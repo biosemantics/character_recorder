@@ -356,10 +356,10 @@
                 var app = this;
 
                 var jsonRequest = {
-                    user: app.childData[3].name,
-                    ontology: 'exp',
+                    user: app.sharedFlag? '' : app.childData[3].name,
+                    ontology: 'carex',
                     term: app.newTerm,
-                    superclassIRI: "http://biosemantics.arizona.edu/ontology/exp#physical_entity",
+                    superclassIRI: "http://biosemantics.arizona.edu/ontology/carex#anatomical_structure",
                     definition: definition,
                     elucidation: '',
                     createdBy: app.childData[3].name + ' via MR',
@@ -389,8 +389,8 @@
                 console.log('value', value);
 
                 var jsonRequest = {
-                    user: app.childData[3].name,
-                    ontology: 'exp',
+                    user: app.sharedFlag? '': app.childData[3].name,
+                    ontology: 'carex',
                 };
                 var temp = value.resultAnnotations.filter(function (e) {
                     return e.property == "http://www.geneontology.org/formats/oboInOwl#id";
@@ -420,7 +420,7 @@
                 if (splitValue.length > 1) {
                     console.log('***', splitValue[1].substring(0, 7));
                     if (splitValue[1].substring(0, 7) == 'part_of') {
-                        jsonRequest.superclassIRI = "http://biosemantics.arizona.edu/ontology/exp#physical_entity";
+                        jsonRequest.superclassIRI = "http://biosemantics.arizona.edu/ontology/carex#anatomical-structure";
                         jsonRequest.definition = '';
                         jsonRequest.elucidation = '';
                         jsonRequest.createdBy = app.childData[3].name + ' via MR';
@@ -742,7 +742,7 @@
                                     "user":  app.sharedFlag? '': app.childData[3].name,
                                     "ontology": 'carex',
                                     "term": app.character_name,
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
+                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                                     "definition": '',
                                     "createdBy": app.childData[3].name,
                                     "creationDate": new Date(),
@@ -766,12 +766,12 @@
                                     jsonClass.definition = jsonClass.definition + ' where [' + app.methodWhere + ']';
                                 }
                                 if (app.character_name.split(' ')[0] == 'distance') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#distance"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-distance"
                                 } else if (app.character_name.split(' ')[0] == 'length') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#length"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-length"
 
                                 } else if (app.character_name.split(' ')[0] == 'width') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#width"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-width"
                                 }
                                 axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                     .then(function (resp) {
@@ -792,7 +792,7 @@
                                     "user":  app.sharedFlag? '': app.childData[3].name,
                                     "ontology": 'carex',
                                     "term": app.character_name + '(' + app.childData[3].name + ')',
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
+                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                                     "definition": '',
                                     "createdBy": app.childData[3].name,
                                     "creationDate": new Date(),
@@ -817,12 +817,12 @@
                                     jsonClass.definition = jsonClass.definition + ' where [' + app.methodWhere + ']';
                                 }
                                 if (app.character_name.split(' ')[0] == 'distance') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#distance"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-distance"
                                 } else if (app.character_name.split(' ')[0] == 'length') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#length"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-length"
 
                                 } else if (app.character_name.split(' ')[0] == 'width') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#width"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-width"
                                 }
 
                                 axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
