@@ -316,6 +316,7 @@
 
                 ],
                 method_description: '',
+                sharedFlag: true,
             }
         },
         props: {
@@ -356,10 +357,10 @@
                 var app = this;
 
                 var jsonRequest = {
-                    user: app.childData[3].name,
-                    ontology: 'exp',
+                    user: app.sharedFlag? '' : app.childData[3].name,
+                    ontology: 'carex',
                     term: app.newTerm,
-                    superclassIRI: "http://biosemantics.arizona.edu/ontology/exp#physical_entity",
+                    superclassIRI: "http://biosemantics.arizona.edu/ontology/carex#anatomical_structure",
                     definition: definition,
                     elucidation: '',
                     createdBy: app.childData[3].name + ' via MR',
@@ -377,7 +378,7 @@
                         app.needMoreGreen[app.currentSetting] = true;
                         app.modalFlag = false;
                         app.newTermDefinition = null;
-                        axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
+                        axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.sharedFlag? '': app.childData[3].name, "ontology": 'carex'})
                             .then(function (resp) {
                                 console.log('save resp', resp);
                             });
@@ -389,8 +390,8 @@
                 console.log('value', value);
 
                 var jsonRequest = {
-                    user: app.childData[3].name,
-                    ontology: 'exp',
+                    user: app.sharedFlag? '' : app.childData[3].name,
+                    ontology: 'carex',
                 };
                 var temp = value.resultAnnotations.filter(function (e) {
                     return e.property == "http://www.geneontology.org/formats/oboInOwl#id";
@@ -420,10 +421,10 @@
                 if (splitValue.length > 1) {
                     console.log('***', splitValue[1].substring(0, 7));
                     if (splitValue[1].substring(0, 7) == 'part_of') {
-                        jsonRequest.superclassIRI = "http://biosemantics.arizona.edu/ontology/exp#physical_entity";
+                        jsonRequest.superclassIRI = "http://biosemantics.arizona.edu/ontology/carex#anatomical-structure";
                         jsonRequest.definition = '';
                         jsonRequest.elucidation = '';
-                        jsonRequest.createdBy = app.childData[3].name + ' via MR';
+                        jsonRequest.createdBy = app.childData[3].name + ' via CR';
                         jsonRequest.examples = app.character_name;
                         jsonRequest.creationDate = new Date();
                         jsonRequest.definitionSrc = app.childData[3].name;
@@ -434,7 +435,7 @@
                                 app.greenTick[setting] = true;
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
-                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user":  app.sharedFlag? '': app.childData[3].name, "ontology": 'carex'})
                                     .then(function (resp) {
                                         console.log('save resp', resp);
                                     });
@@ -454,7 +455,7 @@
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
                             }
-                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.childData[3].name, "ontology": 'exp'})
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user":  app.sharedFlag? '': app.childData[3].name, "ontology": 'carex'})
                                 .then(function (resp) {
                                     console.log('save resp', resp);
                                 });
@@ -566,7 +567,7 @@
 
                     this.$emit('interface', this.childData); // handle data and give it back to parent by interface
 
-                    axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
+                    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character_name)
                         .then(function (resp) {
                             console.log('search resp', resp);
                             var tempFlag = false;
@@ -576,7 +577,7 @@
                                 }
                             }
                             if (app.methodFrom != null && app.methodFrom != '') {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodFrom)
+                                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodFrom)
                                     .then(function (resp) {
                                         console.log('search from resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
@@ -608,7 +609,7 @@
                                     });
                             }
                             if (app.methodTo != null && app.methodTo != '') {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
+                                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodTo)
                                     .then(function (resp) {
                                         console.log('search to resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
@@ -640,7 +641,7 @@
                                     });
                             }
                             if (app.methodInclude != null && app.methodInclude != '') {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodInclude)
+                                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodInclude)
                                     .then(function (resp) {
                                         console.log('search include resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
@@ -672,7 +673,7 @@
                                     });
                             }
                             if (app.methodExclude != null && app.methodExclude != '') {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodExclude)
+                                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodExclude)
                                     .then(function (resp) {
                                         console.log('search exclude resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
@@ -704,7 +705,7 @@
                                     });
                             }
                             if (app.methodWhere != null && app.methodWhere != '') {
-                                axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodWhere)
+                                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodWhere)
                                     .then(function (resp) {
                                         console.log('search at resp', resp);
                                         for (var i = 0; i < resp.data.entries.length; i++) {
@@ -739,10 +740,10 @@
                             if (tempFlag == false) {
 
                                 var jsonClass = {
-                                    "user": app.childData[3].name,
-                                    "ontology": 'exp',
+                                    "user":  app.sharedFlag? '': app.childData[3].name,
+                                    "ontology": 'carex',
                                     "term": app.character_name,
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
+                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                                     "definition": '',
                                     "createdBy": app.childData[3].name,
                                     "creationDate": new Date(),
@@ -766,19 +767,19 @@
                                     jsonClass.definition = jsonClass.definition + ' where [' + app.methodWhere + ']';
                                 }
                                 if (app.character_name.split(' ')[0] == 'distance') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#distance"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-distance"
                                 } else if (app.character_name.split(' ')[0] == 'length') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#length"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-length"
 
                                 } else if (app.character_name.split(' ')[0] == 'width') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#width"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-width"
                                 }
                                 axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                     .then(function (resp) {
                                         console.log('class resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            "user": app.childData[3].name,
-                                            "ontology": 'exp'
+                                            "user":  app.sharedFlag? '': app.childData[3].name,
+                                            "ontology": 'carex'
                                         })
                                             .then(function (resp) {
                                                 console.log('save resp', resp);
@@ -789,10 +790,10 @@
                                     });
                             } else {
                                 var jsonClass = {
-                                    "user": app.childData[3].name,
-                                    "ontology": 'exp',
+                                    "user":  app.sharedFlag? '': app.childData[3].name,
+                                    "ontology": 'carex',
                                     "term": app.character_name + '(' + app.childData[3].name + ')',
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#measurement",
+                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                                     "definition": '',
                                     "createdBy": app.childData[3].name,
                                     "creationDate": new Date(),
@@ -817,20 +818,20 @@
                                     jsonClass.definition = jsonClass.definition + ' where [' + app.methodWhere + ']';
                                 }
                                 if (app.character_name.split(' ')[0] == 'distance') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#distance"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-distance"
                                 } else if (app.character_name.split(' ')[0] == 'length') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#length"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-length"
 
                                 } else if (app.character_name.split(' ')[0] == 'width') {
-                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#width"
+                                    jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-width"
                                 }
 
                                 axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                                     .then(function (resp) {
                                         console.log('class resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            "user": app.childData[3].name,
-                                            "ontology": 'exp'
+                                            "user":  app.sharedFlag? '': app.childData[3].name,
+                                            "ontology": 'carex'
                                         })
                                             .then(function (resp) {
                                                 console.log('save resp', resp);
@@ -866,7 +867,7 @@
             app.methodExclude = app.childData[7];
             app.methodWhere = app.childData[8];
 
-            axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.character_name)
+            axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character_name)
                 .then(function (resp) {
                     console.log('exp search resp', resp);
                     if (resp.data.entries.length > 0) {
@@ -890,7 +891,7 @@
                         console.log('methodArray', app.methodArray);
                     }
                     if (app.methodFrom != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodFrom)
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodFrom)
                             .then(function (resp) {
                                 console.log('search from resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
@@ -906,7 +907,7 @@
                             });
                     }
                     if (app.methodTo != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodTo)
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodTo)
                             .then(function (resp) {
                                 console.log('search to resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
@@ -922,7 +923,7 @@
                             });
                     }
                     if (app.methodInclude != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodInclude)
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodInclude)
                             .then(function (resp) {
                                 console.log('search to resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
@@ -938,7 +939,7 @@
                             });
                     }
                     if (app.methodExclude != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodExclude)
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodExclude)
                             .then(function (resp) {
                                 console.log('search to resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
@@ -954,7 +955,7 @@
                             });
                     }
                     if (app.methodWhere != null) {
-                        axios.get('http://shark.sbs.arizona.edu:8080/exp/search?user=' + app.childData[3].name + '&term=' + app.methodWhere)
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.methodWhere)
                             .then(function (resp) {
                                 console.log('search to resp', resp);
                                 for (var i = 0; i < resp.data.entries.length; i++) {

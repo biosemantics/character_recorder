@@ -824,7 +824,7 @@ class HomeController extends Controller
 
         return array(
             'is_scucess'    =>  1,
-            'doc_url'       =>  '/' . $fileName . '.docx',
+            'doc_url'       =>  '/chrecorder/public/' . $fileName . '.docx',
         );
     }
 
