@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 15px;">
-         <b>Summary function: Please select a summary function for "{{ character_name }}": </b>
+         <b>4. Summary function: Please select a summary function for "{{ character_name }}": </b>
         </div>
         <div class="col-md-12">
             <select v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()" :disabled="edit_created_other">

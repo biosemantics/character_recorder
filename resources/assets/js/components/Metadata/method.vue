@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 15px;">
-            <b>{{method_description}}</b>
+            <b>1. {{method_description}}</b>
             <br/>
         </div>
         <div class="col-md-12" v-if="methodEntry == null">

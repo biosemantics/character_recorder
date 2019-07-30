@@ -437,34 +437,34 @@
                                             <div class="modal-body">
                                                 <div v-if="!character.method_as">
                                                     <div>
-                                                        <b>Please review the method definition carefully. Is this what
+                                                        Please <b>review the method definition carefully</b>. Is this what
                                                             you would
                                                             like
-                                                            to save for <i>{{ character.name }}</i>?</b>
+                                                            to save for <i>{{ character.name }}</i>?
                                                     </div>
                                                     <br>
                                                     <div v-if="character.method_from">
-                                                        From: {{ character.method_from }}
+                                                        <b>From:</b> {{ character.method_from }}
                                                     </div>
                                                     <div v-if="character.method_to">
-                                                        To: {{ character.method_to }}
+                                                        <b>To:</b> {{ character.method_to }}
                                                     </div>
                                                     <div v-if="character.method_include">
-                                                        Include: {{ character.method_include }}
+                                                        <b>Include:</b> {{ character.method_include }}
                                                     </div>
                                                     <div v-if="character.method_exclude">
-                                                        Exclude: {{ character.method_exclude }}
+                                                        <b>Exclude:</b> {{ character.method_exclude }}
                                                     </div>
                                                     <div v-if="character.method_where">
-                                                        Where: {{ character.method_where }}
+                                                        <b>Where:</b> {{ character.method_where }}
                                                     </div>
                                                 </div>
                                                 <div v-if="character.method_as">
                                                     <div>
-                                                        <b>Please review the method definition carefully. Is this what
+                                                        Please <b>review the method definition carefully</b>. Is this what
                                                             you
                                                             would like
-                                                            to save for <i>{{ character.name }}</i>?</b>
+                                                            to save for <i>{{ character.name }}</i>?
                                                     </div>
                                                     <div>
                                                         <img class="img-method"
@@ -495,7 +495,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div>
-                                                    You've select <b>{{ character.unit }}</b> as the Unit for <i>{{
+                                                    You've selected <b>{{ character.unit }}</b> as the Unit for <i>{{
                                                     character.name }}</i>.
                                                 </div>
                                                 <div class="modal-footer">
@@ -522,7 +522,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <div>
-                                                You've select <b>{{ character.standard_tag }}</b> as the Tag for <i>{{
+                                                You've selected <b>{{ character.standard_tag }}</b> as the Tag for <i>{{
                                                 character.name }}</i>.
                                             </div>
                                             <div class="modal-footer">
@@ -544,15 +544,15 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm Summary
+                                        Confirm Summary Function
                                     </div>
                                     <div class="modal-body">
                                         <div v-if="character.summary">
-                                            You've select <b>{{ character.summary }}</b> as the Summary for <i>{{
+                                            <b>{{ character.summary }}</b> will be used as the Summary Function for <i>{{
                                             character.name }}</i>.
                                         </div>
                                         <div v-if="!character.summary">
-                                            Summary function not selected.
+                                            Summary function not selected. Categorical characters do not need a summary function.
                                         </div>
                                         <div class="modal-footer">
                                             <a class="btn btn-primary ok-btn"
