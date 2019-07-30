@@ -3,7 +3,8 @@
         <loading :active.sync="isLoading"
                  :is-full-page="true"
                  :width="255"
-                 :height="255"></loading>
+                 :height="255"
+                 ></loading>
         <div class="tab-pane" id="">
             <form autocomplete="off">
                 <div class="container">
@@ -28,7 +29,7 @@
                                     <div class="col-md-12" style="line-height: 38px;">
                                         <b class="some-container">I 'm measuring <a class="btn btn-primary"
                                                                                     v-on:click="showStandardCharacters()"
-                                                                                    v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">
+                                                                                    >
                                                 the recommended set of characters
                                         </a> <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">(what are they?) </b><br/> or</b>
                                     </div>
@@ -55,7 +56,7 @@
                                 </div>
                                 <div class="margin-top-10"
                                      v-if="userCharacters.find(ch => ch.standard == 0 && ch.username.includes(user.name))">
-                                    <h4><b><u>Characters selected</u></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <h4><b><u>You've selected characters:</u></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="btn btn-add display-block" v-on:click="removeAllCharacters()"><span
                                                 class="glyphicon glyphicon-remove"></span></a>
                                     </h4>
@@ -63,15 +64,24 @@
                                          v-if="eachCharacter.standard == 0 && eachCharacter.username.includes(user.name)"
                                          v-tooltip="eachCharacter.tooltip"
                                          style="display: table; font-weight: bold; cursor: pointer;">
-                                        {{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                          <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag"> 
+                                             {{ eachCharacter.standard_tag }} </b>
+                                         
+                                            <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a class="btn btn-add display-block"
+                                               v-on:click="removeStandardCharacter(eachCharacter.id)"
+                                               :set="previousUserCharacter=eachCharacter"
+                                               ><span
+                                                    class="glyphicon glyphicon-remove"></span></a></i></div> 
+                                        <!--{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeUserCharacter(eachCharacter.id)"><span
-                                                class="glyphicon glyphicon-remove"></span></a>
+                                                class="glyphicon glyphicon-remove"></span></a>-->
                                     </div>
                                 </div>
                                 <div class="margin-top-10"
                                      v-if="userCharacters.find(ch => ch.standard == 1 || !ch.username.includes(user.name))">
-                                    <h4><b><u>Selected Standard Characters</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                                    <h4><b><u>You've selected recommended characters:</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeAllStandardFlag = true;"><span
                                                 class="glyphicon glyphicon-remove"></span></a></h4>
@@ -80,16 +90,35 @@
                                          v-if="eachCharacter.standard == 1 || !eachCharacter.username.includes(user.name)"
                                          v-tooltip="eachCharacter.tooltip"
                                          style="display: table; cursor: pointer;">
-                                        <b>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                         <b v-if="eachCharacter.standard_tag != previousCharacter.standard_tag"> 
+                                             {{ eachCharacter.standard_tag }} </b>
+                                         
+                                            <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a class="btn btn-add display-block"
+                                               v-on:click="removeStandardCharacter(eachCharacter.id)"
+                                               :set="previousCharacter=eachCharacter"
+                                               ><span
+                                                    class="glyphicon glyphicon-remove"></span></a></i></div> 
+                                         
+                                        <!--<b>{{ eachCharacter.name }} {{ eachCharacter.standard_tag }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <a class="btn btn-add display-block"
                                                v-on:click="removeStandardCharacter(eachCharacter.id)"><span
-                                                    class="glyphicon glyphicon-remove"></span></a></b>
+                                                    class="glyphicon glyphicon-remove"></span></a></b> -->
                                         <!--<a-->
                                         <!--v-on:click="removeStandardCharacter(eachCharacter.id)" style="cursor: pointer;">-->
                                         <!--X </a>-->
                                     </div>
                                 </div>
-
+                                <!-- repeat the buttoms here -->
+                                <div v-if="userCharacters.length!=0" class="margin-top-10 text-right">
+                                    <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Generate
+                                        Matrix</a>
+                                    <a class="btn btn-primary" v-on:click="importMatrix()"
+                                       style="width: 200px; background-color: grey; border-color: grey;">Import (CR)
+                                        Matrix</a>
+                                    <a class="btn btn-primary" v-on:click="collapsedFlag = true;"
+                                       style="width: 40px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                </div>
                             </div>
                         </div>
                         <div v-if="collapsedFlag == true">
@@ -537,11 +566,11 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm to Remove Standard Characters
+                                        Confirm to Remove Recommended Characters
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            Do you want to remove all standard characters from your matrix?
+                                            Do you want to remove all recommended characters from your matrix?
                                         </div>
                                         <div class="modal-footer">
                                             <a class="btn btn-primary ok-btn"
@@ -941,6 +970,7 @@
 
     Vue.use(LiquorTree);
     Vue.use({ModelSelect});
+  
 
 
     export default {
@@ -956,6 +986,8 @@
         },
         data: function () {
             return {
+                previousCharacter:"",
+                previousUserCharacter:"",
                 character: {},
                 userCharacters: [],
                 defaultCharacters: [],
