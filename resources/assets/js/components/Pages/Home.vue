@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="margin-top-10">
                                     <b>I have <input v-model="columnCount" style="width: 180px;"
-                                                     placeholder="Enter a default count, like 3"> specimens.</b>
+                                                     placeholder="3"> specimens.</b>
                                 </div>
                                 <div class="margin-top-10 row">
                                     <div class="col-md-12" style="line-height: 38px;">
@@ -58,7 +58,8 @@
                                      v-if="userCharacters.find(ch => ch.standard == 0 && ch.username.includes(user.name))">
                                     <h4><b><u>You've selected characters:</u></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="btn btn-add display-block" v-on:click="removeAllCharacters()"><span
-                                                class="glyphicon glyphicon-remove"></span></a>
+                                                class="glyphicon glyphicon-remove"
+                                                :set="previousUserCharacter=''"></span></a>
                                     </h4>
                                     <div v-for="eachCharacter in userCharacters"
                                          v-if="eachCharacter.standard == 0 && eachCharacter.username.includes(user.name)"
@@ -84,7 +85,8 @@
                                     <h4><b><u>You've selected recommended characters:</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeAllStandardFlag = true;"><span
-                                                class="glyphicon glyphicon-remove"></span></a></h4>
+                                                class="glyphicon glyphicon-remove"
+                                                :set="previousCharacter=''"></span></a></h4>
 
                                     <div v-for="eachCharacter in userCharacters"
                                          v-if="eachCharacter.standard == 1 || !eachCharacter.username.includes(user.name)"
@@ -140,7 +142,7 @@
                                 <div class="col-md-5">
                                     <model-select :options="standardCharacters"
                                                   v-model="item"
-                                                  placeholder="Search character here"
+                                                  placeholder="Search/create character here"
                                                   @searchchange="printSearchText"
                                                   @select="onSelect"
                                     />
@@ -986,8 +988,8 @@
         },
         data: function () {
             return {
-                previousCharacter:"",
-                previousUserCharacter:"",
+                //previousCharacter:"",
+                //previousUserCharacter:"",
                 character: {},
                 userCharacters: [],
                 defaultCharacters: [],
