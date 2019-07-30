@@ -37,7 +37,7 @@
                                         <b>Search/create other character:&nbsp;</b>
                                         <model-select :options="standardCharacters"
                                                       v-model="item"
-                                                      placeholder="Search character here"
+                                                      placeholder="Search/create character here"
                                                       @searchchange="printSearchText"
                                                       @select="onSelect"
                                         />
@@ -292,13 +292,17 @@
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <input style="height: 26px; width: 100%;" type="text"
-                                                               list="first_characters" v-model="firstCharacter"/>
+                                                               list="first_characters" placeholder="select or type" v-model="firstCharacter"/>
                                                         <datalist id="first_characters">
                                                             <option value="Length">Length</option>
                                                             <option value="Width">Width</option>
                                                             <option value="Depth">Depth</option>
                                                             <option value="Diameter">Diameter</option>
                                                             <option value="Distance">Distance</option>
+                                                            <option value="Color">Color</option>
+                                                            <option value="Shape">Shape</option>
+                                                            <option value="Texture">Texture</option>
+                                                            <option value="Distance"></option>
                                                         </datalist>
                                                         <!--<select v-model="firstCharacter" style="height: 26px;">-->
                                                         <!--<option>Length</option>-->
@@ -325,7 +329,7 @@
                                                 <a class="btn btn-primary ok-btn"
                                                    v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter }"
                                                    v-on:click="storeCharacter()">
-                                                    &nbsp; &nbsp; OK &nbsp; &nbsp; </a>
+                                                    &nbsp; &nbsp; Next: Define Character &nbsp; &nbsp; </a>
                                                 <a v-on:click="cancelNewCharacter()" class="btn btn-danger">Cancel</a>
                                             </div>
                                         </div>
@@ -340,7 +344,7 @@
                                         <div class="modal-container">
 
                                             <div class="modal-header">
-                                                <h3>Information about "{{ character.name }}" by {{ character.username
+                                                <h3>Define character "{{ character.name }}", created by {{ character.username
                                                     }}</h3>
                                             </div>
 
