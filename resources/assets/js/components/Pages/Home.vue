@@ -29,10 +29,11 @@
                                         <b class="some-container">I 'm measuring <a class="btn btn-primary"
                                                                                     v-on:click="showStandardCharacters()"
                                                                                     v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">
-                                            the standard set of characters
-                                        </a> <br/> or</b>
+                                                the recommended set of characters
+                                        </a> <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">(what are they?) </b><br/> or</b>
                                     </div>
                                     <div class="col-md-12 margin-top-10">
+                                        <b>Search/create other character:&nbsp;</b>
                                         <model-select :options="standardCharacters"
                                                       v-model="item"
                                                       placeholder="Search character here"
