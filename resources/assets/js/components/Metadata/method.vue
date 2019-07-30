@@ -237,7 +237,7 @@
 
     import Vue from 'vue';
     import VTooltip from 'v-tooltip'
-    var shared = true;
+
     
     Vue.use(VTooltip);
     export default {
@@ -318,6 +318,7 @@
 
                 ],
                 method_description: '',
+                sharedFlag: true,
             }
         },
         props: {
@@ -358,7 +359,7 @@
                 var app = this;
 
                 var jsonRequest = {
-                    user: shared? '' : app.childData[3].name,
+                    user: app.sharedFlag? '' : app.childData[3].name,
                     ontology: 'carex',
                     term: app.newTerm,
                     superclassIRI: "http://biosemantics.arizona.edu/ontology/carex#anatomical_structure",
@@ -379,7 +380,7 @@
                         app.needMoreGreen[app.currentSetting] = true;
                         app.modalFlag = false;
                         app.newTermDefinition = null;
-                        axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": shared? '': app.childData[3].name, "ontology": 'carex'})
+                        axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.sharedFlag? '': app.childData[3].name, "ontology": 'carex'})
                             .then(function (resp) {
                                 console.log('save resp', resp);
                             });
@@ -392,7 +393,7 @@
                 console.log("shared", shared);
 
                 var jsonRequest = {
-                    user: shared? '' : app.childData[3].name,
+                    user: app.sharedFlag? '' : app.childData[3].name,
                     ontology: 'carex',
                 };
                 var temp = value.resultAnnotations.filter(function (e) {
@@ -426,7 +427,7 @@
                         jsonRequest.superclassIRI = "http://biosemantics.arizona.edu/ontology/carex#anatomical-structure";
                         jsonRequest.definition = '';
                         jsonRequest.elucidation = '';
-                        jsonRequest.createdBy = app.childData[3].name + ' via MR';
+                        jsonRequest.createdBy = app.childData[3].name + ' via CR';
                         jsonRequest.examples = app.character_name;
                         jsonRequest.creationDate = new Date();
                         jsonRequest.definitionSrc = app.childData[3].name;
@@ -437,7 +438,7 @@
                                 app.greenTick[setting] = true;
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
-                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user":  shared? '': app.childData[3].name, "ontology": 'carex'})
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {"user":  app.sharedFlag? '': app.childData[3].name, "ontology": 'carex'})
                                     .then(function (resp) {
                                         console.log('save resp', resp);
                                     });
@@ -457,7 +458,7 @@
                                 app.formViewFlag[setting] = false;
                                 app.needMoreGreen[setting] = true;
                             }
-                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user":  shared? '': app.childData[3].name, "ontology": 'carex'})
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {"user":  app.sharedFlag? '': app.childData[3].name, "ontology": 'carex'})
                                 .then(function (resp) {
                                     console.log('save resp', resp);
                                 });
@@ -742,7 +743,7 @@
                             if (tempFlag == false) {
 
                                 var jsonClass = {
-                                    "user":  shared? '': app.childData[3].name,
+                                    "user":  app.sharedFlag? '': app.childData[3].name,
                                     "ontology": 'carex',
                                     "term": app.character_name,
                                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
@@ -780,7 +781,7 @@
                                     .then(function (resp) {
                                         console.log('class resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            "user":  shared? '': app.childData[3].name,
+                                            "user":  app.sharedFlag? '': app.childData[3].name,
                                             "ontology": 'carex'
                                         })
                                             .then(function (resp) {
@@ -792,7 +793,7 @@
                                     });
                             } else {
                                 var jsonClass = {
-                                    "user":  shared? '': app.childData[3].name,
+                                    "user":  app.sharedFlag? '': app.childData[3].name,
                                     "ontology": 'carex',
                                     "term": app.character_name + '(' + app.childData[3].name + ')',
                                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
@@ -832,7 +833,7 @@
                                     .then(function (resp) {
                                         console.log('class resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            "user":  shared? '': app.childData[3].name,
+                                            "user":  app.sharedFlag? '': app.childData[3].name,
                                             "ontology": 'carex'
                                         })
                                             .then(function (resp) {

@@ -2213,7 +2213,7 @@
                                         .then(function (resp) {
                                             console.log('shark api definition resp', resp);
                                             axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                user: '',
+                                                user: app.sharedFlag ? '' : app.user.name,
                                                 ontology: 'carex'
                                             })
                                                 .then(function (resp) {
