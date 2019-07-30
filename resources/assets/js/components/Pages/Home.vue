@@ -210,6 +210,7 @@
                                                class="btn btn-add dropdown-toggle" style="line-height: 30px;"
                                                data-toggle="dropdown">
                                                 <span><b>{{ value.unit }}</b></span>
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </a>
                                             <ul class="dropdown-menu" role="menu">
@@ -223,6 +224,7 @@
                                             <a class="btn btn-add dropdown-toggle" style="line-height: 30px;"
                                                data-toggle="dropdown">
                                                 <span><b>{{ value.summary }}</b></span>
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </a>
                                             <ul class="dropdown-menu" role="menu">
