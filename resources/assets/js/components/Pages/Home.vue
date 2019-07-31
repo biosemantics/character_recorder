@@ -3,7 +3,8 @@
         <loading :active.sync="isLoading"
                  :is-full-page="true"
                  :width="255"
-                 :height="255"></loading>
+                 :height="255"
+                 ></loading>
         <div class="tab-pane" id="">
             <form autocomplete="off">
                 <div class="container">
@@ -22,20 +23,21 @@
                                 </div>
                                 <div class="margin-top-10">
                                     <b>I have <input v-model="columnCount" style="width: 180px;"
-                                                     placeholder="Enter a default count, like 3"> specimens.</b>
+                                                     placeholder="3"> specimens.</b>
                                 </div>
                                 <div class="margin-top-10 row">
                                     <div class="col-md-12" style="line-height: 38px;">
                                         <b class="some-container">I 'm measuring <a class="btn btn-primary"
                                                                                     v-on:click="showStandardCharacters()"
-                                                                                    v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">
-                                            the standard set of characters
-                                        </a> <br/> or</b>
+                                                                                    >
+                                                the recommended set of characters
+                                        </a> <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">(what are they?) </b><br/> or</b>
                                     </div>
                                     <div class="col-md-12 margin-top-10">
+                                        <b>Search/create other character:&nbsp;</b>
                                         <model-select :options="standardCharacters"
                                                       v-model="item"
-                                                      placeholder="Search character here"
+                                                      placeholder="Search/create character here"
                                                       @searchchange="printSearchText"
                                                       @select="onSelect"
                                         />
@@ -54,41 +56,71 @@
                                 </div>
                                 <div class="margin-top-10"
                                      v-if="userCharacters.find(ch => ch.standard == 0 && ch.username.includes(user.name))">
-                                    <h4><b><u>Characters selected</u></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <h4><b><u>You've selected characters:</u></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="btn btn-add display-block" v-on:click="removeAllCharacters()"><span
-                                                class="glyphicon glyphicon-remove"></span></a>
+                                                class="glyphicon glyphicon-remove"
+                                                :set="previousUserCharacter=''"></span></a>
                                     </h4>
                                     <div v-for="eachCharacter in userCharacters"
                                          v-if="eachCharacter.standard == 0 && eachCharacter.username.includes(user.name)"
                                          v-tooltip="eachCharacter.tooltip"
                                          style="display: table; font-weight: bold; cursor: pointer;">
-                                        {{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                          <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag"> 
+                                             {{ eachCharacter.standard_tag }} </b>
+                                         
+                                            <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a class="btn btn-add display-block"
+                                               v-on:click="removeStandardCharacter(eachCharacter.id)"
+                                               :set="previousUserCharacter=eachCharacter"
+                                               ><span
+                                                    class="glyphicon glyphicon-remove"></span></a></i></div> 
+                                        <!--{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeUserCharacter(eachCharacter.id)"><span
-                                                class="glyphicon glyphicon-remove"></span></a>
+                                                class="glyphicon glyphicon-remove"></span></a>-->
                                     </div>
                                 </div>
                                 <div class="margin-top-10"
                                      v-if="userCharacters.find(ch => ch.standard == 1 || !ch.username.includes(user.name))">
-                                    <h4><b><u>Selected Standard Characters</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                                    <h4><b><u>You've selected recommended characters:</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeAllStandardFlag = true;"><span
-                                                class="glyphicon glyphicon-remove"></span></a></h4>
+                                                class="glyphicon glyphicon-remove"
+                                                :set="previousCharacter=''"></span></a></h4>
 
                                     <div v-for="eachCharacter in userCharacters"
                                          v-if="eachCharacter.standard == 1 || !eachCharacter.username.includes(user.name)"
                                          v-tooltip="eachCharacter.tooltip"
                                          style="display: table; cursor: pointer;">
-                                        <b>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                         <b v-if="eachCharacter.standard_tag != previousCharacter.standard_tag"> 
+                                             {{ eachCharacter.standard_tag }} </b>
+                                         
+                                            <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <a class="btn btn-add display-block"
+                                               v-on:click="removeStandardCharacter(eachCharacter.id)"
+                                               :set="previousCharacter=eachCharacter"
+                                               ><span
+                                                    class="glyphicon glyphicon-remove"></span></a></i></div> 
+                                         
+                                        <!--<b>{{ eachCharacter.name }} {{ eachCharacter.standard_tag }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <a class="btn btn-add display-block"
                                                v-on:click="removeStandardCharacter(eachCharacter.id)"><span
-                                                    class="glyphicon glyphicon-remove"></span></a></b>
+                                                    class="glyphicon glyphicon-remove"></span></a></b> -->
                                         <!--<a-->
                                         <!--v-on:click="removeStandardCharacter(eachCharacter.id)" style="cursor: pointer;">-->
                                         <!--X </a>-->
                                     </div>
                                 </div>
-
+                                <!-- repeat the buttoms here -->
+                                <div v-if="userCharacters.length!=0" class="margin-top-10 text-right">
+                                    <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Generate
+                                        Matrix</a>
+                                    <a class="btn btn-primary" v-on:click="importMatrix()"
+                                       style="width: 200px; background-color: grey; border-color: grey;">Import (CR)
+                                        Matrix</a>
+                                    <a class="btn btn-primary" v-on:click="collapsedFlag = true;"
+                                       style="width: 40px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
+                                </div>
                             </div>
                         </div>
                         <div v-if="collapsedFlag == true">
@@ -110,7 +142,7 @@
                                 <div class="col-md-5">
                                     <model-select :options="standardCharacters"
                                                   v-model="item"
-                                                  placeholder="Search character here"
+                                                  placeholder="Search/create character here"
                                                   @searchchange="printSearchText"
                                                   @select="onSelect"
                                     />
@@ -151,7 +183,6 @@
                                     v-if="userCharacters.find(ch => ch.id == row[0].character_id).show_flag == true">
                                     <td v-if="value.header_id == 1"
                                         v-for="value in row"
-                                        v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip"
                                         style="cursor: pointer; display: flex; ">
                                         <div style="width: 30px;">
                                             <div style="height: 22px; line-height: 22px;">
@@ -163,7 +194,7 @@
                                                       class="glyphicon glyphicon-chevron-down"></span>
                                             </div>
                                         </div>
-                                        <div style="line-height: 44px;">
+                                        <div style="line-height: 44px;" v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip">
                                             {{ value.value }}
                                         </div>
                                         <div>
@@ -178,6 +209,7 @@
                                                class="btn btn-add dropdown-toggle" style="line-height: 30px;"
                                                data-toggle="dropdown">
                                                 <span><b>{{ value.unit }}</b></span>
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </a>
                                             <ul class="dropdown-menu" role="menu">
@@ -191,6 +223,7 @@
                                             <a class="btn btn-add dropdown-toggle" style="line-height: 30px;"
                                                data-toggle="dropdown">
                                                 <span><b>{{ value.summary }}</b></span>
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </a>
                                             <ul class="dropdown-menu" role="menu">
@@ -260,13 +293,17 @@
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <input style="height: 26px; width: 100%;" type="text"
-                                                               list="first_characters" v-model="firstCharacter"/>
+                                                               list="first_characters" placeholder="select or type" v-model="firstCharacter"/>
                                                         <datalist id="first_characters">
                                                             <option value="Length">Length</option>
                                                             <option value="Width">Width</option>
                                                             <option value="Depth">Depth</option>
                                                             <option value="Diameter">Diameter</option>
                                                             <option value="Distance">Distance</option>
+                                                            <option value="Color">Color</option>
+                                                            <option value="Shape">Shape</option>
+                                                            <option value="Texture">Texture</option>
+                                                            <option value="Distance"></option>
                                                         </datalist>
                                                         <!--<select v-model="firstCharacter" style="height: 26px;">-->
                                                         <!--<option>Length</option>-->
@@ -293,7 +330,7 @@
                                                 <a class="btn btn-primary ok-btn"
                                                    v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter }"
                                                    v-on:click="storeCharacter()">
-                                                    &nbsp; &nbsp; OK &nbsp; &nbsp; </a>
+                                                    &nbsp; &nbsp; Next: Define Character &nbsp; &nbsp; </a>
                                                 <a v-on:click="cancelNewCharacter()" class="btn btn-danger">Cancel</a>
                                             </div>
                                         </div>
@@ -308,7 +345,7 @@
                                         <div class="modal-container">
 
                                             <div class="modal-header">
-                                                <h3>Information about "{{ character.name }}" by {{ character.username
+                                                <h3>Define character "{{ character.name }}", created by {{ character.username
                                                     }}</h3>
                                             </div>
 
@@ -401,34 +438,34 @@
                                             <div class="modal-body">
                                                 <div v-if="!character.method_as">
                                                     <div>
-                                                        <b>Please review the method definition carefully. Is this what
+                                                        Please <b>review the method definition carefully</b>. Is this what
                                                             you would
                                                             like
-                                                            to save for <i>{{ character.name }}</i>?</b>
+                                                            to save for <i>{{ character.name }}</i>?
                                                     </div>
                                                     <br>
                                                     <div v-if="character.method_from">
-                                                        From: {{ character.method_from }}
+                                                        <b>From:</b> {{ character.method_from }}
                                                     </div>
                                                     <div v-if="character.method_to">
-                                                        To: {{ character.method_to }}
+                                                        <b>To:</b> {{ character.method_to }}
                                                     </div>
                                                     <div v-if="character.method_include">
-                                                        Include: {{ character.method_include }}
+                                                        <b>Include:</b> {{ character.method_include }}
                                                     </div>
                                                     <div v-if="character.method_exclude">
-                                                        Exclude: {{ character.method_exclude }}
+                                                        <b>Exclude:</b> {{ character.method_exclude }}
                                                     </div>
                                                     <div v-if="character.method_where">
-                                                        Where: {{ character.method_where }}
+                                                        <b>Where:</b> {{ character.method_where }}
                                                     </div>
                                                 </div>
                                                 <div v-if="character.method_as">
                                                     <div>
-                                                        <b>Please review the method definition carefully. Is this what
+                                                        Please <b>review the method definition carefully</b>. Is this what
                                                             you
                                                             would like
-                                                            to save for <i>{{ character.name }}</i>?</b>
+                                                            to save for <i>{{ character.name }}</i>?
                                                     </div>
                                                     <div>
                                                         <img class="img-method"
@@ -459,7 +496,7 @@
                                             </div>
                                             <div class="modal-body">
                                                 <div>
-                                                    You've select <b>{{ character.unit }}</b> as the Unit for <i>{{
+                                                    You've selected <b>{{ character.unit }}</b> as the Unit for <i>{{
                                                     character.name }}</i>.
                                                 </div>
                                                 <div class="modal-footer">
@@ -486,7 +523,7 @@
                                         </div>
                                         <div class="modal-body">
                                             <div>
-                                                You've select <b>{{ character.standard_tag }}</b> as the Tag for <i>{{
+                                                You've selected <b>{{ character.standard_tag }}</b> as the Tag for <i>{{
                                                 character.name }}</i>.
                                             </div>
                                             <div class="modal-footer">
@@ -508,15 +545,15 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm Summary
+                                        Confirm Summary Function
                                     </div>
                                     <div class="modal-body">
                                         <div v-if="character.summary">
-                                            You've select <b>{{ character.summary }}</b> as the Summary for <i>{{
+                                            <b>{{ character.summary }}</b> will be used as the Summary Function for <i>{{
                                             character.name }}</i>.
                                         </div>
                                         <div v-if="!character.summary">
-                                            Summary function not selected.
+                                            Summary function not selected. Categorical characters do not need a summary function.
                                         </div>
                                         <div class="modal-footer">
                                             <a class="btn btn-primary ok-btn"
@@ -536,11 +573,11 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm to Remove Standard Characters
+                                        Confirm to Remove Recommended Characters
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            Do you want to remove all standard characters from your matrix?
+                                            Do you want to remove all recommended characters from your matrix?
                                         </div>
                                         <div class="modal-footer">
                                             <a class="btn btn-primary ok-btn"
@@ -940,6 +977,7 @@
 
     Vue.use(LiquorTree);
     Vue.use({ModelSelect});
+  
 
 
     export default {
@@ -955,6 +993,8 @@
         },
         data: function () {
             return {
+                //previousCharacter:"",
+                //previousUserCharacter:"",
                 character: {},
                 userCharacters: [],
                 defaultCharacters: [],
