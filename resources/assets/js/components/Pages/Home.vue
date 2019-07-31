@@ -259,8 +259,10 @@
                             <!--<div style="margin-top: 5px;">-->
                             <!--<a class="btn btn-primary" v-on:click="expandDescription()"><span class="glyphicon glyphicon-chevron-left"></span></a>-->
                             <!--</div>-->
+                            <!--<a class="btn btn-default" style="border: none;" v-on:click="expandDescription()"><span
+                                    class="glyphicon glyphicon-option-vertical" style="color: #1f648b;"></span></a>-->
                             <a class="btn btn-default" style="border: none;" v-on:click="expandDescription()"><span
-                                    class="glyphicon glyphicon-option-vertical" style="color: #1f648b;"></span></a>
+                                    style="color: #1f648b; font-weigth: bold; writing-mode: vertical-rl; text-orientation: upright; ">Generate Description</span></a>        
                         </div>
                     </div>
                     <div v-if="descriptionFlag == true"
