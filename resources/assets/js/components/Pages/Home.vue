@@ -183,7 +183,6 @@
                                     v-if="userCharacters.find(ch => ch.id == row[0].character_id).show_flag == true">
                                     <td v-if="value.header_id == 1"
                                         v-for="value in row"
-                                        v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip"
                                         style="cursor: pointer; display: flex; ">
                                         <div style="width: 30px;">
                                             <div style="height: 22px; line-height: 22px;">
@@ -195,7 +194,7 @@
                                                       class="glyphicon glyphicon-chevron-down"></span>
                                             </div>
                                         </div>
-                                        <div style="line-height: 44px;">
+                                        <div style="line-height: 44px;" v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip">
                                             {{ value.value }}
                                         </div>
                                         <div>
