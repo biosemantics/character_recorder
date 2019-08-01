@@ -277,13 +277,14 @@
                     <div v-if="descriptionFlag == true"
                          style="position:relative; min-width: 25%; max-width: 600px; overflow-y: scroll; word-wrap: break-word;"
                          class="panel">
-                        <div class="panel-heading"><b>Generated Description</b></div>
-                        <div class="panel-body" style="min-height: 100px;" v-html="descriptionText">
+                        <div class="panel-heading">
+                                <div class="text-right" style="position: absolute; right: 10px; top: 0px;">
+                                <a class="btn btn-primary" v-on:click="updateDescription()">Generate/Update</a>
+                                <a class="btn btn-primary" v-on:click="exportDescription()">Export</a></div>
                         </div>
-                        <div class="text-right" style="position: absolute; right: 10px; bottom: 10px;">
-                            <a class="btn btn-primary" v-on:click="updateDescription()">Update</a>
-                            <a class="btn btn-primary" v-on:click="exportDescription()">Export</a>
+                        <div class="panel-body" style="min-height: 80px; position: absolute; right: 10px; top: 25px;" v-html="descriptionText">
                         </div>
+                       
                     </div>
 
                 </div>
@@ -756,14 +757,15 @@
                                                 </div>
                                                 <div v-if="searchColorFlag == 2">
                                                     Did you mean <b>{{ exactColor.term }}</b>?<br/>
-                                                    Current Definition: <input
+                                                    Definition of <b> {{ exactColor.term }} </b>: <input
                                                         v-model="colorDefinition[index][eachColor.detailFlag]"
                                                         style="width: 70%;">
                                                     <!--Hong modified this: Did you mean <b>{{ exactColor.term }}</b>?<br/>
                                                     Current Definition: <input
                                                         v-model="app.exactColor.definition"
                                                         style="width: 70%;">   --> 
-                                                    <br/>If current defintion is not displayed, feel free to add a definition above.
+                                                    <br/><br/>If definition is lacking, you can propose or edit the definition above. <br/>
+                
 
                                                 </div>
                                                 <div v-if="searchColorFlag !=2 ">
