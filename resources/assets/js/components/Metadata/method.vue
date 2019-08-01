@@ -1,7 +1,7 @@
 <template>
     <div class="row">
         <div class="col-md-12" style="font-size: 15px;">
-            <b>{{method_description}}</b>
+            <b>1. {{method_description}}</b>
             <br/>
         </div>
         <div class="col-md-12" v-if="methodEntry == null">
@@ -10,9 +10,9 @@
             It will take more than few seconds...
         </div>
         <div v-if="methodEntry != null">
-            <div class="col-md-12" v-if="noneMethod == false && methodArray.length > 0">
+            <!--<div class="col-md-12" v-if="noneMethod == false && methodArray.length > 0">
                 Please select one illustration that matching your measurement methods.
-            </div>
+            </div> -->
             <div v-for="(each, index) in methodEntry.resultAnnotations"
                  v-if="noneMethod == false && each.property == 'http://purl.oblibrary.org/obo/IAO_0000600'"
                  class="col-md-6">
@@ -238,10 +238,12 @@
     import Vue from 'vue';
     import VTooltip from 'v-tooltip'
 
+    
     Vue.use(VTooltip);
     export default {
         data: function () {
             return {
+                shared: true,
                 childData: [],
                 character_name: null,
                 viewFlag: false,
@@ -388,6 +390,7 @@
             addSynonym: function (setting, value) {
                 var app = this;
                 console.log('value', value);
+                console.log("shared", shared);
 
                 var jsonRequest = {
                     user: app.sharedFlag? '' : app.childData[3].name,
@@ -857,7 +860,7 @@
             this.character_name = sessionStorage.getItem("characterName");
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.edit_created_other = (sessionStorage.getItem('edit_created_other')=='true');
-            this.method_description = this.edit_created_other ? 'Method: The character is defined as' : 'Method: Please explain how you would measure the item. e.g., from the bottom to the top.';
+            this.method_description = this.edit_created_other ? 'Method: The character is defined as' : 'Method: Please explain how you would measure a specimen for the character. e.g., from bottom to top.';
             console.log('edit created other -----------------', this.edit_created_other);
             this.childData = this.parentData; // save props data to itself's data and deal with it
             console.log('parentData', app.parentData);

@@ -1,17 +1,12 @@
 <template>
     <div class="row">
-        <div class="col-md-12" style="font-size: 20px;">
-            Tag of "{{ character_name }}" is:
+        <div class="col-md-12" style="font-size: 15px;">
+           <b>3. Tag: Please choose a tag for "{{ character_name }}": </b>
         </div>
-        <div class="col-md-12" style="font-size: 14px;">
-            Choose a meaningful tag for a character! For an example, a group of characters about leaves should use the tag "Leaves".
+        <div class="col-md-12" style="font-size: 12px;">
+            You can change the tag later, but always choose a meaningful tag for a character! For an example, a group of characters about leaves should use the tag "Leaves".
             <br/>
-            <br/>
-            Tags are used to organize characters in the matrix view. Characters with the same tag will be in the same group and included on the same tab in the matrix.
-            <br/>
-            <br/>
-            Tags are also used to as the headings for a group of characters in the text description generated from the matrix.
-        </div>
+        </div>      
         <div class="col-md-12">
             <input v-if="viewFlag == false" style="width: 100%;" @change="handleDataFc()" :disabled="edit_created_other" type="text" list="user_tags" v-model="childData"/>
             <datalist id="user_tags" v-if="userTags.length > 0">
@@ -25,6 +20,16 @@
             <!--</select>-->
             <div v-if="viewFlag == true" style="border: 1px solid grey;">
                 {{ childData ? childData : '&nbsp;' }}
+            </div>
+        </div>
+
+         <div class="col-md-12" style="font-size: 12px;">
+            <br/>
+            <b>How will the tags be used?</b><br/>
+            
+            <div style="text-indent: 10px"> Tags are used to organize characters in the matrix view. Characters with the same tag will be in the same group and included on the same tab in the matrix.
+            </div>
+            <div style="text-indent: 10px"> Tags are also used to as the headings for a group of characters in the text description generated from the matrix.
             </div>
         </div>
     </div>

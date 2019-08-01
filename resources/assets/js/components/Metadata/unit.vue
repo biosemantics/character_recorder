@@ -1,7 +1,7 @@
 <template>
     <div class="row">
-        <div class="col-md-12" style="font-size: 20px;">
-            "{{ character_name }}" uses unit:
+        <div class="col-md-12" style="font-size: 15px;">
+            <b>2. Unit: Please select a unit for character "{{ character_name }}". You can change the unit later.</b>
         </div>
         <div class="col-md-12">
             <select v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()" :disabled="edit_created_other">
