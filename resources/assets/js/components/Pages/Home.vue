@@ -2855,6 +2855,14 @@
                         } else if (app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == nonColor[flag]))) {
                             app.searchNonColorFlag = 2;
                             app.exactNonColor = app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == nonColor[flag]));
+                            if (app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
+                                app.exactNonColor.definition = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                                var index = app.nonColorDetails.indexOf(nonColor);
+                                app.nonColorDefinition[index][flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                            } else {
+                                var index = app.nonColorDetails.indexOf(nonColor);
+                                app.nonColorDefinition[index][flag] = null;
+                            }
                         }
                         console.log('app.searchNonColorFlag', app.searchNonColorFlag);
                     });
