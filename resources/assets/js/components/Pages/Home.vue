@@ -126,11 +126,20 @@
                 <div style="padding-left: 15px; padding-right: 15px; display: inline-flex; width: 100%;"
                      v-if="matrixShowFlag == true">
                     <div v-bind:class="{'width-95per': descriptionFlag == false}" style="min-width: 70%;">
-                        <ul class="nav nav-tabs">
-                            <li v-for="eachTag in userTags" v-bind:class="{ active: currentTab == eachTag.tag_name }"><a
-                                    data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">{{ eachTag.tag_name
-                                }}</a></li>
-                        </ul>
+                        <!--<ul class="nav nav-tabs">-->
+                            <draggable
+                                    :list="userTags"
+                                    class="nav nav-tabs">
+                                    <li v-for="eachTag in userTags" v-bind:class="{ active: currentTab == eachTag.tag_name }" :key="eachTag.name">
+                                        <a data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">
+                                            {{ eachTag.tag_name}}
+                                        </a>
+                                    </li>
+                            <!--<li v-for="eachTag in userTags" v-bind:class="{ active: currentTab == eachTag.tag_name }"><a-->
+                                    <!--data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">{{ eachTag.tag_name-->
+                                <!--}}</a></li>-->
+                            </draggable>
+                        <!--</ul>-->
                         <div class="table-responsive">
                             <table class="table table-bordered cr-table">
                                 <thead>
@@ -721,7 +730,7 @@
                                                     <label for="user-defined">Just use my term:</label>
                                                     <div for="user-defined">
                                                         Definition: <input
-                                                            v-model="colorDefinition[index][eachColor.detailFlag]"
+                                                            v-model="userColorDefinition[index][eachColor.detailFlag]"
                                                             class="color-definition-input">
                                                         Taxon:
                                                         <input v-model="colorTaxon[index][eachColor.detailFlag]"
@@ -746,9 +755,9 @@
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="saveColorValue()">
                                                     Save </a>
-                                                <a class="btn btn-primary ok-btn"
-                                                   v-on:click="saveNewColorValue()">
-                                                    Save & New </a>
+                                                <!--<a class="btn btn-primary ok-btn"-->
+                                                   <!--v-on:click="saveNewColorValue()">-->
+                                                    <!--Save & New </a>-->
                                                 <a v-on:click="colorDetailsFlag = false;" class="btn btn-danger">Cancel</a>
                                             </div>
                                         </div>
@@ -876,7 +885,7 @@
                                                     <label for="non-user-defined">Just use my term:</label>
                                                     <div for="user-defined">
                                                         Definition: <input
-                                                            v-model="nonColorDefinition[index][eachValue.detailFlag]"
+                                                            v-model="userNonColorDefinition[index][eachValue.detailFlag]"
                                                             class="non-color-input-definition">
                                                         Taxon: <input
                                                             v-model="nonColorTaxon[index][eachValue.detailFlag]"
@@ -900,9 +909,9 @@
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="saveNonColorValue()">
                                                     Save </a>
-                                                <a class="btn btn-primary ok-btn"
-                                                   v-on:click="saveNewNonColorValue()">
-                                                    Save & New </a>
+                                                <!--<a class="btn btn-primary ok-btn"-->
+                                                   <!--v-on:click="saveNewNonColorValue()">-->
+                                                    <!--Save & New </a>-->
                                                 <a v-on:click="nonColorDetailsFlag = false;"
                                                    class="btn btn-danger">Cancel</a>
                                             </div>
@@ -937,6 +946,8 @@
     import 'vue-loading-overlay/dist/vue-loading.css';
 
     import LiquorTree from 'liquor-tree';
+
+    import draggable from 'vuedraggable'
 
     Vue.use(LiquorTree);
     Vue.use({ModelSelect});
@@ -1017,6 +1028,7 @@
                 colorTaxon: [],
                 colorSampleText: [],
                 colorDefinition: [],
+                userColorDefinition: [],
                 preList: [],
                 postList: [],
                 nonColorDetails: [],
@@ -1033,12 +1045,14 @@
                 nonColorTaxon: [],
                 nonColorSampleText: [],
                 nonColorDefinition: [],
+                userNonColorDefinition: [],
                 searchNonColorFlag: 0,
                 sharedFlag: true,
             }
         },
         components: {
             ModelSelect,
+            draggable,
             Loading
         },
 
@@ -2159,9 +2173,9 @@
                             console.log('app.colorDetails[i][key]', app.colorDetails[i][key]);
                             if (app.colorDetails[i][key] != null && app.colorDetails[i][key] != '') {
                                 if (app.colorDetails[i][key].endsWith('(user defined)') && postFlag == true) {
-                                    if (app.colorDefinition[i][key] == ''
-                                        || app.colorDefinition[i][key] == null
-                                        || app.colorDefinition[i][key] == undefined
+                                    if (app.userColorDefinition[i][key] == ''
+                                        || app.userColorDefinition[i][key] == null
+                                        || app.userColorDefinition[i][key] == undefined
                                         || app.colorSampleText[i][key] == ''
                                         || app.colorSampleText[i][key] == null
                                         || app.colorSampleText[i][key] == undefined
@@ -2175,10 +2189,10 @@
                                         var date = new Date();
                                         requestBody = {
                                             "user": app.sharedFlag ? '' : app.user.name,
-                                            "ontology": "carex",
+                                            "ontologylo": "carex",
                                             "term": tempValue[key],
                                             "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + app.changeToSubClassName(key),
-                                            "definition": app.colorDefinition[i][key],
+                                            "definition": app.userColorDefinition[i][key],
                                             "elucidation": "",
                                             "createdBy": app.user.name,
                                             "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
@@ -2296,9 +2310,9 @@
                     var requestBody = {};
                     if (app.nonColorDetails[i]['main_value'] != null && app.nonColorDetails[i]['main_value'] != '') {
                         if (app.nonColorDetails[i]['main_value'].endsWith('(user defined)') && postFlag == true) {
-                            if (app.nonColorDefinition[i]['main_value'] == ''
-                                || app.nonColorDefinition[i]['main_value'] == null
-                                || app.nonColorDefinition[i]['main_value'] == undefined
+                            if (app.userNonColorDefinition[i]['main_value'] == ''
+                                || app.userNonColorDefinition[i]['main_value'] == null
+                                || app.userNonColorDefinition[i]['main_value'] == undefined
                                 || app.nonColorSampleText[i]['main_value'] == ''
                                 || app.nonColorSampleText[i]['main_value'] == null
                                 || app.nonColorSampleText[i]['main_value'] == undefined
@@ -2314,7 +2328,7 @@
                                     "ontology": "carex",
                                     "term": tempValue['main_value'],
                                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#texture",
-                                    "definition": app.nonColorDefinition[i]['main_value'],
+                                    "definition": app.userNonColorDefinition[i]['main_value'],
                                     "elucidation": "",
                                     "createdBy": app.user.name,
                                     "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
@@ -2339,7 +2353,7 @@
                             requestBody = {
                                 "user": app.sharedFlag ? '' : app.user.name,
                                 "ontology": "carex",
-                                "definition": app.colorDefinition[i]['main_value'],
+                                "definition": app.nonColorDefinition[i]['main_value'],
                                 "providedBy": app.user.name,
                                 "exampleSentence": "",
                                 "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + tempValue['main_value']
@@ -2444,6 +2458,7 @@
                                     app.colorTaxon = [];
                                     app.colorSampleText = [];
                                     app.colorDefinition = [];
+                                    app.userColorDefinition = [];
                                     app.colorDetails.push({value_id: value.id, detailFlag: null});
                                     app.colorComment.push({});
                                     app.colorTaxon.push({
@@ -2455,6 +2470,7 @@
                                     });
                                     app.colorSampleText.push({});
                                     app.colorDefinition.push({});
+                                    app.userColorDefinition.push({});
                                 } else {
                                     $('.color-input').attr('placeholder', '');
                                     console.log('place holder test');
@@ -2462,6 +2478,7 @@
                                     app.colorTaxon = [];
                                     app.colorSampleText = [];
                                     app.colorDefinition = [];
+                                    app.userColorDefinition = [];
                                     for (var i = 0; i < app.colorDetails.length; i++) {
                                         app.colorDetails[i].taxon = app.taxonName;
                                         app.colorDetails[i].detailFlag = null;
@@ -2475,6 +2492,7 @@
                                         });
                                         app.colorSampleText.push({});
                                         app.colorDefinition.push({});
+                                        app.userColorDefinition.push({});
                                     }
                                 }
                             });
@@ -2490,6 +2508,7 @@
                                     app.nonColorTaxon = [];
                                     app.nonColorSampleText = [];
                                     app.nonColorDefinition = [];
+                                    app.userNonColorDefinition = [];
                                     app.nonColorDetails.push({
                                         value_id: value.id,
                                         detailFlag: null,
@@ -2501,11 +2520,13 @@
                                     });
                                     app.nonColorSampleText.push({});
                                     app.nonColorDefinition.push({});
+                                    app.userNonColorDefinition.push({});
                                 } else {
                                     app.nonColorComment = [];
                                     app.nonColorTaxon = [];
                                     app.nonColorSampleText = [];
                                     app.nonColorDefinition = [];
+                                    app.userNonColorDefinition = [];
                                     for (var i = 0; i < app.nonColorDetails.length; i++) {
                                         app.nonColorDetails[i].taxon = app.taxonName;
                                         app.nonColorDetails[i].detailFlag = null;
@@ -2516,6 +2537,7 @@
                                         });
                                         app.nonColorSampleText.push({});
                                         app.nonColorDefinition.push({});
+                                        app.userNonColorDefinition.push({});
                                     }
                                 }
                             });
@@ -2699,7 +2721,7 @@
                             app.colorSynonyms = app.searchColor.filter(function (eachColor) {
                                 return eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == color[flag])
                                     || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == color[flag])
-                                    || (eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == color[flag])) != null || eachColor.term == color[flag];
+                                    || (eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == color[flag])) != null || eachColor.term == color[flag];
 
                             });
                             for (var i = 0; i < app.colorSynonyms.length; i++) {
@@ -2726,6 +2748,14 @@
                         } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == color[flag]))) {
                             app.searchColorFlag = 2;
                             app.exactColor = app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == color[flag]));
+                            if (app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
+                                app.exactColor.definition = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                                var index = app.colorDetails.indexOf(color);
+                                app.colorDefinition[index][flag] = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                            } else {
+                                var index = app.colorDetails.indexOf(color);
+                                app.colorDefinition[index][flag] = null;
+                            }
                         }
                         console.log('app.searchColorFlag', app.searchColorFlag);
                     });
@@ -2756,7 +2786,7 @@
                             app.nonColorSynonyms = app.searchNonColor.filter(function (eachValue) {
                                 return eachValue.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == nonColor[flag])
                                     || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == nonColor[flag])
-                                    || (eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == nonColor[flag])) != null || eachValue.term == nonColor[flag];
+                                    || (eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == nonColor[flag])) != null || eachValue.term == nonColor[flag];
 
                             });
                             for (var i = 0; i < app.nonColorSynonyms.length; i++) {
