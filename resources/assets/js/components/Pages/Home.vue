@@ -277,13 +277,14 @@
                     <div v-if="descriptionFlag == true"
                          style="position:relative; min-width: 25%; max-width: 600px; overflow-y: scroll; word-wrap: break-word;"
                          class="panel">
-                        <div class="panel-heading"><b>Generated Description</b></div>
-                        <div class="panel-body" style="min-height: 100px;" v-html="descriptionText">
+                        <div class="panel-heading">
+                                <div class="text-right" style="position: absolute; right: 10px; top: 0px;">
+                                <a class="btn btn-primary" v-on:click="updateDescription()">Generate/Update</a>
+                                <a class="btn btn-primary" v-on:click="exportDescription()">Export</a></div>
                         </div>
-                        <div class="text-right" style="position: absolute; right: 10px; bottom: 10px;">
-                            <a class="btn btn-primary" v-on:click="updateDescription()">Update</a>
-                            <a class="btn btn-primary" v-on:click="exportDescription()">Export</a>
+                        <div class="panel-body" style="min-height: 80px; position: absolute; right: 10px; top: 25px;" v-html="descriptionText">
                         </div>
+                       
                     </div>
 
                 </div>
@@ -609,7 +610,7 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Formulate a value: select existing phrases or use your own terms(need
+                                        Formulate a value: type in a blank to select existing phrases or use your own terms(need
                                         definition)
                                     </div>
                                     <div class="modal-body">
@@ -640,7 +641,7 @@
                                                     <input v-on:focus="changeColorSection(eachColor, 'brightness', $event)"
                                                            v-on:keyup.enter="searchColorSelection(eachColor, 'brightness')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.brightness" placeholder="bright"
+                                                           v-model="eachColor.brightness" 
                                                            class="color-input">
                                                     <h5>
                                                         brightness
@@ -650,7 +651,7 @@
                                                     <input v-on:focus="changeColorSection(eachColor, 'reflectance', $event)"
                                                            v-on:keyup.enter="searchColorSelection(eachColor, 'reflectance')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.reflectance" placeholder="shiny"
+                                                           v-model="eachColor.reflectance" 
                                                            class="color-input">
                                                     <h5>
                                                         reflectance
@@ -660,7 +661,7 @@
                                                     <input v-on:focus="changeColorSection(eachColor, 'saturation', $event)"
                                                            v-on:keyup.enter="searchColorSelection(eachColor, 'saturation')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.saturation" placeholder="pale"
+                                                           v-model="eachColor.saturation" 
                                                            class="color-input">
                                                     <h5>
                                                         saturation
@@ -670,7 +671,7 @@
                                                     <input v-on:focus="changeColorSection(eachColor, 'colored', $event)"
                                                            v-on:keyup.enter="searchColorSelection(eachColor, 'colored')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.colored" placeholder="blue"
+                                                           v-model="eachColor.colored" 
                                                            class="color-input">
                                                     <h5>
                                                         color
@@ -680,7 +681,7 @@
                                                     <input v-on:focus="changeColorSection(eachColor, 'multi_colored', $event)"
                                                            v-on:keyup.enter="searchColorSelection(eachColor, 'multi_colored')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.multi_colored" placeholder="stripped"
+                                                           v-model="eachColor.multi_colored" 
                                                            class="color-input">
                                                     <h5>
                                                         pattern
@@ -747,7 +748,7 @@
                                                            v-on:click="expandCommentSection(eachSynonym, eachColor.detailFlag)"><span
                                                                 class="glyphicon glyphicon-comment"></span></a>
                                                         <div v-if="eachSynonym.commentFlag == true">
-                                                            Don't you like this term? improve or add definition for it:
+                                                            Do not like this term? improve or add definition for it:
                                                             <input
                                                                     v-model="colorComment[index][eachColor.detailFlag]"
                                                                     style="width: 100%;">
@@ -755,10 +756,16 @@
                                                     </div>
                                                 </div>
                                                 <div v-if="searchColorFlag == 2">
-                                                    Here is what we known about <b>{{ exactColor.term }}</b>
-                                                    Definition: <input
+                                                    Did you mean <b>{{ exactColor.term }}</b>?<br/>
+                                                    Definition of <b> {{ exactColor.term }} </b>: <input
                                                         v-model="colorDefinition[index][eachColor.detailFlag]"
                                                         style="width: 70%;">
+                                                    <!--Hong modified this: Did you mean <b>{{ exactColor.term }}</b>?<br/>
+                                                    Current Definition: <input
+                                                        v-model="app.exactColor.definition"
+                                                        style="width: 70%;">   --> 
+                                                    <br/><br/>If definition is lacking, you can propose or edit the definition above. <br/>
+                
 
                                                 </div>
                                                 <div v-if="searchColorFlag !=2 ">
@@ -766,18 +773,18 @@
                                                            v-bind:value="defaultColorValue + '(user defined)'"
                                                            v-on:change="selectUserDefinedTerm(eachColor, eachColor.detailFlag, defaultColorValue)"
                                                            v-model="eachColor[eachColor.detailFlag]">
-                                                    <label for="user-defined">Just use my term:</label>
+                                                    <label for="user-defined">Use my term (please define the term, all input required):</label>
                                                     <div for="user-defined">
                                                         Definition: <input
                                                             v-model="userColorDefinition[index][eachColor.detailFlag]"
                                                             class="color-definition-input">
-                                                        Taxon:
+                                                        Used for Taxon:
                                                         <input v-model="colorTaxon[index][eachColor.detailFlag]"
                                                                class="color-definition-input">
                                                         Sample Sentence:
                                                         <input
                                                             v-model="colorSampleText[index][eachColor.detailFlag]"
-                                                            class="color-definition-input"><br/>
+                                                            class="color-definition-input" placeholder=""><br/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -921,7 +928,7 @@
                                                            v-bind:value="defaultNonColorValue + '(user defined)'"
                                                            v-on:change="selectUserDefinedTerm(eachValue, eachValue.detailFlag, defaultNonColorValue)"
                                                            v-model="eachValue[eachValue.detailFlag]">
-                                                    <label for="non-user-defined">Just use my term:</label>
+                                                    <label for="non-user-defined">Use my term (please define the term, all input required):</label>
                                                     <div for="user-defined">
                                                         Definition: <input
                                                             v-model="userNonColorDefinition[index][eachValue.detailFlag]"
@@ -2566,7 +2573,7 @@
                                             "createdBy": app.user.name,
                                             "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
                                             "definitionSrc": app.user.name,
-                                            "examples": app.colorSampleText[i][key] + ", used in taxon " + app.colorTaxon[i][key],
+                                            "examples": app.colorSampleText[i][key]+ ", used in taxon " + app.colorTaxon[i][key],
                                             "logicDefinition": "",
                                         };
                                         axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
@@ -3101,8 +3108,8 @@
                             for (var i = 0; i < app.colorSynonyms.length; i++) {
                                 if (app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                                     app.colorSynonyms[i].definition = app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                                    var index = app.colorDetails.indexOf(color);
-                                    app.colorDefinition[index][flag] = app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                                    //var index = app.colorDetails.indexOf(color);
+                                    //app.colorDefinition[index][flag] = app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                 } else {
                                     var index = app.colorDetails.indexOf(color);
                                     app.colorDefinition[index][flag] = null;
@@ -3113,8 +3120,8 @@
                             app.exactColor = app.searchColor.find(eachColor => eachColor.term == color[flag]);
                             if (app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                                 app.exactColor.definition = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                                var index = app.colorDetails.indexOf(color);
-                                app.colorDefinition[index][flag] = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                                //var index = app.colorDetails.indexOf(color);
+                                //app.colorDefinition[index][flag] = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                             } else {
                                 var index = app.colorDetails.indexOf(color);
                                 app.colorDefinition[index][flag] = null;
