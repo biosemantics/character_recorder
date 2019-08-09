@@ -2168,7 +2168,7 @@
 //                                    console.log('get-color-values', resp.data);
                                     var colorValues = app.allColorValues.filter(eachValue => checkValueIdArray.includes(eachValue.value_id));
                                     var objColorValues = {
-
+                                        'empty': []
                                     };
                                     var arraySortedColor = [];
                                     for (var l = 0; l < colorValues.length; l++) {
@@ -2207,8 +2207,42 @@
                                             }
 
                                             objColorValues[colorValues[l].post_constraint].push(jsonColorValue);
+                                        } else {
+                                            var jsonColorValue = {
+                                                colored: colorValues[l].colored,
+                                                brightness: colorValues[l].brightness,
+                                                saturation: colorValues[l].saturation,
+                                                count: 0,
+                                                value: '',
+                                                multi_colored: colorValues[l].multi_colored
+                                            };
+                                            if (colorValues[l].negation != null && colorValues[l].negation != '') {
+                                                jsonColorValue.value = colorValues[l].negation + '-';
+                                            }
+                                            if (colorValues[l].pre_constraint != null && colorValues[l].pre_constraint != '') {
+                                                jsonColorValue.value += colorValues[l].pre_constraint + '-';
+                                            }
+                                            if (colorValues[l].brightness != null && colorValues[l].brightness != '') {
+                                                jsonColorValue.value += colorValues[l].brightness + '-';
+                                            }
+                                            if (colorValues[l].reflectance != null && colorValues[l].reflectance != '') {
+                                                jsonColorValue.value += colorValues[l].reflectance + '-';
+                                            }
+                                            if (colorValues[l].saturation != null && colorValues[l].saturation != '') {
+                                                jsonColorValue.value += colorValues[l].saturation + '-';
+                                            }
+                                            if (colorValues[l].colored != null && colorValues[l].colored != '') {
+                                                jsonColorValue.value += colorValues[l].colored;
+                                            }
+                                            if (colorValues[l].multi_colored != null && colorValues[l].multi_colored != '') {
+                                                jsonColorValue.value += '-' + colorValues[l].multi_colored;
+                                            }
+
+                                            objColorValues['empty'].push(jsonColorValue);
                                         }
                                     }
+
+                                    console.log('objColorValues', objColorValues);
                                     for (var objKey in objColorValues) {
                                         for (var l = 0; l < objColorValues[objKey].length; l++) {
                                             objColorValues[objKey][l].count = objColorValues[objKey].filter(function(each) {
@@ -2223,6 +2257,7 @@
                                                 }
                                             }).length;
                                         }
+                                        objColorValues[objKey] = app.sortColorValue(objColorValues[objKey]);
                                         for (var l = 0; l < objColorValues[objKey].length; l++) {
                                             if (objColorValues[objKey][l].count > 1) {
                                                 var tempArray = objColorValues[objKey].filter(function(each) {
@@ -2237,12 +2272,14 @@
                                                     }
                                                 });
                                                 console.log('tempArray', tempArray);
-                                                objColorValues[objKey] = objColorValues[objKey].filter( function( el ) {
-                                                    return !tempArray.includes( el );
-                                                } );
+                                                if (tempArray.length > 2) {
+                                                    objColorValues[objKey] = objColorValues[objKey].filter( function( el ) {
+                                                        return !tempArray.includes( el );
+                                                    } );
+                                                }
+
                                             }
                                         }
-                                        objColorValues[objKey] = app.sortColorValue(objColorValues[objKey]);
                                         while (objColorValues[objKey].length > 0) {
                                             arraySortedColor.push([]);
                                             objColorValues[objKey][0].objKey = objKey;
@@ -2276,7 +2313,7 @@
                                                 app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
-                                                        app.descriptionText += ' to or ' + tempArraySorted[l][m].value;
+                                                        app.descriptionText += ' or to ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
                                             } else {
@@ -2301,7 +2338,7 @@
 //                                    console.log('get-color-values', resp.data);
                                     var nonColorValues = app.allNonColorValues.filter(eachValue => checkValueIdArray.includes(eachValue.value_id));
                                     var objNonColorValues = {
-
+                                        'empty': []
                                     };
                                     var arraySortedNonColor = [];
                                     for (var l = 0; l < nonColorValues.length; l++) {
@@ -2326,6 +2363,24 @@
                                             }
 
                                             objNonColorValues[nonColorValues[l].post_constraint].push(jsonNonColorValue);
+                                        } else {
+                                            var jsonNonColorValue = {
+                                                main_value: nonColorValues[l].main_value,
+                                                count: 0,
+                                                value: '',
+                                            };
+                                            if (nonColorValues[l].negation != null && nonColorValues[l].negation != '') {
+                                                jsonNonColorValue.value = nonColorValues[l].negation + '-';
+                                            }
+                                            if (nonColorValues[l].pre_constraint != null && nonColorValues[l].pre_constraint != '') {
+                                                jsonNonColorValue.value += nonColorValues[l].pre_constraint + '-';
+                                            }
+
+                                            if (nonColorValues[l].main_value != null && nonColorValues[l].main_value != '') {
+                                                jsonNonColorValue.value += nonColorValues[l].main_value;
+                                            }
+
+                                            objNonColorValues['empty'].push(jsonNonColorValue);
                                         }
                                     }
                                     for (var objKey in objNonColorValues) {
