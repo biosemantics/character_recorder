@@ -2272,11 +2272,9 @@
                                                     }
                                                 });
                                                 console.log('tempArray', tempArray);
-                                                if (tempArray.length > 2) {
-                                                    objColorValues[objKey] = objColorValues[objKey].filter( function( el ) {
-                                                        return !tempArray.includes( el );
-                                                    } );
-                                                }
+                                                objColorValues[objKey] = objColorValues[objKey].filter( function( el ) {
+                                                    return !tempArray.includes( el );
+                                                } );
 
                                             }
                                         }
@@ -2309,6 +2307,8 @@
                                             if (l > 0 || tempIndex > 0) {
                                                 app.descriptionText += ' or ';
                                             }
+                                            console.log('eachCount', eachCount);
+                                            console.log('app.columnCount', app.columnCount);
                                             if (tempArraySorted[l].length > 1) {
                                                 app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
                                                 if (tempArraySorted[l].length > 2) {
