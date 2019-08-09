@@ -50,6 +50,19 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')->get();
     }
 
+    public function getAllColorValues() {
+
+        $colorValues = ColorDetails::all();
+        $nonColorValues = NonColorDetails::all();
+        
+        $data = [
+            'colorValues' => $colorValues,
+            'nonColorValues' => $nonColorValues,
+        ];
+
+        return $data;
+    }
+
     public function getValuesByCharacter()
     {
         $user = User::where('id', '=', Auth::id())->first();
@@ -231,10 +244,13 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
-            'values' => $returnValues
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
         ];
 
         return $data;
@@ -281,11 +297,13 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnDefaultCharacters = $this->getDefaultCharacters();
-
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'defaultCharacters' => $returnDefaultCharacters
         ];
 
@@ -300,10 +318,13 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnTaxon = $user->taxon;
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'taxon' => $returnTaxon
         ];
 
@@ -348,10 +369,13 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'userTags' => $returnUserTags,
             'defaultCharacters' => $defaultCharacters
         ];
@@ -408,11 +432,14 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnTaxon = $user->taxon;
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
-            'taxon' => $returnTaxon
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'taxon' => $returnTaxon,
         ];
 
         return $data;
@@ -446,11 +473,15 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnTaxon = $user->taxon;
+
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
-            'taxon' => $returnTaxon
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'taxon' => $returnTaxon,
         ];
 
         return $data;
@@ -503,10 +534,16 @@ class HomeController extends Controller
         $returnCharacters = $this->getArrayCharacters();
         $returnDefaultCharacters = $this->getDefaultCharacters();
         $returnTaxon = $user->taxon;
+
+        $returnTaxon = $user->taxon;
+
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'taxon' => $returnTaxon,
             'defaultCharacters' => $returnDefaultCharacters,
         ];
@@ -548,12 +585,15 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnDefaultCharacters = $this->getDefaultCharacters();
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'error_input' => 0,
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
-            'defaultCharacters' => $returnDefaultCharacters
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'defaultCharacters' => $returnDefaultCharacters,
         ];
 
         return $data;
@@ -625,12 +665,14 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
-
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
-            'tags' => $returnUserTags
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'tags' => $returnUserTags,
         ];
 
         return $data;
@@ -656,10 +698,14 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
+
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
         ];
 
         return $data;
@@ -687,10 +733,13 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
         ];
 
         return $data;
@@ -791,10 +840,13 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
         ];
 
         return $data;
@@ -815,6 +867,7 @@ class HomeController extends Controller
                 if ($separatedTexts[1] != ' . ') {
                     $textrun->addText($separatedTexts[0] . ': ', ['bold' => true]);
                     $textrun->addText($separatedTexts[1]);
+                    $textrun->addTextBreak();
                 }
 
             }
@@ -836,10 +889,13 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
         ];
 
         return $data;
@@ -890,11 +946,13 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnDefaultCharacters = $this->getDefaultCharacters();
-
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'defaultCharacters' => $returnDefaultCharacters,
             'userTags'  => $returnUserTags
         ];
@@ -923,10 +981,12 @@ class HomeController extends Controller
 
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
-
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
+            'characters' => $returnCharacters,
             'values' => $returnValues,
-            'characters' => $returnCharacters
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
         ];
 
         return $data;
@@ -1006,33 +1066,16 @@ class HomeController extends Controller
 
         $characters = Character::where('name', '=', $characterName)->get();
 
-        $preList = ['longitudinally'];
-        $postList = ['when young'];
-        foreach ($characters as $eachCharacter) {
-            $values = Value::where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
-            foreach($values as $eachValue) {
-                $details = ColorDetails::where('value_id', '=', $eachValue->id)->get();
-                foreach ($details as $each) {
-                    if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
-                        if (!in_array($each->pre_constraint, $preList)) {
-                            array_push($preList, $each->pre_constraint);
-                        }
-                    }
-                    if ($each->post_constraint != null && $each->post_constraint != '' && $each->post_constraint != 'undefined' && $each->post_constraint != 'null') {
-                        if (!in_array($each->post_constraint, $postList)) {
-                            array_push($postList, $each->post_constraint);
-                        }
-                    }
-                }
-            }
-        }
+        $constraints = $this->getDefaultConstraint($characterName);
 
         $returnValues = $this->getValuesByCharacter();
-
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'values' => $returnValues,
-            'preList' => $preList,
-            'postList' => $postList,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'preList' => $constraints['preList'],
+            'postList' => $constraints['postList'],
         ];
 
         return $data;
@@ -1059,12 +1102,28 @@ class HomeController extends Controller
                         }
                     }
                 }
+                $details = NonColorDetails::where('value_id', '=', $eachValue->id)->get();
+                foreach ($details as $each) {
+                    if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
+                        if (!in_array($each->pre_constraint, $preList)) {
+                            array_push($preList, $each->pre_constraint);
+                        }
+                    }
+                    if ($each->post_constraint != null && $each->post_constraint != '' && $each->post_constraint != 'undefined' && $each->post_constraint != 'null') {
+                        if (!in_array($each->post_constraint, $postList)) {
+                            array_push($postList, $each->post_constraint);
+                        }
+                    }
+                }
             }
         }
 
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $preList,
-            'postList' => $postList
+            'postList' => $postList,
         ];
 
         return $data;
@@ -1110,6 +1169,24 @@ class HomeController extends Controller
 
         $characters = Character::where('name', '=', $characterName)->get();
 
+        $constraints = $this->getDefaultConstraint($characterName);
+
+        $returnValues = $this->getValuesByCharacter();
+        $returnAllDetailValues = $this->getAllColorValues();
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'preList' => $constraints['preList'],
+            'postList' => $constraints['postList'],
+        ];
+
+        return $data;
+    }
+
+    public function getDefaultConstraint($characterName) {
+        $characters = Character::where('name', '=', $characterName)->get();
+
         $preList = ['longitudinally'];
         $postList = ['when young'];
         foreach ($characters as $eachCharacter) {
@@ -1128,29 +1205,7 @@ class HomeController extends Controller
                         }
                     }
                 }
-            }
-        }
-
-        $returnValues = $this->getValuesByCharacter();
-
-        $data = [
-            'values' => $returnValues,
-            'preList' => $preList,
-            'postList' => $postList,
-        ];
-
-        return $data;
-    }
-
-    public function getDefaultConstraint($characterName) {
-        $characters = Character::where('name', '=', $characterName)->get();
-
-        $preList = ['longitudinally'];
-        $postList = ['when young'];
-        foreach ($characters as $eachCharacter) {
-            $values = Value::where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
-            foreach($values as $eachValue) {
-                $details = ColorDetails::where('value_id', '=', $eachValue->id)->get();
+                $details = NonColorDetails::where('value_id', '=', $eachValue->id)->get();
                 foreach ($details as $each) {
                     if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
                         if (!in_array($each->pre_constraint, $preList)) {
@@ -1185,8 +1240,11 @@ class HomeController extends Controller
 
         $constraints = $this->getDefaultConstraint($characterName);
 
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
         ];
@@ -1203,11 +1261,25 @@ class HomeController extends Controller
         $characterName = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first()->name;
 
         $constraints = $this->getDefaultConstraint($characterName);
-
+        $returnAllDetailValues = $this->getAllColorValues();
         $data = [
             'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
+        ];
+
+        return $data;
+    }
+
+    public function getColorValues(Request $request) {
+        $valueIds = $request->input('value_id');
+
+        $colorValues = ColorDetails::whereIn('value_id', $valueIds)->get();
+
+        $data = [
+            'colorValues' => $colorValues,
         ];
 
         return $data;

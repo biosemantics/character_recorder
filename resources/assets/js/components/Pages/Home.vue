@@ -1090,6 +1090,8 @@
                 userNonColorDefinition: [],
                 searchNonColorFlag: 0,
                 sharedFlag: true,
+                allColorValues: [],
+                allNonColorValues: [],
             }
         },
         components: {
@@ -2143,14 +2145,245 @@
                                     app.descriptionText += ' ; ';
                                 }
                             } else {
-                                if (tempValueArray.find(v => v == 'green')) {
-                                    if (tempValueArray.find(v => v == 'grey')) {
-                                        app.descriptionText += 'frequently grey, occasionally green; '
-                                    } else {
-                                        app.descriptionText += 'usually light grey, occasionally dark grey or green; '
+                                console.log('filteredValues', filteredValues);
+                                var currentCharacter = app.userCharacters.find(ch => ch.id == filteredValues[0].character_id);
+                                if (currentCharacter.name.split(' of ')[1].toLowerCase() != currentCharacter.standard_tag.toLowerCase) {
+                                    app.descriptionText += currentCharacter.name.split(' of ')[1].charAt(0).toUpperCase() + currentCharacter.name.split(' of ')[1].slice(1) + ' ';
+                                }
+                                if (currentCharacter.name.split(' of ')[0] == 'Color') {
+                                    var checkValueIdArray = [];
+                                    for (var k = 0; k < filteredValues.length; k++) {
+                                        if (filteredValues[k].header_id != 1) {
+                                            checkValueIdArray.push(filteredValues[k].id);
+                                        }
                                     }
+
+//                                    console.log('get-color-values', resp.data);
+                                    var colorValues = app.allColorValues.filter(eachValue => checkValueIdArray.includes(eachValue.value_id));
+                                    var objColorValues = {
+
+                                    };
+                                    var arraySortedColor = [];
+                                    for (var l = 0; l < colorValues.length; l++) {
+                                        if (colorValues[l].post_constraint != null && colorValues[l].post_constraint != '') {
+                                            if (!(colorValues[l].post_constraint in objColorValues)) {
+                                                objColorValues[colorValues[l].post_constraint] = [];
+                                            }
+                                            var jsonColorValue = {
+                                                colored: colorValues[l].colored,
+                                                brightness: colorValues[l].brightness,
+                                                saturation: colorValues[l].saturation,
+                                                count: 0,
+                                                value: '',
+                                                multi_colored: colorValues[l].multi_colored
+                                            };
+                                            if (colorValues[l].negation != null && colorValues[l].negation != '') {
+                                                jsonColorValue.value = colorValues[l].negation + '-';
+                                            }
+                                            if (colorValues[l].pre_constraint != null && colorValues[l].pre_constraint != '') {
+                                                jsonColorValue.value += colorValues[l].pre_constraint + '-';
+                                            }
+                                            if (colorValues[l].brightness != null && colorValues[l].brightness != '') {
+                                                jsonColorValue.value += colorValues[l].brightness + '-';
+                                            }
+                                            if (colorValues[l].reflectance != null && colorValues[l].reflectance != '') {
+                                                jsonColorValue.value += colorValues[l].reflectance + '-';
+                                            }
+                                            if (colorValues[l].saturation != null && colorValues[l].saturation != '') {
+                                                jsonColorValue.value += colorValues[l].saturation + '-';
+                                            }
+                                            if (colorValues[l].colored != null && colorValues[l].colored != '') {
+                                                jsonColorValue.value += colorValues[l].colored;
+                                            }
+                                            if (colorValues[l].multi_colored != null && colorValues[l].multi_colored != '') {
+                                                jsonColorValue.value += '-' + colorValues[l].multi_colored;
+                                            }
+
+                                            objColorValues[colorValues[l].post_constraint].push(jsonColorValue);
+                                        }
+                                    }
+                                    for (var objKey in objColorValues) {
+                                        for (var l = 0; l < objColorValues[objKey].length; l++) {
+                                            objColorValues[objKey][l].count = objColorValues[objKey].filter(function(each) {
+                                                if (objColorValues[objKey][l].multi_colored != null && objColorValues[objKey][l].multi_colored != '') {
+                                                    return each.value.endsWith(objColorValues[objKey][l].value);
+                                                } else {
+                                                    if (each.multi_colored != null && each.multi_colored != '') {
+                                                        return each.value.substring(0, each.value.length - (each.multi_colored.length + 1)).endsWith(objColorValues[objKey][l].value);
+                                                    } else {
+                                                        return each.value.endsWith(objColorValues[objKey][l].value);
+                                                    }
+                                                }
+                                            }).length;
+                                        }
+                                        for (var l = 0; l < objColorValues[objKey].length; l++) {
+                                            if (objColorValues[objKey][l].count > 1) {
+                                                var tempArray = objColorValues[objKey].filter(function(each) {
+                                                    if (objColorValues[objKey][l].multi_colored != null && objColorValues[objKey][l].multi_colored != '') {
+                                                        return each.value.endsWith(objColorValues[objKey][l].value) && each.value != objColorValues[objKey][l].value;
+                                                    } else {
+                                                        if (each.multi_colored != null && each.multi_colored != '') {
+                                                            return each.value.substring(0, each.value.length - (each.multi_colored.length + 1)).endsWith(objColorValues[objKey][l].value)  && each.value != objColorValues[objKey][l].value;
+                                                        } else {
+                                                            return each.value.endsWith(objColorValues[objKey][l].value) && each.value != objColorValues[objKey][l].value;
+                                                        }
+                                                    }
+                                                });
+                                                console.log('tempArray', tempArray);
+                                                objColorValues[objKey] = objColorValues[objKey].filter( function( el ) {
+                                                    return !tempArray.includes( el );
+                                                } );
+                                            }
+                                        }
+                                        objColorValues[objKey] = app.sortColorValue(objColorValues[objKey]);
+                                        while (objColorValues[objKey].length > 0) {
+                                            arraySortedColor.push([]);
+                                            objColorValues[objKey][0].objKey = objKey;
+                                            arraySortedColor[arraySortedColor.length - 1].push(objColorValues[objKey][0]);
+                                            var matchColor = objColorValues[objKey][0];
+                                            objColorValues[objKey].shift();
+                                            var index = 0;
+                                            for (var m = 0; m < (objColorValues[objKey].length + index); m++) {
+                                                if (app.checkAllowRange(matchColor, objColorValues[objKey][m - index])) {
+                                                    objColorValues[objKey][m - index].objKey = objKey;
+                                                    arraySortedColor[arraySortedColor.length - 1].push(objColorValues[objKey][m - index]);
+                                                    objColorValues[objKey].splice(m - index, 1);
+                                                    index++;
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                    var tempIndex = 0;
+                                    for (var objKey in objColorValues) {
+                                        var tempArraySorted = arraySortedColor.filter(each => each[0].objKey == objKey);
+                                        for (var l = 0; l < tempArraySorted.length; l++) {
+                                            var eachCount = 0;
+                                            for (var m = 0; m < tempArraySorted[l].length; m++) {
+                                                eachCount += tempArraySorted[l][m].count;
+                                            }
+                                            if (l > 0 || tempIndex > 0) {
+                                                app.descriptionText += ' or ';
+                                            }
+                                            if (tempArraySorted[l].length > 1) {
+                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+                                                if (tempArraySorted[l].length > 2) {
+                                                    for (var m = 2; m < tempArraySorted[l].length; m++) {
+                                                        app.descriptionText += ' to or ' + tempArraySorted[l][m].value;
+                                                    }
+                                                }
+                                            } else {
+                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value;
+                                            }
+                                        }
+
+                                        tempIndex++;
+
+                                    }
+
+                                    console.log('arraySortedColor', arraySortedColor);
+                                    console.log('objColorValues', objColorValues);
                                 } else {
-                                    app.descriptionText += 'sometimes hairy at base or middle part, sometimes ciliate, or occasionally smooth throughout; '
+                                    var checkValueIdArray = [];
+                                    for (var k = 0; k < filteredValues.length; k++) {
+                                        if (filteredValues[k].header_id != 1) {
+                                            checkValueIdArray.push(filteredValues[k].id);
+                                        }
+                                    }
+
+//                                    console.log('get-color-values', resp.data);
+                                    var nonColorValues = app.allNonColorValues.filter(eachValue => checkValueIdArray.includes(eachValue.value_id));
+                                    var objNonColorValues = {
+
+                                    };
+                                    var arraySortedNonColor = [];
+                                    for (var l = 0; l < nonColorValues.length; l++) {
+                                        if (nonColorValues[l].post_constraint != null && nonColorValues[l].post_constraint != '') {
+                                            if (!(nonColorValues[l].post_constraint in objNonColorValues)) {
+                                                objNonColorValues[nonColorValues[l].post_constraint] = [];
+                                            }
+                                            var jsonNonColorValue = {
+                                                main_value: nonColorValues[l].main_value,
+                                                count: 0,
+                                                value: '',
+                                            };
+                                            if (nonColorValues[l].negation != null && nonColorValues[l].negation != '') {
+                                                jsonNonColorValue.value = nonColorValues[l].negation + '-';
+                                            }
+                                            if (nonColorValues[l].pre_constraint != null && nonColorValues[l].pre_constraint != '') {
+                                                jsonNonColorValue.value += nonColorValues[l].pre_constraint + '-';
+                                            }
+
+                                            if (nonColorValues[l].main_value != null && nonColorValues[l].main_value != '') {
+                                                jsonNonColorValue.value += nonColorValues[l].main_value;
+                                            }
+
+                                            objNonColorValues[nonColorValues[l].post_constraint].push(jsonNonColorValue);
+                                        }
+                                    }
+                                    for (var objKey in objNonColorValues) {
+                                        for (var l = 0; l < objNonColorValues[objKey].length; l++) {
+                                            objNonColorValues[objKey][l].count = objNonColorValues[objKey].filter(function(each) {
+                                                return each.value.endsWith(objNonColorValues[objKey][l].value);
+                                            }).length;
+                                        }
+                                        for (var l = 0; l < objNonColorValues[objKey].length; l++) {
+                                            if (objNonColorValues[objKey][l].count > 1) {
+                                                var tempArray = objNonColorValues[objKey].filter(function(each) {
+                                                    return each.value.endsWith(objNonColorValues[objKey][l].value) && each.value != objNonColorValues[objKey][l].value;
+                                                });
+                                                console.log('tempArray', tempArray);
+                                                objNonColorValues[objKey] = objNonColorValues[objKey].filter( function( el ) {
+                                                    return !tempArray.includes( el );
+                                                } );
+                                            }
+                                        }
+                                        objNonColorValues[objKey] = app.sortNonColorValue(objNonColorValues[objKey]);
+                                        while (objNonColorValues[objKey].length > 0) {
+                                            arraySortedNonColor.push([]);
+                                            objNonColorValues[objKey][0].objKey = objKey;
+                                            arraySortedNonColor[arraySortedNonColor.length - 1].push(objNonColorValues[objKey][0]);
+                                            var matchValue = objNonColorValues[objKey][0];
+                                            objNonColorValues[objKey].shift();
+                                            var index = 0;
+                                            for (var m = 0; m < (objNonColorValues[objKey].length + index); m++) {
+                                                if (matchValue.main_value == objNonColorValues[objKey][m - index].main_value) {
+                                                    objNonColorValues[objKey][m - index].objKey = objKey;
+                                                    arraySortedNonColor[arraySortedNonColor.length - 1].push(objNonColorValues[objKey][m - index]);
+                                                    objNonColorValues[objKey].splice(m - index, 1);
+                                                    index++;
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                    var tempIndex = 0;
+                                    for (var objKey in objNonColorValues) {
+                                        var tempArraySorted = arraySortedNonColor.filter(each => each[0].objKey == objKey);
+                                        for (var l = 0; l < tempArraySorted.length; l++) {
+                                            var eachCount = 0;
+                                            for (var m = 0; m < tempArraySorted[l].length; m++) {
+                                                eachCount += tempArraySorted[l][m].count;
+                                            }
+                                            if (l > 0 || tempIndex > 0) {
+                                                app.descriptionText += ' or ';
+                                            }
+                                            if (tempArraySorted[l].length > 1) {
+                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+                                                if (tempArraySorted[l].length > 2) {
+                                                    for (var m = 2; m < tempArraySorted[l].length; m++) {
+                                                        app.descriptionText += ' to or ' + tempArraySorted[l][m].value;
+                                                    }
+                                                }
+                                            } else {
+                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value;
+                                            }
+                                        }
+                                        console.log('arraySortedColor', arraySortedNonColor);
+                                        console.log('objColorValues', objNonColorValues);
+                                        tempIndex++;
+
+                                    }
                                 }
                             }
                         }
@@ -2162,6 +2395,101 @@
                     app.descriptionText += '<br/>';
 
                 }
+
+            },
+            sortColorValue(arrayColorValues) {
+                var app = this;
+
+                arrayColorValues.sort((a, b) => (!app.checkAllowRange(a, b) && a.colored > b.colored) ? 1 : -1);
+                arrayColorValues.sort((a, b) => (a.brightness == 'dark') ? 1 : -1);
+                arrayColorValues.sort((a, b) => (a.brightness == 'medium') ? 1 : -1);
+                arrayColorValues.sort((a, b) => (a.brightness == 'light') ? 1 : -1);
+                arrayColorValues.sort((a, b) => (a.brightness == 'bright') ? 1 : -1);
+                arrayColorValues.sort((a, b) => (a.saturation != '' && a.saturation != null) ? 1 : -1);
+
+                arrayColorValues.sort(function(x,y){ return x.colored == 'white' ? -1 : y.colored == 'white' ? 1 : 0; });
+                arrayColorValues.sort(function(x,y){ return x.colored == 'black' ? 1 : y.colored == 'black' ? -1 : 0; });
+
+                var obj = {};
+
+                for (var i = 0; i < arrayColorValues.length; i++ )
+                    obj[arrayColorValues[i]['value']] = arrayColorValues[i];
+
+                var returnArray = [];
+                for ( var key in obj )
+                    returnArray.push(obj[key]);
+
+                return returnArray;
+            },
+            sortNonColorValue(arrayNonColorValue) {
+                arrayNonColorValue.sort((a, b) => (a.colored > b.colored) ? 1 : -1)
+                var obj = {};
+
+                for (var i = 0; i < arrayNonColorValue.length; i++ )
+                    obj[arrayNonColorValue[i]['value']] = arrayNonColorValue[i];
+
+                var returnArray = [];
+                for ( var key in obj )
+                    returnArray.push(obj[key]);
+
+                return returnArray;
+            },
+            getPercentageForDescription(totalCount, eachCount) {
+                var percentage = eachCount / totalCount * 100;
+                if (percentage <= 5) {
+                    return 'rarely';
+                } else if (percentage > 5 && percentage <= 25) {
+                    return 'occasionally';
+                } else if (percentage > 25 && percentage <= 50) {
+                    return 'sometimes';
+                } else if (percentage > 50 && percentage <= 75) {
+                    return 'usually';
+                } else if (percentage > 75 && percentage <= 100) {
+                    return 'frequently';
+                }
+            },
+            checkAllowRange(firstColor, secondColor) {
+                var app = this;
+                var returnFlag = false;
+
+                var firstMatchColor = firstColor.colored.split(' ')[firstColor.colored.split(' ').length - 1];
+                var secondMatchColor = secondColor.colored.split(' ')[secondColor.colored.split(' ').length - 1];
+
+                if (firstColor.colored == 'white' || secondColor.colored == 'black') {
+                    returnFlag = true;
+                } else if (firstMatchColor == secondMatchColor) {
+                    returnFlag = true;
+                } else if (firstMatchColor == 'yellow') {
+                    if (secondMatchColor == 'green'
+                        || secondMatchColor == 'brown') {
+                        returnFlag = true;
+                    }
+                } else if (firstMatchColor == 'green') {
+                    if (secondMatchColor == 'brown') {
+                        returnFlag = true;
+                    }
+                } else if (firstMatchColor == 'gold') {
+                    if (secondMatchColor == 'brown'
+                        || secondMatchColor == 'red'
+                        || secondMatchColor == 'purple') {
+                        returnFlag = true;
+                    }
+                } else if (firstMatchColor == 'red') {
+                    if (secondMatchColor == 'purple'
+                        || secondMatchColor == 'brown') {
+                        returnFlag = true;
+                    }
+                } else if (firstMatchColor == 'purple') {
+                    if (secondMatchColor == 'brown') {
+                        returnFlag = true;
+                    }
+                } else if (firstMatchColor == 'blue') {
+                    if (secondMatchColor == 'purple') {
+                        returnFlag = true;
+                    }
+                }
+
+                return returnFlag;
 
             },
             exportDescription() {
@@ -2212,7 +2540,6 @@
                         if (app.checkColorProperty(key)) {
                             tempValue[key] = app.colorDetails[i][key];
                             var requestBody = {};
-                            console.log('app.colorDetails[i][key]', app.colorDetails[i][key]);
                             if (app.colorDetails[i][key] != null && app.colorDetails[i][key] != '') {
                                 if (app.colorDetails[i][key].endsWith('(user defined)') && postFlag == true) {
                                     if (app.userColorDefinition[i][key] == ''
@@ -2313,6 +2640,8 @@
                             app.preList = resp.data.preList;
                             app.postList = resp.data.postList;
                             app.colorDetailsFlag = false;
+                            app.allColorValues = resp.data.allColorValues;
+                            app.allNonColorValues = resp.data.allNonColorValues;
                             console.log('save color value resp', postValues);
                         });
                 } else {
@@ -2331,6 +2660,8 @@
                         app.values = resp.data.values;
                         app.preList = resp.data.preList;
                         app.postList = resp.data.postList;
+                        app.allColorValues = resp.data.allColorValues;
+                        app.allNonColorValues = resp.data.allNonColorValues;
                         app.colorDetailsFlag = false;
                     });
             },
@@ -2444,6 +2775,7 @@
                             app.values = resp.data.values;
                             app.preList = resp.data.preList;
                             app.postList = resp.data.postList;
+                            app.allNonColorValues = resp.data.allNonColorValues;
                             app.nonColorDetailsFlag = false;
                         });
                 } else {
@@ -3013,6 +3345,8 @@
                             app.userCharacters = resp.data.characters;
                             app.headers = resp.data.headers;
                             app.values = resp.data.values;
+                            app.allColorValues = resp.data.allColorValues;
+                            app.allNonColorValues = resp.data.allNonColorValues;
                             if (resp.data.taxon != null) {
                                 app.taxonName = resp.data.taxon;
                             }

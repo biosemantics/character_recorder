@@ -28,6 +28,7 @@ Route::group([
     Route::post('remove-non-color-value',               ['as' => 'remove_non_color_value',      'uses' => 'HomeController@removeNonColorValue']);
     Route::get('get-constraint/{characterName}',        ['as' => 'get_constraint',              'uses' => 'HomeController@getConstraint']);
     Route::get('get-non-color-details/{valueId}',       ['as' => 'get_non_color_details',       'uses' => 'HomeController@getNonColorDetails']);
+    Route::post('get-color-values',                     ['as' => 'get_color_values',            'uses' => 'HomeController@getColorValues']);
 
     Route::group([
         'prefix' => '/character',
