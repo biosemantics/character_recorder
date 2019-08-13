@@ -2317,26 +2317,29 @@
                                     for (var objKey in objColorValues) {
                                         var tempArraySorted = arraySortedColor.filter(each => each[0].objKey == objKey);
                                         var countArray = cloneSortedColor.filter(each => each[0].objKey == objKey);
-                                        for (var l = 0; l < tempArraySorted.length; l++) {
+                                        for (var l = 0; l < countArray.length; l++) {
                                             var eachCount = 0;
-                                            console.log('countArray[l]', countArray[l]);
                                             for (var m = 0; m < countArray[l].length; m++) {
                                                 eachCount += countArray[l][m].count;
                                             }
-                                            console.log('eachCount', eachCount);
+                                            tempArraySorted[l].eachCount = eachCount;
+                                        }
+                                        tempArraySorted.sort((a, b) => a.eachCount > b.eachCount ? -1 : 1);
+                                        for (var l = 0; l < tempArraySorted.length; l++) {
+
                                             console.log('app.columnCount', app.columnCount);
                                             if (l > 0 || tempIndex > 0) {
-                                                app.descriptionText += ' or ';
+                                                app.descriptionText += ', ';
                                             }
                                             if (tempArraySorted[l].length > 1) {
-                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
                                                         app.descriptionText += ' or to ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
                                             } else {
-                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value;
+                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
                                             }
                                         }
 
@@ -2444,7 +2447,7 @@
                                                 eachCount += tempArraySorted[l][m].count;
                                             }
                                             if (l > 0 || tempIndex > 0) {
-                                                app.descriptionText += ' or ';
+                                                app.descriptionText += ', ';
                                             }
                                             if (tempArraySorted[l].length > 1) {
                                                 app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
@@ -2480,7 +2483,7 @@
 
                 console.log('originalArray', arrayColorValues);
                 arrayColorValues.sort((a, b) => (!app.checkAllowRange(a, b) && a.colored > b.colored) ? 1 : -1);
-                arrayColorValues.sort((a, b) => (a.brightness == 'dark') ? -1 : 1);
+                arrayColorValues.sort((a, b) => (a.brightness == 'dark') ? 1 : -1);
                 arrayColorValues.sort((a, b) => (a.brightness == 'medium') ? -1 : 1);
                 arrayColorValues.sort((a, b) => (a.brightness == 'light') ? -1 : 1);
                 arrayColorValues.sort((a, b) => (a.brightness == 'bright') ? -1 : 1);
