@@ -2261,16 +2261,16 @@
                                         }
                                         objColorValues[objKey] = app.sortColorValue(objColorValues[objKey]);
                                         cloneObjColor[objKey] = app.sortColorValue(objColorValues[objKey]);
-                                        for (var l = 0; l < cloneObjColor[objKey].length; l++) {
-                                            if (cloneObjColor[objKey][l].count > 1) {
-                                                var tempArray = cloneObjColor[objKey].filter(function(each) {
-                                                    if (cloneObjColor[objKey][l].multi_colored != null && cloneObjColor[objKey][l].multi_colored != '') {
-                                                        return each.value.endsWith(cloneObjColor[objKey][l].value) && each.value != cloneObjColor[objKey][l].value;
+                                        for (var l = 0; l < objColorValues[objKey].length; l++) {
+                                            if (objColorValues[objKey][l].count > 1) {
+                                                var tempArray = objColorValues[objKey].filter(function(each) {
+                                                    if (objColorValues[objKey][l].multi_colored != null && objColorValues[objKey][l].multi_colored != '') {
+                                                        return (each.value.endsWith(objColorValues[objKey][l].value)) && (each.value != objColorValues[objKey][l].value);
                                                     } else {
                                                         if (each.multi_colored != null && each.multi_colored != '') {
-                                                            return each.value.substring(0, each.value.length - (each.multi_colored.length + 1)).endsWith(cloneObjColor[objKey][l].value)  && each.value != cloneObjColor[objKey][l].value;
+                                                            return each.value.substring(0, each.value.length - (each.multi_colored.length + 1)).endsWith(objColorValues[objKey][l].value)  && each.value != objColorValues[objKey][l].value;
                                                         } else {
-                                                            return each.value.endsWith(cloneObjColor[objKey][l].value) && each.value != cloneObjColor[objKey][l].value;
+                                                            return (each.value.endsWith(objColorValues[objKey][l].value)) && (each.value != objColorValues[objKey][l].value);
                                                         }
                                                     }
                                                 });
@@ -2322,7 +2322,11 @@
                                             for (var m = 0; m < countArray[l].length; m++) {
                                                 eachCount += countArray[l][m].count;
                                             }
-                                            tempArraySorted[l].eachCount = eachCount;
+                                            for (var m = 0; m < tempArraySorted.length; m++) {
+                                                if (tempArraySorted[m].includes(countArray[l][0])) {
+                                                    tempArraySorted[m].eachCount = eachCount;
+                                                }
+                                            }
                                         }
                                         tempArraySorted.sort((a, b) => a.eachCount > b.eachCount ? -1 : 1);
                                         for (var l = 0; l < tempArraySorted.length; l++) {
@@ -2481,7 +2485,6 @@
             sortColorValue(arrayColorValues) {
                 var app = this;
 
-                console.log('originalArray', arrayColorValues);
                 arrayColorValues.sort((a, b) => (!app.checkAllowRange(a, b) && a.colored > b.colored) ? 1 : -1);
                 arrayColorValues.sort((a, b) => (a.brightness == 'dark') ? 1 : -1);
                 arrayColorValues.sort((a, b) => (a.brightness == 'medium') ? -1 : 1);
@@ -2501,7 +2504,6 @@
                 var returnArray = [];
                 for ( var key in obj )
                     returnArray.push(obj[key]);
-                console.log('returnArray', returnArray);
                 return returnArray;
             },
             sortNonColorValue(arrayNonColorValue) {
