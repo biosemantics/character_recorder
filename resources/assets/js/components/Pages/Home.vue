@@ -2359,8 +2359,23 @@
                                         console.log('countArray', countArray);
                                         console.log('tempArraySorted', tempArraySorted);
                                         tempArraySorted.sort((a, b) => a.eachCount > b.eachCount ? -1 : 1);
-                                        for (var l = 0; l < tempArraySorted.length; l++) {
 
+                                        for (var l = 0; l < tempArraySorted.length; l++) {
+//                                            var sortedArrayToRemove = [];
+//                                            for (var m = 0; m < tempArraySorted[l].length; m++) {
+//                                                if (tempArraySorted[l][m].value.split('-').length > 1) {
+//                                                    if (tempArraySorted[l].filter(function(each) {
+//                                                            return (tempArraySorted[l][m].brightness != null && tempArraySorted[l][m].brightness != '' && tempArraySorted[l][m].brightness == each.brightness)
+//                                                                || (tempArraySorted[l][m].saturation != null && tempArraySorted[l][m].saturation != '' && tempArraySorted[l][m].saturation == each.saturation)
+//                                                                || (tempArraySorted[l][m].multi_colored != null && tempArraySorted[l][m].multi_colored != '' && tempArraySorted[l][m].multi_colored == each.multi_colored);
+//                                                        }).length < 2) {
+//                                                        sortedArrayToRemove.push(tempArraySorted[l][m]);
+//                                                    }
+//                                                }
+//                                            }
+//                                            tempArraySorted[l] = tempArraySorted[l].filter(function(each) {
+//                                                return !sortedArrayToRemove.includes(each);
+//                                            });
                                             if (l > 0 || tempIndex > 0) {
                                                 app.descriptionText += ', ';
                                             }
@@ -2376,6 +2391,9 @@
                                             }
                                         }
 
+                                        if (objKey != 'empty') {
+                                            app.descriptionText += ' ' + objKey;
+                                        }
                                         tempIndex++;
 
                                     }
@@ -2394,6 +2412,7 @@
                                         'empty': []
                                     };
                                     var arraySortedNonColor = [];
+                                    var cloneSortedNonColor = [];
                                     for (var l = 0; l < nonColorValues.length; l++) {
                                         if (nonColorValues[l].post_constraint != null && nonColorValues[l].post_constraint != '') {
                                             if (!(nonColorValues[l].post_constraint in objNonColorValues)) {
@@ -2470,28 +2489,58 @@
                                             }
                                         }
 
+                                        for (var l = 0; l < arraySortedNonColor.length; l++) {
+                                            cloneSortedNonColor[l] = arraySortedNonColor[l];
+                                            for (var m = 0; m < arraySortedNonColor[l].length; m++) {
+                                                var tempArray = arraySortedNonColor[l].filter(function(each) {
+                                                    return each.value.endsWith(arraySortedNonColor[l][m].value) && each.value != arraySortedNonColor[l][m].value;
+                                                });
+                                                cloneSortedNonColor[l] = cloneSortedNonColor[l].filter( function( el ) {
+                                                    return !tempArray.includes( el );
+                                                });
+                                            }
+                                        }
+
                                     }
                                     var tempIndex = 0;
                                     for (var objKey in objNonColorValues) {
                                         var tempArraySorted = arraySortedNonColor.filter(each => each[0].objKey == objKey);
+                                        var countArray = cloneSortedNonColor.filter(each => each[0].objKey == objKey);
+                                        for (var l = 0; l < countArray.length; l++) {
+                                            var eachCount = 0;
+                                            for (var m = 0; m < countArray[l].length; m++) {
+                                                eachCount += countArray[l][m].count;
+                                            }
+                                            for (var m = 0; m < tempArraySorted.length; m++) {
+                                                if (tempArraySorted[m].includes(countArray[l][0])) {
+                                                    tempArraySorted[m].eachCount = eachCount;
+                                                }
+                                            }
+                                        }
+                                        console.log('countArray', countArray);
+                                        console.log('tempArraySorted', tempArraySorted);
+                                        tempArraySorted.sort((a, b) => a.eachCount > b.eachCount ? -1 : 1);
+
                                         for (var l = 0; l < tempArraySorted.length; l++) {
                                             var eachCount = 0;
-                                            for (var m = 0; m < tempArraySorted[l].length; m++) {
-                                                eachCount += tempArraySorted[l][m].count;
-                                            }
+
                                             if (l > 0 || tempIndex > 0) {
                                                 app.descriptionText += ', ';
                                             }
                                             if (tempArraySorted[l].length > 1) {
-                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
                                                         app.descriptionText += ' to or ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
                                             } else {
-                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, eachCount) + ' ' + tempArraySorted[l][0].value;
+                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
                                             }
+                                        }
+
+                                        if (objKey != 'empty') {
+                                            app.descriptionText += ' ' + objKey;
                                         }
                                         tempIndex++;
 
