@@ -2169,9 +2169,9 @@
                                     var objColorValues = {
                                         'empty': []
                                     };
-                                    var cloneObjColor = {
-                                        'empty': []
-                                    };
+//                                    var cloneObjColor = {
+//                                        'empty': []
+//                                    };
                                     var arraySortedColor = [];
                                     var cloneSortedColor = [];
                                     for (var l = 0; l < colorValues.length; l++) {
@@ -2260,26 +2260,28 @@
                                             }).length;
                                         }
                                         objColorValues[objKey] = app.sortColorValue(objColorValues[objKey]);
-                                        cloneObjColor[objKey] = app.sortColorValue(objColorValues[objKey]);
-                                        for (var l = 0; l < objColorValues[objKey].length; l++) {
-                                            if (objColorValues[objKey][l].count > 1) {
-                                                var tempArray = objColorValues[objKey].filter(function(each) {
-                                                    if (objColorValues[objKey][l].multi_colored != null && objColorValues[objKey][l].multi_colored != '') {
-                                                        return (each.value.endsWith(objColorValues[objKey][l].value)) && (each.value != objColorValues[objKey][l].value);
-                                                    } else {
-                                                        if (each.multi_colored != null && each.multi_colored != '') {
-                                                            return each.value.substring(0, each.value.length - (each.multi_colored.length + 1)).endsWith(objColorValues[objKey][l].value)  && each.value != objColorValues[objKey][l].value;
-                                                        } else {
-                                                            return (each.value.endsWith(objColorValues[objKey][l].value)) && (each.value != objColorValues[objKey][l].value);
-                                                        }
-                                                    }
-                                                });
-                                                cloneObjColor[objKey] = cloneObjColor[objKey].filter( function( el ) {
-                                                    return !tempArray.includes( el );
-                                                } );
-
-                                            }
-                                        }
+//                                        cloneObjColor[objKey] = app.sortColorValue(objColorValues[objKey]);
+//                                        for (var l = 0; l < objColorValues[objKey].length; l++) {
+//                                            if (objColorValues[objKey][l].count > 1) {
+//                                                var tempArray = objColorValues[objKey].filter(function(each) {
+//                                                    if (objColorValues[objKey][l].multi_colored != null && objColorValues[objKey][l].multi_colored != '') {
+//                                                        return (each.value.endsWith(objColorValues[objKey][l].value)) && (each.value != objColorValues[objKey][l].value);
+//                                                    } else {
+//                                                        if (each.multi_colored != null && each.multi_colored != '') {
+//                                                            return each.value.substring(0, each.value.length - (each.multi_colored.length + 1)).endsWith(objColorValues[objKey][l].value)  && each.value != objColorValues[objKey][l].value;
+//                                                        } else {
+//                                                            return (each.value.endsWith(objColorValues[objKey][l].value)) && (each.value != objColorValues[objKey][l].value);
+//                                                        }
+//                                                    }
+//                                                });
+//                                                cloneObjColor[objKey] = cloneObjColor[objKey].filter( function( el ) {
+//                                                    return !tempArray.includes( el );
+//                                                } );
+//
+//                                            }
+//                                        }
+//                                        console.log('objColorValues', objColorValues);
+//                                        console.log('cloneObjColor', cloneObjColor);
                                         while (objColorValues[objKey].length > 0) {
                                             arraySortedColor.push([]);
                                             objColorValues[objKey][0].objKey = objKey;
@@ -2296,24 +2298,50 @@
                                                 }
                                             }
                                         }
-                                        while (cloneObjColor[objKey].length > 0) {
-                                            cloneSortedColor.push([]);
-                                            cloneObjColor[objKey][0].objKey = objKey;
-                                            cloneSortedColor[cloneSortedColor.length - 1].push(cloneObjColor[objKey][0]);
-                                            var matchColor = cloneObjColor[objKey][0];
-                                            cloneObjColor[objKey].shift();
-                                            var index = 0;
-                                            for (var m = 0; m < (cloneObjColor[objKey].length + index); m++) {
-                                                if (app.checkAllowRange(matchColor, cloneObjColor[objKey][m - index])) {
-                                                    cloneObjColor[objKey][m - index].objKey = objKey;
-                                                    cloneSortedColor[cloneSortedColor.length - 1].push(cloneObjColor[objKey][m - index]);
-                                                    cloneObjColor[objKey].splice(m - index, 1);
-                                                    index++;
-                                                }
+
+                                        console.log('arraySortedColor', arraySortedColor);
+                                        cloneSortedColor = [];
+                                        for (var l = 0; l < arraySortedColor.length; l++) {
+                                            cloneSortedColor[l] = arraySortedColor[l];
+                                            for (var m = 0; m < arraySortedColor[l].length; m++) {
+                                                var tempArray = arraySortedColor[l].filter(function(each) {
+                                                    if (arraySortedColor[l][m].multi_colored != null && arraySortedColor[l][m].multi_colored != '') {
+                                                        return (each.value.endsWith(arraySortedColor[l][m].value)) && (each.value != arraySortedColor[l][m].value);
+                                                    } else {
+                                                        if (each.multi_colored != null && each.multi_colored != '') {
+                                                            return each.value.substring(0, each.value.length - (each.multi_colored.length + 1)).endsWith(arraySortedColor[l][m].value);
+                                                        } else {
+                                                            return (each.value.endsWith(arraySortedColor[l][m].value)) && (each.value != arraySortedColor[l][m].value);
+                                                        }
+                                                    }
+                                                });
+                                                cloneSortedColor[l] = cloneSortedColor[l].filter( function( el ) {
+                                                    return !tempArray.includes( el );
+                                                });
                                             }
                                         }
+                                        console.log('cloneSortedColor', cloneSortedColor);
+
+//                                        while (cloneObjColor[objKey].length > 0) {
+//                                            cloneSortedColor.push([]);
+//                                            cloneObjColor[objKey][0].objKey = objKey;
+//                                            cloneSortedColor[cloneSortedColor.length - 1].push(cloneObjColor[objKey][0]);
+//                                            var matchColor = cloneObjColor[objKey][0];
+//                                            cloneObjColor[objKey].shift();
+//                                            var index = 0;
+//                                            for (var m = 0; m < (cloneObjColor[objKey].length + index); m++) {
+//                                                if (app.checkAllowRange(matchColor, cloneObjColor[objKey][m - index])) {
+//                                                    cloneObjColor[objKey][m - index].objKey = objKey;
+//                                                    cloneSortedColor[cloneSortedColor.length - 1].push(cloneObjColor[objKey][m - index]);
+//                                                    cloneObjColor[objKey].splice(m - index, 1);
+//                                                    index++;
+//                                                }
+//                                            }
+//                                        }
                                     }
                                     var tempIndex = 0;
+                                    console.log('arraySortedColor', arraySortedColor);
+                                    console.log('cloneSortedColor', cloneSortedColor);
                                     for (var objKey in objColorValues) {
                                         var tempArraySorted = arraySortedColor.filter(each => each[0].objKey == objKey);
                                         var countArray = cloneSortedColor.filter(each => each[0].objKey == objKey);
@@ -2328,10 +2356,11 @@
                                                 }
                                             }
                                         }
+                                        console.log('countArray', countArray);
+                                        console.log('tempArraySorted', tempArraySorted);
                                         tempArraySorted.sort((a, b) => a.eachCount > b.eachCount ? -1 : 1);
                                         for (var l = 0; l < tempArraySorted.length; l++) {
 
-                                            console.log('app.columnCount', app.columnCount);
                                             if (l > 0 || tempIndex > 0) {
                                                 app.descriptionText += ', ';
                                             }
