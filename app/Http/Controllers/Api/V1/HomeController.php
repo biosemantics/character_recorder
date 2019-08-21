@@ -1031,40 +1031,39 @@ class HomeController extends Controller
     public function saveColorValue(Request $request) {
         $colorValues = $request->all();
 
-        $characterName = Character::where('id', '=', Value::where('id', '=', $colorValues[0]['value_id'])->first()->character_id)->first()->name;
-        foreach ($colorValues as $eachColor) {
-            if (array_key_exists('id', $eachColor)) {
-                $color = ColorDetails::where('id', '=', $eachColor['id'])->first();
-                $color->value_id = $eachColor['value_id'];
-                $color->negation = $eachColor['negation'];
-                $color->pre_constraint = $eachColor['pre_constraint'];
-                $color->brightness = $eachColor['brightness'];
-                $color->reflectance = $eachColor['reflectance'];
-                $color->saturation = $eachColor['saturation'];
-                $color->colored = $eachColor['colored'];
-                $color->multi_colored = $eachColor['multi_colored'];
-                $color->post_constraint = $eachColor['post_constraint'];
+        $colorDetails = ColorDetails::where('id', '=', $request->input('id'))->first();
+        if ($request->input('id') && $colorDetails) {
+            $colorDetails->value_id = $request->input('value_id');
+            $colorDetails->negation = $request->input('negation');
+            $colorDetails->pre_constraint = $request->input('pre_constraint');
+            $colorDetails->brightness = $request->input('brightness');
+            $colorDetails->reflectance = $request->input('reflectance');
+            $colorDetails->saturation = $request->input('saturation');
+            $colorDetails->colored = $request->input('colored');
+            $colorDetails->multi_colored = $request->input('multi_colored');
+            $colorDetails->post_constraint = $request->input('post_constraint');
 
-                $color->save();
-            } else {
-                $color = new ColorDetails([
-                    'value_id' => $eachColor['value_id'],
-                    'negation' => isset($eachColor['negation']) ? $eachColor['negation'] : null,
-                    'pre_constraint' => isset($eachColor['pre_constraint']) ? $eachColor['pre_constraint'] : null,
-                    'brightness' => isset($eachColor['brightness']) ? $eachColor['brightness'] : null,
-                    'reflectance' => isset($eachColor['reflectance']) ? $eachColor['reflectance'] : null,
-                    'saturation' => isset($eachColor['saturation']) ? $eachColor['saturation'] : null,
-                    'colored' => isset($eachColor['colored']) ? $eachColor['colored'] : null,
-                    'multi_colored' => isset($eachColor['multi_colored']) ? $eachColor['multi_colored'] : null,
-                    'post_constraint' => isset($eachColor['post_constraint']) ? $eachColor['post_constraint'] : null,
-                ]);
+            $colorDetails->save();
+        } else {
+            $color = new ColorDetails([
+                'value_id' => $request->input('value_id'),
+                'negation' => $request->input('negation') ? $request->input('negation') : null,
+                'pre_constraint' => $request->input('pre_constraint') ? $request->input('pre_constraint') : null,
+                'brightness' => $request->input('brightness') ? $request->input('brightness') : null,
+                'reflectance' => $request->input('reflectance') ? $request->input('reflectance') : null,
+                'saturation' => $request->input('saturation') ? $request->input('saturation') : null,
+                'colored' => $request->input('colored') ? $request->input('colored') : null,
+                'multi_colored' => $request->input('multi_colored') ? $request->input('multi_colored') : null,
+                'post_constraint' => $request->input('post_constraint') ? $request->input('post_constraint') : null,
+            ]);
 
-                $color->save();
-            }
+            $color->save();
         }
 
+        $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
 
-        $characters = Character::where('name', '=', $characterName)->get();
+        $returnColorDetails = ColorDetails::where('value_id', '=', $request->input('value_id'))->get();
+//        $characters = Character::where('name', '=', $characterName)->get();
 
         $constraints = $this->getDefaultConstraint($characterName);
 
@@ -1076,6 +1075,7 @@ class HomeController extends Controller
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
+            'colorDetails' => $returnColorDetails,
         ];
 
         return $data;
@@ -1142,43 +1142,45 @@ class HomeController extends Controller
     public function saveNonColorValue(Request $request) {
         $nonColorValues = $request->all();
 
-        $characterName = Character::where('id', '=', Value::where('id', '=', $nonColorValues[0]['value_id'])->first()->character_id)->first()->name;
+        $nonColorDetails = NonColorDetails::where('id', '=', $request->input('id'))->first();
+        if ($request->input('id') && $nonColorDetails) {
+            $nonColorDetails->value_id = $request->input('value_id');
+            $nonColorDetails->negation = $request->input('negation');
+            $nonColorDetails->pre_constraint = $request->input('pre_constraint');
+            $nonColorDetails->main_value = $request->input('main_value');
+            $nonColorDetails->post_constraint = $request->input('post_constraint');
 
-        foreach ($nonColorValues as $eachValue) {
-            if (array_key_exists('id', $eachValue)) {
-                $value = NonColorDetails::where('id', '=', $eachValue['id'])->first();
-                $value->value_id = $eachValue['value_id'];
-                $value->negation = $eachValue['negation'];
-                $value->pre_constraint = $eachValue['pre_constraint'];
-                $value->main_value = $eachValue['main_value'];
-                $value->post_constraint = $eachValue['post_constraint'];
+            $nonColorDetails->save();
+        } else {
+            $nonColorDetails = new NonColorDetails([
+                'value_id' => $request->input('value_id'),
+                'negation' =>  $request->input('negation') ?  $request->input('negation') : null,
+                'pre_constraint' =>  $request->input('pre_constraint') ?  $request->input('pre_constraint') : null,
+                'main_value' =>  $request->input('main_value') ?  $request->input('main_value') : null,
+                'post_constraint' =>  $request->input('post_constraint') ?  $request->input('post_constraint') : null,
+            ]);
 
-                $value->save();
-            } else {
-                $value = new NonColorDetails([
-                    'value_id' => $eachValue['value_id'],
-                    'negation' => isset($eachValue['negation']) ? $eachValue['negation'] : null,
-                    'pre_constraint' => isset($eachValue['pre_constraint']) ? $eachValue['pre_constraint'] : null,
-                    'main_value' => isset($eachValue['main_value']) ? $eachValue['main_value'] : null,
-                    'post_constraint' => isset($eachValue['post_constraint']) ? $eachValue['post_constraint'] : null,
-                ]);
-
-                $value->save();
-            }
+            $nonColorDetails->save();
         }
 
-        $characters = Character::where('name', '=', $characterName)->get();
+        $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
+
+
+//        $characters = Character::where('name', '=', $characterName)->get();
 
         $constraints = $this->getDefaultConstraint($characterName);
 
         $returnValues = $this->getValuesByCharacter();
         $returnAllDetailValues = $this->getAllColorValues();
+        $returnNonColorDetails = NonColorDetails::where('value_id', '=', $request->input('value_id'))->get();
+
         $data = [
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
+            'nonColorDetails' => $returnNonColorDetails,
         ];
 
         return $data;
@@ -1248,6 +1250,37 @@ class HomeController extends Controller
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
         ];
+        return $data;
+    }
+
+    public function removeEachColorDetails(Request $request) {
+        $eachColorDetails = ColorDetails::where('id', '=', $request->input('id'))->first();
+        if ($eachColorDetails) {
+            $eachColorDetails->delete();
+        }
+
+        $returnColorDetails = ColorDetails::where('value_id', '=', $request->input('value_id'))->get();
+
+        $data = [
+            'colorDetails' => $returnColorDetails
+        ];
+
+        return $data;
+    }
+
+    public function removeEachNonColorDetails(Request $request) {
+        $eachNonColorDetails = NonColorDetails::where('id', '=', $request->input('id'))->first();
+
+        if ($eachNonColorDetails) {
+            $eachNonColorDetails->delete();
+        }
+
+        $returnNonColorDetails = NonColorDetails::where('value_id', '=', $request->input('value_id'))->get();
+
+        $data = [
+            'nonColorDetails' => $returnNonColorDetails
+        ];
+
         return $data;
     }
 
