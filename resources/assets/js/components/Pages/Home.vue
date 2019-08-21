@@ -613,21 +613,54 @@
                                         Formulate a value: type in a blank to select existing phrases or use your own terms(need
                                         definition)
                                     </div>
+
                                     <div class="modal-body">
-                                        <div v-for="(eachColor, index) in colorDetails">
+                                        <div v-for="(eachColor, index) in colorDetails" style="margin-top: 5px;" v-if="currentColorValueExist == true" class="row">
+                                            <div class="col-md-6">
+                                                <div style="display: inline-block;" v-if="eachColor.negation != null">
+                                                    {{ eachColor.negation }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachColor.pre_constraint != null">
+                                                    {{ eachColor.pre_constraint }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachColor.brightness != null">
+                                                    {{ eachColor.brightness }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachColor.reflectance != null">
+                                                    {{ eachColor.reflectance }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachColor.saturation != null">
+                                                    {{ eachColor.saturation }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachColor.colored != null">
+                                                    {{ eachColor.colored }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachColor.multi_colored != null">
+                                                    {{ eachColor.multi_colored }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachColor.post_constraint != null">
+                                                    {{ eachColor.post_constraint }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <a class="btn btn-primary" v-on:click="editEachColor(eachColor)">Edit</a>
+                                                <a class="btn btn-primary" v-on:click="removeEachColor(eachColor)">Remove</a>
+                                            </div>
+                                        </div>
+                                        <div>
                                             <div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(eachColor, 'negation', $event)"
+                                                    <input v-on:focus="changeColorSection(currentColorValue, 'negation', $event)"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.negation" placeholder="">
+                                                           v-model="currentColorValue.negation" placeholder="">
                                                     <h5>
                                                         negation
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(eachColor, 'pre_constraint', $event)"
+                                                    <input v-on:focus="changeColorSection(currentColorValue, 'pre_constraint', $event)"
                                                            style="width: 90px;"
-                                                           v-model="eachColor.pre_constraint"
+                                                           v-model="currentColorValue.pre_constraint"
                                                            list="pre_list">
                                                     <datalist id="pre_list">
                                                         <option v-for="each in preList" :value="each">{{ each }}
@@ -638,59 +671,59 @@
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(eachColor, 'brightness', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(eachColor, 'brightness')"
+                                                    <input v-on:focus="changeColorSection(currentColorValue, 'brightness', $event)"
+                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'brightness')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.brightness" 
+                                                           v-model="currentColorValue.brightness"
                                                            class="color-input">
                                                     <h5>
                                                         brightness
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(eachColor, 'reflectance', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(eachColor, 'reflectance')"
+                                                    <input v-on:focus="changeColorSection(currentColorValue, 'reflectance', $event)"
+                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'reflectance')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.reflectance" 
+                                                           v-model="currentColorValue.reflectance"
                                                            class="color-input">
                                                     <h5>
                                                         reflectance
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(eachColor, 'saturation', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(eachColor, 'saturation')"
+                                                    <input v-on:focus="changeColorSection(currentColorValue, 'saturation', $event)"
+                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'saturation')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.saturation" 
+                                                           v-model="currentColorValue.saturation"
                                                            class="color-input">
                                                     <h5>
                                                         saturation
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(eachColor, 'colored', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(eachColor, 'colored')"
+                                                    <input v-on:focus="changeColorSection(currentColorValue, 'colored', $event)"
+                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'colored')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.colored" 
+                                                           v-model="currentColorValue.colored"
                                                            class="color-input">
                                                     <h5>
                                                         color
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(eachColor, 'multi_colored', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(eachColor, 'multi_colored')"
+                                                    <input v-on:focus="changeColorSection(currentColorValue, 'multi_colored', $event)"
+                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'multi_colored')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachColor.multi_colored" 
+                                                           v-model="currentColorValue.multi_colored"
                                                            class="color-input">
                                                     <h5>
                                                         pattern
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(eachColor, 'post_constraint', $event)"
+                                                    <input v-on:focus="changeColorSection(currentColorValue, 'post_constraint', $event)"
                                                            style="width: 90px;"
-                                                           v-model="eachColor.post_constraint"
+                                                           v-model="currentColorValue.post_constraint"
                                                            list="post_list">
                                                     <datalist id="post_list">
                                                         <option v-for="each in postList" :value="each">{{ each }}
@@ -701,24 +734,24 @@
                                                     </h5>
                                                 </div>
                                             </div>
-                                            <div v-if="eachColor.detailFlag == 'negation'" style="margin-top: 10px;">
-                                                <input type="radio" id="not" v-model="eachColor.negation"
+                                            <div v-if="currentColorValue.detailFlag == 'negation'" style="margin-top: 10px;">
+                                                <input type="radio" id="not" v-model="currentColorValue.negation"
                                                        v-bind:value="'Not'"/> <label for="not">Not</label> <br/>
-                                                <input type="radio" id="unselect-not" v-model="eachColor.negation"
+                                                <input type="radio" id="unselect-not" v-model="currentColorValue.negation"
                                                        v-bind:value="''"/> <label for="unselect-not">Unselect
                                                 Not</label>
                                             </div>
-                                            <div v-if="(eachColor.detailFlag == 'brightness'
-                                            || eachColor.detailFlag == 'reflectance'
-                                            || eachColor.detailFlag == 'saturation'
-                                            || eachColor.detailFlag == 'colored'
-                                            || eachColor.detailFlag == 'multi_colored') && colorExistFlag"
+                                            <div v-if="(currentColorValue.detailFlag == 'brightness'
+                                            || currentColorValue.detailFlag == 'reflectance'
+                                            || currentColorValue.detailFlag == 'saturation'
+                                            || currentColorValue.detailFlag == 'colored'
+                                            || currentColorValue.detailFlag == 'multi_colored') && colorExistFlag"
                                                  style="margin-top: 10px;">
                                                 <!--<input style="width: 300px;" v-model="colorSearchText" placeholder="Enter a term to filter the term tree"/>-->
                                                 <tree
                                                         :data="treeData"
                                                         :options="colorTreeOption"
-                                                        :filter="eachColor[eachColor.detailFlag]"
+                                                        :filter="currentColorValue[currentColorValue.detailFlag]"
                                                         ref="tree"
                                                         @node:selected="onTreeNodeSelected"
                                                         style="max-height: 300px;">
@@ -728,11 +761,11 @@
                                                     </div>
                                                 </tree>
                                             </div>
-                                            <div v-if="(eachColor.detailFlag == 'brightness'
-                                            || eachColor.detailFlag == 'reflectance'
-                                            || eachColor.detailFlag == 'saturation'
-                                            || eachColor.detailFlag == 'colored'
-                                            || eachColor.detailFlag == 'multi_colored') && !colorExistFlag"
+                                            <div v-if="(currentColorValue.detailFlag == 'brightness'
+                                            || currentColorValue.detailFlag == 'reflectance'
+                                            || currentColorValue.detailFlag == 'saturation'
+                                            || currentColorValue.detailFlag == 'colored'
+                                            || currentColorValue.detailFlag == 'multi_colored') && !colorExistFlag"
                                                  style="margin-top: 10px;">
 
                                                 <div v-if="searchColorFlag == 1">
@@ -740,17 +773,17 @@
                                                         <b>Did you mean?</b>
                                                         <input type="radio" v-bind:id="eachSynonym.term"
                                                                v-bind:value="eachSynonym.term"
-                                                               v-model="eachColor[eachColor.detailFlag]">
+                                                               v-model="currentColorValue[currentColorValue.detailFlag]">
                                                         <label v-bind:for="eachSynonym.term"> {{ eachSynonym.term }} ({{
                                                             eachSynonym.parentTerm }}): </label> {{
                                                         eachSynonym.definition ? eachSynonym.definition : 'No definition' }}
                                                         <a class="btn"
-                                                           v-on:click="expandCommentSection(eachSynonym, eachColor.detailFlag)"><span
+                                                           v-on:click="expandCommentSection(eachSynonym, currentColorValue.detailFlag)"><span
                                                                 class="glyphicon glyphicon-comment"></span></a>
                                                         <div v-if="eachSynonym.commentFlag == true">
                                                             Do not like this term? improve or add definition for it:
                                                             <input
-                                                                    v-model="colorComment[index][eachColor.detailFlag]"
+                                                                    v-model="colorComment[currentColorValue.detailFlag]"
                                                                     style="width: 100%;">
                                                         </div>
                                                     </div>
@@ -758,7 +791,7 @@
                                                 <div v-if="searchColorFlag == 2">
                                                     Did you mean <b>{{ exactColor.term }}</b>?<br/>
                                                     Definition of <b> {{ exactColor.term }} </b>: <input
-                                                        v-model="colorDefinition[index][eachColor.detailFlag]"
+                                                        v-model="colorDefinition[currentColorValue.detailFlag]"
                                                         style="width: 70%;">
                                                     <!--Hong modified this: Did you mean <b>{{ exactColor.term }}</b>?<br/>
                                                     Current Definition: <input
@@ -771,19 +804,19 @@
                                                 <div v-if="searchColorFlag !=2 ">
                                                     <input type="radio" id="user-defined"
                                                            v-bind:value="defaultColorValue + '(user defined)'"
-                                                           v-on:change="selectUserDefinedTerm(eachColor, eachColor.detailFlag, defaultColorValue)"
-                                                           v-model="eachColor[eachColor.detailFlag]">
+                                                           v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"
+                                                           v-model="currentColorValue[currentColorValue.detailFlag]">
                                                     <label for="user-defined">Use my term (please define the term, all input required):</label>
                                                     <div for="user-defined">
                                                         Definition: <input
-                                                            v-model="userColorDefinition[index][eachColor.detailFlag]"
+                                                            v-model="userColorDefinition[currentColorValue.detailFlag]"
                                                             class="color-definition-input">
                                                         Used for Taxon:
-                                                        <input v-model="colorTaxon[index][eachColor.detailFlag]"
+                                                        <input v-model="colorTaxon[currentColorValue.detailFlag]"
                                                                class="color-definition-input">
                                                         Sample Sentence:
                                                         <input
-                                                            v-model="colorSampleText[index][eachColor.detailFlag]"
+                                                            v-model="colorSampleText[currentColorValue.detailFlag]"
                                                             class="color-definition-input" placeholder=""><br/>
                                                     </div>
                                                 </div>
@@ -801,9 +834,9 @@
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="saveColorValue()">
                                                     Save </a>
-                                                <!--<a class="btn btn-primary ok-btn"-->
-                                                   <!--v-on:click="saveNewColorValue()">-->
-                                                    <!--Save & New </a>-->
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="saveColorValue(true)">
+                                                    Save & New </a>
                                                 <a v-on:click="colorDetailsFlag = false;" class="btn btn-danger">Cancel</a>
                                             </div>
                                         </div>
@@ -823,20 +856,40 @@
                                         definition)
                                     </div>
                                     <div class="modal-body">
-                                        <div v-for="(eachValue, index) in nonColorDetails">
+                                        <div v-for="(eachValue, index) in nonColorDetails" class="row" v-if="currentNonColorValueExist == true">
+                                            <div class="col-md-6">
+                                                <div style="display: inline-block;" v-if="eachValue.negation != null">
+                                                    {{ eachValue.negation }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachValue.pre_constraint != null">
+                                                    {{ eachValue.pre_constraint }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachValue.main_value != null">
+                                                    {{ eachValue.main_value }}
+                                                </div>
+                                                <div style="display: inline-block;" v-if="eachValue.post_constraint != null">
+                                                    {{ eachValue.post_constraint }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <a class="btn btn-primary" v-on:click="editEachNonColor(eachValue)">Edit</a>
+                                                <a class="btn btn-primary" v-on:click="removeEachNonColor(eachValue)">Remove</a>
+                                            </div>
+                                        </div>
+                                        <div>
                                             <div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeNonColorSection(eachValue, 'negation', $event)"
+                                                    <input v-on:focus="changeNonColorSection(currentNonColorValue, 'negation', $event)"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachValue.negation" placeholder="">
+                                                           v-model="currentNonColorValue.negation" placeholder="">
                                                     <h5>
                                                         negation
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeNonColorSection(eachValue, 'pre_constraint', $event)"
+                                                    <input v-on:focus="changeNonColorSection(currentNonColorValue, 'pre_constraint', $event)"
                                                            style="width: 90px;"
-                                                           v-model="eachValue.pre_constraint"
+                                                           v-model="currentNonColorValue.pre_constraint"
                                                            list="pre_non_list">
                                                     <datalist id="pre_non_list">
                                                         <option v-for="each in preList" :value="each">{{ each }}
@@ -847,19 +900,19 @@
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeNonColorSection(eachValue, 'main_value', $event)"
-                                                           v-on:keyup.enter="searchNonColorSelection(eachValue, 'main_value')"
+                                                    <input v-on:focus="changeNonColorSection(currentNonColorValue, 'main_value', $event)"
+                                                           v-on:keyup.enter="searchNonColorSelection(currentNonColorValue, 'main_value')"
                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="eachValue.main_value"
-                                                           :placeholder="eachValue.placeholderName">
+                                                           v-model="currentNonColorValue.main_value"
+                                                           :placeholder="currentNonColorValue.placeholderName">
                                                     <h5>
-                                                        {{ eachValue.placeholderName }}
+                                                        {{ currentNonColorValue.placeholderName }}
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
-                                                    <input v-on:focus="changeNonColorSection(eachValue, 'post_constraint', $event)"
+                                                    <input v-on:focus="changeNonColorSection(currentNonColorValue, 'post_constraint', $event)"
                                                            style="width: 90px;"
-                                                           v-model="eachValue.post_constraint"
+                                                           v-model="currentNonColorValue.post_constraint"
                                                            list="post_non_list">
                                                     <datalist id="post_non_list" v-if="postList.length > 0">
                                                         <option v-for="each in postList" :value="each">{{ each }}
@@ -870,20 +923,20 @@
                                                     </h5>
                                                 </div>
                                             </div>
-                                            <div v-if="eachValue.detailFlag == 'negation'" style="margin-top: 10px;">
-                                                <input type="radio" id="non-not" v-model="eachValue.negation"
+                                            <div v-if="currentNonColorValue.detailFlag == 'negation'" style="margin-top: 10px;">
+                                                <input type="radio" id="non-not" v-model="currentNonColorValue.negation"
                                                        v-bind:value="'Not'"/> <label for="non-not">Not</label> <br/>
-                                                <input type="radio" id="non-unselect-not" v-model="eachValue.negation"
+                                                <input type="radio" id="non-unselect-not" v-model="currentNonColorValue.negation"
                                                        v-bind:value="''"/> <label for="non-unselect-not">Unselect
                                                 Not</label>
                                             </div>
-                                            <div v-if="(eachValue.detailFlag == 'main_value') && nonColorExistFlag"
+                                            <div v-if="(currentNonColorValue.detailFlag == 'main_value') && nonColorExistFlag"
                                                  style="margin-top: 10px;">
                                                 <!--<input style="width: 300px;" v-model="nonColorSearchText" placeholder="Enter a term to filter the term tree"/>-->
                                                 <tree
                                                         :data="textureTreeData"
                                                         :options="colorTreeOption"
-                                                        :filter="eachValue.main_value"
+                                                        :filter="currentNonColorValue.main_value"
                                                         ref="tree"
                                                         @node:selected="onTextureTreeNodeSelected"
                                                         style="max-height: 300px;">
@@ -893,7 +946,7 @@
                                                     </div>
                                                 </tree>
                                             </div>
-                                            <div v-if="(eachValue.detailFlag == 'main_value') && !nonColorExistFlag"
+                                            <div v-if="(currentNonColorValue.detailFlag == 'main_value') && !nonColorExistFlag"
                                                  style="margin-top: 10px;">
 
                                                 <div v-if="searchNonColorFlag == 1">
@@ -901,17 +954,17 @@
                                                         <b>Did you mean? </b>
                                                         <input type="radio" v-bind:id="eachSynonym.term"
                                                                v-bind:value="eachSynonym.term"
-                                                               v-model="eachValue[eachValue.detailFlag]">
+                                                               v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
                                                         <label v-bind:for="eachSynonym.term">{{ eachSynonym.term }} ({{
                                                             eachSynonym.parentTerm }}): </label> {{
                                                         eachSynonym.definition ? eachSynonym.definition : 'No definition' }}
                                                         <a class="btn"
-                                                           v-on:click="expandCommentSection(eachSynonym, eachValue.detailFlag)"><span
+                                                           v-on:click="expandCommentSection(eachSynonym, currentNonColorValue.detailFlag)"><span
                                                                 class="glyphicon glyphicon-comment"></span></a>
                                                         <div v-if="eachSynonym.commentFlag == true">
                                                             Don't you like this term? improve or add definition for it:
                                                             <input
-                                                                    v-model="nonColorComment[index][eachValue.detailFlag]"
+                                                                    v-model="nonColorComment[currentNonColorValue.detailFlag]"
                                                                     style="width: 100%;">
                                                         </div>
                                                     </div>
@@ -919,25 +972,25 @@
                                                 <div v-if="searchNonColorFlag == 2">
                                                     Here is what we known about <b>{{ exactNonColor.term }}</b>
                                                     Definition: <input
-                                                        v-model="nonColorDefinition[index][eachValue.detailFlag]"
+                                                        v-model="nonColorDefinition[currentNonColorValue.detailFlag]"
                                                         style="width: 70%;">
 
                                                 </div>
                                                 <div v-if="searchNonColorFlag !=2 ">
                                                     <input type="radio" id="non-user-defined"
                                                            v-bind:value="defaultNonColorValue + '(user defined)'"
-                                                           v-on:change="selectUserDefinedTerm(eachValue, eachValue.detailFlag, defaultNonColorValue)"
-                                                           v-model="eachValue[eachValue.detailFlag]">
+                                                           v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"
+                                                           v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
                                                     <label for="non-user-defined">Use my term (please define the term, all input required):</label>
                                                     <div for="user-defined">
                                                         Definition: <input
-                                                            v-model="userNonColorDefinition[index][eachValue.detailFlag]"
+                                                            v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
                                                             class="non-color-input-definition">
                                                         Taxon: <input
-                                                            v-model="nonColorTaxon[index][eachValue.detailFlag]"
+                                                            v-model="nonColorTaxon[currentNonColorValue.detailFlag]"
                                                             class="non-color-input-definition">
                                                         Sample Sentence: <input
-                                                            v-model="nonColorSampleText[index][eachValue.detailFlag]"
+                                                            v-model="nonColorSampleText[currentNonColorValue.detailFlag]"
                                                             class="non-color-input-definition">
                                                     </div>
                                                 </div>
@@ -955,9 +1008,9 @@
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="saveNonColorValue()">
                                                     Save </a>
-                                                <!--<a class="btn btn-primary ok-btn"-->
-                                                   <!--v-on:click="saveNewNonColorValue()">-->
-                                                    <!--Save & New </a>-->
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="saveNonColorValue(true)">
+                                                    Save & New </a>
                                                 <a v-on:click="nonColorDetailsFlag = false;"
                                                    class="btn btn-danger">Cancel</a>
                                             </div>
@@ -1073,11 +1126,11 @@
                 exactColor: {},
                 colorDetailId: null,
                 defaultColorValue: '',
-                colorComment: [],
-                colorTaxon: [],
-                colorSampleText: [],
-                colorDefinition: [],
-                userColorDefinition: [],
+                colorComment: {},
+                colorTaxon: {},
+                colorSampleText: {},
+                colorDefinition: {},
+                userColorDefinition: {},
                 preList: [],
                 postList: [],
                 nonColorDetails: [],
@@ -1090,15 +1143,19 @@
                 exactNonColor: {},
                 nonColorDetailId: null,
                 defaultNonColorValue: null,
-                nonColorComment: [],
-                nonColorTaxon: [],
-                nonColorSampleText: [],
-                nonColorDefinition: [],
-                userNonColorDefinition: [],
+                nonColorComment: {},
+                nonColorTaxon: {},
+                nonColorSampleText: {},
+                nonColorDefinition: {},
+                userNonColorDefinition: {},
                 searchNonColorFlag: 0,
                 sharedFlag: true,
                 allColorValues: [],
                 allNonColorValues: [],
+                currentColorValue: {},
+                currentNonColorValue: {},
+                currentColorValueExist: false,
+                currentNonColorValueExist: false,
             }
         },
         components: {
@@ -2686,133 +2743,146 @@
                         app.headers = resp.data.headers;
                     });
             },
-            saveColorValue() {
+            saveColorValue(newFlag = false) {
                 var app = this;
 
-                var postValues = [];
 
                 var postFlag = true;
+                console.log('currentColorValue', app.currentColorValue);
 
-                for (var i = 0; i < app.colorDetails.length; i++) {
-                    var tempValue = {};
-                    tempValue['value_id'] = app.colorDetails[i]['value_id'];
-                    if (app.colorDetails[i].id) {
-                        tempValue['id'] = app.colorDetails[i].id;
-                    }
-                    for (var key in app.colorDetails[i]) {
-                        if (app.checkColorProperty(key)) {
-                            tempValue[key] = app.colorDetails[i][key];
-                            var requestBody = {};
-                            if (app.colorDetails[i][key] != null && app.colorDetails[i][key] != '') {
-                                if (app.colorDetails[i][key].endsWith('(user defined)') && postFlag == true) {
-                                    if (app.userColorDefinition[i][key] == ''
-                                        || app.userColorDefinition[i][key] == null
-                                        || app.userColorDefinition[i][key] == undefined
-                                        || app.colorSampleText[i][key] == ''
-                                        || app.colorSampleText[i][key] == null
-                                        || app.colorSampleText[i][key] == undefined
-                                        || app.colorTaxon[i][key] == ''
-                                        || app.colorTaxon[i][key] == null
-                                        || app.colorTaxon[i][key] == undefined) {
-                                         postFlag = false;
-                                    } else if (postFlag == true){
-                                        tempValue[key] = app.colorDetails[i][key].substr(0, app.colorDetails[i][key].length - 14);
-                                        console.log('colorSampleText', app.colorSampleText[i][key]);
-                                        var date = new Date();
-                                        requestBody = {
-                                            "user": app.sharedFlag ? '' : app.user.name,
-                                            "ontologylo": "carex",
-                                            "term": tempValue[key],
-                                            "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + app.changeToSubClassName(key),
-                                            "definition": app.userColorDefinition[i][key],
-                                            "elucidation": "",
-                                            "createdBy": app.user.name,
-                                            "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                            "definitionSrc": app.user.name,
-                                            "examples": app.colorSampleText[i][key]+ ", used in taxon " + app.colorTaxon[i][key],
-                                            "logicDefinition": "",
-                                        };
-                                        axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-                                            .then(function (resp) {
-                                                console.log('shark api class resp', resp);
-                                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                    user: app.sharedFlag ? '' : app.user.name,
-                                                    ontology: 'carex'
-                                                })
-                                                    .then(function (resp) {
-                                                        console.log('save api resp', resp);
-                                                    });
-                                            });
-                                    }
-
-
-                                } else if (app.colorDefinition[i][key] && postFlag == true) {
-                                    requestBody = {
-                                        "user": app.sharedFlag ? '' : app.user.name,
-                                        "ontology": "carex",
-                                        "definition": app.colorDefinition[i][key],
-                                        "providedBy": app.user.name,
-                                        "exampleSentence": "",
-                                        "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + tempValue[key]
-                                    };
-                                    axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
-                                        .then(function (resp) {
-                                            console.log('shark api definition resp', resp);
-                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                user: app.sharedFlag ? '' : app.user.name,
-                                                ontology: 'carex'
-                                            })
-                                                .then(function (resp) {
-                                                    console.log('save api resp', resp);
-                                                });
-                                        });
-                                    console.log('user defined', app.colorDefinition[i][key]);
-                                } else if (app.colorComment[i][key] && postFlag == true) {
-                                    requestBody = {
-                                        "user": app.sharedFlag ? '' : app.user.name,
-                                        "ontology": "carex",
-                                        "comment": app.colorComment[i][key],
-                                        "providedBy": app.user.name,
-                                        "exampleSentence": "",
-                                        "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + tempValue[key]
-                                    };
-                                    axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                                        .then(function (resp) {
-                                            console.log('shark api comment resp', resp);
-                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                user: app.sharedFlag ? '' : app.user.name,
-                                                ontology: 'carex'
-                                            })
-                                                .then(function (resp) {
-                                                    console.log('save api resp', resp);
-                                                });
-                                        });
-                                    console.log('colorComment', app.colorComment[i][key]);
-
-                                }
-                            }
-
-                        }
-                    }
-                    postValues.push(tempValue);
+//                for (var i = 0; i < app.colorDetails.length; i++) {
+                var postValue = {};
+                postValue['value_id'] = app.currentColorValue['value_id'];
+                if (app.currentColorValue.id) {
+                    postValue['id'] = app.currentColorValue.id;
                 }
+                for (var key in app.currentColorValue) {
+                    if (app.checkColorProperty(key)) {
+                        postValue[key] = app.currentColorValue[key];
+                        var requestBody = {};
+                        if (app.currentColorValue[key] != null && app.currentColorValue[key] != '') {
+                            if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
+                                if (app.userColorDefinition[key] == ''
+                                    || app.userColorDefinition[key] == null
+                                    || app.userColorDefinition[key] == undefined
+                                    || app.colorSampleText[key] == ''
+                                    || app.colorSampleText[key] == null
+                                    || app.colorSampleText[key] == undefined
+                                    || app.colorTaxon[key] == ''
+                                    || app.colorTaxon[key] == null
+                                    || app.colorTaxon[key] == undefined) {
+                                     postFlag = false;
+                                } else if (postFlag == true){
+                                    postValue[key] = app.currentColorValue[key].substr(0, app.currentColorValue[key].length - 14);
+                                    console.log('colorSampleText', app.colorSampleText[key]);
+                                    var date = new Date();
+                                    requestBody = {
+                                        "user": app.sharedFlag ? '' : app.user.name,
+                                        "ontologylo": "carex",
+                                        "term": postValue[key],
+                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + app.changeToSubClassName(key),
+                                        "definition": app.userColorDefinition[key],
+                                        "elucidation": "",
+                                        "createdBy": app.user.name,
+                                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                        "definitionSrc": app.user.name,
+                                        "examples": app.colorSampleText[key]+ ", used in taxon " + app.colorTaxon[key],
+                                        "logicDefinition": "",
+                                    };
+                                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                        .then(function (resp) {
+                                            console.log('shark api class resp', resp);
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                user: app.sharedFlag ? '' : app.user.name,
+                                                ontology: 'carex'
+                                            })
+                                                .then(function (resp) {
+                                                    console.log('save api resp', resp);
+                                                });
+                                        });
+                                }
+
+
+                            } else if (app.colorDefinition[key] && postFlag == true) {
+                                requestBody = {
+                                    "user": app.sharedFlag ? '' : app.user.name,
+                                    "ontology": "carex",
+                                    "definition": app.colorDefinition[key],
+                                    "providedBy": app.user.name,
+                                    "exampleSentence": "",
+                                    "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
+                                };
+                                axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
+                                    .then(function (resp) {
+                                        console.log('shark api definition resp', resp);
+                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                            user: app.sharedFlag ? '' : app.user.name,
+                                            ontology: 'carex'
+                                        })
+                                            .then(function (resp) {
+                                                console.log('save api resp', resp);
+                                            });
+                                    });
+                                console.log('user defined', app.colorDefinition);
+                            } else if (app.colorComment[key] && postFlag == true) {
+                                requestBody = {
+                                    "user": app.sharedFlag ? '' : app.user.name,
+                                    "ontology": "carex",
+                                    "comment": app.colorComment[key],
+                                    "providedBy": app.user.name,
+                                    "exampleSentence": "",
+                                    "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
+                                };
+                                axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
+                                    .then(function (resp) {
+                                        console.log('shark api comment resp', resp);
+                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                            user: app.sharedFlag ? '' : app.user.name,
+                                            ontology: 'carex'
+                                        })
+                                            .then(function (resp) {
+                                                console.log('save api resp', resp);
+                                            });
+                                    });
+
+                            }
+                        }
+
+                    }
+                }
+//                }
+                console.log('postValue', postValue);
                 if (postFlag == true) {
-                    axios.post('/chrecorder/public/api/v1/save-color-value', postValues)
+                    axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
                         .then(function (resp) {
                             app.values = resp.data.values;
                             app.preList = resp.data.preList;
                             app.postList = resp.data.postList;
-                            app.colorDetailsFlag = false;
+                            if (newFlag == false) {
+                                app.colorDetailsFlag = false;
+                            } else {
+                                app.colorDetailsFlag = true;
+                                app.colorComment = {};
+                                app.colorTaxon = {
+                                    'brightness': app.taxonName,
+                                    'reflectance': app.taxonName,
+                                    'saturation': app.taxonName,
+                                    'colored': app.taxonName,
+                                    'multi_colored': app.taxonName,
+                                };
+                                app.colorSampleText = {};
+                                app.colorDefinition = {};
+                                app.userColorDefinition = {};
+                                app.currentColorValue.taxon = app.taxonName;
+                            }
+                            app.colorDetails = resp.data.colorDetails;
                             app.allColorValues = resp.data.allColorValues;
                             app.allNonColorValues = resp.data.allNonColorValues;
-                            console.log('save color value resp', postValues);
+                            app.currentColorValue = {value_id: app.currentColorValue.value_id};
                         });
                 } else {
                     $('.color-definition-input').css('border', '1px solid red');
                 }
-
-                console.log('postValues', postValues);
-
             },
             removeColorValue() {
                 var app = this;
@@ -2828,75 +2898,52 @@
                         app.colorDetailsFlag = false;
                     });
             },
-            saveNonColorValue() {
+            saveNonColorValue(newFlag = false) {
                 var app = this;
 
-                var postValues = [];
                 var postFlag = true;
-                for (var i = 0; i < app.nonColorDetails.length; i++) {
-                    var tempValue = {};
-                    tempValue['value_id'] = app.nonColorDetails[i]['value_id'];
-                    if (app.nonColorDetails[i].id) {
-                        tempValue['id'] = app.nonColorDetails[i].id;
-                    }
-                    tempValue['negation'] = app.nonColorDetails[i].negation;
-                    tempValue['pre_constraint'] = app.nonColorDetails[i].pre_constraint;
-                    tempValue['post_constraint'] = app.nonColorDetails[i].post_constraint;
-                    tempValue['main_value'] = app.nonColorDetails[i].main_value;
-                    var requestBody = {};
-                    if (app.nonColorDetails[i]['main_value'] != null && app.nonColorDetails[i]['main_value'] != '') {
-                        if (app.nonColorDetails[i]['main_value'].endsWith('(user defined)') && postFlag == true) {
-                            if (app.userNonColorDefinition[i]['main_value'] == ''
-                                || app.userNonColorDefinition[i]['main_value'] == null
-                                || app.userNonColorDefinition[i]['main_value'] == undefined
-                                || app.nonColorSampleText[i]['main_value'] == ''
-                                || app.nonColorSampleText[i]['main_value'] == null
-                                || app.nonColorSampleText[i]['main_value'] == undefined
-                                || app.nonColorTaxon[i]['main_value'] == ''
-                                || app.nonColorTaxon[i]['main_value'] == null
-                                || app.nonColorTaxon[i]['main_value'] == undefined) {
-                                postFlag = false;
-                            } else if (postFlag == true) {
-                                tempValue['main_value'] = app.nonColorDetails[i]['main_value'].substr(0, app.nonColorDetails[i]['main_value'].length - 14);
-                                var date = new Date();
-                                requestBody = {
-                                    "user": app.sharedFlag ? '' : app.user.name,
-                                    "ontology": "carex",
-                                    "term": tempValue['main_value'],
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#texture",
-                                    "definition": app.userNonColorDefinition[i]['main_value'],
-                                    "elucidation": "",
-                                    "createdBy": app.user.name,
-                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                    "definitionSrc": app.user.name,
-                                    "examples": app.nonColorSampleText[i]['main_value'] + ", used in taxon " + app.nonColorTaxon[i]['main_value'],
-                                    "logicDefinition": "",
-                                };
-                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-                                    .then(function (resp) {
-                                        console.log('shark api class resp', resp);
-                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            user: app.sharedFlag ? '' : app.user.name,
-                                            ontology: 'carex'
-                                        })
-                                            .then(function (resp) {
-                                                console.log('save api resp', resp);
-                                            });
-                                    });
-                            }
-
-                        } else if (app.nonColorDefinition[i]['main_value'] && postFlag == true) {
+//                for (var i = 0; i < app.nonColorDetails.length; i++) {
+                var postValue = {};
+                postValue['value_id'] = app.currentNonColorValue['value_id'];
+                if (app.currentNonColorValue.id) {
+                    postValue['id'] = app.currentNonColorValue.id;
+                }
+                postValue['negation'] = app.currentNonColorValue.negation;
+                postValue['pre_constraint'] = app.currentNonColorValue.pre_constraint;
+                postValue['post_constraint'] = app.currentNonColorValue.post_constraint;
+                postValue['main_value'] = app.currentNonColorValue.main_value;
+                var requestBody = {};
+                if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '') {
+                    if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
+                        if (app.userNonColorDefinition['main_value'] == ''
+                            || app.userNonColorDefinition['main_value'] == null
+                            || app.userNonColorDefinition['main_value'] == undefined
+                            || app.nonColorSampleText['main_value'] == ''
+                            || app.nonColorSampleText['main_value'] == null
+                            || app.nonColorSampleText['main_value'] == undefined
+                            || app.nonColorTaxon['main_value'] == ''
+                            || app.nonColorTaxon['main_value'] == null
+                            || app.nonColorTaxon['main_value'] == undefined) {
+                            postFlag = false;
+                        } else if (postFlag == true) {
+                            postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
+                            var date = new Date();
                             requestBody = {
                                 "user": app.sharedFlag ? '' : app.user.name,
                                 "ontology": "carex",
-                                "definition": app.nonColorDefinition[i]['main_value'],
-                                "providedBy": app.user.name,
-                                "exampleSentence": "",
-                                "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + tempValue['main_value']
+                                "term": postValue['main_value'],
+                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#texture",
+                                "definition": app.userNonColorDefinition['main_value'],
+                                "elucidation": "",
+                                "createdBy": app.user.name,
+                                "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                "definitionSrc": app.user.name,
+                                "examples": app.nonColorSampleText['main_value'] + ", used in taxon " + app.nonColorTaxon['main_value'],
+                                "logicDefinition": "",
                             };
-                            axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
+                            axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
                                 .then(function (resp) {
-                                    console.log('shark api definition resp', resp);
+                                    console.log('shark api class resp', resp);
                                     axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                         user: app.sharedFlag ? '' : app.user.name,
                                         ontology: 'carex'
@@ -2905,41 +2952,80 @@
                                             console.log('save api resp', resp);
                                         });
                                 });
-                        } else if (app.nonColorComment[i]['main_value'] && postFlag == true) {
-                            requestBody = {
-                                "user": app.sharedFlag ? '' : app.user.name,
-                                "ontology": "carex",
-                                "comment": app.nonColorComment[i]['main_value'],
-                                "providedBy": app.user.name,
-                                "exampleSentence": "",
-                                "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + tempValue['main_value']
-                            };
-                            axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                                .then(function (resp) {
-                                    console.log('shark api comment resp', resp);
-                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                        user: app.sharedFlag ? '' : app.user.name,
-                                        ontology: 'carex'
-                                    })
-                                        .then(function (resp) {
-                                            console.log('save api resp', resp);
-                                        });
-                                });
-
                         }
-                    }
 
-                    postValues.push(tempValue);
+                    } else if (app.nonColorDefinition['main_value'] && postFlag == true) {
+                        requestBody = {
+                            "user": app.sharedFlag ? '' : app.user.name,
+                            "ontology": "carex",
+                            "definition": app.nonColorDefinition['main_value'],
+                            "providedBy": app.user.name,
+                            "exampleSentence": "",
+                            "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
+                        };
+                        axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
+                            .then(function (resp) {
+                                console.log('shark api definition resp', resp);
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                    user: app.sharedFlag ? '' : app.user.name,
+                                    ontology: 'carex'
+                                })
+                                    .then(function (resp) {
+                                        console.log('save api resp', resp);
+                                    });
+                            });
+                    } else if (app.nonColorComment['main_value'] && postFlag == true) {
+                        requestBody = {
+                            "user": app.sharedFlag ? '' : app.user.name,
+                            "ontology": "carex",
+                            "comment": app.nonColorComment['main_value'],
+                            "providedBy": app.user.name,
+                            "exampleSentence": "",
+                            "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
+                        };
+                        axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
+                            .then(function (resp) {
+                                console.log('shark api comment resp', resp);
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                    user: app.sharedFlag ? '' : app.user.name,
+                                    ontology: 'carex'
+                                })
+                                    .then(function (resp) {
+                                        console.log('save api resp', resp);
+                                    });
+                            });
+
+                    }
                 }
 
+//                }
+
                 if (postFlag == true) {
-                    axios.post('/chrecorder/public/api/v1/save-non-color-value', postValues)
+                    axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
                         .then(function (resp) {
                             app.values = resp.data.values;
                             app.preList = resp.data.preList;
                             app.postList = resp.data.postList;
+                            app.nonColorDetails = resp.data.nonColorDetails;
                             app.allNonColorValues = resp.data.allNonColorValues;
-                            app.nonColorDetailsFlag = false;
+                            app.currentNonColorValue = {
+                                detailsFlag: null,
+                                value_id: app.currentNonColorValue.value_id,
+                                placeholderName: app.currentNonColorValue.placeholderName
+                            };
+                            if (newFlag == false) {
+                                app.nonColorDetailsFlag = false;
+                            } else {
+                                app.nonColorDetailsFlag = true;
+                                app.nonColorComment = {};
+                                app.nonColorTaxon = {
+                                    'main_value': app.taxonName,
+                                };
+                                app.nonColorSampleText = {};
+                                app.nonColorDefinition = {};
+                                app.userNonColorDefinition = {};
+                                app.currentNonColorValue.taxon = app.taxonName;
+                            }
                         });
                 } else {
                     $('.non-color-input-definition').css('border', '1px solid red');
@@ -2977,6 +3063,13 @@
             focusedValue(value) {
                 var app = this;
 
+                app.currentColorValue = {};
+                app.currentColorValue.detailsFlag = null;
+                app.currentColorValue.value_id = value.id;
+                app.currentNonColorValue = {};
+                app.currentNonColorValue.detailsFlag = null;
+                app.currentNonColorValue.value_id = value.id;
+//                console.log('test', value);
                 var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
                 if (!app.checkHaveUnit(currentCharacter.name)) {
                     axios.get('/chrecorder/public/api/v1/get-constraint/' + currentCharacter.name)
@@ -2991,45 +3084,39 @@
                                 console.log('get-color resp', resp.data);
                                 app.colorDetails = resp.data.colorDetails;
                                 if (app.colorDetails.length == 0) {
-                                    app.colorComment = [];
-                                    app.colorTaxon = [];
-                                    app.colorSampleText = [];
-                                    app.colorDefinition = [];
-                                    app.userColorDefinition = [];
-                                    app.colorDetails.push({value_id: value.id, detailFlag: null});
-                                    app.colorComment.push({});
-                                    app.colorTaxon.push({
+                                    app.currentColorValueExist = false;
+                                    app.colorComment = {};
+                                    app.colorTaxon = {
                                         'brightness': app.taxonName,
                                         'reflectance': app.taxonName,
                                         'saturation': app.taxonName,
                                         'colored': app.taxonName,
                                         'multi_colored': app.taxonName,
-                                    });
-                                    app.colorSampleText.push({});
-                                    app.colorDefinition.push({});
-                                    app.userColorDefinition.push({});
+                                    };
+                                    app.colorSampleText = {};
+                                    app.colorDefinition = {};
+                                    app.userColorDefinition = {};
+                                    app.colorDetails.push({value_id: value.id, detailFlag: null});
                                 } else {
+                                    console.log('currentColorValue', app.currentColorValue);
+                                    app.currentColorValueExist = true;
+                                    app.currentColorValue.value_id = value.id;
                                     $('.color-input').attr('placeholder', '');
-                                    console.log('place holder test');
-                                    app.colorComment = [];
-                                    app.colorTaxon = [];
-                                    app.colorSampleText = [];
-                                    app.colorDefinition = [];
-                                    app.userColorDefinition = [];
+                                    app.colorComment = {};
+                                    app.colorTaxon = {
+                                        'brightness': app.taxonName,
+                                        'reflectance': app.taxonName,
+                                        'saturation': app.taxonName,
+                                        'colored': app.taxonName,
+                                        'multi_colored': app.taxonName,
+                                    };
+                                    app.colorSampleText = {};
+                                    app.colorDefinition = {};
+                                    app.userColorDefinition = {};
+                                    app.currentColorValue.taxon = app.taxonName;
                                     for (var i = 0; i < app.colorDetails.length; i++) {
                                         app.colorDetails[i].taxon = app.taxonName;
                                         app.colorDetails[i].detailFlag = null;
-                                        app.colorComment.push({});
-                                        app.colorTaxon.push({
-                                            'brightness': app.taxonName,
-                                            'reflectance': app.taxonName,
-                                            'saturation': app.taxonName,
-                                            'colored': app.taxonName,
-                                            'multi_colored': app.taxonName,
-                                        });
-                                        app.colorSampleText.push({});
-                                        app.colorDefinition.push({});
-                                        app.userColorDefinition.push({});
                                     }
                                 }
                             });
@@ -3041,40 +3128,36 @@
                             .then(function (resp) {
                                 app.nonColorDetails = resp.data.nonColorDetails;
                                 if (app.nonColorDetails.length == 0) {
-                                    app.nonColorComment = [];
-                                    app.nonColorTaxon = [];
-                                    app.nonColorSampleText = [];
-                                    app.nonColorDefinition = [];
-                                    app.userNonColorDefinition = [];
+                                    app.currentNonColorValueExist = false;
+                                    app.nonColorComment = {};
+                                    app.nonColorTaxon = {
+                                        'main_value': app.taxonName,
+                                    };
+                                    app.nonColorSampleText = {};
+                                    app.nonColorDefinition = {};
+                                    app.userNonColorDefinition = {};
+                                    app.currentNonColorValue.placeholderName = currentCharacter.name.split(' ')[0].toLowerCase();
+                                    app.currentNonColorValue.taxon = app.taxonName;
                                     app.nonColorDetails.push({
                                         value_id: value.id,
                                         detailFlag: null,
                                         placeholderName: currentCharacter.name.split(' ')[0].toLowerCase()
                                     });
-                                    app.nonColorComment.push({});
-                                    app.nonColorTaxon.push({
-                                        'main_value': app.taxonName,
-                                    });
-                                    app.nonColorSampleText.push({});
-                                    app.nonColorDefinition.push({});
-                                    app.userNonColorDefinition.push({});
                                 } else {
-                                    app.nonColorComment = [];
-                                    app.nonColorTaxon = [];
-                                    app.nonColorSampleText = [];
-                                    app.nonColorDefinition = [];
-                                    app.userNonColorDefinition = [];
+                                    app.currentNonColorValueExist = true;
+                                    app.nonColorComment = {};
+                                    app.nonColorTaxon = {
+                                        'main_value': app.taxonName,
+                                    };
+                                    app.nonColorSampleText = {};
+                                    app.nonColorDefinition = {};
+                                    app.userNonColorDefinition = {};
+                                    app.currentNonColorValue.placeholderName = currentCharacter.name.split(' ')[0].toLowerCase();
+                                    app.currentNonColorValue.taxon = app.taxonName;
                                     for (var i = 0; i < app.nonColorDetails.length; i++) {
                                         app.nonColorDetails[i].taxon = app.taxonName;
                                         app.nonColorDetails[i].detailFlag = null;
                                         app.nonColorDetails[i].placeholderName = currentCharacter.name.split(' ')[0].toLowerCase();
-                                        app.nonColorComment.push({});
-                                        app.nonColorTaxon.push({
-                                            'main_value': app.taxonName,
-                                        });
-                                        app.nonColorSampleText.push({});
-                                        app.nonColorDefinition.push({});
-                                        app.userNonColorDefinition.push({});
                                     }
                                 }
                             });
@@ -3268,7 +3351,7 @@
                                     //app.colorDefinition[index][flag] = app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                 } else {
                                     var index = app.colorDetails.indexOf(color);
-                                    app.colorDefinition[index][flag] = null;
+                                    app.colorDefinition[flag] = null;
                                 }
                             }
                         } else if (app.searchColor.find(eachColor => eachColor.term == color[flag])) {
@@ -3280,7 +3363,7 @@
                                 //app.colorDefinition[index][flag] = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                             } else {
                                 var index = app.colorDetails.indexOf(color);
-                                app.colorDefinition[index][flag] = null;
+                                app.colorDefinition[flag] = null;
                             }
                         } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == color[flag]))) {
                             app.searchColorFlag = 2;
@@ -3288,10 +3371,10 @@
                             if (app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                                 app.exactColor.definition = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                 var index = app.colorDetails.indexOf(color);
-                                app.colorDefinition[index][flag] = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                                app.colorDefinition[flag] = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                             } else {
                                 var index = app.colorDetails.indexOf(color);
-                                app.colorDefinition[index][flag] = null;
+                                app.colorDefinition[flag] = null;
                             }
                         }
                         console.log('app.searchColorFlag', app.searchColorFlag);
@@ -3330,10 +3413,10 @@
                                 if (app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                                     app.nonColorSynonyms[i].definition = app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                     var index = app.nonColorDetails.indexOf(nonColor);
-                                    app.nonColorDefinition[index][flag] = app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                                    app.nonColorDefinition[flag] = app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                 } else {
                                     var index = app.nonColorDetails.indexOf(nonColor);
-                                    app.nonColorDefinition[index][flag] = null;
+                                    app.nonColorDefinition[flag] = null;
                                 }
                             }
                         } else if (app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag])) {
@@ -3342,10 +3425,10 @@
                             if (app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                                 app.exactNonColor.definition = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                 var index = app.nonColorDetails.indexOf(nonColor);
-                                app.nonColorDefinition[index][flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                                app.nonColorDefinition[flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                             } else {
                                 var index = app.nonColorDetails.indexOf(nonColor);
-                                app.nonColorDefinition[index][flag] = null;
+                                app.nonColorDefinition[flag] = null;
                             }
                         } else if (app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == nonColor[flag]))) {
                             app.searchNonColorFlag = 2;
@@ -3353,10 +3436,10 @@
                             if (app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                                 app.exactNonColor.definition = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                 var index = app.nonColorDetails.indexOf(nonColor);
-                                app.nonColorDefinition[index][flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                                app.nonColorDefinition[flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                             } else {
                                 var index = app.nonColorDetails.indexOf(nonColor);
-                                app.nonColorDefinition[index][flag] = null;
+                                app.nonColorDefinition[flag] = null;
                             }
                         }
                         console.log('app.searchNonColorFlag', app.searchNonColorFlag);
@@ -3388,9 +3471,9 @@
                     app.nonColorDetails[0]['main_value'] = node.data.text;
 
                 } else {
-                    for (var i = 0; i < app.colorDetails.length; i++) {
-
-                    }
+//                    for (var i = 0; i < app.colorDetails.length; i++) {
+//
+//                    }
                 }
             },
             checkHaveColorValueSet(text) {
@@ -3450,13 +3533,37 @@
                 if (app.colorDetails.length == 1) {
 
                 }
-                console.log('color', color);
-                console.log('flag', flag);
-                console.log('value', value);
-                console.log('test');
             },
             importMatrix() {
 
+            },
+            editEachColor(color) {
+                console.log('color', color);
+                var app = this;
+                app.currentColorValue = color;
+                app.currentColorValue.detailsFlag = null;
+            },
+            removeEachColor(color) {
+                console.log('color', color);
+                var app = this;
+                axios.post('/chrecorder/public/api/v1/remove-each-color-details', color)
+                    .then(function(resp) {
+                        app.colorDetails = resp.data.colorDetails;
+                    });
+            },
+            editEachNonColor(value) {
+                var app = this;
+                var tempPlaceholderName = app.currentNonColorValue.placeholderName;
+                app.currentNonColorValue = value;
+                app.currentNonColorValue.placeholderName = tempPlaceholderName;
+                app.currentNonColorValue.detailsFlag = null;
+            },
+            removeEachNonColor(value) {
+                var app = this;
+                axios.post('/chrecorder/public/api/v1/remove-each-non-color-details', value)
+                    .then(function(resp) {
+                        app.nonColorDetails = resp.data.nonColorDetails;
+                    });
             },
         },
         watch: {
