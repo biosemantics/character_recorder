@@ -611,8 +611,9 @@
                                 <div class="modal-container">
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
+                                        <hr>
                                         <div v-if="currentColorValueExist == true">
-                                            Existing Values
+                                            <b>Existing values</b>
                                         </div>
                                         <div v-for="(eachColor, index) in colorDetails" style="margin-top: 5px;" v-if="currentColorValueExist == true" class="row">
                                             <div class="col-md-6">
@@ -650,7 +651,7 @@
                                             <hr>
                                         </div>
                                         <div>
-                                            Formulate a value: type in a blank to select existing phrases or use your own terms(need
+                                            <b>Formulate a value:</b> type in a blank to select existing phrases or use your own terms(need
                                             definition)
                                         </div>
                                     </div>
@@ -863,8 +864,9 @@
                                 <div class="modal-container">
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
+                                        <hr>
                                         <div v-if="currentNonColorValueExist == true">
-                                            Existing Values
+                                            <b>Existing values</b>
                                         </div>
                                         <div v-for="(eachValue, index) in nonColorDetails" class="row" style="margin-top: 5px;" v-if="currentNonColorValueExist == true">
                                             <div class="col-md-6">
@@ -890,7 +892,7 @@
                                             <hr>
                                         </div>
                                         <div>
-                                            Formulate a value: select existing phrases or use your own terms(need
+                                            <b>Formulate a value:</b> select existing phrases or use your own terms(need
                                             definition)
                                         </div>
 
