@@ -2898,6 +2898,7 @@
                                     app.colorDetailsFlag = false;
                                 } else {
                                     app.colorDetailsFlag = true;
+                                    app.currentColorValueExist = true;
                                     app.colorComment = {};
                                     app.colorTaxon = {
                                         'brightness': app.taxonName,
@@ -3069,6 +3070,7 @@
                                     app.nonColorDetailsFlag = false;
                                 } else {
                                     app.nonColorDetailsFlag = true;
+                                    app.currentNonColorValueExist = true;
                                     app.nonColorComment = {};
                                     app.nonColorTaxon = {
                                         'main_value': app.taxonName,
