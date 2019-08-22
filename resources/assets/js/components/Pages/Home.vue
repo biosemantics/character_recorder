@@ -610,11 +610,9 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Formulate a value: type in a blank to select existing phrases or use your own terms(need
-                                        definition)
-                                    </div>
-
-                                    <div class="modal-body">
+                                        <div v-if="currentColorValueExist == true">
+                                            Existing Values
+                                        </div>
                                         <div v-for="(eachColor, index) in colorDetails" style="margin-top: 5px;" v-if="currentColorValueExist == true" class="row">
                                             <div class="col-md-6">
                                                 <div style="display: inline-block;" v-if="eachColor.negation != null">
@@ -643,10 +641,22 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <a class="btn btn-primary" v-on:click="editEachColor(eachColor)">Edit</a>
-                                                <a class="btn btn-primary" v-on:click="removeEachColor(eachColor)">Remove</a>
+                                                <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="editEachColor(eachColor)">Edit</a>
+                                                <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="removeEachColor(eachColor)">Remove</a>
                                             </div>
                                         </div>
+                                        <div v-if="currentColorValueExist == true">
+                                            <hr>
+                                        </div>
+                                        <div>
+                                            <b>{{ currentCharacter.name }}</b> <br/>
+                                            Formulate a value: type in a blank to select existing phrases or use your own terms(need
+                                            definition)
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-body">
+
                                         <div>
                                             <div>
                                                 <div style="display: inline-block;">
@@ -828,7 +838,7 @@
                                             <div class="col-md-6" style="text-align: left;">
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="removeColorValue()">
-                                                    Remove Value </a>
+                                                    Remove All Value </a>
                                             </div>
                                             <div class="col-md-6">
                                                 <a class="btn btn-primary ok-btn"
@@ -852,11 +862,10 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Formulate a value: select existing phrases or use your own terms(need
-                                        definition)
-                                    </div>
-                                    <div class="modal-body">
-                                        <div v-for="(eachValue, index) in nonColorDetails" class="row" v-if="currentNonColorValueExist == true">
+                                        <div v-if="currentNonColorValueExist == true">
+                                            Existing Values
+                                        </div>
+                                        <div v-for="(eachValue, index) in nonColorDetails" class="row" style="margin-top: 5px;" v-if="currentNonColorValueExist == true">
                                             <div class="col-md-6">
                                                 <div style="display: inline-block;" v-if="eachValue.negation != null">
                                                     {{ eachValue.negation }}
@@ -872,10 +881,22 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
-                                                <a class="btn btn-primary" v-on:click="editEachNonColor(eachValue)">Edit</a>
-                                                <a class="btn btn-primary" v-on:click="removeEachNonColor(eachValue)">Remove</a>
+                                                <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="editEachNonColor(eachValue)">Edit</a>
+                                                <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="removeEachNonColor(eachValue)">Remove</a>
                                             </div>
                                         </div>
+                                        <div v-if="currentNonColorValueExist == true">
+                                            <hr>
+                                        </div>
+                                        <div>
+                                            <b>{{ currentCharacter.name }}</b> <br/>
+                                            Formulate a value: select existing phrases or use your own terms(need
+                                            definition)
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-body">
+
                                         <div>
                                             <div>
                                                 <div style="display: inline-block;">
@@ -1002,7 +1023,7 @@
                                             <div class="col-md-6" style="text-align: left;">
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="removeNonColorValue()">
-                                                    Remove Value </a>
+                                                    Remove All Value </a>
                                             </div>
                                             <div class="col-md-6">
                                                 <a class="btn btn-primary ok-btn"
@@ -1156,6 +1177,7 @@
                 currentNonColorValue: {},
                 currentColorValueExist: false,
                 currentNonColorValueExist: false,
+                currentCharacter: {},
             }
         },
         components: {
@@ -2437,14 +2459,14 @@
                                                 app.descriptionText += ', ';
                                             }
                                             if (tempArraySorted[l].length > 1) {
-                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+                                                app.descriptionText += app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
                                                         app.descriptionText += ' or to ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
                                             } else {
-                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
+                                                app.descriptionText += app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
                                             }
                                         }
 
@@ -2585,14 +2607,14 @@
                                                 app.descriptionText += ', ';
                                             }
                                             if (tempArraySorted[l].length > 1) {
-                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+                                                app.descriptionText += app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
                                                         app.descriptionText += ' to or ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
                                             } else {
-                                                app.descriptionText += app.getPercentageForDescription(app.columnCount, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
+                                                app.descriptionText += app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
                                             }
                                         }
 
@@ -2749,49 +2771,87 @@
 
                 var postFlag = true;
                 console.log('currentColorValue', app.currentColorValue);
+                console.log('app.currentColorValue.colored', app.currentColorValue.colored);
 
-//                for (var i = 0; i < app.colorDetails.length; i++) {
-                var postValue = {};
-                postValue['value_id'] = app.currentColorValue['value_id'];
-                if (app.currentColorValue.id) {
-                    postValue['id'] = app.currentColorValue.id;
-                }
-                for (var key in app.currentColorValue) {
-                    if (app.checkColorProperty(key)) {
-                        postValue[key] = app.currentColorValue[key];
-                        var requestBody = {};
-                        if (app.currentColorValue[key] != null && app.currentColorValue[key] != '') {
-                            if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
-                                if (app.userColorDefinition[key] == ''
-                                    || app.userColorDefinition[key] == null
-                                    || app.userColorDefinition[key] == undefined
-                                    || app.colorSampleText[key] == ''
-                                    || app.colorSampleText[key] == null
-                                    || app.colorSampleText[key] == undefined
-                                    || app.colorTaxon[key] == ''
-                                    || app.colorTaxon[key] == null
-                                    || app.colorTaxon[key] == undefined) {
-                                     postFlag = false;
-                                } else if (postFlag == true){
-                                    postValue[key] = app.currentColorValue[key].substr(0, app.currentColorValue[key].length - 14);
-                                    console.log('colorSampleText', app.colorSampleText[key]);
-                                    var date = new Date();
+                if ((app.currentColorValue.colored == undefined || app.currentColorValue.colored == 'undefined' || app.currentColorValue.colored == null || app.currentColorValue.colored == '')
+                    && (app.currentColorValue.multi_colored == undefined || app.currentColorValue.multi_colored == 'undefined' || app.currentColorValue.multi_colored == null || app.currentColorValue.multi_colored == '')
+                    && (app.currentColorValue.negation == undefined || app.currentColorValue.negation == 'undefined' || app.currentColorValue.negation == null || app.currentColorValue.negation == '')
+                    && (app.currentColorValue.post_constraint == undefined || app.currentColorValue.post_constraint == 'undefined' || app.currentColorValue.post_constraint == null || app.currentColorValue.post_constraint == '')
+                    && (app.currentColorValue.pre_constraint == undefined || app.currentColorValue.pre_constraint == 'undefined' || app.currentColorValue.pre_constraint == null || app.currentColorValue.pre_constraint == '')
+                    && (app.currentColorValue.reflectance == undefined || app.currentColorValue.reflectance == 'undefined' || app.currentColorValue.reflectance == null || app.currentColorValue.reflectance == '')
+                    && (app.currentColorValue.saturation == undefined || app.currentColorValue.saturation == 'undefined' || app.currentColorValue.saturation == null || app.currentColorValue.saturation == '')) {
+                    axios.get('/chrecorder/public/api/v1/get-color-details/' + app.currentColorValue.value_id)
+                        .then(function (resp) {
+                            app.colorDetails = resp.data.colorDetails;
+                            app.values = resp.data.values;
+                            app.colorDetailsFlag = false;
+
+                        });
+                } else {
+                    var postValue = {};
+                    postValue['value_id'] = app.currentColorValue['value_id'];
+                    if (app.currentColorValue.id) {
+                        postValue['id'] = app.currentColorValue.id;
+                    }
+                    for (var key in app.currentColorValue) {
+                        if (app.checkColorProperty(key)) {
+                            postValue[key] = app.currentColorValue[key];
+                            var requestBody = {};
+                            if (app.currentColorValue[key] != null && app.currentColorValue[key] != '') {
+                                if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
+                                    if (app.userColorDefinition[key] == ''
+                                        || app.userColorDefinition[key] == null
+                                        || app.userColorDefinition[key] == undefined
+                                        || app.colorSampleText[key] == ''
+                                        || app.colorSampleText[key] == null
+                                        || app.colorSampleText[key] == undefined
+                                        || app.colorTaxon[key] == ''
+                                        || app.colorTaxon[key] == null
+                                        || app.colorTaxon[key] == undefined) {
+                                        postFlag = false;
+                                    } else if (postFlag == true){
+                                        postValue[key] = app.currentColorValue[key].substr(0, app.currentColorValue[key].length - 14);
+                                        console.log('colorSampleText', app.colorSampleText[key]);
+                                        var date = new Date();
+                                        requestBody = {
+                                            "user": app.sharedFlag ? '' : app.user.name,
+                                            "ontologylo": "carex",
+                                            "term": postValue[key],
+                                            "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + app.changeToSubClassName(key),
+                                            "definition": app.userColorDefinition[key],
+                                            "elucidation": "",
+                                            "createdBy": app.user.name,
+                                            "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                            "definitionSrc": app.user.name,
+                                            "examples": app.colorSampleText[key]+ ", used in taxon " + app.colorTaxon[key],
+                                            "logicDefinition": "",
+                                        };
+                                        axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                            .then(function (resp) {
+                                                console.log('shark api class resp', resp);
+                                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                    user: app.sharedFlag ? '' : app.user.name,
+                                                    ontology: 'carex'
+                                                })
+                                                    .then(function (resp) {
+                                                        console.log('save api resp', resp);
+                                                    });
+                                            });
+                                    }
+
+
+                                } else if (app.colorDefinition[key] && postFlag == true) {
                                     requestBody = {
                                         "user": app.sharedFlag ? '' : app.user.name,
-                                        "ontologylo": "carex",
-                                        "term": postValue[key],
-                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + app.changeToSubClassName(key),
-                                        "definition": app.userColorDefinition[key],
-                                        "elucidation": "",
-                                        "createdBy": app.user.name,
-                                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                        "definitionSrc": app.user.name,
-                                        "examples": app.colorSampleText[key]+ ", used in taxon " + app.colorTaxon[key],
-                                        "logicDefinition": "",
+                                        "ontology": "carex",
+                                        "definition": app.colorDefinition[key],
+                                        "providedBy": app.user.name,
+                                        "exampleSentence": "",
+                                        "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
                                     };
-                                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                    axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
                                         .then(function (resp) {
-                                            console.log('shark api class resp', resp);
+                                            console.log('shark api definition resp', resp);
                                             axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                                 user: app.sharedFlag ? '' : app.user.name,
                                                 ontology: 'carex'
@@ -2800,89 +2860,68 @@
                                                     console.log('save api resp', resp);
                                                 });
                                         });
+                                    console.log('user defined', app.colorDefinition);
+                                } else if (app.colorComment[key] && postFlag == true) {
+                                    requestBody = {
+                                        "user": app.sharedFlag ? '' : app.user.name,
+                                        "ontology": "carex",
+                                        "comment": app.colorComment[key],
+                                        "providedBy": app.user.name,
+                                        "exampleSentence": "",
+                                        "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
+                                    };
+                                    axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
+                                        .then(function (resp) {
+                                            console.log('shark api comment resp', resp);
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                user: app.sharedFlag ? '' : app.user.name,
+                                                ontology: 'carex'
+                                            })
+                                                .then(function (resp) {
+                                                    console.log('save api resp', resp);
+                                                });
+                                        });
+
                                 }
-
-
-                            } else if (app.colorDefinition[key] && postFlag == true) {
-                                requestBody = {
-                                    "user": app.sharedFlag ? '' : app.user.name,
-                                    "ontology": "carex",
-                                    "definition": app.colorDefinition[key],
-                                    "providedBy": app.user.name,
-                                    "exampleSentence": "",
-                                    "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
-                                };
-                                axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
-                                    .then(function (resp) {
-                                        console.log('shark api definition resp', resp);
-                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            user: app.sharedFlag ? '' : app.user.name,
-                                            ontology: 'carex'
-                                        })
-                                            .then(function (resp) {
-                                                console.log('save api resp', resp);
-                                            });
-                                    });
-                                console.log('user defined', app.colorDefinition);
-                            } else if (app.colorComment[key] && postFlag == true) {
-                                requestBody = {
-                                    "user": app.sharedFlag ? '' : app.user.name,
-                                    "ontology": "carex",
-                                    "comment": app.colorComment[key],
-                                    "providedBy": app.user.name,
-                                    "exampleSentence": "",
-                                    "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
-                                };
-                                axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                                    .then(function (resp) {
-                                        console.log('shark api comment resp', resp);
-                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            user: app.sharedFlag ? '' : app.user.name,
-                                            ontology: 'carex'
-                                        })
-                                            .then(function (resp) {
-                                                console.log('save api resp', resp);
-                                            });
-                                    });
-
                             }
-                        }
 
+                        }
+                    }
+//                }
+                    if (postFlag == true) {
+                        axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
+                            .then(function (resp) {
+                                app.values = resp.data.values;
+                                app.preList = resp.data.preList;
+                                app.postList = resp.data.postList;
+                                if (newFlag == false) {
+                                    app.colorDetailsFlag = false;
+                                } else {
+                                    app.colorDetailsFlag = true;
+                                    app.colorComment = {};
+                                    app.colorTaxon = {
+                                        'brightness': app.taxonName,
+                                        'reflectance': app.taxonName,
+                                        'saturation': app.taxonName,
+                                        'colored': app.taxonName,
+                                        'multi_colored': app.taxonName,
+                                    };
+                                    app.colorSampleText = {};
+                                    app.colorDefinition = {};
+                                    app.userColorDefinition = {};
+                                    app.currentColorValue.taxon = app.taxonName;
+                                }
+                                app.colorDetails = resp.data.colorDetails;
+                                app.allColorValues = resp.data.allColorValues;
+                                app.allNonColorValues = resp.data.allNonColorValues;
+                                app.currentColorValue = {value_id: app.currentColorValue.value_id};
+                            });
+                    } else {
+                        $('.color-definition-input').css('border', '1px solid red');
                     }
                 }
-//                }
-                console.log('postValue', postValue);
-                if (postFlag == true) {
-                    axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
-                        .then(function (resp) {
-                            app.values = resp.data.values;
-                            app.preList = resp.data.preList;
-                            app.postList = resp.data.postList;
-                            if (newFlag == false) {
-                                app.colorDetailsFlag = false;
-                            } else {
-                                app.colorDetailsFlag = true;
-                                app.colorComment = {};
-                                app.colorTaxon = {
-                                    'brightness': app.taxonName,
-                                    'reflectance': app.taxonName,
-                                    'saturation': app.taxonName,
-                                    'colored': app.taxonName,
-                                    'multi_colored': app.taxonName,
-                                };
-                                app.colorSampleText = {};
-                                app.colorDefinition = {};
-                                app.userColorDefinition = {};
-                                app.currentColorValue.taxon = app.taxonName;
-                            }
-                            app.colorDetails = resp.data.colorDetails;
-                            app.allColorValues = resp.data.allColorValues;
-                            app.allNonColorValues = resp.data.allNonColorValues;
-                            app.currentColorValue = {value_id: app.currentColorValue.value_id};
-                        });
-                } else {
-                    $('.color-definition-input').css('border', '1px solid red');
-                }
+//                for (var i = 0; i < app.colorDetails.length; i++) {
+
             },
             removeColorValue() {
                 var app = this;
@@ -2901,49 +2940,84 @@
             saveNonColorValue(newFlag = false) {
                 var app = this;
 
-                var postFlag = true;
+
+                if ((app.currentNonColorValue.negation == 'undefined' || app.currentNonColorValue.negation == '' || app.currentNonColorValue.negation == null)
+                    && (app.currentNonColorValue.pre_constraint == 'undefined' || app.currentNonColorValue.pre_constraint == '' || app.currentNonColorValue.pre_constraint == null)
+                    && (app.currentNonColorValue.main_value == 'undefined' || app.currentNonColorValue.main_value == '' || app.currentNonColorValue.main_value == null)
+                    && (app.currentNonColorValue.post_constraint == 'undefined' || app.currentNonColorValue.post_constraint == '' || app.currentNonColorValue.post_constraint == null)) {
+                    axios.get('/chrecorder/public/api/v1/get-non-color-details/' + app.currentNonColorValue.value_id)
+                        .then(function (resp) {
+                            app.nonColorDetails = resp.data.nonColorDetails;
+                            app.values = resp.data.values;
+                            app.nonColorDetailsFlag = false;
+
+                        });
+                } else {
+                    var postFlag = true;
 //                for (var i = 0; i < app.nonColorDetails.length; i++) {
-                var postValue = {};
-                postValue['value_id'] = app.currentNonColorValue['value_id'];
-                if (app.currentNonColorValue.id) {
-                    postValue['id'] = app.currentNonColorValue.id;
-                }
-                postValue['negation'] = app.currentNonColorValue.negation;
-                postValue['pre_constraint'] = app.currentNonColorValue.pre_constraint;
-                postValue['post_constraint'] = app.currentNonColorValue.post_constraint;
-                postValue['main_value'] = app.currentNonColorValue.main_value;
-                var requestBody = {};
-                if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '') {
-                    if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
-                        if (app.userNonColorDefinition['main_value'] == ''
-                            || app.userNonColorDefinition['main_value'] == null
-                            || app.userNonColorDefinition['main_value'] == undefined
-                            || app.nonColorSampleText['main_value'] == ''
-                            || app.nonColorSampleText['main_value'] == null
-                            || app.nonColorSampleText['main_value'] == undefined
-                            || app.nonColorTaxon['main_value'] == ''
-                            || app.nonColorTaxon['main_value'] == null
-                            || app.nonColorTaxon['main_value'] == undefined) {
-                            postFlag = false;
-                        } else if (postFlag == true) {
-                            postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
-                            var date = new Date();
+                    var postValue = {};
+                    postValue['value_id'] = app.currentNonColorValue['value_id'];
+                    if (app.currentNonColorValue.id) {
+                        postValue['id'] = app.currentNonColorValue.id;
+                    }
+                    postValue['negation'] = app.currentNonColorValue.negation;
+                    postValue['pre_constraint'] = app.currentNonColorValue.pre_constraint;
+                    postValue['post_constraint'] = app.currentNonColorValue.post_constraint;
+                    postValue['main_value'] = app.currentNonColorValue.main_value;
+                    var requestBody = {};
+                    if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '') {
+                        if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
+                            if (app.userNonColorDefinition['main_value'] == ''
+                                || app.userNonColorDefinition['main_value'] == null
+                                || app.userNonColorDefinition['main_value'] == undefined
+                                || app.nonColorSampleText['main_value'] == ''
+                                || app.nonColorSampleText['main_value'] == null
+                                || app.nonColorSampleText['main_value'] == undefined
+                                || app.nonColorTaxon['main_value'] == ''
+                                || app.nonColorTaxon['main_value'] == null
+                                || app.nonColorTaxon['main_value'] == undefined) {
+                                postFlag = false;
+                            } else if (postFlag == true) {
+                                postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
+                                var date = new Date();
+                                requestBody = {
+                                    "user": app.sharedFlag ? '' : app.user.name,
+                                    "ontology": "carex",
+                                    "term": postValue['main_value'],
+                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#texture",
+                                    "definition": app.userNonColorDefinition['main_value'],
+                                    "elucidation": "",
+                                    "createdBy": app.user.name,
+                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                    "definitionSrc": app.user.name,
+                                    "examples": app.nonColorSampleText['main_value'] + ", used in taxon " + app.nonColorTaxon['main_value'],
+                                    "logicDefinition": "",
+                                };
+                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                    .then(function (resp) {
+                                        console.log('shark api class resp', resp);
+                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                            user: app.sharedFlag ? '' : app.user.name,
+                                            ontology: 'carex'
+                                        })
+                                            .then(function (resp) {
+                                                console.log('save api resp', resp);
+                                            });
+                                    });
+                            }
+
+                        } else if (app.nonColorDefinition['main_value'] && postFlag == true) {
                             requestBody = {
                                 "user": app.sharedFlag ? '' : app.user.name,
                                 "ontology": "carex",
-                                "term": postValue['main_value'],
-                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#texture",
-                                "definition": app.userNonColorDefinition['main_value'],
-                                "elucidation": "",
-                                "createdBy": app.user.name,
-                                "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                "definitionSrc": app.user.name,
-                                "examples": app.nonColorSampleText['main_value'] + ", used in taxon " + app.nonColorTaxon['main_value'],
-                                "logicDefinition": "",
+                                "definition": app.nonColorDefinition['main_value'],
+                                "providedBy": app.user.name,
+                                "exampleSentence": "",
+                                "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
                             };
-                            axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                            axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
                                 .then(function (resp) {
-                                    console.log('shark api class resp', resp);
+                                    console.log('shark api definition resp', resp);
                                     axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                         user: app.sharedFlag ? '' : app.user.name,
                                         ontology: 'carex'
@@ -2952,84 +3026,64 @@
                                             console.log('save api resp', resp);
                                         });
                                 });
+                        } else if (app.nonColorComment['main_value'] && postFlag == true) {
+                            requestBody = {
+                                "user": app.sharedFlag ? '' : app.user.name,
+                                "ontology": "carex",
+                                "comment": app.nonColorComment['main_value'],
+                                "providedBy": app.user.name,
+                                "exampleSentence": "",
+                                "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
+                            };
+                            axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
+                                .then(function (resp) {
+                                    console.log('shark api comment resp', resp);
+                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                        user: app.sharedFlag ? '' : app.user.name,
+                                        ontology: 'carex'
+                                    })
+                                        .then(function (resp) {
+                                            console.log('save api resp', resp);
+                                        });
+                                });
+
                         }
-
-                    } else if (app.nonColorDefinition['main_value'] && postFlag == true) {
-                        requestBody = {
-                            "user": app.sharedFlag ? '' : app.user.name,
-                            "ontology": "carex",
-                            "definition": app.nonColorDefinition['main_value'],
-                            "providedBy": app.user.name,
-                            "exampleSentence": "",
-                            "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
-                        };
-                        axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
-                            .then(function (resp) {
-                                console.log('shark api definition resp', resp);
-                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                    user: app.sharedFlag ? '' : app.user.name,
-                                    ontology: 'carex'
-                                })
-                                    .then(function (resp) {
-                                        console.log('save api resp', resp);
-                                    });
-                            });
-                    } else if (app.nonColorComment['main_value'] && postFlag == true) {
-                        requestBody = {
-                            "user": app.sharedFlag ? '' : app.user.name,
-                            "ontology": "carex",
-                            "comment": app.nonColorComment['main_value'],
-                            "providedBy": app.user.name,
-                            "exampleSentence": "",
-                            "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
-                        };
-                        axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                            .then(function (resp) {
-                                console.log('shark api comment resp', resp);
-                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                    user: app.sharedFlag ? '' : app.user.name,
-                                    ontology: 'carex'
-                                })
-                                    .then(function (resp) {
-                                        console.log('save api resp', resp);
-                                    });
-                            });
-
                     }
-                }
 
 //                }
 
-                if (postFlag == true) {
-                    axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
-                        .then(function (resp) {
-                            app.values = resp.data.values;
-                            app.preList = resp.data.preList;
-                            app.postList = resp.data.postList;
-                            app.nonColorDetails = resp.data.nonColorDetails;
-                            app.allNonColorValues = resp.data.allNonColorValues;
-                            app.currentNonColorValue = {
-                                detailsFlag: null,
-                                value_id: app.currentNonColorValue.value_id,
-                                placeholderName: app.currentNonColorValue.placeholderName
-                            };
-                            if (newFlag == false) {
-                                app.nonColorDetailsFlag = false;
-                            } else {
-                                app.nonColorDetailsFlag = true;
-                                app.nonColorComment = {};
-                                app.nonColorTaxon = {
-                                    'main_value': app.taxonName,
+                    if (postFlag == true) {
+                        axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
+                            .then(function (resp) {
+                                app.values = resp.data.values;
+                                app.preList = resp.data.preList;
+                                app.postList = resp.data.postList;
+                                app.nonColorDetails = resp.data.nonColorDetails;
+                                app.allNonColorValues = resp.data.allNonColorValues;
+                                app.currentNonColorValue = {
+                                    detailsFlag: null,
+                                    value_id: app.currentNonColorValue.value_id,
+                                    placeholderName: app.currentNonColorValue.placeholderName
                                 };
-                                app.nonColorSampleText = {};
-                                app.nonColorDefinition = {};
-                                app.userNonColorDefinition = {};
-                                app.currentNonColorValue.taxon = app.taxonName;
-                            }
-                        });
-                } else {
-                    $('.non-color-input-definition').css('border', '1px solid red');
+                                if (newFlag == false) {
+                                    app.nonColorDetailsFlag = false;
+                                } else {
+                                    app.nonColorDetailsFlag = true;
+                                    app.nonColorComment = {};
+                                    app.nonColorTaxon = {
+                                        'main_value': app.taxonName,
+                                    };
+                                    app.nonColorSampleText = {};
+                                    app.nonColorDefinition = {};
+                                    app.userNonColorDefinition = {};
+                                    app.currentNonColorValue.taxon = app.taxonName;
+                                }
+                            });
+                    } else {
+                        $('.non-color-input-definition').css('border', '1px solid red');
+                    }
                 }
+
 
             },
             removeNonColorValue() {
@@ -3071,6 +3125,7 @@
                 app.currentNonColorValue.value_id = value.id;
 //                console.log('test', value);
                 var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
+                app.currentCharacter = currentCharacter;
                 if (!app.checkHaveUnit(currentCharacter.name)) {
                     axios.get('/chrecorder/public/api/v1/get-constraint/' + currentCharacter.name)
                         .then(function (resp) {
@@ -3243,7 +3298,7 @@
                 var characterName = app.userCharacters.find(ch => ch.id == characterId).name;
                 console.log('characterName', characterName);
 
-                var searchText = characterName.split(' ');
+                var searchText = characterName.split('of');
 
                 if (flag == 'negation') {
                     event.target.placeholder = '';
@@ -3254,7 +3309,7 @@
                 app.nonColorExistFlag = false;
 
                 if (flag == 'main_value') {
-                    axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText[0].toLowerCase())
+                    axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText[0].toLowerCase().replace(' ', '-'))
                         .then(function (resp) {
                             app.textureTreeData = resp.data;
                             nonColor.detailFlag = flag;
@@ -3327,13 +3382,14 @@
                         if (app.searchColor.length == 0) {
                             app.searchColorFlag = 0;
                             if (color.id && !color[flag].endsWith('(user defined)')) {
+                                app.currentColorValue[flag] = color[flag] + '(user defined)';
                                 for (var i = 0; i < app.colorDetails.length; i++) {
                                     if (app.colorDetails[i].id == color.id) {
                                         app.colorDetails[i][flag] = color[flag] + '(user defined)';
                                     }
                                 }
                             } else if (!color[flag].endsWith('(user defined)')) {
-                                app.colorDetails[0][flag] = color[flag] + '(user defined)';
+                                app.currentColorValue[flag] = color[flag] + '(user defined)';
                             }
                         } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == color[flag])
                             || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == color[flag])))) {
@@ -3392,13 +3448,14 @@
                         if (app.searchNonColor.length == 0) {
                             app.searchNonColorFlag = 0;
                             if (nonColor.id && !nonColor[flag].endsWith('(user defined)')) {
+                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
                                 for (var i = 0; i < app.nonColorDetails.length; i++) {
                                     if (app.nonColorDetails[i].id == nonColor.id) {
                                         app.nonColorDetails[i][flag] = nonColor[flag] + '(user defined)';
                                     }
                                 }
                             } else if (!nonColor[flag].endsWith('(user defined)')) {
-                                app.nonColorDetails[0][flag] = nonColor[flag] + '(user defined)';
+                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
                             }
                         } else if (app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == nonColor[flag])
                             || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == nonColor[flag])))) {
@@ -3449,32 +3506,20 @@
                 var app = this;
                 app.colorDetailsFlag = false;
                 console.log('treeNode', node);
-                if (app.colorDetails.length == 1) {
-                    app.colorDetailsFlag = true;
-                    app.colorDetails[0][app.colorDetails[0].detailFlag] = app.colorDetails[0][app.colorDetails[0].detailFlag] + ';';
-                    app.colorDetails[0][app.colorDetails[0].detailFlag] = app.colorDetails[0][app.colorDetails[0].detailFlag].substring(0, app.colorDetails[0][app.colorDetails[0].detailFlag].length - 1);
-                    app.colorDetails[0][app.colorDetails[0].detailFlag] = node.data.text;
-                } else {
-                    for (var i = 0; i < app.colorDetails.length; i++) {
-
-                    }
-                }
+                app.colorDetailsFlag = true;
+                app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
+                app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
+                app.currentColorValue[app.currentColorValue.detailFlag] = node.data.text;
 
             },
             onTextureTreeNodeSelected(node) {
                 var app = this;
                 app.nonColorDetailsFlag = false;
-                if (app.nonColorDetails.length == 1) {
-                    app.nonColorDetailsFlag = true;
-                    app.nonColorDetails[0]['main_value'] = app.nonColorDetails[0]['main_value'] + ';';
-                    app.nonColorDetails[0]['main_value'] = app.nonColorDetails[0]['main_value'].substring(0, app.nonColorDetails[0]['main_value'].length - 1);
-                    app.nonColorDetails[0]['main_value'] = node.data.text;
+                app.nonColorDetailsFlag = true;
+                app.currentNonColorValue['main_value'] = app.currentNonColorValue['main_value'] + ';';
+                app.currentNonColorValue['main_value'] = app.currentNonColorValue['main_value'].substring(0, app.currentNonColorValue['main_value'].length - 1);
+                app.currentNonColorValue['main_value'] = node.data.text;
 
-                } else {
-//                    for (var i = 0; i < app.colorDetails.length; i++) {
-//
-//                    }
-                }
             },
             checkHaveColorValueSet(text) {
                 if (text == 'brightness'
