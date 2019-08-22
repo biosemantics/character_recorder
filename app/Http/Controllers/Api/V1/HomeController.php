@@ -89,7 +89,11 @@ class HomeController extends Controller
                                     ($eachColor->saturation ? ($eachColor->saturation . ' ') : '') .
                                     ($eachColor->colored ? ($eachColor->colored . ' ') : '') .
                                     ($eachColor->multi_colored ? ($eachColor->multi_colored . ' ') : '') .
-                                    ($eachColor->post_constraint ? ($eachColor->post_constraint . ' ') : '');
+                                    ($eachColor->post_constraint ? ($eachColor->post_constraint . ' ') : '') ;
+                                if ($value->value != '') {
+                                    $value->value = substr($value->value, 0, -1);
+                                    $value->value = $value->value . '; ';
+                                }
                             }
                             if ($value->value != '') {
                                 $value->value = substr($value->value, 0, -1);
@@ -106,6 +110,10 @@ class HomeController extends Controller
                                     ($eachValue->pre_constraint ? ($eachValue->pre_constraint . ' ') : '') .
                                     ($eachValue->main_value ? ($eachValue->main_value . ' ') : '') .
                                     ($eachValue->post_constraint ? ($eachValue->post_constraint . ' ') : '');
+                                if ($value->value != '') {
+                                    $value->value = substr($value->value, 0, -1);
+                                    $value->value = $value->value . '; ';
+                                }
                             }
                             if ($value->value != '') {
                                 $value->value = substr($value->value, 0, -1);
@@ -1020,9 +1028,11 @@ class HomeController extends Controller
     }
     public function getColorDetails(Request $request, $valueId) {
         $colorDetails = ColorDetails::where('value_id', '=', $valueId)->get();
+        $returnValues = $this->getValuesByCharacter();
 
         $data = [
-            'colorDetails' => $colorDetails
+            'colorDetails' => $colorDetails,
+            'values' => $returnValues
         ];
 
         return $data;
@@ -1131,9 +1141,11 @@ class HomeController extends Controller
 
     public function getNonColorDetails(Request $request, $valueId) {
         $nonColorDetails = NonColorDetails::where('value_id', '=', $valueId)->get();
+        $returnValues = $this->getValuesByCharacter();
 
         $data = [
-            'nonColorDetails' => $nonColorDetails
+            'nonColorDetails' => $nonColorDetails,
+            'values' => $returnValues
         ];
 
         return $data;
