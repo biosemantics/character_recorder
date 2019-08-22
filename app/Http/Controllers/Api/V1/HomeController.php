@@ -1272,9 +1272,20 @@ class HomeController extends Controller
         }
 
         $returnColorDetails = ColorDetails::where('value_id', '=', $request->input('value_id'))->get();
+        $returnValues = $this->getValuesByCharacter();
+        $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
+
+        $constraints = $this->getDefaultConstraint($characterName);
+
+        $returnAllDetailValues = $this->getAllColorValues();
 
         $data = [
-            'colorDetails' => $returnColorDetails
+            'colorDetails' => $returnColorDetails,
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'preList' => $constraints['preList'],
+            'postList' => $constraints['postList'],
         ];
 
         return $data;
@@ -1286,11 +1297,22 @@ class HomeController extends Controller
         if ($eachNonColorDetails) {
             $eachNonColorDetails->delete();
         }
+        $returnValues = $this->getValuesByCharacter();
 
         $returnNonColorDetails = NonColorDetails::where('value_id', '=', $request->input('value_id'))->get();
+        $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
+
+        $constraints = $this->getDefaultConstraint($characterName);
+
+        $returnAllDetailValues = $this->getAllColorValues();
 
         $data = [
-            'nonColorDetails' => $returnNonColorDetails
+            'nonColorDetails' => $returnNonColorDetails,
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'preList' => $constraints['preList'],
+            'postList' => $constraints['postList'],
         ];
 
         return $data;

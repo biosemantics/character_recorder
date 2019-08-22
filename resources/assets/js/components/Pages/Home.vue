@@ -610,6 +610,7 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
+                                        <b>{{ currentCharacter.name }}</b> <br/>
                                         <div v-if="currentColorValueExist == true">
                                             Existing Values
                                         </div>
@@ -649,7 +650,6 @@
                                             <hr>
                                         </div>
                                         <div>
-                                            <b>{{ currentCharacter.name }}</b> <br/>
                                             Formulate a value: type in a blank to select existing phrases or use your own terms(need
                                             definition)
                                         </div>
@@ -838,7 +838,7 @@
                                             <div class="col-md-6" style="text-align: left;">
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="removeColorValue()">
-                                                    Remove All Value </a>
+                                                    Remove All Values </a>
                                             </div>
                                             <div class="col-md-6">
                                                 <a class="btn btn-primary ok-btn"
@@ -862,6 +862,7 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
+                                        <b>{{ currentCharacter.name }}</b> <br/>
                                         <div v-if="currentNonColorValueExist == true">
                                             Existing Values
                                         </div>
@@ -889,7 +890,6 @@
                                             <hr>
                                         </div>
                                         <div>
-                                            <b>{{ currentCharacter.name }}</b> <br/>
                                             Formulate a value: select existing phrases or use your own terms(need
                                             definition)
                                         </div>
@@ -1023,7 +1023,7 @@
                                             <div class="col-md-6" style="text-align: left;">
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="removeNonColorValue()">
-                                                    Remove All Value </a>
+                                                    Remove All Values </a>
                                             </div>
                                             <div class="col-md-6">
                                                 <a class="btn btn-primary ok-btn"
@@ -3596,6 +3596,11 @@
                 axios.post('/chrecorder/public/api/v1/remove-each-color-details', color)
                     .then(function(resp) {
                         app.colorDetails = resp.data.colorDetails;
+                        app.values = resp.data.values;
+                        app.preList = resp.data.preList;
+                        app.postList = resp.data.postList;
+                        app.allColorValues = resp.data.allColorValues;
+                        app.allNonColorValues = resp.data.allNonColorValues;
                     });
             },
             editEachNonColor(value) {
@@ -3610,6 +3615,11 @@
                 axios.post('/chrecorder/public/api/v1/remove-each-non-color-details', value)
                     .then(function(resp) {
                         app.nonColorDetails = resp.data.nonColorDetails;
+                        app.values = resp.data.values;
+                        app.preList = resp.data.preList;
+                        app.postList = resp.data.postList;
+                        app.allColorValues = resp.data.allColorValues;
+                        app.allNonColorValues = resp.data.allNonColorValues;
                     });
             },
         },
