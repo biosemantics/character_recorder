@@ -2941,6 +2941,7 @@
             saveNonColorValue(newFlag = false) {
                 var app = this;
 
+                var postFlag = true;
 
                 if ((app.currentNonColorValue.negation == 'undefined' || app.currentNonColorValue.negation == '' || app.currentNonColorValue.negation == null)
                     && (app.currentNonColorValue.pre_constraint == 'undefined' || app.currentNonColorValue.pre_constraint == '' || app.currentNonColorValue.pre_constraint == null)
@@ -2954,7 +2955,6 @@
 
                         });
                 } else {
-                    var postFlag = true;
 //                for (var i = 0; i < app.nonColorDetails.length; i++) {
                     var postValue = {};
                     postValue['value_id'] = app.currentNonColorValue['value_id'];
