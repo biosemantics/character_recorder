@@ -2440,6 +2440,7 @@
                                         console.log('countArray', countArray);
                                         console.log('tempArraySorted', tempArraySorted);
                                         tempArraySorted.sort((a, b) => a.eachCount > b.eachCount ? -1 : 1);
+                                        var objByPercentage = {};
 
                                         for (var l = 0; l < tempArraySorted.length; l++) {
 //                                            var sortedArrayToRemove = [];
@@ -2457,18 +2458,53 @@
 //                                            tempArraySorted[l] = tempArraySorted[l].filter(function(each) {
 //                                                return !sortedArrayToRemove.includes(each);
 //                                            });
-                                            if (l > 0 || tempIndex > 0) {
-                                                app.descriptionText += ', ';
-                                            }
+//                                            if (l > 0 || tempIndex > 0) {
+//                                                app.descriptionText += ', ';
+//                                            }
+                                            var tempProperty = app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount);
+                                            console.log('tempProperty', tempProperty);
+
                                             if (tempArraySorted[l].length > 1) {
-                                                app.descriptionText += app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+
+                                                if (!objByPercentage[tempProperty]) {
+                                                    objByPercentage[tempProperty] = [];
+                                                }
+                                                objByPercentage[tempProperty].push(tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value);
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
-                                                        app.descriptionText += ' or to ' + tempArraySorted[l][m].value;
+                                                        objByPercentage[tempProperty][objByPercentage[tempProperty].length - 1] += ' or to ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
+
+
+//                                                app.descriptionText += app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+//                                                if (tempArraySorted[l].length > 2) {
+//                                                    for (var m = 2; m < tempArraySorted[l].length; m++) {
+//                                                        app.descriptionText += ' or to ' + tempArraySorted[l][m].value;
+//                                                    }
+//                                                }
                                             } else {
-                                                app.descriptionText += app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
+                                                if (!objByPercentage[tempProperty]) {
+                                                    objByPercentage[tempProperty] = [];
+                                                }
+                                                objByPercentage[tempProperty].push(tempArraySorted[l][0].value);
+//                                                app.descriptionText += app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
+                                            }
+
+                                        }
+                                        console.log('objByPercentage', objByPercentage);
+
+                                        for (var [objIndex, [key, value]] of Object.entries(Object.entries(objByPercentage))) {
+                                            if (objIndex > 0) {
+                                                app.descriptionText += ', ';
+                                            }
+
+                                            app.descriptionText += key;
+                                            for (var percentageIndex = 0; percentageIndex < objByPercentage[key].length; percentageIndex++) {
+                                                if (percentageIndex > 0) {
+                                                    app.descriptionText += ',';
+                                                }
+                                                app.descriptionText += ' ' + objByPercentage[key][percentageIndex];
                                             }
                                         }
 
@@ -2602,21 +2638,50 @@
                                         console.log('tempArraySorted', tempArraySorted);
                                         tempArraySorted.sort((a, b) => a.eachCount > b.eachCount ? -1 : 1);
 
-                                        for (var l = 0; l < tempArraySorted.length; l++) {
-                                            var eachCount = 0;
+                                        var objByPercentage = {};
 
-                                            if (l > 0 || tempIndex > 0) {
-                                                app.descriptionText += ', ';
+                                        for (var l = 0; l < tempArraySorted.length; l++) {
+
+//                                            if (l > 0 || tempIndex > 0) {
+//                                                app.descriptionText += ', ';
+//                                            }
+                                            var tempProperty = app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount);
+                                            if (!objByPercentage[tempProperty]) {
+                                                objByPercentage[tempProperty] = [];
                                             }
+
+
                                             if (tempArraySorted[l].length > 1) {
-                                                app.descriptionText += app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+                                                objByPercentage[tempProperty].push(tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value);
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
-                                                        app.descriptionText += ' to or ' + tempArraySorted[l][m].value;
+                                                        objByPercentage[tempProperty][objByPercentage[tempProperty].length - 1] += ' or to ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
+
+//                                                app.descriptionText += app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
+//                                                if (tempArraySorted[l].length > 2) {
+//                                                    for (var m = 2; m < tempArraySorted[l].length; m++) {
+//                                                        app.descriptionText += ' to or ' + tempArraySorted[l][m].value;
+//                                                    }
+//                                                }
                                             } else {
-                                                app.descriptionText += app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
+                                                objByPercentage[tempProperty].push(tempArraySorted[l][0].value);
+//                                                app.descriptionText += app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
+                                            }
+                                        }
+
+                                        for (var [objIndex, [key, value]] of Object.entries(Object.entries(objByPercentage))) {
+                                            if (objIndex > 0) {
+                                                app.descriptionText += ', ';
+                                            }
+
+                                            app.descriptionText += key;
+                                            for (var percentageIndex = 0; percentageIndex < objByPercentage[key].length; percentageIndex++) {
+                                                if (percentageIndex > 0) {
+                                                    app.descriptionText += ',';
+                                                }
+                                                app.descriptionText += ' ' + objByPercentage[key][percentageIndex];
                                             }
                                         }
 
@@ -2679,17 +2744,21 @@
                 return returnArray;
             },
             getPercentageForDescription(totalCount, eachCount) {
-                var percentage = eachCount / totalCount * 100;
-                if (percentage <= 5) {
-                    return 'rarely';
-                } else if (percentage > 5 && percentage <= 25) {
-                    return 'occasionally';
-                } else if (percentage > 25 && percentage <= 50) {
-                    return 'sometimes';
-                } else if (percentage > 50 && percentage <= 75) {
-                    return 'usually';
-                } else if (percentage > 75 && percentage <= 100) {
-                    return 'frequently';
+                if (totalCount == 1) {
+                    return '';
+                } else {
+                    var percentage = eachCount / totalCount * 100;
+                    if (percentage <= 5) {
+                        return 'rarely';
+                    } else if (percentage > 5 && percentage <= 25) {
+                        return 'occasionally';
+                    } else if (percentage > 25 && percentage <= 50) {
+                        return 'sometimes';
+                    } else if (percentage > 50 && percentage <= 75) {
+                        return 'usually';
+                    } else if (percentage > 75 && percentage <= 100) {
+                        return 'frequently';
+                    }
                 }
             },
             checkAllowRange(firstColor, secondColor) {
