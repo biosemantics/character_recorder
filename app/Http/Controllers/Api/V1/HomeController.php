@@ -286,6 +286,7 @@ class HomeController extends Controller
             'method_include' => $request->input('method_include'),
             'method_exclude' => $request->input('method_exclude'),
             'method_where' => $request->input('method_where'),
+            'method_as' => $request->input('method_as'),
             'unit' => $request->input('unit'),
             'standard' => $request->input('standard'),
             'creator' => $request->input('creator'),
@@ -506,6 +507,7 @@ class HomeController extends Controller
             'method_include' => $request->input('method_include'),
             'method_exclude' => $request->input('method_exclude'),
             'method_where' => $request->input('method_where'),
+            'method_as' => $request->input('method_as'),
             'unit' => $request->input('unit'),
             'standard' => $request->input('standard'),
             'creator' => $request->input('creator'),
@@ -923,6 +925,7 @@ class HomeController extends Controller
         $character->method_include = $request->input('method_include');
         $character->method_exclude = $request->input('method_exclude');
         $character->method_where = $request->input('method_where');
+        $character->method_as = $request->input('method_as');
         $character->unit = $request->input('unit');
         $character->standard = $request->input('standard');
         $character->creator = $request->input('creator');

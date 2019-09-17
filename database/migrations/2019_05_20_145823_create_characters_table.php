@@ -21,6 +21,7 @@ class CreateCharactersTable extends Migration
             $table->string('method_include', 573)->nullable();
             $table->string('method_exclude', 573)->nullable();
             $table->string('method_where', 573)->nullable();
+            $table->string('method_as', 573)->nullable();
             $table->string('creator', 573)->nullable();
             $table->string('unit', 573)->nullable();
             $table->boolean('standard')->nullable();
