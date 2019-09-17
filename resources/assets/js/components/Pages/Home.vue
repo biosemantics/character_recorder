@@ -482,7 +482,7 @@
                                                     <div>
                                                         <img class="img-method"
                                                              style="width: 100%;"
-                                                             v-bind:src="'https://drive.google.com/uc?id=' + character.method_as.split('id=')[1].substring(0, character.method_where.split('id=')[1].length)"/>
+                                                             v-bind:src="'https://drive.google.com/uc?id=' + character.method_as.split('id=')[1].substring(0, character.method_as.split('id=')[1].length)"/>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -1180,6 +1180,36 @@
                 currentColorValueExist: false,
                 currentNonColorValueExist: false,
                 currentCharacter: {},
+                methodFieldData: {
+                    fromTerm: null,
+                    fromId: null,
+                    toTerm: null,
+                    toId: null,
+                    includeTerm: null,
+                    includeId: null,
+                    excludeTerm: null,
+                    excludeId: null,
+                    whereTerm: null,
+                    whereId: null,
+                    fromNeedMore: false,
+                    toNeedMore: false,
+                    includeNeedMore: false,
+                    excludeNeedMore: false,
+                    whereNeedMore: false,
+                    fromSynonyms: [],
+                    toSynonyms: [],
+                    includeSynonyms: [],
+                    excludeSynonyms: [],
+                    whereSynonyms: [],
+                    noneSynonymFlag: {
+                        from: false,
+                        to: false,
+                        include: false,
+                        exclude: false,
+                        where: false,
+                    }
+                },
+                checkMethodFlag: false,
             }
         },
         components: {
@@ -1234,6 +1264,7 @@
                 console.log('app.character after handle: ', app.character); // get the data after child dealing
             },
             printSearchText (searchText) {
+                var app = this;
                 app.searchText = searchText;
             },
             onSelect(selectedItem) {
@@ -1298,6 +1329,35 @@
                 sessionStorage.setItem("characterName", app.character.name);
 
                 if (app.checkHaveUnit(app.character.name)) {
+                    // Initializing the methodFieldData //
+                    app.methodFieldData.fromTerm = null;
+                    app.methodFieldData.fromId = null;
+                    app.methodFieldData.toTerm = null;
+                    app.methodFieldData.toId = null;
+                    app.methodFieldData.includeTerm = null;
+                    app.methodFieldData.includeId = null;
+                    app.methodFieldData.excludeTerm = null;
+                    app.methodFieldData.excludeId = null;
+                    app.methodFieldData.whereTerm = null;
+                    app.methodFieldData.whereId = null;
+                    app.methodFieldData.fromNeedMore = false;
+                    app.methodFieldData.toNeedMore = false;
+                    app.methodFieldData.includeNeedMore = false;
+                    app.methodFieldData.excludeNeedMore = false;
+                    app.methodFieldData.whereNeedMore = false;
+                    app.methodFieldData.fromSynonyms = [];
+                    app.methodFieldData.toSynonyms = [];
+                    app.methodFieldData.includeSynonyms = [];
+                    app.methodFieldData.excludeSynonyms = [];
+                    app.methodFieldData.whereSynonyms = [];
+                    app.methodFieldData.noneSynonymFlag = {
+                        from: false,
+                        to: false,
+                        include: false,
+                        exclude: false,
+                        where: false,
+                    };
+                    //
                     app.parentData = [];
                     app.parentData.push(app.character.method_as);
                     app.parentData[3] = app.user;
@@ -1306,6 +1366,7 @@
                     app.parentData[6] = app.character.method_include;
                     app.parentData[7] = app.character.method_exclude;
                     app.parentData[8] = app.character.method_where;
+                    app.parentData[9] = app.methodFieldData;
                     app.metadataFlag = 'method';
                     app.currentMetadata = method;
                 } else {
@@ -1327,8 +1388,38 @@
 
 
                 if (app.checkHaveUnit(app.character.name)) {
+                    // Initializing the methodFieldData //
+                    app.methodFieldData.fromTerm = null;
+                    app.methodFieldData.fromId = null;
+                    app.methodFieldData.toTerm = null;
+                    app.methodFieldData.toId = null;
+                    app.methodFieldData.includeTerm = null;
+                    app.methodFieldData.includeId = null;
+                    app.methodFieldData.excludeTerm = null;
+                    app.methodFieldData.excludeId = null;
+                    app.methodFieldData.whereTerm = null;
+                    app.methodFieldData.whereId = null;
+                    app.methodFieldData.fromNeedMore = false;
+                    app.methodFieldData.toNeedMore = false;
+                    app.methodFieldData.includeNeedMore = false;
+                    app.methodFieldData.excludeNeedMore = false;
+                    app.methodFieldData.whereNeedMore = false;
+                    app.methodFieldData.fromSynonyms = [];
+                    app.methodFieldData.toSynonyms = [];
+                    app.methodFieldData.includeSynonyms = [];
+                    app.methodFieldData.excludeSynonyms = [];
+                    app.methodFieldData.whereSynonyms = [];
+                    app.methodFieldData.noneSynonymFlag = {
+                        from: false,
+                        to: false,
+                        include: false,
+                        exclude: false,
+                        where: false,
+                    };
+                    //
                     app.parentData = [];
                     app.parentData[3] = app.user;
+                    app.parentData[9] = app.methodFieldData;
                     app.metadataFlag = 'method';
                     app.currentMetadata = method;
                 } else {
@@ -1354,12 +1445,41 @@
 
                 console.log('checkHaveUnit', app.checkHaveUnit(app.character.name));
 
-                console.log("metadata", metadata);
+                console.log('metadata', metadata);
                 console.log("app.character=", app.character);
                 if (app.checkHaveUnit(app.character.name) || (metadata != 'method' && metadata != 'unit')) {
                     app.metadataFlag = metadata;
                     switch (metadata) {
                         case 'method':
+                            // Initializing the methodFieldData //
+                            app.methodFieldData.fromTerm = null;
+                            app.methodFieldData.fromId = null;
+                            app.methodFieldData.toTerm = null;
+                            app.methodFieldData.toId = null;
+                            app.methodFieldData.includeTerm = null;
+                            app.methodFieldData.includeId = null;
+                            app.methodFieldData.excludeTerm = null;
+                            app.methodFieldData.excludeId = null;
+                            app.methodFieldData.whereTerm = null;
+                            app.methodFieldData.whereId = null;
+                            app.methodFieldData.fromNeedMore = false;
+                            app.methodFieldData.toNeedMore = false;
+                            app.methodFieldData.includeNeedMore = false;
+                            app.methodFieldData.excludeNeedMore = false;
+                            app.methodFieldData.whereNeedMore = false;
+                            app.methodFieldData.fromSynonyms = [];
+                            app.methodFieldData.toSynonyms = [];
+                            app.methodFieldData.includeSynonyms = [];
+                            app.methodFieldData.excludeSynonyms = [];
+                            app.methodFieldData.whereSynonyms = [];
+                            app.methodFieldData.noneSynonymFlag = {
+                                from: false,
+                                to: false,
+                                include: false,
+                                exclude: false,
+                                where: false,
+                            };
+                            //
                             app.parentData = [];
                             app.parentData[0] = app.character.method_as;
                             app.parentData[3] = app.user;
@@ -1368,6 +1488,7 @@
                             app.parentData[6] = app.character.method_include;
                             app.parentData[7] = app.character.method_exclude;
                             app.parentData[8] = app.character.method_where;
+                            app.parentData[9] = app.methodFieldData;
                             app.currentMetadata = method;
                             break;
                         case 'unit':
@@ -1507,60 +1628,421 @@
                         app.refreshUserCharacters();
                     });
             },
-            saveCharacter(metadataFlag) {
+
+            checkDctionary: async() => {
+
+            },
+            async saveCharacter(metadataFlag) {
                 var app = this;
                 console.log('app.character = ', app.character);
-                console.log('saveCharacter', metadataFlag);
+                console.log('metadataFlag', metadataFlag);
 
-                if (app.character.summary == ''
-                    || app.character.summary == null
-                    || app.character.summary == undefined) {
-                    if (app.checkHaveUnit(app.character.name)) {
-                        app.character.summary = 'mean';
-                    } else {
-                        app.character.summary = '';
+                app.methodFieldData.fromTerm = null;
+                app.methodFieldData.fromId = null;
+                app.methodFieldData.toTerm = null;
+                app.methodFieldData.toId = null;
+                app.methodFieldData.includeTerm = null;
+                app.methodFieldData.includeId = null;
+                app.methodFieldData.excludeTerm = null;
+                app.methodFieldData.excludeId = null;
+                app.methodFieldData.whereTerm = null;
+                app.methodFieldData.whereId = null;
+                app.methodFieldData.fromNeedMore = false;
+                app.methodFieldData.toNeedMore = false;
+                app.methodFieldData.includeNeedMore = false;
+                app.methodFieldData.excludeNeedMore = false;
+                app.methodFieldData.whereNeedMore = false;
+                app.methodFieldData.fromSynonyms = [];
+                app.methodFieldData.toSynonyms = [];
+                app.methodFieldData.includeSynonyms = [];
+                app.methodFieldData.excludeSynonyms = [];
+                app.methodFieldData.whereSynonyms = [];
+                app.methodFieldData.noneSynonymFlag = {
+                    from: false,
+                    to: false,
+                    include: false,
+                    exclude: false,
+                    where: false,
+                };
+
+                var checkMethod = true;
+
+                var tempViewFlag = (sessionStorage.getItem('viewFlag') == 'true')
+
+                if ((app.checkHaveUnit(app.character.name) == true) && (tempViewFlag == false)) {
+                    var tempFlag = false;
+                    console.log('sadfsd');
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name)
+                        .then(function(resp) {
+                            console.log('search term resp', resp.data);
+                            for (var i = 0; i < resp.data.entries.length; i++) {
+                                if (resp.data.entries[i].term == app.character.name) {
+                                    tempFlag = true;
+                                }
+                            }
+                        });
+                    if (app.character['method_from'] != null && app.character['method_from'] != '') {
+                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_from'])
+                            .then(function(resp) {
+                                console.log('method_from search resp', resp.data);
+                                for (var i = 0; i < resp.data.entries.length; i++) {
+                                    if (resp.data.entries[i].score == 1) {
+                                        app.methodFieldData.fromTerm = resp.data.entries[i].term;
+                                        app.methodFieldData.fromId = resp.data.entries[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                        })[0].value;
+                                        console.log('fromId', app.methodFieldData.fromId);
+                                        break;
+                                    }
+                                    if (app.methodFieldData.fromId == null) {
+                                        checkMethod = false;
+                                        app.methodFieldData.fromNeedMore = true;
+                                        app.methodFieldData.fromSynonyms = resp.data.entries;
+                                        if (app.methodFieldData.fromSynonyms.length == 0) {
+                                            app.methodFieldData.noneSynonymFlag.from = true;
+                                        }
+                                        for (var i = 0; i < app.methodFieldData.fromSynonyms.length; i++) {
+                                            app.methodFieldData.fromSynonyms[i].tooltip = '';
+                                            var temp = app.methodFieldData.fromSynonyms[i].resultAnnotations.filter(function (e) {
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.methodFieldData.fromSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
                     }
-                }
 
-//                if (app.character['id'] && !app.editFlag) {
-//                    delete app.character['id'];
-//                }
+                    if (app.character['method_to'] != null && app.character['method_to'] != '') {
+                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_to'])
+                            .then(function(resp) {
+                                console.log('method_to search resp', resp.data);
+                                for (var i = 0; i < resp.data.entries.length; i++) {
+                                    if (resp.data.entries[i].score == 1) {
+                                        app.methodFieldData.toTerm = resp.data.entries[i].term;
+                                        app.methodFieldData.toId = resp.data.entries[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                        })[0].value;
+                                        console.log('toId', app.methodFieldData.toId);
+                                        break;
+                                    }
+                                    if (app.methodFieldData.toId == null) {
+                                        checkMethod = false;
+                                        app.methodFieldData.toNeedMore = true;
+                                        app.methodFieldData.toSynonyms = resp.data.entries;
+                                        if (app.methodFieldData.toSynonyms.length == 0) {
+                                            app.methodFieldData.noneSynonymFlag.to = true;
+                                        }
+                                        for (var i = 0; i < app.methodFieldData.toSynonyms.length; i++) {
+                                            app.methodFieldData.toSynonyms[i].tooltip = '';
+                                            var temp = app.methodFieldData.toSynonyms[i].resultAnnotations.filter(function (e) {
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.methodFieldData.toSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                    }
+                    if (app.character['method_include'] != null && app.character['method_include'] != '') {
+                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_include'])
+                            .then(function(resp) {
+                                for (var i = 0; i < resp.data.entries.length; i++) {
+                                    if (resp.data.entries[i].score == 1) {
+                                        app.methodFieldData.includeTerm = resp.data.entries[i].term;
+                                        app.methodFieldData.includeId = resp.data.entries[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                        })[0].value;
+                                        console.log('includeId', app.methodFieldData.includeId);
+                                        break;
+                                    }
+                                    if (app.methodFieldData.includeId == null) {
+                                        checkMethod = false;
+                                        app.methodFieldData.includeNeedMore = true;
+                                        app.methodFieldData.includeSynonyms = resp.data.entries;
+                                        if (app.methodFieldData.includeSynonyms.length == 0) {
+                                            app.methodFieldData.noneSynonymFlag.include = true;
+                                        }
+                                        for (var i = 0; i < app.methodFieldData.includeSynonyms.length; i++) {
+                                            app.methodFieldData.includeSynonyms[i].tooltip = '';
+                                            var temp = app.methodFieldData.includeSynonyms[i].resultAnnotations.filter(function (e) {
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.methodFieldData.includeSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                    }
 
-                var checkFields = true;
-                if ((this.character['method_from'] == null || this.character['method_from'] == '') &&
-                    (this.character['method_to'] == null || this.character['method_to'] == '') &&
-                    (this.character['method_include'] == null || this.character['method_include'] == '') &&
-                    (this.character['method_exclude'] == null || this.character['method_exclude'] == '') &&
-                    (this.character['method_where'] == null || this.character['method_where'] == '')) {
-                    checkFields = false;
-                }
+                    if (app.character['method_exclude'] != null && app.character['method_exclude'] != '') {
+                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_exclude'])
+                            .then(function(resp) {
+                                for (var i = 0; i < resp.data.entries.length; i++) {
+                                    if (resp.data.entries[i].score == 1) {
+                                        app.methodFieldData.excludeTerm = resp.data.entries[i].term;
+                                        app.methodFieldData.excludeId = resp.data.entries[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                        })[0].value;
+                                        console.log('includeId', app.methodFieldData.excludeId);
+                                        break;
+                                    }
+                                    if (app.methodFieldData.excludeId == null) {
+                                        checkMethod = false;
+                                        app.methodFieldData.excludeNeedMore = true;
+                                        app.methodFieldData.excludeSynonyms = resp.data.entries;
+                                        if (app.methodFieldData.excludeSynonyms.length == 0) {
+                                            app.methodFieldData.noneSynonymFlag.exclude = true;
+                                        }
+                                        for (var i = 0; i < app.methodFieldData.excludeSynonyms.length; i++) {
+                                            app.methodFieldData.excludeSynonyms[i].tooltip = '';
+                                            var temp = app.methodFieldData.excludeSynonyms[i].resultAnnotations.filter(function (e) {
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.methodFieldData.excludeSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                    }
 
-                if (!app.character['unit']) {
-                    checkFields = false;
-                }
+                    if (app.character['method_where'] != null && app.character['method_where'] != '') {
+                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_where'])
+                            .then(function(resp) {
+                                for (var i = 0; i < resp.data.entries.length; i++) {
+                                    if (resp.data.entries[i].score == 1) {
+                                        app.methodFieldData.whereTerm = resp.data.entries[i].term;
+                                        app.methodFieldData.whereId = resp.data.entries[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://www.geneontology.org/formats/oboInOwl#id';
+                                        })[0].value;
+                                        console.log('includeId', app.methodFieldData.whereId);
+                                        break;
+                                    }
+                                    if (app.methodFieldData.whereId == null) {
+                                        checkMethod = false;
+                                        app.methodFieldData.whereNeedMore = true;
+                                        app.methodFieldData.whereSynonyms = resp.data.entries;
+                                        if (app.methodFieldData.whereSynonyms.length == 0) {
+                                            app.methodFieldData.noneSynonymFlag.where = true;
+                                        }
+                                        for (var i = 0; i < app.methodFieldData.whereSynonyms.length; i++) {
+                                            app.methodFieldData.whereSynonyms[i].tooltip = '';
+                                            var temp = app.methodFieldData.whereSynonyms[i].resultAnnotations.filter(function (e) {
+                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                            });
+                                            if (temp.length > 0) {
+                                                app.methodFieldData.whereSynonyms[i].tooltip = temp[0].value;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                    }
 
-                if (!app.checkHaveUnit(app.character.name)) {
-                    checkFields = true;
-                }
+                    if (tempFlag == false) {
 
-
-                if (checkFields) {
-                    if ((app.character.standard_tag == null
-                        || app.character.standard_tag == ''
-                        || app.character.standard_tag == undefined)) {
-                        app.showDetails('tag', app.metadataFlag);
-
-                    } else {
-                        if (app.checkHaveUnit(app.character.name)) {
-                            app.confirmMethod = true;
-                        } else {
-                            app.confirmTag = true;
+                        var jsonClass = {
+                            "user":  app.sharedFlag? '': app.user.name,
+                            "ontology": 'carex',
+                            "term": app.character.name,
+                            "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                            "definition": '',
+                            "createdBy": app.user.name,
+                            "creationDate": new Date(),
+                            "definitionSrc": "tba",
+                            "examples": "tba",
+                            "logicDefinition": "measured_from some [" + app.character['method_from'] + "] and measured_to some [" + app.character['method_to'] + "]"
+                        };
+                        if (app.character['method_from'] != null) {
+                            jsonClass.definition = jsonClass.definition + 'from [' + app.character['method_from'] + ']';
                         }
+                        if (app.character['method_to'] != null) {
+                            jsonClass.definition = jsonClass.definition + ' to [' + app.character['method_to'] + ']';
+                        }
+                        if (app.character['method_include'] != null) {
+                            jsonClass.definition = jsonClass.definition + ' include [' + app.character['method_include'] + ']';
+                        }
+                        if (app.character['method_exclude'] != null) {
+                            jsonClass.definition = jsonClass.definition + ' exclude [' + app.character['method_exclude'] + ']';
+                        }
+                        if (app.character['method_where'] != null) {
+                            jsonClass.definition = jsonClass.definition + ' where [' + app.character['method_where'] + ']';
+                        }
+                        if (app.character.name.toLowerCase().split(' ')[0] == 'distance') {
+                            jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-distance"
+                        } else if (app.character.name.toLowerCase().split(' ')[0] == 'length') {
+                            jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-length"
+
+                        } else if (app.character.name.toLowerCase().split(' ')[0] == 'width') {
+                            jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-width"
+                        }
+                        await axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
+                            .then(function (resp) {
+                                console.log('class resp', resp);
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                    "user":  app.sharedFlag? '': app.user.name,
+                                    "ontology": 'carex'
+                                })
+                                    .then(function (resp) {
+                                        console.log('save resp', resp);
+                                    });
+                            })
+                            .catch(function (resp) {
+                                console.log('class error resp', resp);
+                            });
+                    } else {
+                        var jsonClass = {
+                            "user":  app.sharedFlag? '': app.user.name,
+                            "ontology": 'carex',
+                            "term": app.character.name + '(' + app.user.name + ')',
+                            "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                            "definition": '',
+                            "createdBy": app.user.name,
+                            "creationDate": new Date(),
+                            "definitionSrc": "tba",
+                            "examples": "tba",
+                            "logicDefinition": "measured_from some [" + app.character['method_from'] + "] and measured_to some [" + app.character['method_to'] + "]"
+                        };
+
+                        if (app.character['method_from'] != null) {
+                            jsonClass.definition = jsonClass.definition + 'from [' + app.character['method_from'] + ']';
+                        }
+                        if (app.character['method_to'] != null) {
+                            jsonClass.definition = jsonClass.definition + ' to [' + app.character['method_to'] + ']';
+                        }
+                        if (app.character['method_include'] != null) {
+                            jsonClass.definition = jsonClass.definition + ' include [' + app.character['method_include'] + ']';
+                        }
+                        if (app.character['method_exclude'] != null) {
+                            jsonClass.definition = jsonClass.definition + ' exclude [' + app.character['method_exclude'] + ']';
+                        }
+                        if (app.character['method_where'] != null) {
+                            jsonClass.definition = jsonClass.definition + ' where [' + app.character['method_where'] + ']';
+                        }
+                        if (app.character.name.toLowerCase().split(' ')[0] == 'distance') {
+                            jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-distance"
+                        } else if (app.character.name.toLowerCase().split(' ')[0] == 'length') {
+                            jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-length"
+
+                        } else if (app.character.name.toLowerCase().split(' ')[0] == 'width') {
+                            jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-width"
+                        }
+
+                        await axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
+                            .then(function (resp) {
+                                console.log('class resp', resp);
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                    "user":  app.sharedFlag? '': app.user.name,
+                                    "ontology": 'carex'
+                                })
+                                    .then(function (resp) {
+                                        console.log('save resp', resp);
+                                    });
+                            })
+                            .catch(function (resp) {
+                                console.log('class error resp', resp);
+                            });
+                    }
+//                        });
+                }
+
+                if (checkMethod == false) {
+                    console.log('checkMethod', checkMethod);
+                    if (app.metadataFlag != 'method') {
+                        console.log('not method field');
+                        app.parentData = [];
+                        app.parentData[0] = app.character.method_as;
+                        app.parentData[3] = app.user;
+                        app.parentData[4] = app.character.method_from;
+                        app.parentData[5] = app.character.method_to;
+                        app.parentData[6] = app.character.method_include;
+                        app.parentData[7] = app.character.method_exclude;
+                        app.parentData[8] = app.character.method_where;
+                        app.parentData[9] = app.methodFieldData;
+                        app.metadataFlag = 'method';
+                        app.currentMetadata = method;
+                    } else {
+                        console.log('method field');
+//                        app.parentData = app.character.standard_tag;
+//                        app.metadataFlag = 'tag';
+                        app.currentMetadata = null;
+
+                        setTimeout(function() {
+                            app.parentData = [];
+                            app.parentData[0] = app.character.method_as;
+                            app.parentData[3] = app.user;
+                            app.parentData[4] = app.character.method_from;
+                            app.parentData[5] = app.character.method_to;
+                            app.parentData[6] = app.character.method_include;
+                            app.parentData[7] = app.character.method_exclude;
+                            app.parentData[8] = app.character.method_where;
+                            app.parentData[9] = app.methodFieldData;
+                            app.metadataFlag = 'method';
+                            app.currentMetadata = method;
+                        }, 1);
+
+
                     }
 
                 } else {
-                    app.showDetails('unit', app.metadataFlag);
+                    var checkFields = true;
+
+                    if (app.character.summary == ''
+                        || app.character.summary == null
+                        || app.character.summary == undefined) {
+                        if (app.checkHaveUnit(app.character.name)) {
+                            app.character.summary = 'mean';
+                        } else {
+                            app.character.summary = '';
+                        }
+                    }
+
+                    if ((app.character['method_from'] == null || app.character['method_from'] == '') &&
+                        (app.character['method_to'] == null || app.character['method_to'] == '') &&
+                        (app.character['method_include'] == null || app.character['method_include'] == '') &&
+                        (app.character['method_exclude'] == null || app.character['method_exclude'] == '') &&
+                        (app.character['method_where'] == null || app.character['method_where'] == '')) {
+                        checkFields = false;
+                    }
+
+                    if (!app.character['unit']) {
+                        checkFields = false;
+                    }
+
+                    if (!app.checkHaveUnit(app.character.name)) {
+                        checkFields = true;
+                    }
+
+
+                    if (checkFields) {
+                        if ((app.character.standard_tag == null
+                            || app.character.standard_tag == ''
+                            || app.character.standard_tag == undefined)) {
+                            app.showDetails('tag', app.metadataFlag);
+
+                        } else {
+                            if (app.checkHaveUnit(app.character.name)) {
+                                app.confirmMethod = true;
+                            } else {
+                                app.confirmTag = true;
+                            }
+                        }
+
+                    } else {
+                        app.showDetails('unit', app.metadataFlag);
+                    }
                 }
+
+
+
             },
             use(characterId) {
                 var app = this;
@@ -3692,6 +4174,10 @@
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
                     });
+            },
+            getUserTag: async() => {
+                var app = this;
+                return axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id);
             },
         },
         watch: {
