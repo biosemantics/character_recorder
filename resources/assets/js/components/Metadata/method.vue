@@ -25,7 +25,7 @@
             <div v-if="!noneMethod && methodArray.length > 0 && !edit_created_other" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
             </div>
-            <div v-if="methodFrom != null || methodTo != null || methodInclude != null || methodExclude != null || methodWhere != null">
+            <div v-if="noneMethod == true || methodArray.length == 0 || methodFrom != null || methodTo != null || methodInclude != null || methodExclude != null || methodWhere != null">
                 <!--<div class="col-md-12 text-right">-->
                     <!--<a v-if="methodArray.length > 0" class="btn btn-primary" v-on:click="displayImageSection()"-->
                        <!--style="padding: 3px 8px;">-->
