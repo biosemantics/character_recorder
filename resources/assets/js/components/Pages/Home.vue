@@ -1694,21 +1694,22 @@
                                         console.log('fromId', app.methodFieldData.fromId);
                                         break;
                                     }
-                                    if (app.methodFieldData.fromId == null) {
-                                        checkMethod = false;
-                                        app.methodFieldData.fromNeedMore = true;
-                                        app.methodFieldData.fromSynonyms = resp.data.entries;
-                                        if (app.methodFieldData.fromSynonyms.length == 0) {
-                                            app.methodFieldData.noneSynonymFlag.from = true;
-                                        }
-                                        for (var i = 0; i < app.methodFieldData.fromSynonyms.length; i++) {
-                                            app.methodFieldData.fromSynonyms[i].tooltip = '';
-                                            var temp = app.methodFieldData.fromSynonyms[i].resultAnnotations.filter(function (e) {
-                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                            });
-                                            if (temp.length > 0) {
-                                                app.methodFieldData.fromSynonyms[i].tooltip = temp[0].value;
-                                            }
+
+                                }
+                                if (app.methodFieldData.fromId == null) {
+                                    checkMethod = false;
+                                    app.methodFieldData.fromNeedMore = true;
+                                    app.methodFieldData.fromSynonyms = resp.data.entries;
+                                    if (app.methodFieldData.fromSynonyms.length == 0) {
+                                        app.methodFieldData.noneSynonymFlag.from = true;
+                                    }
+                                    for (var i = 0; i < app.methodFieldData.fromSynonyms.length; i++) {
+                                        app.methodFieldData.fromSynonyms[i].tooltip = '';
+                                        var temp = app.methodFieldData.fromSynonyms[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                        });
+                                        if (temp.length > 0) {
+                                            app.methodFieldData.fromSynonyms[i].tooltip = temp[0].value;
                                         }
                                     }
                                 }
@@ -1728,21 +1729,22 @@
                                         console.log('toId', app.methodFieldData.toId);
                                         break;
                                     }
-                                    if (app.methodFieldData.toId == null) {
-                                        checkMethod = false;
-                                        app.methodFieldData.toNeedMore = true;
-                                        app.methodFieldData.toSynonyms = resp.data.entries;
-                                        if (app.methodFieldData.toSynonyms.length == 0) {
-                                            app.methodFieldData.noneSynonymFlag.to = true;
-                                        }
-                                        for (var i = 0; i < app.methodFieldData.toSynonyms.length; i++) {
-                                            app.methodFieldData.toSynonyms[i].tooltip = '';
-                                            var temp = app.methodFieldData.toSynonyms[i].resultAnnotations.filter(function (e) {
-                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                            });
-                                            if (temp.length > 0) {
-                                                app.methodFieldData.toSynonyms[i].tooltip = temp[0].value;
-                                            }
+
+                                }
+                                if (app.methodFieldData.toId == null) {
+                                    checkMethod = false;
+                                    app.methodFieldData.toNeedMore = true;
+                                    app.methodFieldData.toSynonyms = resp.data.entries;
+                                    if (app.methodFieldData.toSynonyms.length == 0) {
+                                        app.methodFieldData.noneSynonymFlag.to = true;
+                                    }
+                                    for (var i = 0; i < app.methodFieldData.toSynonyms.length; i++) {
+                                        app.methodFieldData.toSynonyms[i].tooltip = '';
+                                        var temp = app.methodFieldData.toSynonyms[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                        });
+                                        if (temp.length > 0) {
+                                            app.methodFieldData.toSynonyms[i].tooltip = temp[0].value;
                                         }
                                     }
                                 }
@@ -1760,21 +1762,22 @@
                                         console.log('includeId', app.methodFieldData.includeId);
                                         break;
                                     }
-                                    if (app.methodFieldData.includeId == null) {
-                                        checkMethod = false;
-                                        app.methodFieldData.includeNeedMore = true;
-                                        app.methodFieldData.includeSynonyms = resp.data.entries;
-                                        if (app.methodFieldData.includeSynonyms.length == 0) {
-                                            app.methodFieldData.noneSynonymFlag.include = true;
-                                        }
-                                        for (var i = 0; i < app.methodFieldData.includeSynonyms.length; i++) {
-                                            app.methodFieldData.includeSynonyms[i].tooltip = '';
-                                            var temp = app.methodFieldData.includeSynonyms[i].resultAnnotations.filter(function (e) {
-                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                            });
-                                            if (temp.length > 0) {
-                                                app.methodFieldData.includeSynonyms[i].tooltip = temp[0].value;
-                                            }
+
+                                }
+                                if (app.methodFieldData.includeId == null) {
+                                    checkMethod = false;
+                                    app.methodFieldData.includeNeedMore = true;
+                                    app.methodFieldData.includeSynonyms = resp.data.entries;
+                                    if (app.methodFieldData.includeSynonyms.length == 0) {
+                                        app.methodFieldData.noneSynonymFlag.include = true;
+                                    }
+                                    for (var i = 0; i < app.methodFieldData.includeSynonyms.length; i++) {
+                                        app.methodFieldData.includeSynonyms[i].tooltip = '';
+                                        var temp = app.methodFieldData.includeSynonyms[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                        });
+                                        if (temp.length > 0) {
+                                            app.methodFieldData.includeSynonyms[i].tooltip = temp[0].value;
                                         }
                                     }
                                 }
@@ -1793,21 +1796,22 @@
                                         console.log('includeId', app.methodFieldData.excludeId);
                                         break;
                                     }
-                                    if (app.methodFieldData.excludeId == null) {
-                                        checkMethod = false;
-                                        app.methodFieldData.excludeNeedMore = true;
-                                        app.methodFieldData.excludeSynonyms = resp.data.entries;
-                                        if (app.methodFieldData.excludeSynonyms.length == 0) {
-                                            app.methodFieldData.noneSynonymFlag.exclude = true;
-                                        }
-                                        for (var i = 0; i < app.methodFieldData.excludeSynonyms.length; i++) {
-                                            app.methodFieldData.excludeSynonyms[i].tooltip = '';
-                                            var temp = app.methodFieldData.excludeSynonyms[i].resultAnnotations.filter(function (e) {
-                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                            });
-                                            if (temp.length > 0) {
-                                                app.methodFieldData.excludeSynonyms[i].tooltip = temp[0].value;
-                                            }
+
+                                }
+                                if (app.methodFieldData.excludeId == null) {
+                                    checkMethod = false;
+                                    app.methodFieldData.excludeNeedMore = true;
+                                    app.methodFieldData.excludeSynonyms = resp.data.entries;
+                                    if (app.methodFieldData.excludeSynonyms.length == 0) {
+                                        app.methodFieldData.noneSynonymFlag.exclude = true;
+                                    }
+                                    for (var i = 0; i < app.methodFieldData.excludeSynonyms.length; i++) {
+                                        app.methodFieldData.excludeSynonyms[i].tooltip = '';
+                                        var temp = app.methodFieldData.excludeSynonyms[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                        });
+                                        if (temp.length > 0) {
+                                            app.methodFieldData.excludeSynonyms[i].tooltip = temp[0].value;
                                         }
                                     }
                                 }
@@ -1826,21 +1830,22 @@
                                         console.log('includeId', app.methodFieldData.whereId);
                                         break;
                                     }
-                                    if (app.methodFieldData.whereId == null) {
-                                        checkMethod = false;
-                                        app.methodFieldData.whereNeedMore = true;
-                                        app.methodFieldData.whereSynonyms = resp.data.entries;
-                                        if (app.methodFieldData.whereSynonyms.length == 0) {
-                                            app.methodFieldData.noneSynonymFlag.where = true;
-                                        }
-                                        for (var i = 0; i < app.methodFieldData.whereSynonyms.length; i++) {
-                                            app.methodFieldData.whereSynonyms[i].tooltip = '';
-                                            var temp = app.methodFieldData.whereSynonyms[i].resultAnnotations.filter(function (e) {
-                                                return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
-                                            });
-                                            if (temp.length > 0) {
-                                                app.methodFieldData.whereSynonyms[i].tooltip = temp[0].value;
-                                            }
+
+                                }
+                                if (app.methodFieldData.whereId == null) {
+                                    checkMethod = false;
+                                    app.methodFieldData.whereNeedMore = true;
+                                    app.methodFieldData.whereSynonyms = resp.data.entries;
+                                    if (app.methodFieldData.whereSynonyms.length == 0) {
+                                        app.methodFieldData.noneSynonymFlag.where = true;
+                                    }
+                                    for (var i = 0; i < app.methodFieldData.whereSynonyms.length; i++) {
+                                        app.methodFieldData.whereSynonyms[i].tooltip = '';
+                                        var temp = app.methodFieldData.whereSynonyms[i].resultAnnotations.filter(function (e) {
+                                            return e.property == 'http://purl.oblibrary.org/obo/IAO_0000115';
+                                        });
+                                        if (temp.length > 0) {
+                                            app.methodFieldData.whereSynonyms[i].tooltip = temp[0].value;
                                         }
                                     }
                                 }
