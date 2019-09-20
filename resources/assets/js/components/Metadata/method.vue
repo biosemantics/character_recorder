@@ -918,21 +918,27 @@
                 .then(function (resp) {
                     console.log('exp search resp', resp);
                     if (resp.data.entries.length > 0) {
-                        app.methodEntry = resp.data.entries[0];
+                        app.methodEntry = resp.data.entries.filter(function(each) {
+                            return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
+                        })[0];
                         console.log('methodEntry', app.methodEntry);
-                        app.methodArray = resp.data.entries[0].resultAnnotations.filter(function (e) {
-                            return e.property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation';
-                        });
-                        console.log('methodArray', app.methodArray);
-                        if (app.methodArray.length > 0 && app.childData[0] != null) {
-                            for (var i = 0; i < resp.data.entries[0].resultAnnotations.length; i++) {
-                                console.log('i', i);
-                                if (resp.data.entries[0].resultAnnotations[i].value.substring(1,resp.data.entries[0].resultAnnotations[i].value.length  - 1) == app.childData[0]) {
-                                    app.illustratorProperty[i] = true;
-                                    console.log('index', index);
+                        if (app.methodEntry) {
+                            app.methodArray = app.methodEntry.resultAnnotations.filter(function (e) {
+                                return e.property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation';
+                            });
+                            console.log('methodArray', app.methodArray);
+                            if (app.methodArray.length > 0 && app.childData[0] != null) {
+                                for (var i = 0; i < app.methodEntry.resultAnnotations.length; i++) {
+                                    if (app.methodEntry.resultAnnotations[i].value.substring(1,app.methodEntry.resultAnnotations[i].value.length  - 1) == app.childData[0]) {
+                                        app.illustratorProperty[i] = true;
+                                    }
                                 }
                             }
+                        } else {
+                            app.methodEntry = true;
+                            app.methodArray = resp.data.entries;
                         }
+
                     } else {
                         app.methodEntry = true;
                         app.methodArray = resp.data.entries;
