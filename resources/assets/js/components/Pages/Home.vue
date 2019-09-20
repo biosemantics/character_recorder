@@ -208,7 +208,7 @@
                                         </div>
                                         <div>
                                             <a class="btn btn-add"
-                                               v-on:click="editCharacter(row[row.length - 1], true, row[row.length - 1].standard)"
+                                               v-on:click="editCharacter(row[row.length - 1], true, false)"
                                                style="line-height: 30px;">
                                                 <span class="glyphicon glyphicon-edit"></span>
                                             </a>
@@ -1319,7 +1319,9 @@
 //                    app.character.standard = 0;
                 }
 
-                if (standardFlag || (editFlag && !app.character.username.includes(app.user.name))) {
+                console.log('app.character.username', app.character.username);
+                console.log('app.user.name', app.user.name);
+                if (standardFlag || (editFlag && !app.character.owner_name.includes(app.user.name))) {
                     app.editFlag = false;
                     app.viewFlag = true;
                     sessionStorage.setItem('viewFlag', true);
