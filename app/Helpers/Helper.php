@@ -9,9 +9,9 @@ if (!function_exists('getRandomPhrase')) {
      * */
     function getRandomPhrase()
     {
-        $arr = ['Enabling reuse of trait data',
-            'Making your data long lived',
-            'Building the trait data infrastructure for the future'];
+        $arr = ['enabling reuse of trait data',
+            'making your data long lived',
+            'building the trait data infrastructure for the future'];
         return $arr[rand(0, 2)];
     }
 }

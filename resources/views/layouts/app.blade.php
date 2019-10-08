@@ -93,7 +93,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand font-30" href="{{ url('/') }}">
-                        <b>{{ config('app.name', 'Character Recorder') }} <b style="font-size: 20px;">{{ getRandomPhrase() }}</b></b>
+                        <b>{{ config('app.name', 'Character Recorder') }} : <b style="font-size: 20px;">{{ getRandomPhrase() }}</b></b>
                     </a>
 
                 </div>
