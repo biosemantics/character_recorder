@@ -784,6 +784,7 @@
                                                         <b>Did you mean?</b>
                                                         <input type="radio" v-bind:id="eachSynonym.term"
                                                                v-bind:value="eachSynonym.term"
+                                                               v-on:change="selectedSynonymForColor(currentColorValue.detailFlag)"
                                                                v-model="currentColorValue[currentColorValue.detailFlag]">
                                                         <label v-bind:for="eachSynonym.term"> {{ eachSynonym.term }} ({{
                                                             eachSynonym.parentTerm }}): </label> {{
@@ -812,12 +813,20 @@
                 
 
                                                 </div>
+                                                <div v-if="searchColorFlag !=2" v-for="(eachOption, index) in extraColors">
+                                                    <input type="radio"
+                                                           v-bind:id="'extra-option-' + index"
+                                                           value=""
+                                                           v-on:change="selectExtraOption(eachOption.flag, eachOption.value, currentColorValue.detailFlag)"
+                                                           v-model="currentColorValue[currentColorValue.detailFlag]">
+                                                    <label v-bind:for="'extra-option-' + index">{{ eachOption.value }} is term for {{ eachOption.flag }}</label>
+                                                </div>
                                                 <div v-if="searchColorFlag !=2 ">
                                                     <input type="radio" id="user-defined"
                                                            v-bind:value="defaultColorValue + '(user defined)'"
                                                            v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"
                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label for="user-defined">Use my term (please define the term, all input required):</label>
+                                                    <label for="user-defined">Use my term '{{ defaultColorValue }}'(please define the term, all input required):</label>
                                                     <div for="user-defined">
                                                         Definition: <input
                                                             v-model="userColorDefinition[currentColorValue.detailFlag]"
@@ -1004,7 +1013,7 @@
                                                            v-bind:value="defaultNonColorValue + '(user defined)'"
                                                            v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"
                                                            v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
-                                                    <label for="non-user-defined">Use my term (please define the term, all input required):</label>
+                                                    <label for="non-user-defined">Use my term '{{ defaultNonColorValue }}'(please define the term, all input required):</label>
                                                     <div for="user-defined">
                                                         Definition: <input
                                                             v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
@@ -1175,8 +1184,20 @@
                 sharedFlag: true,
                 allColorValues: [],
                 allNonColorValues: [],
-                currentColorValue: {},
-                currentNonColorValue: {},
+                currentColorValue: {
+                    confirmedFlag: {
+                        brightness: false,
+                        reflectance: false,
+                        saturation: false,
+                        colored: false,
+                        multi_colored: false,
+                    }
+                },
+                currentNonColorValue: {
+                    confirmedFlag: {
+                        main_value: false,
+                    }
+                },
                 currentColorValueExist: false,
                 currentNonColorValueExist: false,
                 currentCharacter: {},
@@ -1210,6 +1231,8 @@
                     }
                 },
                 checkMethodFlag: false,
+                colorationData: {},
+                extraColors: [],
             }
         },
         components: {
@@ -2602,6 +2625,9 @@
             expandDescription() {
                 var app = this;
                 app.descriptionFlag = !app.descriptionFlag;
+                if (app.descriptionFlag == true) {
+                    app.updateDescription();
+                }
             },
             checkHaveUnit(string) {
                 var app = this;
@@ -3204,7 +3230,7 @@
                 arrayColorValues.sort((a, b) => (a.brightness == 'light') ? -1 : 1);
                 arrayColorValues.sort((a, b) => (a.brightness == 'bright') ? -1 : 1);
                 arrayColorValues.sort((a, b) => (a.saturation != '' && a.saturation != null) ? -1 : 1);
-                arrayColorValues.sort((a, b) => (a.colored.split(' ').length > b.colored.split(' ').length) ? -1 : 1);
+//                arrayColorValues.sort((a, b) => (a.colored.split(' ').length > b.colored.split(' ').length) ? -1 : 1);
 
                 arrayColorValues.sort(function(x,y){ return x.colored == 'white' ? -1 : y.colored == 'white' ? 1 : 0; });
                 arrayColorValues.sort(function(x,y){ return x.colored == 'black' ? 1 : y.colored == 'black' ? -1 : 0; });
@@ -3220,7 +3246,7 @@
                 return returnArray;
             },
             sortNonColorValue(arrayNonColorValue) {
-                arrayNonColorValue.sort((a, b) => (a.colored > b.colored) ? 1 : -1)
+                arrayNonColorValue.sort((a, b) => (a.value > b.value) ? 1 : -1)
                 var obj = {};
 
                 for (var i = 0; i < arrayNonColorValue.length; i++ )
@@ -3254,10 +3280,10 @@
                 var app = this;
                 var returnFlag = false;
 
-                var firstMatchColor = firstColor.colored.split(' ')[firstColor.colored.split(' ').length - 1];
-                var secondMatchColor = secondColor.colored.split(' ')[secondColor.colored.split(' ').length - 1];
+                var firstMatchColor = app.getPrimaryColor(firstColor.colored);
+                var secondMatchColor = app.getPrimaryColor(secondColor.colored);
 
-                if (firstColor.colored == 'white' || secondColor.colored == 'black') {
+                if (firstMatchColor == 'white' || secondMatchColor == 'black') {
                     returnFlag = true;
                 } else if (firstMatchColor == secondMatchColor) {
                     returnFlag = true;
@@ -3325,70 +3351,155 @@
                         app.headers = resp.data.headers;
                     });
             },
-            saveColorValue(newFlag = false) {
+            async saveColorValue(newFlag = false) {
                 var app = this;
 
 
                 var postFlag = true;
+                var comparedFlag = false;
+
                 console.log('currentColorValue', app.currentColorValue);
                 console.log('app.currentColorValue.colored', app.currentColorValue.colored);
 
-                if ((app.currentColorValue.colored == undefined || app.currentColorValue.colored == 'undefined' || app.currentColorValue.colored == null || app.currentColorValue.colored == '')
-                    && (app.currentColorValue.multi_colored == undefined || app.currentColorValue.multi_colored == 'undefined' || app.currentColorValue.multi_colored == null || app.currentColorValue.multi_colored == '')
-                    && (app.currentColorValue.negation == undefined || app.currentColorValue.negation == 'undefined' || app.currentColorValue.negation == null || app.currentColorValue.negation == '')
-                    && (app.currentColorValue.post_constraint == undefined || app.currentColorValue.post_constraint == 'undefined' || app.currentColorValue.post_constraint == null || app.currentColorValue.post_constraint == '')
-                    && (app.currentColorValue.pre_constraint == undefined || app.currentColorValue.pre_constraint == 'undefined' || app.currentColorValue.pre_constraint == null || app.currentColorValue.pre_constraint == '')
-                    && (app.currentColorValue.reflectance == undefined || app.currentColorValue.reflectance == 'undefined' || app.currentColorValue.reflectance == null || app.currentColorValue.reflectance == '')
-                    && (app.currentColorValue.saturation == undefined || app.currentColorValue.saturation == 'undefined' || app.currentColorValue.saturation == null || app.currentColorValue.saturation == '')) {
-                    axios.get('/chrecorder/public/api/v1/get-color-details/' + app.currentColorValue.value_id)
-                        .then(function (resp) {
-                            app.colorDetails = resp.data.colorDetails;
-                            app.values = resp.data.values;
-                            app.colorDetailsFlag = false;
+                if (app.currentColorValue['brightness'] && app.currentColorValue.confirmedFlag['brightness'] == false) {
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['brightness'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('brightness'))
+                        .then(function(resp) {
+                            console.log('brightness', resp.data);
+                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['brightness'])) {
+                                app.searchColorSelection(app.currentColorValue, 'brightness');
+                            } else {
+                                comparedFlag = true;
+                            }
+
+                        });
+                } else if (app.currentColorValue['saturation'] && app.currentColorValue.confirmedFlag['saturation'] == false) {
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['saturation'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('saturation'))
+                        .then(function(resp) {
+                            console.log('saturation', resp.data);
+                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['saturation'])) {
+                                app.searchColorSelection(app.currentColorValue, 'saturation');
+                            } else {
+                                comparedFlag = true;
+                            }
+
+                        });
+                } else if (app.currentColorValue['reflectance'] && app.currentColorValue.confirmedFlag['reflectance'] == false) {
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['reflectance'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('reflectance'))
+                        .then(function(resp) {
+                            console.log('reflectance', resp.data);
+                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['reflectance'])) {
+                                app.searchColorSelection(app.currentColorValue, 'reflectance');
+                            } else {
+                                comparedFlag = true;
+                            }
+
+                        });
+                } else if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false) {
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['colored'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('colored'))
+                        .then(function(resp) {
+                            console.log('colored', resp.data);
+                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['colored'])) {
+                                app.searchColorSelection(app.currentColorValue, 'colored');
+                            } else {
+                                comparedFlag = true;
+                            }
+
+                        });
+                } else if (app.currentColorValue['multi_colored'] && app.currentColorValue.confirmedFlag['multi_colored'] == false) {
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['multi_colored'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('multi_colored'))
+                        .then(function(resp) {
+                            console.log('multi_colored', resp.data);
+                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['multi_colored'])) {
+                                app.searchColorSelection(app.currentColorValue, 'multi_colored');
+                            } else {
+                                comparedFlag = true;
+                            }
 
                         });
                 } else {
-                    var postValue = {};
-                    postValue['value_id'] = app.currentColorValue['value_id'];
-                    if (app.currentColorValue.id) {
-                        postValue['id'] = app.currentColorValue.id;
-                    }
-                    for (var key in app.currentColorValue) {
-                        if (app.checkColorProperty(key)) {
-                            postValue[key] = app.currentColorValue[key];
-                            var requestBody = {};
-                            if (app.currentColorValue[key] != null && app.currentColorValue[key] != '') {
-                                if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
-                                    if (app.userColorDefinition[key] == ''
-                                        || app.userColorDefinition[key] == null
-                                        || app.userColorDefinition[key] == undefined
-                                        || app.colorSampleText[key] == ''
-                                        || app.colorSampleText[key] == null
-                                        || app.colorSampleText[key] == undefined
-                                        || app.colorTaxon[key] == ''
-                                        || app.colorTaxon[key] == null
-                                        || app.colorTaxon[key] == undefined) {
-                                        postFlag = false;
-                                    } else if (postFlag == true){
-                                        postValue[key] = app.currentColorValue[key].substr(0, app.currentColorValue[key].length - 14);
-                                        console.log('colorSampleText', app.colorSampleText[key]);
-                                        var date = new Date();
+                    comparedFlag = true;
+                }
+
+                if (comparedFlag) {
+                    if ((app.currentColorValue.colored == undefined || app.currentColorValue.colored == 'undefined' || app.currentColorValue.colored == null || app.currentColorValue.colored == '')
+                        && (app.currentColorValue.multi_colored == undefined || app.currentColorValue.multi_colored == 'undefined' || app.currentColorValue.multi_colored == null || app.currentColorValue.multi_colored == '')
+                        && (app.currentColorValue.negation == undefined || app.currentColorValue.negation == 'undefined' || app.currentColorValue.negation == null || app.currentColorValue.negation == '')
+                        && (app.currentColorValue.post_constraint == undefined || app.currentColorValue.post_constraint == 'undefined' || app.currentColorValue.post_constraint == null || app.currentColorValue.post_constraint == '')
+                        && (app.currentColorValue.pre_constraint == undefined || app.currentColorValue.pre_constraint == 'undefined' || app.currentColorValue.pre_constraint == null || app.currentColorValue.pre_constraint == '')
+                        && (app.currentColorValue.reflectance == undefined || app.currentColorValue.reflectance == 'undefined' || app.currentColorValue.reflectance == null || app.currentColorValue.reflectance == '')
+                        && (app.currentColorValue.saturation == undefined || app.currentColorValue.saturation == 'undefined' || app.currentColorValue.saturation == null || app.currentColorValue.saturation == '')) {
+                        axios.get('/chrecorder/public/api/v1/get-color-details/' + app.currentColorValue.value_id)
+                            .then(function (resp) {
+                                app.colorDetails = resp.data.colorDetails;
+                                app.values = resp.data.values;
+                                app.colorDetailsFlag = false;
+
+                            });
+                    } else {
+                        var postValue = {};
+                        postValue['value_id'] = app.currentColorValue['value_id'];
+                        if (app.currentColorValue.id) {
+                            postValue['id'] = app.currentColorValue.id;
+                        }
+                        for (var key in app.currentColorValue) {
+                            if (app.checkColorProperty(key)) {
+                                postValue[key] = app.currentColorValue[key];
+                                var requestBody = {};
+                                if (app.currentColorValue[key] != null && app.currentColorValue[key] != '') {
+                                    if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
+                                        if (app.userColorDefinition[key] == ''
+                                            || app.userColorDefinition[key] == null
+                                            || app.userColorDefinition[key] == undefined
+                                            || app.colorSampleText[key] == ''
+                                            || app.colorSampleText[key] == null
+                                            || app.colorSampleText[key] == undefined
+                                            || app.colorTaxon[key] == ''
+                                            || app.colorTaxon[key] == null
+                                            || app.colorTaxon[key] == undefined) {
+                                            postFlag = false;
+                                        } else if (postFlag == true) {
+                                            postValue[key] = app.currentColorValue[key].substr(0, app.currentColorValue[key].length - 14);
+                                            console.log('colorSampleText', app.colorSampleText[key]);
+                                            var date = new Date();
+                                            requestBody = {
+                                                "user": app.sharedFlag ? '' : app.user.name,
+                                                "ontology": "carex",
+                                                "term": postValue[key],
+                                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + app.changeToSubClassName(key),
+                                                "definition": app.userColorDefinition[key],
+                                                "elucidation": "",
+                                                "createdBy": app.user.name,
+                                                "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                                "definitionSrc": app.user.name,
+                                                "examples": app.colorSampleText[key] + ", used in taxon " + app.colorTaxon[key],
+                                                "logicDefinition": "",
+                                            };
+                                            axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                                .then(function (resp) {
+                                                    console.log('shark api class resp', resp);
+                                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                        user: app.sharedFlag ? '' : app.user.name,
+                                                        ontology: 'carex'
+                                                    })
+                                                        .then(function (resp) {
+                                                            console.log('save api resp', resp);
+                                                        });
+                                                });
+                                        }
+
+
+                                    } else if (app.colorDefinition[key] && postFlag == true) {
                                         requestBody = {
                                             "user": app.sharedFlag ? '' : app.user.name,
-                                            "ontologylo": "carex",
-                                            "term": postValue[key],
-                                            "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + app.changeToSubClassName(key),
-                                            "definition": app.userColorDefinition[key],
-                                            "elucidation": "",
-                                            "createdBy": app.user.name,
-                                            "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                            "definitionSrc": app.user.name,
-                                            "examples": app.colorSampleText[key]+ ", used in taxon " + app.colorTaxon[key],
-                                            "logicDefinition": "",
+                                            "ontology": "carex",
+                                            "definition": app.colorDefinition[key],
+                                            "providedBy": app.user.name,
+                                            "exampleSentence": "",
+                                            "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
                                         };
-                                        axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                        axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
                                             .then(function (resp) {
-                                                console.log('shark api class resp', resp);
+                                                console.log('shark api definition resp', resp);
                                                 axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                                     user: app.sharedFlag ? '' : app.user.name,
                                                     ontology: 'carex'
@@ -3397,91 +3508,73 @@
                                                         console.log('save api resp', resp);
                                                     });
                                             });
+                                        console.log('user defined', app.colorDefinition);
+                                    } else if (app.colorComment[key] && postFlag == true) {
+                                        requestBody = {
+                                            "user": app.sharedFlag ? '' : app.user.name,
+                                            "ontology": "carex",
+                                            "comment": app.colorComment[key],
+                                            "providedBy": app.user.name,
+                                            "exampleSentence": "",
+                                            "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
+                                        };
+                                        axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
+                                            .then(function (resp) {
+                                                console.log('shark api comment resp', resp);
+                                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                    user: app.sharedFlag ? '' : app.user.name,
+                                                    ontology: 'carex'
+                                                })
+                                                    .then(function (resp) {
+                                                        console.log('save api resp', resp);
+                                                    });
+                                            });
+
                                     }
-
-
-                                } else if (app.colorDefinition[key] && postFlag == true) {
-                                    requestBody = {
-                                        "user": app.sharedFlag ? '' : app.user.name,
-                                        "ontology": "carex",
-                                        "definition": app.colorDefinition[key],
-                                        "providedBy": app.user.name,
-                                        "exampleSentence": "",
-                                        "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
-                                    };
-                                    axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
-                                        .then(function (resp) {
-                                            console.log('shark api definition resp', resp);
-                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                user: app.sharedFlag ? '' : app.user.name,
-                                                ontology: 'carex'
-                                            })
-                                                .then(function (resp) {
-                                                    console.log('save api resp', resp);
-                                                });
-                                        });
-                                    console.log('user defined', app.colorDefinition);
-                                } else if (app.colorComment[key] && postFlag == true) {
-                                    requestBody = {
-                                        "user": app.sharedFlag ? '' : app.user.name,
-                                        "ontology": "carex",
-                                        "comment": app.colorComment[key],
-                                        "providedBy": app.user.name,
-                                        "exampleSentence": "",
-                                        "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
-                                    };
-                                    axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                                        .then(function (resp) {
-                                            console.log('shark api comment resp', resp);
-                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                user: app.sharedFlag ? '' : app.user.name,
-                                                ontology: 'carex'
-                                            })
-                                                .then(function (resp) {
-                                                    console.log('save api resp', resp);
-                                                });
-                                        });
-
                                 }
-                            }
 
+                            }
+                        }
+//                }
+                        if (postFlag == true) {
+                            axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
+                                .then(function (resp) {
+                                    app.values = resp.data.values;
+                                    app.preList = resp.data.preList;
+                                    app.postList = resp.data.postList;
+                                    if (newFlag == false) {
+                                        app.colorDetailsFlag = false;
+                                    } else {
+                                        app.colorDetailsFlag = true;
+                                        app.currentColorValueExist = true;
+                                        app.colorComment = {};
+                                        app.colorTaxon = {
+                                            'brightness': app.taxonName,
+                                            'reflectance': app.taxonName,
+                                            'saturation': app.taxonName,
+                                            'colored': app.taxonName,
+                                            'multi_colored': app.taxonName,
+                                        };
+                                        app.colorSampleText = {};
+                                        app.colorDefinition = {};
+                                        app.userColorDefinition = {};
+                                        app.currentColorValue.taxon = app.taxonName;
+                                    }
+                                    app.colorDetails = resp.data.colorDetails;
+                                    app.allColorValues = resp.data.allColorValues;
+                                    app.allNonColorValues = resp.data.allNonColorValues;
+                                    app.currentColorValue = {value_id: app.currentColorValue.value_id};
+                                });
+                        } else {
+                            $('.color-definition-input').css('border', '1px solid red');
                         }
                     }
-//                }
-                    if (postFlag == true) {
-                        axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
-                            .then(function (resp) {
-                                app.values = resp.data.values;
-                                app.preList = resp.data.preList;
-                                app.postList = resp.data.postList;
-                                if (newFlag == false) {
-                                    app.colorDetailsFlag = false;
-                                } else {
-                                    app.colorDetailsFlag = true;
-                                    app.currentColorValueExist = true;
-                                    app.colorComment = {};
-                                    app.colorTaxon = {
-                                        'brightness': app.taxonName,
-                                        'reflectance': app.taxonName,
-                                        'saturation': app.taxonName,
-                                        'colored': app.taxonName,
-                                        'multi_colored': app.taxonName,
-                                    };
-                                    app.colorSampleText = {};
-                                    app.colorDefinition = {};
-                                    app.userColorDefinition = {};
-                                    app.currentColorValue.taxon = app.taxonName;
-                                }
-                                app.colorDetails = resp.data.colorDetails;
-                                app.allColorValues = resp.data.allColorValues;
-                                app.allNonColorValues = resp.data.allNonColorValues;
-                                app.currentColorValue = {value_id: app.currentColorValue.value_id};
-                            });
-                    } else {
-                        $('.color-definition-input').css('border', '1px solid red');
-                    }
                 }
+
+
+
 //                for (var i = 0; i < app.colorDetails.length; i++) {
+//                  }
 
             },
             removeColorValue() {
@@ -3503,60 +3596,85 @@
 
                 var postFlag = true;
 
-                if ((app.currentNonColorValue.negation == 'undefined' || app.currentNonColorValue.negation == '' || app.currentNonColorValue.negation == null)
-                    && (app.currentNonColorValue.pre_constraint == 'undefined' || app.currentNonColorValue.pre_constraint == '' || app.currentNonColorValue.pre_constraint == null)
-                    && (app.currentNonColorValue.main_value == 'undefined' || app.currentNonColorValue.main_value == '' || app.currentNonColorValue.main_value == null)
-                    && (app.currentNonColorValue.post_constraint == 'undefined' || app.currentNonColorValue.post_constraint == '' || app.currentNonColorValue.post_constraint == null)) {
-                    axios.get('/chrecorder/public/api/v1/get-non-color-details/' + app.currentNonColorValue.value_id)
-                        .then(function (resp) {
-                            app.nonColorDetails = resp.data.nonColorDetails;
-                            app.values = resp.data.values;
-                            app.nonColorDetailsFlag = false;
-
-                        });
+                if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false) {
+                    app.searchNonColorSelection(app.currentNonColorValue, 'main_value');
                 } else {
+                    if ((app.currentNonColorValue.negation == 'undefined' || app.currentNonColorValue.negation == '' || app.currentNonColorValue.negation == null)
+                        && (app.currentNonColorValue.pre_constraint == 'undefined' || app.currentNonColorValue.pre_constraint == '' || app.currentNonColorValue.pre_constraint == null)
+                        && (app.currentNonColorValue.main_value == 'undefined' || app.currentNonColorValue.main_value == '' || app.currentNonColorValue.main_value == null)
+                        && (app.currentNonColorValue.post_constraint == 'undefined' || app.currentNonColorValue.post_constraint == '' || app.currentNonColorValue.post_constraint == null)) {
+                        axios.get('/chrecorder/public/api/v1/get-non-color-details/' + app.currentNonColorValue.value_id)
+                            .then(function (resp) {
+                                app.nonColorDetails = resp.data.nonColorDetails;
+                                app.values = resp.data.values;
+                                app.nonColorDetailsFlag = false;
+
+                            });
+                    } else {
 //                for (var i = 0; i < app.nonColorDetails.length; i++) {
-                    var postValue = {};
-                    postValue['value_id'] = app.currentNonColorValue['value_id'];
-                    if (app.currentNonColorValue.id) {
-                        postValue['id'] = app.currentNonColorValue.id;
-                    }
-                    postValue['negation'] = app.currentNonColorValue.negation;
-                    postValue['pre_constraint'] = app.currentNonColorValue.pre_constraint;
-                    postValue['post_constraint'] = app.currentNonColorValue.post_constraint;
-                    postValue['main_value'] = app.currentNonColorValue.main_value;
-                    var requestBody = {};
-                    if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '') {
-                        if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
-                            if (app.userNonColorDefinition['main_value'] == ''
-                                || app.userNonColorDefinition['main_value'] == null
-                                || app.userNonColorDefinition['main_value'] == undefined
-                                || app.nonColorSampleText['main_value'] == ''
-                                || app.nonColorSampleText['main_value'] == null
-                                || app.nonColorSampleText['main_value'] == undefined
-                                || app.nonColorTaxon['main_value'] == ''
-                                || app.nonColorTaxon['main_value'] == null
-                                || app.nonColorTaxon['main_value'] == undefined) {
-                                postFlag = false;
-                            } else if (postFlag == true) {
-                                postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
-                                var date = new Date();
+                        var postValue = {};
+                        postValue['value_id'] = app.currentNonColorValue['value_id'];
+                        if (app.currentNonColorValue.id) {
+                            postValue['id'] = app.currentNonColorValue.id;
+                        }
+                        postValue['negation'] = app.currentNonColorValue.negation;
+                        postValue['pre_constraint'] = app.currentNonColorValue.pre_constraint;
+                        postValue['post_constraint'] = app.currentNonColorValue.post_constraint;
+                        postValue['main_value'] = app.currentNonColorValue.main_value;
+                        var requestBody = {};
+                        if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '') {
+                            if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
+                                if (app.userNonColorDefinition['main_value'] == ''
+                                    || app.userNonColorDefinition['main_value'] == null
+                                    || app.userNonColorDefinition['main_value'] == undefined
+                                    || app.nonColorSampleText['main_value'] == ''
+                                    || app.nonColorSampleText['main_value'] == null
+                                    || app.nonColorSampleText['main_value'] == undefined
+                                    || app.nonColorTaxon['main_value'] == ''
+                                    || app.nonColorTaxon['main_value'] == null
+                                    || app.nonColorTaxon['main_value'] == undefined) {
+                                    postFlag = false;
+                                } else if (postFlag == true) {
+                                    postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
+                                    var date = new Date();
+                                    requestBody = {
+                                        "user": app.sharedFlag ? '' : app.user.name,
+                                        "ontology": "carex",
+                                        "term": postValue['main_value'],
+                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#texture",
+                                        "definition": app.userNonColorDefinition['main_value'],
+                                        "elucidation": "",
+                                        "createdBy": app.user.name,
+                                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                        "definitionSrc": app.user.name,
+                                        "examples": app.nonColorSampleText['main_value'] + ", used in taxon " + app.nonColorTaxon['main_value'],
+                                        "logicDefinition": "",
+                                    };
+                                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                        .then(function (resp) {
+                                            console.log('shark api class resp', resp);
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                user: app.sharedFlag ? '' : app.user.name,
+                                                ontology: 'carex'
+                                            })
+                                                .then(function (resp) {
+                                                    console.log('save api resp', resp);
+                                                });
+                                        });
+                                }
+
+                            } else if (app.nonColorDefinition['main_value'] && postFlag == true) {
                                 requestBody = {
                                     "user": app.sharedFlag ? '' : app.user.name,
                                     "ontology": "carex",
-                                    "term": postValue['main_value'],
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#texture",
-                                    "definition": app.userNonColorDefinition['main_value'],
-                                    "elucidation": "",
-                                    "createdBy": app.user.name,
-                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                    "definitionSrc": app.user.name,
-                                    "examples": app.nonColorSampleText['main_value'] + ", used in taxon " + app.nonColorTaxon['main_value'],
-                                    "logicDefinition": "",
+                                    "definition": app.nonColorDefinition['main_value'],
+                                    "providedBy": app.user.name,
+                                    "exampleSentence": "",
+                                    "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
                                 };
-                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
                                     .then(function (resp) {
-                                        console.log('shark api class resp', resp);
+                                        console.log('shark api definition resp', resp);
                                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
                                             user: app.sharedFlag ? '' : app.user.name,
                                             ontology: 'carex'
@@ -3565,86 +3683,66 @@
                                                 console.log('save api resp', resp);
                                             });
                                     });
+                            } else if (app.nonColorComment['main_value'] && postFlag == true) {
+                                requestBody = {
+                                    "user": app.sharedFlag ? '' : app.user.name,
+                                    "ontology": "carex",
+                                    "comment": app.nonColorComment['main_value'],
+                                    "providedBy": app.user.name,
+                                    "exampleSentence": "",
+                                    "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
+                                };
+                                axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
+                                    .then(function (resp) {
+                                        console.log('shark api comment resp', resp);
+                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                            user: app.sharedFlag ? '' : app.user.name,
+                                            ontology: 'carex'
+                                        })
+                                            .then(function (resp) {
+                                                console.log('save api resp', resp);
+                                            });
+                                    });
+
                             }
-
-                        } else if (app.nonColorDefinition['main_value'] && postFlag == true) {
-                            requestBody = {
-                                "user": app.sharedFlag ? '' : app.user.name,
-                                "ontology": "carex",
-                                "definition": app.nonColorDefinition['main_value'],
-                                "providedBy": app.user.name,
-                                "exampleSentence": "",
-                                "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
-                            };
-                            axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
-                                .then(function (resp) {
-                                    console.log('shark api definition resp', resp);
-                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                        user: app.sharedFlag ? '' : app.user.name,
-                                        ontology: 'carex'
-                                    })
-                                        .then(function (resp) {
-                                            console.log('save api resp', resp);
-                                        });
-                                });
-                        } else if (app.nonColorComment['main_value'] && postFlag == true) {
-                            requestBody = {
-                                "user": app.sharedFlag ? '' : app.user.name,
-                                "ontology": "carex",
-                                "comment": app.nonColorComment['main_value'],
-                                "providedBy": app.user.name,
-                                "exampleSentence": "",
-                                "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
-                            };
-                            axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                                .then(function (resp) {
-                                    console.log('shark api comment resp', resp);
-                                    axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                        user: app.sharedFlag ? '' : app.user.name,
-                                        ontology: 'carex'
-                                    })
-                                        .then(function (resp) {
-                                            console.log('save api resp', resp);
-                                        });
-                                });
-
                         }
-                    }
 
 //                }
 
-                    if (postFlag == true) {
-                        axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
-                            .then(function (resp) {
-                                app.values = resp.data.values;
-                                app.preList = resp.data.preList;
-                                app.postList = resp.data.postList;
-                                app.nonColorDetails = resp.data.nonColorDetails;
-                                app.allNonColorValues = resp.data.allNonColorValues;
-                                app.currentNonColorValue = {
-                                    detailsFlag: null,
-                                    value_id: app.currentNonColorValue.value_id,
-                                    placeholderName: app.currentNonColorValue.placeholderName
-                                };
-                                if (newFlag == false) {
-                                    app.nonColorDetailsFlag = false;
-                                } else {
-                                    app.nonColorDetailsFlag = true;
-                                    app.currentNonColorValueExist = true;
-                                    app.nonColorComment = {};
-                                    app.nonColorTaxon = {
-                                        'main_value': app.taxonName,
+                        if (postFlag == true) {
+                            axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
+                                .then(function (resp) {
+                                    app.values = resp.data.values;
+                                    app.preList = resp.data.preList;
+                                    app.postList = resp.data.postList;
+                                    app.nonColorDetails = resp.data.nonColorDetails;
+                                    app.allNonColorValues = resp.data.allNonColorValues;
+                                    app.currentNonColorValue = {
+                                        detailsFlag: null,
+                                        value_id: app.currentNonColorValue.value_id,
+                                        placeholderName: app.currentNonColorValue.placeholderName
                                     };
-                                    app.nonColorSampleText = {};
-                                    app.nonColorDefinition = {};
-                                    app.userNonColorDefinition = {};
-                                    app.currentNonColorValue.taxon = app.taxonName;
-                                }
-                            });
-                    } else {
-                        $('.non-color-input-definition').css('border', '1px solid red');
+                                    if (newFlag == false) {
+                                        app.nonColorDetailsFlag = false;
+                                    } else {
+                                        app.nonColorDetailsFlag = true;
+                                        app.currentNonColorValueExist = true;
+                                        app.nonColorComment = {};
+                                        app.nonColorTaxon = {
+                                            'main_value': app.taxonName,
+                                        };
+                                        app.nonColorSampleText = {};
+                                        app.nonColorDefinition = {};
+                                        app.userNonColorDefinition = {};
+                                        app.currentNonColorValue.taxon = app.taxonName;
+                                    }
+                                });
+                        } else {
+                            $('.non-color-input-definition').css('border', '1px solid red');
+                        }
                     }
                 }
+
 
 
             },
@@ -3679,10 +3777,23 @@
             focusedValue(value) {
                 var app = this;
 
-                app.currentColorValue = {};
+                app.currentColorValue = {
+                    confirmedFlag: {
+                        brightness: false,
+                        reflectance: false,
+                        saturation: false,
+                        colored: false,
+                        multi_colored: false,
+                    }
+                };
                 app.currentColorValue.detailsFlag = null;
                 app.currentColorValue.value_id = value.id;
-                app.currentNonColorValue = {};
+                app.currentNonColorValue = {
+                    confirmedFlag: {
+                        main_value: false,
+                    }
+                };
+                app.extraColors = [];
                 app.currentNonColorValue.detailsFlag = null;
                 app.currentNonColorValue.value_id = value.id;
 //                console.log('test', value);
@@ -3860,7 +3971,7 @@
                 var characterName = app.userCharacters.find(ch => ch.id == characterId).name;
                 console.log('characterName', characterName);
 
-                var searchText = characterName.split('of');
+                var searchText = characterName.split(' ');
 
                 if (flag == 'negation') {
                     event.target.placeholder = '';
@@ -3871,7 +3982,7 @@
                 app.nonColorExistFlag = false;
 
                 if (flag == 'main_value') {
-                    axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText[0].toLowerCase().replace(' ', '-'))
+                    axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText[0].toLowerCase())
                         .then(function (resp) {
                             app.textureTreeData = resp.data;
                             nonColor.detailFlag = flag;
@@ -3932,19 +4043,43 @@
 
                 return searchFlag;
             },
-            searchColorSelection(color, flag) {
+            async searchColorSelection(color, flag) {
                 var app = this;
                 app.colorExistFlag = false;
                 app.defaultColorValue = color[flag];
+                app.extraColors = [];
+                var arrayFlag = [
+                    'brightness',
+                    'reflectance',
+                    'saturation',
+                    'colored',
+                    'multi_colored'
+                ];
 //                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + color[flag])
                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(flag))
-                    .then(function (resp) {
+                    .then(async function (resp) {
                         console.log('search carex resp', resp.data);
                         app.searchColor = resp.data.entries;
                         if (app.searchColor.length == 0) {
                             app.searchColorFlag = 0;
+                            for (var i = 0; i < arrayFlag.length; i++) {
+                                if (arrayFlag[i] != flag) {
+                                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(arrayFlag[i]))
+                                        .then(function(resp) {
+                                            if (resp.data.entries.length != 0) {
+                                                var tempJson = {
+                                                    flag: arrayFlag[i],
+                                                    value: color[flag]
+                                                };
+                                                app.extraColors.push(tempJson);
+                                            }
+                                        });
+
+                                }
+                            }
                             if (color.id && !color[flag].endsWith('(user defined)')) {
                                 app.currentColorValue[flag] = color[flag] + '(user defined)';
+                                app.currentColorValue.confirmedFlag[flag] = true;
                                 for (var i = 0; i < app.colorDetails.length; i++) {
                                     if (app.colorDetails[i].id == color.id) {
                                         app.colorDetails[i][flag] = color[flag] + '(user defined)';
@@ -3952,6 +4087,7 @@
                                 }
                             } else if (!color[flag].endsWith('(user defined)')) {
                                 app.currentColorValue[flag] = color[flag] + '(user defined)';
+                                app.currentColorValue.confirmedFlag[flag] = true;
                             }
                         } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == color[flag])
                             || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == color[flag])))) {
@@ -4011,6 +4147,7 @@
                             app.searchNonColorFlag = 0;
                             if (nonColor.id && !nonColor[flag].endsWith('(user defined)')) {
                                 app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
+                                app.currentNonColorValue.confirmedFlag[flag] = true;
                                 for (var i = 0; i < app.nonColorDetails.length; i++) {
                                     if (app.nonColorDetails[i].id == nonColor.id) {
                                         app.nonColorDetails[i][flag] = nonColor[flag] + '(user defined)';
@@ -4018,6 +4155,7 @@
                                 }
                             } else if (!nonColor[flag].endsWith('(user defined)')) {
                                 app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
+                                app.currentNonColorValue.confirmedFlag[flag] = true;
                             }
                         } else if (app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == nonColor[flag])
                             || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == nonColor[flag])))) {
@@ -4069,6 +4207,7 @@
                 app.colorDetailsFlag = false;
                 console.log('treeNode', node);
                 app.colorDetailsFlag = true;
+                app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
                 app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
                 app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
                 app.currentColorValue[app.currentColorValue.detailFlag] = node.data.text;
@@ -4078,6 +4217,7 @@
                 var app = this;
                 app.nonColorDetailsFlag = false;
                 app.nonColorDetailsFlag = true;
+                app.currentNonColorValue.confirmedFlag['main_value'] = true;
                 app.currentNonColorValue['main_value'] = app.currentNonColorValue['main_value'] + ';';
                 app.currentNonColorValue['main_value'] = app.currentNonColorValue['main_value'].substring(0, app.currentNonColorValue['main_value'].length - 1);
                 app.currentNonColorValue['main_value'] = node.data.text;
@@ -4137,6 +4277,12 @@
             selectUserDefinedTerm(color, flag, value) {
                 var app = this;
 
+                if (flag == 'main_value') {
+                    app.currentNonColorValue.confirmedFlag[flag] = true;
+                } else {
+                    app.currentColorValue.confirmedFlag[flag] = true;
+                }
+
                 if (app.colorDetails.length == 1) {
 
                 }
@@ -4148,6 +4294,14 @@
                 console.log('color', color);
                 var app = this;
                 app.currentColorValue = color;
+                app.currentColorValue.confirmedFlag = {
+                    brightness: false,
+                    reflectance: false,
+                    saturation: false,
+                    colored: false,
+                    multi_colored: false
+                };
+                app.extraColors = [];
                 app.currentColorValue.detailsFlag = null;
             },
             removeEachColor(color) {
@@ -4167,6 +4321,7 @@
                 var app = this;
                 var tempPlaceholderName = app.currentNonColorValue.placeholderName;
                 app.currentNonColorValue = value;
+                app.currentNonColorValue.confirmedFlag.main_value = false;
                 app.currentNonColorValue.placeholderName = tempPlaceholderName;
                 app.currentNonColorValue.detailsFlag = null;
             },
@@ -4186,6 +4341,26 @@
                 var app = this;
                 return axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id);
             },
+            getPrimaryColor(detailColor) {
+                var app = this;
+                for (var key in app.colorationData) {
+                    if (app.colorationData[key].includes(detailColor)) {
+                        return key;
+                    }
+                }
+                return false;
+            },
+            selectedSynonymForColor(detailFlag) {
+                var app = this;
+
+                app.currentColorValue.confirmedFlag[detailFlag] = true;
+            },
+            selectExtraOption(flag, value, currentFlag) {
+                var app = this;
+
+                app.currentColorValue[flag] = value;
+//                app.currentColorValue[currentFlag] = value;
+            }
         },
         watch: {
             colorTreeData(newData) {
@@ -4195,10 +4370,26 @@
             },
             nonColorTreeData(newData) {
                 this.textureTreeData = newData;
-            }
+            },
+
         },
         created() {
             var app = this;
+            axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=coloration')
+                .then(function(resp) {
+                    console.log('colorationData', resp.data);
+                    var colorData = resp.data.children[0].children;
+                    for (var i = 0; i < colorData.length; i++) {
+                        app.colorationData[colorData[i]['text']] = [];
+                        app.colorationData[colorData[i]['text']].push(colorData[i]['text']);
+                        if ('children' in colorData[i]) {
+                            for (var j = 0; j < colorData[i].children.length; j++) {
+                                app.colorationData[colorData[i]['text']].push(colorData[i].children[j].text);
+                            }
+                        }
+                    }
+                    console.log('app.colorationData', app.colorationData);
+                });
             axios.get('/chrecorder/public/api/v1/standard_characters')
                 .then(function (resp) {
                     console.log('standardCharacters', resp);
