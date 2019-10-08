@@ -819,14 +819,14 @@
                                                            value=""
                                                            v-on:change="selectExtraOption(eachOption.flag, eachOption.value, currentColorValue.detailFlag)"
                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label v-bind:for="'extra-option-' + index">{{ eachOption.value }} is term for {{ eachOption.flag }}</label>
+                                                    <label v-bind:for="'extra-option-' + index">{{ eachOption.value }} describes {{ eachOption.flag }}, move {{ eachOption.value }} to {{ eachOption.flag}}</label>
                                                 </div>
                                                 <div v-if="searchColorFlag !=2 ">
                                                     <input type="radio" id="user-defined"
                                                            v-bind:value="defaultColorValue + '(user defined)'"
                                                            v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"
                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label for="user-defined">Use my term '{{ defaultColorValue }}'(please define the term, all input required):</label>
+                                                    <label for="user-defined">Use my term '{{ defaultColorValue }}'(as a {{ currentColorValue.detailFlag }}). Please define the term, all input required:</label>
                                                     <div for="user-defined">
                                                         Definition: <input
                                                             v-model="userColorDefinition[currentColorValue.detailFlag]"
