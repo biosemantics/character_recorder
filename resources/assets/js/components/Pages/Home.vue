@@ -819,14 +819,18 @@
                                                            value=""
                                                            v-on:change="selectExtraOption(eachOption.flag, eachOption.value, currentColorValue.detailFlag)"
                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label v-bind:for="'extra-option-' + index">{{ eachOption.value }} describes {{ eachOption.flag }}, move {{ eachOption.value }} to {{ eachOption.flag}}</label>
+                                                    <label v-bind:for="'extra-option-' + index">{{ eachOption.value }} describes {{ changeFlagToLabel(eachOption.flag) }}, move {{ eachOption.value }} to {{ changeFlagToLabel(eachOption.flag) }}</label>
                                                 </div>
                                                 <div v-if="searchColorFlag !=2 ">
+                                                    <!--<input type="radio" id="user-defined"-->
+                                                           <!--v-bind:value="defaultColorValue + '(user defined)'"-->
+                                                           <!--v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"-->
+                                                           <!--v-model="currentColorValue[currentColorValue.detailFlag]">-->
                                                     <input type="radio" id="user-defined"
-                                                           v-bind:value="defaultColorValue + '(user defined)'"
+                                                           v-bind:value="defaultColorValue"
                                                            v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"
                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label for="user-defined">Use my term '{{ defaultColorValue }}'(as a {{ currentColorValue.detailFlag }}). Please define the term, all input required:</label>
+                                                    <label for="user-defined">Use my term '{{ defaultColorValue }}'(as a {{ changeFlagToLabel(currentColorValue.detailFlag) }}). Please define the term, all input required:</label>
                                                     <div for="user-defined">
                                                         Definition: <input
                                                             v-model="userColorDefinition[currentColorValue.detailFlag]"
@@ -1010,9 +1014,13 @@
                                                 </div>
                                                 <div v-if="searchNonColorFlag !=2 ">
                                                     <input type="radio" id="non-user-defined"
-                                                           v-bind:value="defaultNonColorValue + '(user defined)'"
+                                                           v-bind:value="defaultNonColorValue"
                                                            v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"
                                                            v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
+                                                    <!--<input type="radio" id="non-user-defined"-->
+                                                           <!--v-bind:value="defaultNonColorValue + '(user defined)'"-->
+                                                           <!--v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"-->
+                                                           <!--v-model="currentNonColorValue[currentNonColorValue.detailFlag]">-->
                                                     <label for="non-user-defined">Use my term '{{ defaultNonColorValue }}'(please define the term, all input required):</label>
                                                     <div for="user-defined">
                                                         Definition: <input
@@ -3343,6 +3351,20 @@
                 }
                 return returnFlag;
             },
+            changeFlagToLabel(flag) {
+                var returnText = flag;
+                switch (flag) {
+                    case 'colored':
+                        returnText = 'color';
+                        break;
+                    case 'multi_colored':
+                        returnText = 'pattern';
+                        break;
+                    default:
+                        break;
+                }
+                return returnText;
+            },
             saveHeader(header) {
                 var app = this;
                 console.log('header', header.header);
@@ -3446,7 +3468,8 @@
                                 postValue[key] = app.currentColorValue[key];
                                 var requestBody = {};
                                 if (app.currentColorValue[key] != null && app.currentColorValue[key] != '') {
-                                    if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
+//                                    if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
+                                    if (app.searchColorFlag == 0 && postFlag == true) {
                                         if (app.userColorDefinition[key] == ''
                                             || app.userColorDefinition[key] == null
                                             || app.userColorDefinition[key] == undefined
@@ -3458,7 +3481,8 @@
                                             || app.colorTaxon[key] == undefined) {
                                             postFlag = false;
                                         } else if (postFlag == true) {
-                                            postValue[key] = app.currentColorValue[key].substr(0, app.currentColorValue[key].length - 14);
+//                                            postValue[key] = app.currentColorValue[key].substr(0, app.currentColorValue[key].length - 14);
+                                            postValue[key] = app.currentColorValue[key];
                                             console.log('colorSampleText', app.colorSampleText[key]);
                                             var date = new Date();
                                             requestBody = {
@@ -3508,7 +3532,6 @@
                                                         console.log('save api resp', resp);
                                                     });
                                             });
-                                        console.log('user defined', app.colorDefinition);
                                     } else if (app.colorComment[key] && postFlag == true) {
                                         requestBody = {
                                             "user": app.sharedFlag ? '' : app.user.name,
@@ -3535,6 +3558,7 @@
 
                             }
                         }
+                        console.log('postFlag', postFlag);
 //                }
                         if (postFlag == true) {
                             axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
@@ -3623,7 +3647,8 @@
                         postValue['main_value'] = app.currentNonColorValue.main_value;
                         var requestBody = {};
                         if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '') {
-                            if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
+//                            if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
+                            if (app.searchNonColorFlag == 0 && postFlag == true) {
                                 if (app.userNonColorDefinition['main_value'] == ''
                                     || app.userNonColorDefinition['main_value'] == null
                                     || app.userNonColorDefinition['main_value'] == undefined
@@ -3635,7 +3660,8 @@
                                     || app.nonColorTaxon['main_value'] == undefined) {
                                     postFlag = false;
                                 } else if (postFlag == true) {
-                                    postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
+//                                    postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
+                                    postValue['main_value'] = app.currentNonColorValue['main_value'];
                                     var date = new Date();
                                     requestBody = {
                                         "user": app.sharedFlag ? '' : app.user.name,
@@ -4077,18 +4103,20 @@
 
                                 }
                             }
-                            if (color.id && !color[flag].endsWith('(user defined)')) {
-                                app.currentColorValue[flag] = color[flag] + '(user defined)';
-                                app.currentColorValue.confirmedFlag[flag] = true;
-                                for (var i = 0; i < app.colorDetails.length; i++) {
-                                    if (app.colorDetails[i].id == color.id) {
-                                        app.colorDetails[i][flag] = color[flag] + '(user defined)';
-                                    }
-                                }
-                            } else if (!color[flag].endsWith('(user defined)')) {
-                                app.currentColorValue[flag] = color[flag] + '(user defined)';
-                                app.currentColorValue.confirmedFlag[flag] = true;
-                            }
+                            app.currentColorValue.confirmedFlag[flag] = true;
+//
+//                            if (color.id && !color[flag].endsWith('(user defined)')) {
+//                                app.currentColorValue[flag] = color[flag] + '(user defined)';
+//                                app.currentColorValue.confirmedFlag[flag] = true;
+//                                for (var i = 0; i < app.colorDetails.length; i++) {
+//                                    if (app.colorDetails[i].id == color.id) {
+//                                        app.colorDetails[i][flag] = color[flag] + '(user defined)';
+//                                    }
+//                                }
+//                            } else if (!color[flag].endsWith('(user defined)')) {
+//                                app.currentColorValue[flag] = color[flag] + '(user defined)';
+//                                app.currentColorValue.confirmedFlag[flag] = true;
+//                            }
                         } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == color[flag])
                             || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == color[flag])))) {
                             app.searchColorFlag = 1;
@@ -4145,18 +4173,19 @@
                         app.searchNonColor = resp.data.entries;
                         if (app.searchNonColor.length == 0) {
                             app.searchNonColorFlag = 0;
-                            if (nonColor.id && !nonColor[flag].endsWith('(user defined)')) {
-                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
-                                app.currentNonColorValue.confirmedFlag[flag] = true;
-                                for (var i = 0; i < app.nonColorDetails.length; i++) {
-                                    if (app.nonColorDetails[i].id == nonColor.id) {
-                                        app.nonColorDetails[i][flag] = nonColor[flag] + '(user defined)';
-                                    }
-                                }
-                            } else if (!nonColor[flag].endsWith('(user defined)')) {
-                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
-                                app.currentNonColorValue.confirmedFlag[flag] = true;
-                            }
+                            app.currentNonColorValue.confirmedFlag[flag] = true;
+//                            if (nonColor.id && !nonColor[flag].endsWith('(user defined)')) {
+//                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
+//                                app.currentNonColorValue.confirmedFlag[flag] = true;
+//                                for (var i = 0; i < app.nonColorDetails.length; i++) {
+//                                    if (app.nonColorDetails[i].id == nonColor.id) {
+//                                        app.nonColorDetails[i][flag] = nonColor[flag] + '(user defined)';
+//                                    }
+//                                }
+//                            } else if (!nonColor[flag].endsWith('(user defined)')) {
+//                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
+//                                app.currentNonColorValue.confirmedFlag[flag] = true;
+//                            }
                         } else if (app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == nonColor[flag])
                             || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == nonColor[flag])))) {
                             app.searchNonColorFlag = 1;
