@@ -54,6 +54,10 @@
             this.character_name = sessionStorage.getItem("characterName");
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.childData = this.parentData; // save props data to itself's data and deal with it
+            if (this.childData == '') {
+                this.childData = 'range-percentile';
+                this.$emit('interface', this.childData); // handle data and give it back to parent by interface
+            }
             this.edit_created_other = (sessionStorage.getItem('edit_created_other')=='true');
         }
     }

@@ -98,6 +98,7 @@
 
                 </div>
 
+
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
@@ -134,6 +135,11 @@
                             </li>
                         @endguest
                     </ul>
+                </div>
+                <div>
+                    <a href="{{ url('/leader-board') }}">
+                        {{ getTopUser() }}
+                    </a>
                 </div>
             </div>
         </nav>

@@ -31,6 +31,7 @@ Route::group([
     Route::post('get-color-values',                     ['as' => 'get_color_values',            'uses' => 'HomeController@getColorValues']);
     Route::post('remove-each-color-details',            ['as' => 'removeEachColorDetails',      'uses' => 'HomeController@removeEachColorDetails']);
     Route::post('remove-each-non-color-details',        ['as' => 'removeEachNonColorDetails',   'uses' => 'HomeController@removeEachNonColorDetails']);
+    Route::post('overwrite-value',                      ['as' => 'overwriteValue',              'uses' => 'HomeController@overwriteValue']);
 
     Route::group([
         'prefix' => '/character',
