@@ -215,7 +215,7 @@
                                         </div>
                                         <div class="btn-group">
                                             <a v-if="checkHaveUnit(value.value) && !value.value.startsWith('Number of') && !value.value.startsWith('Ratio of')"
-                                               class="btn btn-add dropdown-toggle" style="line-height: 30px;"
+                                               class="btn btn-add dropdown-toggle" style="line-height: 30px; color: red;"
                                                data-toggle="dropdown">
                                                 <span><b>{{ value.unit }}</b></span>
                                                 <span class="glyphicon glyphicon-chevron-down"></span>
@@ -254,6 +254,9 @@
                                     <td v-if="value.header_id != 1" v-for="value in row">
                                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
                                                v-on:blur="saveItem($event, value)"/>
+                                        <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
+                                            <img src="../../../../../public/images/left-right-icon.png" style="width: 45px;"/>
+                                        </a>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -612,6 +615,97 @@
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
                                         <hr>
+                                        <div style="float: right;">
+                                            <a class="btn btn-primary" v-if="existColorDetailsFlag == false" v-on:click="existColorDetailsFlag = true;">
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
+                                            </a>
+                                            <a class="btn btn-primary" v-if="existColorDetailsFlag == true" v-on:click="existColorDetailsFlag = false;">
+                                                <span class="glyphicon glyphicon-chevron-up"></span>
+                                            </a>
+                                        </div>
+
+                                        <div v-if="existColorDetails.length > 0 && existColorDetailsFlag == true" style="margin-top: 10px;">
+                                            <div>
+                                                <b>Values used before for this character and taxon</b>
+                                            </div>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>
+                                                        negation
+                                                    </th>
+                                                    <th>
+                                                        pre constraint
+                                                    </th>
+                                                    <th>
+                                                        brightness
+                                                    </th>
+                                                    <th>
+                                                        reflectance
+                                                    </th>
+                                                    <th>
+                                                        saturation
+                                                    </th>
+                                                    <th>
+                                                        color
+                                                    </th>
+                                                    <th>
+                                                        pattern
+                                                    </th>
+                                                    <th>
+                                                        post constraint
+                                                    </th>
+                                                    <th>
+                                                        count
+                                                    </th>
+                                                    <th>
+                                                        author
+                                                    </th>
+                                                    <th>
+
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr v-for="eachDetails in existColorDetails">
+                                                    <td>
+                                                        {{ eachDetails.negation }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.pre_constraint }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.brightness }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.reflectance }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.saturation }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.colored }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.multi_colored }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.post_constraint }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.count }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.username }}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-primary" v-on:click="selectExistDetails(eachDetails)">Use this</a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
                                         <div v-if="currentColorValueExist == true">
                                             <b>Existing values</b>
                                         </div>
@@ -1061,6 +1155,35 @@
                         </div>
                     </transition>
                 </div>
+                <div v-if="confirmOverwriteFlag" @close="confirmOverwriteFlag = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container">
+                                    <div class="modal-header">
+                                        Confirm to overwrite?
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            There are values in the cells to be filled. Overwrite or keep the old values?
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="confirmOverwrite()">
+                                                    Overwrite </a>
+                                                <a v-on:click="confirmOverwriteFlag = false;"
+                                                   class="btn btn-danger">Keep existing values</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
             </form>
         </div>
     </div>
@@ -1241,6 +1364,10 @@
                 checkMethodFlag: false,
                 colorationData: {},
                 extraColors: [],
+                existColorDetails: [],
+                existColorDetailsFlag: false,
+                copyValue: null,
+                confirmOverwriteFlag: false,
             }
         },
         components: {
@@ -1560,6 +1687,20 @@
                     }
                 }
 
+            },
+            checkNumericalCharacter(characterName) {
+                var result = false;
+                if (characterName.startsWith('Length')
+                    || characterName.startsWith('Width')
+                    || characterName.startsWith('Depth')
+                    || characterName.startsWith('Diameter')
+                    || characterName.startsWith('Count')
+                    || characterName.startsWith('Distance')
+                    || characterName.startsWith('Number')
+                    || characterName.startsWith('Ratio')) {
+                    result = true;
+                }
+                return result;
             },
             showStandardCharacters() {
                 var app = this;
@@ -3813,6 +3954,78 @@
             saveNewColorValue() {
 
             },
+            removeArrayDuplicates(array) {
+                var result = [];
+
+
+                for (var i = 0; i < array.length; i++) {
+                    var temp = array[i];
+                    var resultFlag = true;
+                    for (var j = 0; j < result.length; j++) {
+                        if (array[i].negation == result[j].negation
+                            && array[i].pre_constraint == result[j].pre_constraint
+                            && array[i].brightness == result[j].brightness
+                            && array[i].reflectance == result[j].reflectance
+                            && array[i].saturation == result[j].saturation
+                            && array[i].colored == result[j].colored
+                            && array[i].multi_colored == result[j].multi_colored
+                            && array[i].post_constraint == result[j].post_constraint) {
+                            result[j].count = result[j].count + 1;
+                            resultFlag = false;
+                        }
+                    }
+                    if (resultFlag) {
+                        array[i].count = 1;
+                        result.push(array[i]);
+                    }
+                }
+
+                return result;
+            },
+            removeDuplicates(arr) {
+
+                const result = [];
+                const duplicatesIndices = [];
+
+                // Loop through each item in the original array
+                arr.forEach((current, index) => {
+
+                    if (duplicatesIndices.includes(index)) return;
+
+                    result.push(current);
+
+                    // Loop through each other item on array after the current one
+                    for (let comparisonIndex = index + 1; comparisonIndex < arr.length; comparisonIndex++) {
+
+                        const comparison = arr[comparisonIndex];
+                        const currentKeys = Object.keys(current);
+                        const comparisonKeys = Object.keys(comparison);
+
+                        // Check number of keys in objects
+                        if (currentKeys.length !== comparisonKeys.length) continue;
+
+                        // Check key names
+                        const currentKeysString = currentKeys.sort().join("").toLowerCase();
+                        const comparisonKeysString = comparisonKeys.sort().join("").toLowerCase();
+                        if (currentKeysString !== comparisonKeysString) continue;
+
+                        // Check values
+                        let valuesEqual = true;
+                        for (let i = 0; i < currentKeys.length; i++) {
+                            const key = currentKeys[i];
+                            if ( current[key] !== comparison[key] ) {
+                                valuesEqual = false;
+                                break;
+                            }
+                        }
+                        if (valuesEqual) duplicatesIndices.push(comparisonIndex);
+
+                    } // end for loop
+
+                }); // end arr.forEach()
+
+                return result;
+            },
             focusedValue(value) {
                 var app = this;
 
@@ -3835,6 +4048,7 @@
                 app.extraColors = [];
                 app.currentNonColorValue.detailsFlag = null;
                 app.currentNonColorValue.value_id = value.id;
+                app.existColorDetailsFlag = false;
 //                console.log('test', value);
                 var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
                 app.currentCharacter = currentCharacter;
@@ -3850,6 +4064,18 @@
                             .then(function (resp) {
                                 console.log('get-color resp', resp.data);
                                 app.colorDetails = resp.data.colorDetails;
+                                app.existColorDetails = resp.data.existColorDetails;
+                                for (var i = 0; i < app.existColorDetails.length; i++) {
+                                    delete app.existColorDetails[i].created_at;
+                                    delete app.existColorDetails[i].updated_at;
+                                    delete app.existColorDetails[i].id;
+                                    delete app.existColorDetails[i].value_id;
+                                }
+
+                                console.log('resp.data.existColorDetails', resp.data.existColorDetails);
+                                app.existColorDetails = app.removeArrayDuplicates(app.existColorDetails);
+//                                console.log('app.existColorDetails', app.existColorDetails);
+
                                 if (app.colorDetails.length == 0) {
                                     app.currentColorValueExist = false;
                                     app.colorComment = {};
@@ -4402,7 +4628,54 @@
 
                 app.currentColorValue[flag] = value;
 //                app.currentColorValue[currentFlag] = value;
-            }
+            },
+            selectExistDetails(colorDetails) {
+                var app = this;
+
+                console.log('colorDetails', colorDetails);
+                console.log('app.currentColorValue', app.currentColorValue);
+                app.colorDetailsFlag = false;
+                app.currentColorValue.negation = colorDetails.negation;
+                app.currentColorValue.pre_constraint = colorDetails.pre_constraint;
+                app.currentColorValue.brightness = colorDetails.brightness;
+                app.currentColorValue.saturation = colorDetails.saturation;
+                app.currentColorValue.reflectance = colorDetails.reflectance;
+                app.currentColorValue.colored = colorDetails.colored;
+                app.currentColorValue.multi_colored = colorDetails.multi_colored;
+                app.currentColorValue.post_constraint = colorDetails.post_constraint;
+                app.colorDetailsFlag = true;
+            },
+            copyValuesToOther(value) {
+                var app = this;
+                console.log('app.userCharacters', app.userCharacters);
+                console.log('value', value);
+                app.copyValue = value;
+                app.confirmOverwriteFlag = true;
+
+            },
+            confirmOverwrite() {
+                var app = this;
+
+//                var characterName = '';
+//                for (var i = 0; i < app.userCharacters.length; i++) {
+//                    if (app.userCharacters[i].id == app.copyValue.character_id) {
+//                        characterName = app.userCharacters[i].name;
+//                    }
+//                }
+//                console.log('characterName', characterName);
+//                if (app.checkNumericalCharacter(characterName)) {
+                axios.post('/chrecorder/public/api/v1/overwrite-value', app.copyValue)
+                    .then(function(resp) {
+                        app.confirmOverwriteFlag = false;
+                        app.values = resp.data.values;
+                        app.preList = resp.data.preList;
+                        app.postList = resp.data.postList;
+                        app.allColorValues = resp.data.allColorValues;
+                        app.allNonColorValues = resp.data.allNonColorValues;
+                    });
+//                }
+
+            },
         },
         watch: {
             colorTreeData(newData) {

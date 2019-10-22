@@ -404,7 +404,7 @@ class HomeController extends Controller
             for ($i = 0; $i < ($columnCount - $previousHeaderCount); $i++) {
                 $header = Header::create([
                     'user_id' => $request->input('user_id'),
-                    'header' => 'Specimen' . ($previousHeaderCount + $i + 1)
+                    'header' => 'Sample' . ($previousHeaderCount + $i + 1)
                 ]);
             }
         }
@@ -461,10 +461,10 @@ class HomeController extends Controller
         $characters = Character::where('owner_name', '=', $username)->get();
         for ($i = 0; $i < ($columnCount - $oldHeaderCount); $i++) {
             for ($j = 0; $j < $columnCount; $j++) {
-                if (!Header::where('header', '=', ('Specimen' . ($j + 1)))->where('user_id', '=', Auth::id())->first()) {
+                if (!Header::where('header', '=', ('Sample' . ($j + 1)))->where('user_id', '=', Auth::id())->first()) {
                     $header = Header::create([
                         'user_id' => Auth::id(),
-                        'header' => 'Specimen' . ($j + 1)
+                        'header' => 'Sample' . ($j + 1)
                     ]);
                     foreach ($characters as $eachCharacter) {
                         Value::create([
@@ -1032,10 +1032,38 @@ class HomeController extends Controller
     public function getColorDetails(Request $request, $valueId) {
         $colorDetails = ColorDetails::where('value_id', '=', $valueId)->get();
         $returnValues = $this->getValuesByCharacter();
+        $user = User::where('id', '=', Auth::id())->first();
+
+        $selectedCharacter = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first();
+        $users = User::where('taxon', '=', $user->taxon)->get();
+
+        $characterList = Character::where('name', '=', $selectedCharacter->name)->get()->toArray();
+
+        $existDetails = [];
+
+        foreach ($characterList as $eachCharacter) {
+            $tempFlag = false;
+            foreach ($users as $eachUser) {
+                if (substr( $eachUser->email, 0, strlen($eachCharacter['owner_name']) + 1 ) == $eachCharacter['owner_name'] . '@') {
+                    $tempFlag = true;
+                }
+            }
+            if ($tempFlag) {
+                $values = Value::where('character_id', '=', $eachCharacter['id'])->get();
+                foreach ($values as $eachValue) {
+                    $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
+                    foreach ($existColorDetails as $eachColorDetails) {
+                        $eachColorDetails['username'] = $eachCharacter['owner_name'];
+                        array_push($existDetails, $eachColorDetails);
+                    }
+                }
+            }
+        }
 
         $data = [
             'colorDetails' => $colorDetails,
-            'values' => $returnValues
+            'values' => $returnValues,
+            'existColorDetails' => $existDetails
         ];
 
         return $data;
@@ -1326,9 +1354,10 @@ class HomeController extends Controller
 
         NonColorDetails::where('value_id', '=', $valueId)->delete();
 
-        $returnValues = $this->getValuesByCharacter();
 
         $characterName = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first()->name;
+
+        $returnValues = $this->getValuesByCharacter();
 
         $constraints = $this->getDefaultConstraint($characterName);
         $returnAllDetailValues = $this->getAllColorValues();
@@ -1353,5 +1382,84 @@ class HomeController extends Controller
         ];
 
         return $data;
+    }
+
+    public function overwriteValue(Request $request) {
+        $value = $request->all();
+
+        $selectedValue = Value::where('id', '=', $value['id'])->first();
+
+        $characterName = Character::where('id', '=', $value['character_id'])->first()->name;
+        $values = Value::where('character_id', '=', $value['character_id'])->get();
+
+        if ($selectedValue->value != null) {
+
+            foreach ($values as $eachValue) {
+                if ($eachValue->header_id != 1) {
+                    $eachValue->value = $value['value'];
+                    $eachValue->save();
+                }
+            }
+        } else if (substr($characterName, 0, 5) === "Color") {
+            $colorDetails = ColorDetails::where('value_id', '=', $selectedValue->id)->get();
+            if ($colorDetails) {
+                foreach ($values as $eachValue) {
+                    if ($eachValue->id != $value['id']) {
+                        ColorDetails::where('value_id', '=', $eachValue->id)->delete();
+                        foreach ($colorDetails as $eachColorDetails) {
+                            $otherColorDetail = new ColorDetails([
+                                'value_id' => $eachValue->id,
+                                'negation' => $eachColorDetails->negation,
+                                'pre_constraint' => $eachColorDetails->pre_constraint,
+                                'brightness' => $eachColorDetails->brightness,
+                                'reflectance' => $eachColorDetails->reflectance,
+                                'saturation' => $eachColorDetails->saturation,
+                                'colored' => $eachColorDetails->colored,
+                                'multi_colored' => $eachColorDetails->multi_colored,
+                                'post_constraint' => $eachColorDetails->post_constraint,
+                            ]);
+
+                            $otherColorDetail->save();
+                        }
+                    }
+                }
+            }
+        } else {
+            $nonColorDetails = NonColorDetails::where('value_id', '=', $selectedValue->id)->get();
+            if ($nonColorDetails) {
+                foreach ($values as $eachValue) {
+                    if ($eachValue->id != $value['id']) {
+                        NonColorDetails::where('value_id', '=', $eachValue->id)->delete();
+                        foreach ($nonColorDetails as $eachNonColorDetails) {
+                            $otherNonColorDetail = new NonColorDetails([
+                                'value_id' => $eachValue->id,
+                                'negation' => $eachNonColorDetails->negation,
+                                'pre_constraint' => $eachNonColorDetails->pre_constraint,
+                                'main_value' => $eachNonColorDetails->main_value,
+                                'post_constraint' => $eachNonColorDetails->post_constraint,
+                            ]);
+
+                            $otherNonColorDetail->save();
+                        }
+                    }
+                }
+            }
+        }
+
+
+        $returnValues = $this->getValuesByCharacter();
+
+        $constraints = $this->getDefaultConstraint($characterName);
+        $returnAllDetailValues = $this->getAllColorValues();
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'preList' => $constraints['preList'],
+            'postList' => $constraints['postList'],
+        ];
+
+        return $data;
+
     }
 }
