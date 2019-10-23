@@ -1670,7 +1670,7 @@
                             app.currentMetadata = creator;
                             break;
                         case 'usage':
-                            axios.get('/api/v1/get-usage/' + app.character.id)
+                            axios.get('/chrecorder/public/api/v1/get-usage/' + app.character.id)
                                 .then(function (resp) {
                                     app.parentData = [];
                                     app.parentData[0] = resp.data.usage_count;
@@ -1737,7 +1737,7 @@
 
                 console.log('postCharacters', postCharacters);
 
-                axios.post('/api/v1/character/add-standard', postCharacters)
+                axios.post('/chrecorder/public/api/v1/character/add-standard', postCharacters)
                     .then(function (resp) {
                         console.log('addStandard resp', resp.data);
                         app.userCharacters = resp.data;
@@ -1748,7 +1748,7 @@
             removeStandardCharacter(characterId) {
                 var app = this;
 
-                axios.post("/api/v1/character/delete/" + app.user.id + "/" + characterId)
+                axios.post("/chrecorder/public/api/v1/character/delete/" + app.user.id + "/" + characterId)
                     .then(function (resp) {
                         app.userCharacters = resp.data.characters;
                         app.headers = resp.data.headers;
@@ -1764,7 +1764,7 @@
             removeUserCharacter(characterId) {
                 var app = this;
                 var oldUserTag = app.userCharacters.find(ch => ch.id == characterId).standard_tag;
-                axios.post("/api/v1/character/delete/" + app.user.id + "/" + characterId)
+                axios.post("/chrecorder/public/api/v1/character/delete/" + app.user.id + "/" + characterId)
                     .then(function (resp) {
                         app.defaultCharacters = resp.data.defaultCharacters;
                         app.refreshDefaultCharacters();
@@ -1780,7 +1780,7 @@
                                 user_tag: oldUserTag
                             };
                             console.log('remove jsonUserTag', jsonUserTag);
-                            axios.post("/api/v1/user-tag/remove", jsonUserTag)
+                            axios.post("/chrecorder/public/api/v1/user-tag/remove", jsonUserTag)
                                 .then(function (resp) {
                                     console.log("remove UserTag", resp.data);
                                 });
@@ -1792,7 +1792,7 @@
             removeAllCharacters() {
                 var app = this;
                 app.isLoading = true;
-                axios.post('/api/v1/character/remove-all')
+                axios.post('/chrecorder/public/api/v1/character/remove-all')
                     .then(function (resp) {
                         app.isLoading = false;
                         app.userCharacters = resp.data.characters;
@@ -2341,7 +2341,7 @@
                 var app = this;
                 var userId = sessionStorage.getItem("userId");
                 app.confirmSummary = false;
-                axios.get("/api/v1/character/" + userId)
+                axios.get("/chrecorder/public/api/v1/character/" + userId)
                     .then(function (resp) {
                         console.log('getCharacter', resp);
                         var currentCharacters = resp.data.characters;
@@ -2371,7 +2371,7 @@
                                     }
                                 }
 
-                                axios.post('/api/v1/character/update-character', app.character)
+                                axios.post('/chrecorder/public/api/v1/character/update-character', app.character)
                                     .then(function (resp) {
                                         app.userTags = resp.data.userTags;
                                         app.userCharacters = resp.data.characters;
@@ -2413,7 +2413,7 @@
                             }
 
                             if (app.matrixShowFlag) {
-                                axios.post('/api/v1/character/add-character', app.character)
+                                axios.post('/chrecorder/public/api/v1/character/add-character', app.character)
                                     .then(function (resp) {
                                         if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
                                             var jsonUserTag = {
@@ -2421,16 +2421,16 @@
                                                 user_tag: app.character.standard_tag
                                             };
                                             console.log('jsonUserTag', jsonUserTag);
-                                            axios.post("/api/v1/user-tag/create", jsonUserTag)
+                                            axios.post("/chrecorder/public/api/v1/user-tag/create", jsonUserTag)
                                                 .then(function (resp) {
-                                                    axios.get('/api/v1/user-tag/' + app.user.id)
+                                                    axios.get('/chrecorder/public/api/v1/user-tag/' + app.user.id)
                                                         .then(function (resp) {
                                                             app.userTags = resp.data;
                                                         });
                                                     console.log("create UserTag", resp.data);
                                                 });
                                         } else {
-                                            axios.get('/api/v1/user-tag/' + app.user.id)
+                                            axios.get('/chrecorder/public/api/v1/user-tag/' + app.user.id)
                                                 .then(function (resp) {
                                                     app.userTags = resp.data;
                                                 });
@@ -2448,7 +2448,7 @@
                                         app.detailsFlag = false;
                                     });
                             } else {
-                                axios.post("/api/v1/character/create", app.character)
+                                axios.post("/chrecorder/public/api/v1/character/create", app.character)
                                     .then(function (resp) {
                                         if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
                                             var jsonUserTag = {
@@ -2456,7 +2456,7 @@
                                                 user_tag: app.character.standard_tag
                                             };
                                             console.log('jsonUserTag', jsonUserTag);
-                                            axios.post("/api/v1/user-tag/create", jsonUserTag)
+                                            axios.post("/chrecorder/public/api/v1/user-tag/create", jsonUserTag)
                                                 .then(function (resp) {
                                                     console.log("create UserTag", resp.data);
                                                 });
@@ -2484,7 +2484,7 @@
                         'column_count': app.columnCount,
                         'taxon': app.taxonName
                     };
-                    axios.post('/api/v1/matrix-store', jsonMatrix)
+                    axios.post('/chrecorder/public/api/v1/matrix-store', jsonMatrix)
                         .then(function (resp) {
                             app.isLoading = false;
                             console.log('resp storeMatrix', resp.data);
@@ -2494,7 +2494,7 @@
                             app.headers = resp.data.headers;
                             app.values = resp.data.values;
                             console.log('app.userTags', app.userTags);
-                            axios.get('/api/v1/user-tag/' + app.user.id)
+                            axios.get('/chrecorder/public/api/v1/user-tag/' + app.user.id)
                                 .then(function (resp) {
                                     app.userTags = resp.data;
                                     app.showTableForTab(app.userTags[0].tag_name);
@@ -2513,7 +2513,7 @@
             deleteHeader(headerId) {
                 var app = this;
                 app.isLoading = true;
-                axios.post('/api/v1/delete-header/' + headerId)
+                axios.post('/chrecorder/public/api/v1/delete-header/' + headerId)
                     .then(function (resp) {
                         console.log('delete header', resp.data);
                         app.headers = resp.data.headers;
@@ -2527,7 +2527,7 @@
             },
             changeTaxonName() {
                 var app = this;
-                axios.post('/api/v1/change-taxon/' + app.taxonName)
+                axios.post('/chrecorder/public/api/v1/change-taxon/' + app.taxonName)
                     .then(function (resp) {
                         app.taxonName = resp.data.taxon;
                     });
@@ -2540,7 +2540,7 @@
                     app.isLoading = false;
                     alert("To reduce the size of the matrix, use the remove button (x) in the matrix.");
                 } else {
-                    axios.post('/api/v1/add-more-column/' + app.columnCount)
+                    axios.post('/chrecorder/public/api/v1/add-more-column/' + app.columnCount)
                         .then(function (resp) {
                             console.log('addMoreColumn resp', resp.data);
                             app.userCharacters = resp.data.characters;
@@ -2557,7 +2557,7 @@
                 var app = this;
                 var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
                 if (app.checkHaveUnit(currentCharacter.name)) {
-                    axios.post('/api/v1/character/update', value)
+                    axios.post('/chrecorder/public/api/v1/character/update', value)
                         .then(function (resp) {
                             console.log('saveItem', resp.data);
                             if (resp.data.error_input == 1) {
@@ -2579,7 +2579,7 @@
             removeAllStandardCharacters() {
                 var app = this;
                 app.isLoading = true;
-                axios.post('/api/v1/character/remove-all-standard')
+                axios.post('/chrecorder/public/api/v1/character/remove-all-standard')
                     .then(function (resp) {
                         app.removeAllStandardFlag = false;
                         app.isLoading = false;
@@ -2619,7 +2619,7 @@
                 var app = this;
                 app.isLoading = true;
                 app.currentTab = tagName;
-                axios.post('/api/v1/show-tab-character/' + tagName)
+                axios.post('/chrecorder/public/api/v1/show-tab-character/' + tagName)
                     .then(function (resp) {
                         app.isLoading = false;
                         app.userCharacters = resp.data.characters;
@@ -2638,7 +2638,7 @@
             },
             removeRowTable(characterId) {
                 var app = this;
-                axios.post('/api/v1/character/delete/' + app.user.id + '/' + characterId)
+                axios.post('/chrecorder/public/api/v1/character/delete/' + app.user.id + '/' + characterId)
                     .then(function (resp) {
                         app.userCharacters = resp.data.characters;
                         app.headers = resp.data.headers;
@@ -2657,7 +2657,7 @@
                     character_id: characterId,
                     unit: unit
                 };
-                axios.post('/api/v1/character/update-unit', jsonPost)
+                axios.post('/chrecorder/public/api/v1/character/update-unit', jsonPost)
                     .then(function (resp) {
                         app.userCharacters = resp.data.characters;
                         app.headers = resp.data.headers;
@@ -2672,7 +2672,7 @@
                     character_id: characterId,
                     summary: summary
                 };
-                axios.post('/api/v1/character/update-summary', jsonPost)
+                axios.post('/chrecorder/public/api/v1/character/update-summary', jsonPost)
                     .then(function (resp) {
                         app.userCharacters = resp.data.characters;
                         app.headers = resp.data.headers;
@@ -2705,7 +2705,7 @@
                     console.log('tmp', tmp);
 //                    app.values.splice(valueIndex, 1);
 //                    app.values.splice(valueIndex + 1, 0, tmp);
-                    axios.post('/api/v1/character/change-order', {
+                    axios.post('/chrecorder/public/api/v1/character/change-order', {
                         order: 'down',
                         characterId: tmp[0].character_id,
                     })
@@ -2722,7 +2722,7 @@
                     app.isLoading = true;
 //                    app.values.splice(valueIndex, 1);
 //                    app.values.splice(valueIndex - 1, 0, tmp);
-                    axios.post('/api/v1/character/change-order', {
+                    axios.post('/chrecorder/public/api/v1/character/change-order', {
                         order: 'up',
                         characterId: tmp[0].character_id,
                     })
@@ -3473,7 +3473,7 @@
             },
             exportDescription() {
                 var app = this;
-                axios.post('/api/v1/export-description', {template: app.descriptionText, taxon: app.taxonName})
+                axios.post('/chrecorder/public/api/v1/export-description', {template: app.descriptionText, taxon: app.taxonName})
                     .then(function (resp) {
                         console.log('resp', resp.data);
                         if (resp.data.is_scucess == 1) {
@@ -3511,7 +3511,7 @@
             saveHeader(header) {
                 var app = this;
                 console.log('header', header.header);
-                axios.post('/api/v1/update-header', header)
+                axios.post('/chrecorder/public/api/v1/update-header', header)
                     .then(function (resp) {
                         app.headers = resp.data.headers;
                     });
@@ -3593,7 +3593,7 @@
                         && (app.currentColorValue.pre_constraint == undefined || app.currentColorValue.pre_constraint == 'undefined' || app.currentColorValue.pre_constraint == null || app.currentColorValue.pre_constraint == '')
                         && (app.currentColorValue.reflectance == undefined || app.currentColorValue.reflectance == 'undefined' || app.currentColorValue.reflectance == null || app.currentColorValue.reflectance == '')
                         && (app.currentColorValue.saturation == undefined || app.currentColorValue.saturation == 'undefined' || app.currentColorValue.saturation == null || app.currentColorValue.saturation == '')) {
-                        axios.get('/api/v1/get-color-details/' + app.currentColorValue.value_id)
+                        axios.get('/chrecorder/public/api/v1/get-color-details/' + app.currentColorValue.value_id)
                             .then(function (resp) {
                                 app.colorDetails = resp.data.colorDetails;
                                 app.values = resp.data.values;
@@ -3710,7 +3710,7 @@
                         console.log('postFlag', postFlag);
 //                }
                         if (postFlag == true) {
-                            axios.post('/api/v1/save-color-value', postValue)
+                            axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
                                 .then(function (resp) {
                                     app.values = resp.data.values;
                                     app.preList = resp.data.preList;
@@ -3754,7 +3754,7 @@
                 var app = this;
 
                 console.log('app.colorDetails[0].value_id', app.colorDetails[0].value_id);
-                axios.post('/api/v1/remove-color-value', {value_id: app.colorDetails[0].value_id})
+                axios.post('/chrecorder/public/api/v1/remove-color-value', {value_id: app.colorDetails[0].value_id})
                     .then(function (resp) {
                         app.values = resp.data.values;
                         app.preList = resp.data.preList;
@@ -3776,7 +3776,7 @@
                         && (app.currentNonColorValue.pre_constraint == 'undefined' || app.currentNonColorValue.pre_constraint == '' || app.currentNonColorValue.pre_constraint == null)
                         && (app.currentNonColorValue.main_value == 'undefined' || app.currentNonColorValue.main_value == '' || app.currentNonColorValue.main_value == null)
                         && (app.currentNonColorValue.post_constraint == 'undefined' || app.currentNonColorValue.post_constraint == '' || app.currentNonColorValue.post_constraint == null)) {
-                        axios.get('/api/v1/get-non-color-details/' + app.currentNonColorValue.value_id)
+                        axios.get('/chrecorder/public/api/v1/get-non-color-details/' + app.currentNonColorValue.value_id)
                             .then(function (resp) {
                                 app.nonColorDetails = resp.data.nonColorDetails;
                                 app.values = resp.data.values;
@@ -3892,7 +3892,7 @@
 //                }
 
                         if (postFlag == true) {
-                            axios.post('/api/v1/save-non-color-value', postValue)
+                            axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
                                 .then(function (resp) {
                                     app.values = resp.data.values;
                                     app.preList = resp.data.preList;
@@ -3931,7 +3931,7 @@
             removeNonColorValue() {
                 var app = this;
 
-                axios.post('/api/v1/remove-non-color-value', {value_id: app.nonColorDetails[0].value_id})
+                axios.post('/chrecorder/public/api/v1/remove-non-color-value', {value_id: app.nonColorDetails[0].value_id})
                     .then(function (resp) {
                         app.values = resp.data.values;
                         app.preList = resp.data.preList;
@@ -4055,14 +4055,14 @@
                 var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
                 app.currentCharacter = currentCharacter;
                 if (!app.checkHaveUnit(currentCharacter.name)) {
-                    axios.get('/api/v1/get-constraint/' + currentCharacter.name)
+                    axios.get('/chrecorder/public/api/v1/get-constraint/' + currentCharacter.name)
                         .then(function (resp) {
                             app.preList = resp.data.preList;
                             app.postList = resp.data.postList;
                         });
                     if (currentCharacter.name.startsWith('Color')) {
                         app.colorDetailsFlag = true;
-                        axios.get('/api/v1/get-color-details/' + value.id)
+                        axios.get('/chrecorder/public/api/v1/get-color-details/' + value.id)
                             .then(function (resp) {
                                 console.log('get-color resp', resp.data);
                                 app.colorDetails = resp.data.colorDetails;
@@ -4119,7 +4119,7 @@
                         app.nonColorDetailsFlag = true;
 
 
-                        axios.get('/api/v1/get-non-color-details/' + value.id)
+                        axios.get('/chrecorder/public/api/v1/get-non-color-details/' + value.id)
                             .then(function (resp) {
                                 app.nonColorDetails = resp.data.nonColorDetails;
                                 if (app.nonColorDetails.length == 0) {
@@ -4591,7 +4591,7 @@
             removeEachColor(color) {
                 console.log('color', color);
                 var app = this;
-                axios.post('/api/v1/remove-each-color-details', color)
+                axios.post('/chrecorder/public/api/v1/remove-each-color-details', color)
                     .then(function(resp) {
                         app.colorDetails = resp.data.colorDetails;
                         app.values = resp.data.values;
@@ -4611,7 +4611,7 @@
             },
             removeEachNonColor(value) {
                 var app = this;
-                axios.post('/api/v1/remove-each-non-color-details', value)
+                axios.post('/chrecorder/public/api/v1/remove-each-non-color-details', value)
                     .then(function(resp) {
                         app.nonColorDetails = resp.data.nonColorDetails;
                         app.values = resp.data.values;
@@ -4623,7 +4623,7 @@
             },
             getUserTag: async() => {
                 var app = this;
-                return axios.get("/api/v1/user-tag/" + app.user.id);
+                return axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id);
             },
             getPrimaryColor(detailColor) {
                 var app = this;
@@ -4672,7 +4672,7 @@
             confirmOverwrite() {
                 var app = this;
 
-                axios.post('/api/v1/overwrite-value', app.copyValue)
+                axios.post('/chrecorder/public/api/v1/overwrite-value', app.copyValue)
                     .then(function(resp) {
                         app.confirmOverwriteFlag = false;
                         app.values = resp.data.values;
@@ -4686,7 +4686,7 @@
             keepExistingValue() {
                 var app = this;
 
-                axios.post('/api/v1/keep-exist-value', app.copyValue)
+                axios.post('/chrecorder/public/api/v1/keep-exist-value', app.copyValue)
                     .then(function(resp) {
                         app.confirmOverwriteFlag = false;
                         app.values = resp.data.values;
@@ -4725,7 +4725,7 @@
                     }
                     console.log('app.colorationData', app.colorationData);
                 });
-            axios.get('/api/v1/standard_characters')
+            axios.get('/chrecorder/public/api/v1/standard_characters')
                 .then(function (resp) {
                     console.log('standardCharacters', resp);
                     app.defaultCharacters = resp.data;
@@ -4756,7 +4756,7 @@
                         }
                         app.standardCharacters.push(temp);
                     }
-                    axios.get("/api/v1/character/" + app.user.id)
+                    axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
                         .then(function (resp) {
                             console.log('resp character', resp.data);
                             app.userCharacters = resp.data.characters;
@@ -4784,7 +4784,7 @@
                         });
                 });
 
-            axios.get("/api/v1/user-tag/" + app.user.id)
+            axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id)
                 .then(function (resp) {
                     app.userTags = resp.data;
                     console.log('userTags', app.userTags);
