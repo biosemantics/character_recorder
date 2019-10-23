@@ -10,7 +10,8 @@
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.5",
-        "phpoffice/phpword": "^0.16.0"
+        "phpoffice/phpword": "^0.16.0",
+        "pusher/pusher-php-server": "^4.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",

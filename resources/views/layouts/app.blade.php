@@ -15,7 +15,8 @@
     <link href="{{ asset('css/tabs-component.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 	<script>
-		(function(h,o,t,j,a,r){
+
+        (function(h,o,t,j,a,r){
 			h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
 			h._hjSettings={hjid:1284454,hjsv:6};
 			a=o.getElementsByTagName('head')[0];
@@ -137,7 +138,7 @@
                     </ul>
                 </div>
                 <div>
-                    <a href="{{ url('/leader-board') }}">
+                    <a id="top-user" href="{{ url('/leader-board') }}">
                         {{ getTopUser() }}
                     </a>
                 </div>

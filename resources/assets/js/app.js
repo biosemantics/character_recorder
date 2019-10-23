@@ -36,4 +36,12 @@ new Vue({
         // declare message with an empty value
         userName: ''
     },
+    created() {
+        var channel = Echo.channel('my-channel');
+        channel.listen('.my-event', function(data) {
+            $('#top-user').text(data['topUser']);
+            console.log('data.topUser', data.topUser);
+        });
+    },
 });
+
