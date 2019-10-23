@@ -255,7 +255,7 @@
                                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
                                                v-on:blur="saveItem($event, value)"/>
                                         <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
-                                            <img class="left-right-icon"src="../public/images/left-right-icon.png" style="width: 45px;"/>
+                                            <img class="left-right-icon"src="https://cdn0.iconfinder.com/data/icons/interaction-1-2-outlined/232/left-arrow-symbol-andright-arrow-symbol-forward-play-right-arrow-512.png" style="width: 45px;"/>
                                         </a>
                                     </td>
                                 </tr>
