@@ -26,7 +26,9 @@
         "vuex": "^2.3.1"
     },
     "dependencies": {
+        "laravel-echo": "^1.6.1",
         "liquor-tree": "^0.2.59",
+        "pusher-js": "^5.0.2",
         "v-tooltip": "^2.0.2",
         "vue-loading-overlay": "^3.2.0",
         "vue-router": "^3.0.1",

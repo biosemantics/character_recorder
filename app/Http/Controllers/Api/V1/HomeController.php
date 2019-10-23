@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\MyEvent;
 use Illuminate\Http\Request;
 use Auth;
 use App\StandardCharacter;
@@ -132,6 +133,8 @@ class HomeController extends Controller
             array_push($characters, $value_array);
         }
 
+        event(new MyEvent());
+
         return $characters;
     }
 
@@ -155,6 +158,7 @@ class HomeController extends Controller
         $arrayCharacters = [];
         if (Character::where('owner_name', '=', $username)->first()) {
             $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('standard_tag', 'ASC')->orderBy('order', 'ASC')->get();
+//            $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
         }
         foreach ($arrayCharacters as $c) {
 
@@ -359,6 +363,7 @@ class HomeController extends Controller
 
 
         $characters = Character::where('owner_name', '=', $username)->orderBy('standard_tag', 'ASC')->get();
+//        $characters = Character::where('owner_name', '=', $username)->get();
 
         $usedCharacters = Character::where('owner_name', '=', $username)->get();
         foreach ($usedCharacters as $usedCharacter) {
@@ -1441,6 +1446,92 @@ class HomeController extends Controller
 
                             $otherNonColorDetail->save();
                         }
+                    }
+                }
+            }
+        }
+
+
+        $returnValues = $this->getValuesByCharacter();
+
+        $constraints = $this->getDefaultConstraint($characterName);
+        $returnAllDetailValues = $this->getAllColorValues();
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'preList' => $constraints['preList'],
+            'postList' => $constraints['postList'],
+        ];
+
+        return $data;
+
+    }
+
+    public function keepExistValue(Request $request) {
+        $value = $request->all();
+
+        $selectedValue = Value::where('id', '=', $value['id'])->first();
+
+        $characterName = Character::where('id', '=', $value['character_id'])->first()->name;
+        $values = Value::where('character_id', '=', $value['character_id'])->get();
+
+        if ($selectedValue->value != null) {
+
+            foreach ($values as $eachValue) {
+                if ($eachValue->header_id != 1
+                    && $eachValue->value == null) {
+                    $eachValue->value = $value['value'];
+                    $eachValue->save();
+                }
+            }
+        } else if (substr($characterName, 0, 5) === "Color") {
+            $colorDetails = ColorDetails::where('value_id', '=', $selectedValue->id)->get();
+            if ($colorDetails) {
+                foreach ($values as $eachValue) {
+                    if ($eachValue->id != $value['id']) {
+                        $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->first();
+                        if (!$existColorDetails) {
+                            foreach ($colorDetails as $eachColorDetails) {
+                                $otherColorDetail = new ColorDetails([
+                                    'value_id' => $eachValue->id,
+                                    'negation' => $eachColorDetails->negation,
+                                    'pre_constraint' => $eachColorDetails->pre_constraint,
+                                    'brightness' => $eachColorDetails->brightness,
+                                    'reflectance' => $eachColorDetails->reflectance,
+                                    'saturation' => $eachColorDetails->saturation,
+                                    'colored' => $eachColorDetails->colored,
+                                    'multi_colored' => $eachColorDetails->multi_colored,
+                                    'post_constraint' => $eachColorDetails->post_constraint,
+                                ]);
+
+                                $otherColorDetail->save();
+                            }
+                        }
+
+                    }
+                }
+            }
+        } else {
+            $nonColorDetails = NonColorDetails::where('value_id', '=', $selectedValue->id)->get();
+            if ($nonColorDetails) {
+                foreach ($values as $eachValue) {
+                    if ($eachValue->id != $value['id']) {
+                        $existNonColorDetails = NonColorDetails::where('value_id', '=', $eachValue->id)->first();
+                        if (!$existNonColorDetails) {
+                            foreach ($nonColorDetails as $eachNonColorDetails) {
+                                $otherNonColorDetail = new NonColorDetails([
+                                    'value_id' => $eachValue->id,
+                                    'negation' => $eachNonColorDetails->negation,
+                                    'pre_constraint' => $eachNonColorDetails->pre_constraint,
+                                    'main_value' => $eachNonColorDetails->main_value,
+                                    'post_constraint' => $eachNonColorDetails->post_constraint,
+                                ]);
+
+                                $otherNonColorDetail->save();
+                            }
+                        }
+
                     }
                 }
             }
