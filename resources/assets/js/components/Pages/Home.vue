@@ -255,7 +255,7 @@
                                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
                                                v-on:blur="saveItem($event, value)"/>
                                         <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
-                                            <img src="../../../../../public/images/left-right-icon.png" style="width: 45px;"/>
+                                            <img class="left-right-icon"src="../public/images/left-right-icon.png" style="width: 45px;"/>
                                         </a>
                                     </td>
                                 </tr>
