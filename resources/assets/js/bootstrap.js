@@ -57,6 +57,7 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: '2d65978d3e1e850a0828',
     cluster: 'us3',
+    enabledTransports: ['ws', 'xhr_streaming', 'httpHost', 'httpPort'],
     forceTLS: true
 });
 //
