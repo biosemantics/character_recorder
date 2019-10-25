@@ -1066,7 +1066,7 @@
                                             <div>
                                                 <b>Current values</b>
                                             </div>
-                                            <div v-for="(eachValue, index) in nonColorDetails" class="row" style="margin-top: 5px;">
+                                            <div v-for="(eachValue, index) in nonColorDetails" v-if="currentNonColorValueExist == true" class="row" style="margin-top: 5px;">
                                                 <div class="col-md-6">
                                                     <div style="display: inline-block;" v-if="eachValue.negation != null">
                                                         {{ eachValue.negation }}
