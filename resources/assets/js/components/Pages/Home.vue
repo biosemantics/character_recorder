@@ -711,11 +711,19 @@
                                             </div>
                                         </div>
 
-                                        <div v-if="currentColorValueExist == true" style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
+                                        <div v-if="colorDetails.length > 0" style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
+                                            <div style="float: right;">
+                                                <a class="btn btn-primary" v-if="currentColorValueExist == false" v-on:click="currentColorValueExist = true;">
+                                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                                </a>
+                                                <a class="btn btn-primary" v-if="currentColorValueExist == true" v-on:click="currentColorValueExist = false;">
+                                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                                </a>
+                                            </div>
                                             <div>
                                                 <b>Current values</b>
                                             </div>
-                                            <div v-for="(eachColor, index) in colorDetails" style="margin-top: 5px;" class="row">
+                                            <div v-for="(eachColor, index) in colorDetails" v-if="currentColorValueExist == true" style="margin-top: 5px;" class="row">
                                                 <div class="col-md-6">
                                                     <div style="display: inline-block;" v-if="eachColor.negation != null">
                                                         {{ eachColor.negation }}
@@ -1046,11 +1054,19 @@
 
                                             </div>
                                         </div>
-                                        <div v-if="currentNonColorValueExist == true" style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
+                                        <div v-if="nonColorDetails.length > 0" style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
+                                            <div style="float: right;">
+                                                <a class="btn btn-primary" v-if="currentNonColorValueExist == false" v-on:click="currentNonColorValueExist = true;">
+                                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                                </a>
+                                                <a class="btn btn-primary" v-if="currentNonColorValueExist == true" v-on:click="currentNonColorValueExist = false;">
+                                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                                </a>
+                                            </div>
                                             <div>
                                                 <b>Current values</b>
                                             </div>
-                                            <div v-for="(eachValue, index) in nonColorDetails" class="row" style="margin-top: 5px;">
+                                            <div v-for="(eachValue, index) in nonColorDetails" v-if="currentNonColorValueExist == true" class="row" style="margin-top: 5px;">
                                                 <div class="col-md-6">
                                                     <div style="display: inline-block;" v-if="eachValue.negation != null">
                                                         {{ eachValue.negation }}
