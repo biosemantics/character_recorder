@@ -1179,9 +1179,39 @@ class HomeController extends Controller
         $nonColorDetails = NonColorDetails::where('value_id', '=', $valueId)->get();
         $returnValues = $this->getValuesByCharacter();
 
+        $user = User::where('id', '=', Auth::id())->first();
+
+        $selectedCharacter = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first();
+        $users = User::where('taxon', '=', $user->taxon)->get();
+
+        $characterList = Character::where('name', '=', $selectedCharacter->name)->get()->toArray();
+
+        $existDetails = [];
+
+        foreach ($characterList as $eachCharacter) {
+            $tempFlag = false;
+            foreach ($users as $eachUser) {
+                if (substr( $eachUser->email, 0, strlen($eachCharacter['owner_name']) + 1 ) == $eachCharacter['owner_name'] . '@') {
+                    $tempFlag = true;
+                }
+            }
+            if ($tempFlag) {
+                $values = Value::where('character_id', '=', $eachCharacter['id'])->get();
+                foreach ($values as $eachValue) {
+                    $existNonColorDetails = NonColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
+                    foreach ($existNonColorDetails as $eachNonColorDetails) {
+                        $eachNonColorDetails['username'] = $eachCharacter['owner_name'];
+                        array_push($existDetails, $eachNonColorDetails);
+                    }
+                }
+            }
+        }
+
+
         $data = [
             'nonColorDetails' => $nonColorDetails,
-            'values' => $returnValues
+            'values' => $returnValues,
+            'existNonColorDetails' => $existDetails
         ];
 
         return $data;

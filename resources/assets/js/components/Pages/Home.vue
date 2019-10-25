@@ -255,7 +255,7 @@
                                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
                                                v-on:blur="saveItem($event, value)"/>
                                         <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
-                                            <img src="https://cdn0.iconfinder.com/data/icons/interaction-1-2-outlined/232/left-arrow-symbol-andright-arrow-symbol-forward-play-right-arrow-512.png" style="width: 45px;"/>
+                                            <img src="https://cdn0.iconfinder.com/data/icons/interaction-1-2-outlined/232/left-arrow-symbol-andright-arrow-symbol-forward-play-right-arrow-512.png" style="width: 25px;"/>
                                         </a>
                                     </td>
                                 </tr>
@@ -626,7 +626,7 @@
                                             </a>
                                         </div>
 
-                                        <div v-if="existColorDetails.length > 0 && existColorDetailsFlag == true" style="margin-top: 10px;">
+                                        <div v-if="currentColorValueExist == false && existColorDetails.length > 0 && existColorDetailsFlag == true" style="margin-top: 10px;">
                                             <div>
                                                 <b>Values used before for this character and taxon</b>
                                             </div>
@@ -974,6 +974,73 @@
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
                                         <hr>
+                                        <div style="float: right;">
+                                            <a class="btn btn-primary" v-if="existNonColorDetailsFlag == false" v-on:click="existNonColorDetailsFlag = true;">
+                                                <span class="glyphicon glyphicon-chevron-down"></span>
+                                            </a>
+                                            <a class="btn btn-primary" v-if="existNonColorDetailsFlag == true" v-on:click="existNonColorDetailsFlag = false;">
+                                                <span class="glyphicon glyphicon-chevron-up"></span>
+                                            </a>
+                                        </div>
+
+                                        <div v-if="currentNonColorValueExist == false && existNonColorDetails.length > 0 && existNonColorDetailsFlag == true" style="margin-top: 10px;">
+                                            <div>
+                                                <b>Values used before for this character and taxon</b>
+                                            </div>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>
+                                                        negation
+                                                    </th>
+                                                    <th>
+                                                        pre constraint
+                                                    </th>
+                                                    <th>
+                                                        {{ currentNonColorValue.placeholderName }}
+                                                    </th>
+                                                    <th>
+                                                        post constraint
+                                                    </th>
+                                                    <th>
+                                                        count
+                                                    </th>
+                                                    <th>
+                                                        author
+                                                    </th>
+                                                    <th>
+
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr v-for="eachDetails in existNonColorDetails">
+                                                    <td>
+                                                        {{ eachDetails.negation }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.pre_constraint }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.main_value }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.post_constraint }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.count }}
+                                                    </td>
+                                                    <td>
+                                                        {{ eachDetails.username }}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-primary" v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
                                         <div v-if="currentNonColorValueExist == true">
                                             <b>Existing values</b>
                                         </div>
@@ -1368,6 +1435,8 @@
                 extraColors: [],
                 existColorDetails: [],
                 existColorDetailsFlag: false,
+                existNonColorDetails: [],
+                existNonColorDetailsFlag: false,
                 copyValue: null,
                 confirmOverwriteFlag: false,
             }
@@ -3768,7 +3837,6 @@
                 var app = this;
 
                 var postFlag = true;
-
                 if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false) {
                     app.searchNonColorSelection(app.currentNonColorValue, 'main_value');
                 } else {
@@ -3956,6 +4024,30 @@
             saveNewColorValue() {
 
             },
+            removeNonColorDuplicates(array) {
+                var result = [];
+
+                for (var i = 0; i < array.length; i++) {
+                    var temp = array[i];
+                    var resultFlag = true;
+                    for (var j = 0; j < result.length; j++) {
+                        if (array[i].negation == result[j].negation
+                            && array[i].pre_constraint == result[j].pre_constraint
+                            && array[i].main_value == result[j].main_value
+                            && array[i].post_constraint == result[j].post_constraint) {
+                            result[j].count = result[j].count + 1;
+                            resultFlag = false;
+                        }
+                    }
+                    if (resultFlag) {
+                        array[i].count = 1;
+                        result.push(array[i]);
+                    }
+                }
+
+                return result;
+
+            },
             removeArrayDuplicates(array) {
                 var result = [];
 
@@ -4050,10 +4142,12 @@
                 app.extraColors = [];
                 app.currentNonColorValue.detailsFlag = null;
                 app.currentNonColorValue.value_id = value.id;
-                app.existColorDetailsFlag = false;
+                app.existColorDetailsFlag = true;
+                app.existNonColorDetailsFlag = true;
 //                console.log('test', value);
                 var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
                 app.currentCharacter = currentCharacter;
+
                 if (!app.checkHaveUnit(currentCharacter.name)) {
                     axios.get('/chrecorder/public/api/v1/get-constraint/' + currentCharacter.name)
                         .then(function (resp) {
@@ -4122,6 +4216,16 @@
                         axios.get('/chrecorder/public/api/v1/get-non-color-details/' + value.id)
                             .then(function (resp) {
                                 app.nonColorDetails = resp.data.nonColorDetails;
+                                app.existNonColorDetails = resp.data.existNonColorDetails;
+                                for (var i = 0; i < app.existNonColorDetails.length; i++) {
+                                    delete app.existNonColorDetails[i].created_at;
+                                    delete app.existNonColorDetails[i].updated_at;
+                                    delete app.existNonColorDetails[i].id;
+                                    delete app.existNonColorDetails[i].value_id;
+                                }
+
+                                console.log('resp.data.existNonColorDetails', resp.data.existNonColorDetails);
+                                app.existNonColorDetails = app.removeNonColorDuplicates(app.existNonColorDetails);
                                 if (app.nonColorDetails.length == 0) {
                                     app.currentNonColorValueExist = false;
                                     app.nonColorComment = {};
@@ -4428,7 +4532,7 @@
                         app.searchNonColor = resp.data.entries;
                         if (app.searchNonColor.length == 0) {
                             app.searchNonColorFlag = 0;
-                            app.currentNonColorValue.confirmedFlag[flag] = true;
+                            app.currentNonColorValue.confirmedFlag['main_value'] = true;
 //                            if (nonColor.id && !nonColor[flag].endsWith('(user defined)')) {
 //                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
 //                                app.currentNonColorValue.confirmedFlag[flag] = true;
@@ -4660,6 +4764,16 @@
                 app.currentColorValue.multi_colored = colorDetails.multi_colored;
                 app.currentColorValue.post_constraint = colorDetails.post_constraint;
                 app.colorDetailsFlag = true;
+            },
+            selectExistNonColorDetails(nonColorDetails) {
+                var app = this;
+                app.nonColorDetailsFlag = false;
+                app.currentNonColorValue.negation = nonColorDetails.negation;
+                app.currentNonColorValue.pre_constraint = nonColorDetails.pre_constraint;
+                app.currentNonColorValue.main_value = nonColorDetails.main_value;
+                app.currentNonColorValue.post_constraint = nonColorDetails.post_constraint;
+                app.currentNonColorValue.confirmedFlag['main_value'] = true;
+                app.nonColorDetailsFlag = true;
             },
             copyValuesToOther(value) {
                 var app = this;
