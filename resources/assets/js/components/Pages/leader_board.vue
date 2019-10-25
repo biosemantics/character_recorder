@@ -10,6 +10,9 @@
                 {{ each }}
             </div>
         </div>
+        <div>
+            <a class="btn btn-primary" href="/">Go to Matrix Page</a>
+        </div>
     </div>
 </template>
 
