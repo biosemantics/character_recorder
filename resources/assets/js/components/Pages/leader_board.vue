@@ -11,7 +11,7 @@
             </div>
         </div>
         <div>
-            <a class="btn btn-primary" href="/">Go to Matrix Page</a>
+            <a class="btn btn-primary" href="/chrecorder/public">Go to Matrix Page</a>
         </div>
     </div>
 </template>
