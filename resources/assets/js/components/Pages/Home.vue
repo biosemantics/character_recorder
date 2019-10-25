@@ -617,144 +617,147 @@
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
                                         <hr>
-                                        <div style="float: right;">
-                                            <a class="btn btn-primary" v-if="existColorDetailsFlag == false" v-on:click="existColorDetailsFlag = true;">
-                                                <span class="glyphicon glyphicon-chevron-down"></span>
-                                            </a>
-                                            <a class="btn btn-primary" v-if="existColorDetailsFlag == true" v-on:click="existColorDetailsFlag = false;">
-                                                <span class="glyphicon glyphicon-chevron-up"></span>
-                                            </a>
+                                        <div v-if="existColorDetails.length > 0 && existColorDetailsFlag == true" style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                            <div style="float: right;">
+                                                <a class="btn btn-primary" v-if="existColorDetailsFlag == false" v-on:click="existColorDetailsFlag = true;">
+                                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                                </a>
+                                                <a class="btn btn-primary" v-if="existColorDetailsFlag == true" v-on:click="existColorDetailsFlag = false;">
+                                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                                </a>
+                                            </div>
+
+                                            <div style="margin-top: 10px;">
+                                                <div>
+                                                    <b>Values used before for this character and taxon</b>
+                                                </div>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            negation
+                                                        </th>
+                                                        <th>
+                                                            pre constraint
+                                                        </th>
+                                                        <th>
+                                                            brightness
+                                                        </th>
+                                                        <th>
+                                                            reflectance
+                                                        </th>
+                                                        <th>
+                                                            saturation
+                                                        </th>
+                                                        <th>
+                                                            color
+                                                        </th>
+                                                        <th>
+                                                            pattern
+                                                        </th>
+                                                        <th>
+                                                            post constraint
+                                                        </th>
+                                                        <th>
+                                                            count
+                                                        </th>
+                                                        <th>
+                                                            author
+                                                        </th>
+                                                        <th>
+
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr v-for="eachDetails in existColorDetails">
+                                                        <td>
+                                                            {{ eachDetails.negation }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.pre_constraint }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.brightness }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.reflectance }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.saturation }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.colored }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.multi_colored }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.post_constraint }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.count }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.username }}
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-primary" v-on:click="selectExistDetails(eachDetails)">Use this</a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
                                         </div>
 
-                                        <div v-if="currentColorValueExist == false && existColorDetails.length > 0 && existColorDetailsFlag == true" style="margin-top: 10px;">
+                                        <div v-if="currentColorValueExist == true" style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
                                             <div>
-                                                <b>Values used before for this character and taxon</b>
+                                                <b>Current values</b>
                                             </div>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th>
-                                                        negation
-                                                    </th>
-                                                    <th>
-                                                        pre constraint
-                                                    </th>
-                                                    <th>
-                                                        brightness
-                                                    </th>
-                                                    <th>
-                                                        reflectance
-                                                    </th>
-                                                    <th>
-                                                        saturation
-                                                    </th>
-                                                    <th>
-                                                        color
-                                                    </th>
-                                                    <th>
-                                                        pattern
-                                                    </th>
-                                                    <th>
-                                                        post constraint
-                                                    </th>
-                                                    <th>
-                                                        count
-                                                    </th>
-                                                    <th>
-                                                        author
-                                                    </th>
-                                                    <th>
+                                            <div v-for="(eachColor, index) in colorDetails" style="margin-top: 5px;" class="row">
+                                                <div class="col-md-6">
+                                                    <div style="display: inline-block;" v-if="eachColor.negation != null">
+                                                        {{ eachColor.negation }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachColor.pre_constraint != null">
+                                                        {{ eachColor.pre_constraint }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachColor.brightness != null">
+                                                        {{ eachColor.brightness }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachColor.reflectance != null">
+                                                        {{ eachColor.reflectance }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachColor.saturation != null">
+                                                        {{ eachColor.saturation }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachColor.colored != null">
+                                                        {{ eachColor.colored }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachColor.multi_colored != null">
+                                                        {{ eachColor.multi_colored }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachColor.post_constraint != null">
+                                                        {{ eachColor.post_constraint }}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="editEachColor(eachColor)">Edit</a>
+                                                    <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="removeEachColor(eachColor)">Remove</a>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                                    </th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr v-for="eachDetails in existColorDetails">
-                                                    <td>
-                                                        {{ eachDetails.negation }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.pre_constraint }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.brightness }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.reflectance }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.saturation }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.colored }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.multi_colored }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.post_constraint }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.count }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.username }}
-                                                    </td>
-                                                    <td>
-                                                        <a class="btn btn-primary" v-on:click="selectExistDetails(eachDetails)">Use this</a>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                        <div v-if="currentColorValueExist == true">
-                                            <b>Existing values</b>
-                                        </div>
-                                        <div v-for="(eachColor, index) in colorDetails" style="margin-top: 5px;" v-if="currentColorValueExist == true" class="row">
-                                            <div class="col-md-6">
-                                                <div style="display: inline-block;" v-if="eachColor.negation != null">
-                                                    {{ eachColor.negation }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachColor.pre_constraint != null">
-                                                    {{ eachColor.pre_constraint }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachColor.brightness != null">
-                                                    {{ eachColor.brightness }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachColor.reflectance != null">
-                                                    {{ eachColor.reflectance }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachColor.saturation != null">
-                                                    {{ eachColor.saturation }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachColor.colored != null">
-                                                    {{ eachColor.colored }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachColor.multi_colored != null">
-                                                    {{ eachColor.multi_colored }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachColor.post_constraint != null">
-                                                    {{ eachColor.post_constraint }}
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="editEachColor(eachColor)">Edit</a>
-                                                <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="removeEachColor(eachColor)">Remove</a>
-                                            </div>
-                                        </div>
-                                        <div v-if="currentColorValueExist == true">
-                                            <hr>
-                                        </div>
-                                        <div>
-                                            <b>Formulate a value:</b> type in a blank to select existing phrases or use your own terms(need
-                                            definition)
-                                        </div>
                                     </div>
 
                                     <div class="modal-body">
 
-                                        <div>
+                                        <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                            <div>
+                                                <b>Formulate a value:</b> type in a blank to select existing phrases or use your own terms(need
+                                                definition)
+                                            </div>
                                             <div>
                                                 <div style="display: inline-block;">
                                                     <input v-on:focus="changeColorSection(currentColorValue, 'negation', $event)"
@@ -974,108 +977,109 @@
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
                                         <hr>
-                                        <div style="float: right;">
-                                            <a class="btn btn-primary" v-if="existNonColorDetailsFlag == false" v-on:click="existNonColorDetailsFlag = true;">
-                                                <span class="glyphicon glyphicon-chevron-down"></span>
-                                            </a>
-                                            <a class="btn btn-primary" v-if="existNonColorDetailsFlag == true" v-on:click="existNonColorDetailsFlag = false;">
-                                                <span class="glyphicon glyphicon-chevron-up"></span>
-                                            </a>
-                                        </div>
+                                        <div v-if="existNonColorDetails.length > 0 && existNonColorDetailsFlag == true" style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                            <div style="float: right;">
+                                                <a class="btn btn-primary" v-if="existNonColorDetailsFlag == false" v-on:click="existNonColorDetailsFlag = true;">
+                                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                                </a>
+                                                <a class="btn btn-primary" v-if="existNonColorDetailsFlag == true" v-on:click="existNonColorDetailsFlag = false;">
+                                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                                </a>
+                                            </div>
 
-                                        <div v-if="currentNonColorValueExist == false && existNonColorDetails.length > 0 && existNonColorDetailsFlag == true" style="margin-top: 10px;">
+                                            <div style="margin-top: 10px;">
+                                                <div>
+                                                    <b>Values used before for this character and taxon</b>
+                                                </div>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>
+                                                            negation
+                                                        </th>
+                                                        <th>
+                                                            pre constraint
+                                                        </th>
+                                                        <th>
+                                                            {{ currentNonColorValue.placeholderName }}
+                                                        </th>
+                                                        <th>
+                                                            post constraint
+                                                        </th>
+                                                        <th>
+                                                            count
+                                                        </th>
+                                                        <th>
+                                                            author
+                                                        </th>
+                                                        <th>
+
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr v-for="eachDetails in existNonColorDetails">
+                                                        <td>
+                                                            {{ eachDetails.negation }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.pre_constraint }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.main_value }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.post_constraint }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.count }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.username }}
+                                                        </td>
+                                                        <td>
+                                                            <a class="btn btn-primary" v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                        <div v-if="currentNonColorValueExist == true" style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
                                             <div>
-                                                <b>Values used before for this character and taxon</b>
+                                                <b>Current values</b>
                                             </div>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th>
-                                                        negation
-                                                    </th>
-                                                    <th>
-                                                        pre constraint
-                                                    </th>
-                                                    <th>
-                                                        {{ currentNonColorValue.placeholderName }}
-                                                    </th>
-                                                    <th>
-                                                        post constraint
-                                                    </th>
-                                                    <th>
-                                                        count
-                                                    </th>
-                                                    <th>
-                                                        author
-                                                    </th>
-                                                    <th>
-
-                                                    </th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                <tr v-for="eachDetails in existNonColorDetails">
-                                                    <td>
-                                                        {{ eachDetails.negation }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.pre_constraint }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.main_value }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.post_constraint }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.count }}
-                                                    </td>
-                                                    <td>
-                                                        {{ eachDetails.username }}
-                                                    </td>
-                                                    <td>
-                                                        <a class="btn btn-primary" v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
-                                                    </td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-
-                                        </div>
-                                        <div v-if="currentNonColorValueExist == true">
-                                            <b>Existing values</b>
-                                        </div>
-                                        <div v-for="(eachValue, index) in nonColorDetails" class="row" style="margin-top: 5px;" v-if="currentNonColorValueExist == true">
-                                            <div class="col-md-6">
-                                                <div style="display: inline-block;" v-if="eachValue.negation != null">
-                                                    {{ eachValue.negation }}
+                                            <div v-for="(eachValue, index) in nonColorDetails" class="row" style="margin-top: 5px;">
+                                                <div class="col-md-6">
+                                                    <div style="display: inline-block;" v-if="eachValue.negation != null">
+                                                        {{ eachValue.negation }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachValue.pre_constraint != null">
+                                                        {{ eachValue.pre_constraint }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachValue.main_value != null">
+                                                        {{ eachValue.main_value }}
+                                                    </div>
+                                                    <div style="display: inline-block;" v-if="eachValue.post_constraint != null">
+                                                        {{ eachValue.post_constraint }}
+                                                    </div>
                                                 </div>
-                                                <div style="display: inline-block;" v-if="eachValue.pre_constraint != null">
-                                                    {{ eachValue.pre_constraint }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachValue.main_value != null">
-                                                    {{ eachValue.main_value }}
-                                                </div>
-                                                <div style="display: inline-block;" v-if="eachValue.post_constraint != null">
-                                                    {{ eachValue.post_constraint }}
+                                                <div class="col-md-6">
+                                                    <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="editEachNonColor(eachValue)">Edit</a>
+                                                    <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="removeEachNonColor(eachValue)">Remove</a>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="editEachNonColor(eachValue)">Edit</a>
-                                                <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="removeEachNonColor(eachValue)">Remove</a>
-                                            </div>
-                                        </div>
-                                        <div v-if="currentNonColorValueExist == true">
-                                            <hr>
-                                        </div>
-                                        <div>
-                                            <b>Formulate a value:</b> select existing phrases or use your own terms(need
-                                            definition)
                                         </div>
 
                                     </div>
                                     <div class="modal-body">
 
-                                        <div>
+                                        <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                            <div>
+                                                <b>Formulate a value:</b> select existing phrases or use your own terms(need
+                                                definition)
+                                            </div>
                                             <div>
                                                 <div style="display: inline-block;">
                                                     <input v-on:focus="changeNonColorSection(currentNonColorValue, 'negation', $event)"
@@ -4139,6 +4143,10 @@
                         main_value: false,
                     }
                 };
+                app.existColorDetails = [];
+                app.existNonColorDetails = [];
+                app.colorDetails = [];
+                app.nonColorDetails = [];
                 app.extraColors = [];
                 app.currentNonColorValue.detailsFlag = null;
                 app.currentNonColorValue.value_id = value.id;
