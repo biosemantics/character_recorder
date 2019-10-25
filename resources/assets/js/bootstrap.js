@@ -55,7 +55,8 @@ window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: '2d65978d3e1e850a0828',
+    key: '40228f4a5f0fa5fe6b52',
+    // key: '2d65978d3e1e850a0828',
     cluster: 'us3',
     // disabledTransports: ['sockjs'],
     forceTLS: true
