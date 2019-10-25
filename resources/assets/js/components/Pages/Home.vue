@@ -617,7 +617,7 @@
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
                                         <hr>
-                                        <div v-if="existColorDetails.length > 0 && existColorDetailsFlag == true" style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                        <div v-if="existColorDetails.length > 0" style="border-radius: 5px; border: 1px solid; padding: 15px;">
                                             <div style="float: right;">
                                                 <a class="btn btn-primary" v-if="existColorDetailsFlag == false" v-on:click="existColorDetailsFlag = true;">
                                                     <span class="glyphicon glyphicon-chevron-down"></span>
@@ -631,7 +631,7 @@
                                                 <div>
                                                     <b>Values used before for this character and taxon</b>
                                                 </div>
-                                                <table class="table table-bordered">
+                                                <table class="table table-bordered" v-if="existColorDetailsFlag == true">
                                                     <thead>
                                                     <tr>
                                                         <th>
@@ -977,7 +977,7 @@
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
                                         <hr>
-                                        <div v-if="existNonColorDetails.length > 0 && existNonColorDetailsFlag == true" style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                        <div v-if="existNonColorDetails.length > 0" style="border-radius: 5px; border: 1px solid; padding: 15px;">
                                             <div style="float: right;">
                                                 <a class="btn btn-primary" v-if="existNonColorDetailsFlag == false" v-on:click="existNonColorDetailsFlag = true;">
                                                     <span class="glyphicon glyphicon-chevron-down"></span>
@@ -991,7 +991,7 @@
                                                 <div>
                                                     <b>Values used before for this character and taxon</b>
                                                 </div>
-                                                <table class="table table-bordered">
+                                                <table class="table table-bordered" v-if="existNonColorDetailsFlag == true">
                                                     <thead>
                                                     <tr>
                                                         <th>
