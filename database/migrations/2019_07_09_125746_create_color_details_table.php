@@ -18,6 +18,8 @@ class CreateColorDetailsTable extends Migration
             $table->integer('value_id');
             $table->string('negation')->nullable();
             $table->string('pre_constraint')->nullable();
+            $table->string('certainty_constraint')->nullable();
+            $table->string('degree_constraint')->nullable();
             $table->string('brightness')->nullable();
             $table->string('reflectance')->nullable();
             $table->string('saturation')->nullable();
