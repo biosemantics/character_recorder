@@ -4,7 +4,7 @@
                  :is-full-page="true"
                  :width="255"
                  :height="255"
-                 ></loading>
+        ></loading>
         <div class="tab-pane" id="">
             <form autocomplete="off">
                 <div class="container">
@@ -29,9 +29,11 @@
                                     <div class="col-md-12" style="line-height: 38px;">
                                         <b class="some-container">I 'm measuring <a class="btn btn-primary"
                                                                                     v-on:click="showStandardCharacters()"
-                                                                                    >
-                                                the recommended set of characters
-                                        </a> <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">(what are they?) </b><br/> or</b>
+                                        >
+                                            the recommended set of characters
+                                        </a>
+                                            <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">(what
+                                                are they?) </b><br/> or</b>
                                     </div>
                                     <div class="col-md-12 margin-top-10">
                                         <b>Search/create other character:&nbsp;</b>
@@ -65,15 +67,15 @@
                                          v-if="eachCharacter.standard == 0 && eachCharacter.username.includes(user.name)"
                                          v-tooltip="eachCharacter.tooltip"
                                          style="display: table; font-weight: bold; cursor: pointer;">
-                                          <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag"> 
-                                             {{ eachCharacter.standard_tag }} </b>
-                                         
-                                            <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag">
+                                            {{ eachCharacter.standard_tag }} </b>
+
+                                        <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <a class="btn btn-add display-block"
                                                v-on:click="removeStandardCharacter(eachCharacter.id)"
                                                :set="previousUserCharacter=eachCharacter"
-                                               ><span
-                                                    class="glyphicon glyphicon-remove"></span></a></i></div> 
+                                            ><span
+                                                    class="glyphicon glyphicon-remove"></span></a></i></div>
                                         <!--{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeUserCharacter(eachCharacter.id)"><span
@@ -82,7 +84,8 @@
                                 </div>
                                 <div class="margin-top-10"
                                      v-if="userCharacters.find(ch => ch.standard == 1 || !ch.username.includes(user.name))">
-                                    <h4><b><u>You've selected recommended characters:</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+                                    <h4><b><u>You've selected recommended characters:</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    </b>
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeAllStandardFlag = true;"><span
                                                 class="glyphicon glyphicon-remove"
@@ -92,16 +95,16 @@
                                          v-if="eachCharacter.standard == 1 || !eachCharacter.username.includes(user.name)"
                                          v-tooltip="eachCharacter.tooltip"
                                          style="display: table; cursor: pointer;">
-                                         <b v-if="eachCharacter.standard_tag != previousCharacter.standard_tag"> 
-                                             {{ eachCharacter.standard_tag }} </b>
-                                         
-                                            <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <b v-if="eachCharacter.standard_tag != previousCharacter.standard_tag">
+                                            {{ eachCharacter.standard_tag }} </b>
+
+                                        <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <a class="btn btn-add display-block"
                                                v-on:click="removeStandardCharacter(eachCharacter.id)"
                                                :set="previousCharacter=eachCharacter"
-                                               ><span
-                                                    class="glyphicon glyphicon-remove"></span></a></i></div> 
-                                         
+                                            ><span
+                                                    class="glyphicon glyphicon-remove"></span></a></i></div>
+
                                         <!--<b>{{ eachCharacter.name }} {{ eachCharacter.standard_tag }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <a class="btn btn-add display-block"
                                                v-on:click="removeStandardCharacter(eachCharacter.id)"><span
@@ -159,18 +162,19 @@
                      v-if="matrixShowFlag == true">
                     <div v-bind:class="{'width-95per': descriptionFlag == false}" style="min-width: 70%;">
                         <!--<ul class="nav nav-tabs">-->
-                            <draggable
-                                    :list="userTags"
-                                    class="nav nav-tabs">
-                                    <li v-for="eachTag in userTags" v-bind:class="{ active: currentTab == eachTag.tag_name }" :key="eachTag.name">
-                                        <a data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">
-                                            {{ eachTag.tag_name}}
-                                        </a>
-                                    </li>
+                        <draggable
+                                :list="userTags"
+                                class="nav nav-tabs">
+                            <li v-for="eachTag in userTags" v-bind:class="{ active: currentTab == eachTag.tag_name }"
+                                :key="eachTag.name">
+                                <a data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">
+                                    {{ eachTag.tag_name}}
+                                </a>
+                            </li>
                             <!--<li v-for="eachTag in userTags" v-bind:class="{ active: currentTab == eachTag.tag_name }"><a-->
-                                    <!--data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">{{ eachTag.tag_name-->
-                                <!--}}</a></li>-->
-                            </draggable>
+                            <!--data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">{{ eachTag.tag_name-->
+                            <!--}}</a></li>-->
+                        </draggable>
                         <!--</ul>-->
                         <div class="table-responsive">
                             <table class="table table-bordered cr-table">
@@ -178,6 +182,9 @@
                                 <tr>
                                     <th style="min-width: 300px; height: 43px; line-height: 43px; text-align: center;">
                                         Character
+                                    </th>
+                                    <th style="line-height: 43px; text-align: center;">
+                                        Summary
                                     </th>
                                     <th v-if="header.id != 1" v-for="header in headers" style="min-width: 200px;">
                                         <input class="th-input" v-on:blur="saveHeader(header)" v-model="header.header"/>
@@ -203,7 +210,8 @@
                                                       class="glyphicon glyphicon-chevron-down"></span>
                                             </div>
                                         </div>
-                                        <div style="line-height: 44px;" v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip">
+                                        <div style="line-height: 44px;"
+                                             v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip">
                                             {{ value.value }}
                                         </div>
                                         <div>
@@ -215,7 +223,8 @@
                                         </div>
                                         <div class="btn-group">
                                             <a v-if="checkHaveUnit(value.value) && !value.value.startsWith('Number of') && !value.value.startsWith('Ratio of')"
-                                               class="btn btn-add dropdown-toggle" style="line-height: 30px; color: red;"
+                                               class="btn btn-add dropdown-toggle"
+                                               style="line-height: 30px; color: red;"
                                                data-toggle="dropdown">
                                                 <span><b>{{ value.unit }}</b></span>
                                                 <span class="glyphicon glyphicon-chevron-down"></span>
@@ -251,11 +260,15 @@
                                                     class="glyphicon glyphicon-remove"></span></a>
                                         </div>
                                     </td>
+                                    <td style="line-height: 43px; text-align: center;">
+                                        <div style="line-height: 21px;" v-html="calcSummary(row)"></div>
+                                    </td>
                                     <td v-if="value.header_id != 1" v-for="value in row">
                                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
                                                v-on:blur="saveItem($event, value)"/>
                                         <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
-                                            <img src="https://cdn0.iconfinder.com/data/icons/interaction-1-2-outlined/232/left-arrow-symbol-andright-arrow-symbol-forward-play-right-arrow-512.png" style="width: 25px;"/>
+                                            <img src="https://cdn0.iconfinder.com/data/icons/interaction-1-2-outlined/232/left-arrow-symbol-andright-arrow-symbol-forward-play-right-arrow-512.png"
+                                                 style="width: 25px;"/>
                                         </a>
                                     </td>
                                 </tr>
@@ -274,20 +287,21 @@
                             <!--<a class="btn btn-default" style="border: none;" v-on:click="expandDescription()"><span
                                     class="glyphicon glyphicon-option-vertical" style="color: #1f648b;"></span></a>-->
                             <a class="btn btn-default" style="border: none;" v-on:click="expandDescription()"><span
-                                    style="color: #1f648b; font-weigth: bold; writing-mode: vertical-rl; text-orientation: upright; ">Generate Description</span></a>        
+                                    style="color: #1f648b; font-weigth: bold; writing-mode: vertical-rl; text-orientation: upright; ">Generate Description</span></a>
                         </div>
                     </div>
                     <div v-if="descriptionFlag == true"
                          style="position:relative; min-width: 25%; max-width: 600px; overflow-y: scroll; word-wrap: break-word;"
                          class="panel">
                         <div class="panel-heading">
-                                <div class="text-right" style="position: absolute; right: 10px; top: 0px;">
+                            <div class="text-right" style="position: absolute; right: 10px; top: 0px;">
                                 <a class="btn btn-primary" v-on:click="updateDescription()">Generate/Update</a>
                                 <a class="btn btn-primary" v-on:click="exportDescription()">Export</a></div>
                         </div>
-                        <div class="panel-body" style="min-height: 80px; position: absolute; right: 10px; top: 25px;" v-html="descriptionText">
+                        <div class="panel-body" style="min-height: 80px; position: absolute; right: 10px; top: 25px;"
+                             v-html="descriptionText">
                         </div>
-                       
+
                     </div>
 
                 </div>
@@ -308,7 +322,8 @@
                                                 <div class="row">
                                                     <div class="col-md-4">
                                                         <input style="height: 26px; width: 100%;" type="text"
-                                                               list="first_characters" placeholder="select or type" v-model="firstCharacter"/>
+                                                               list="first_characters" placeholder="select or type"
+                                                               v-model="firstCharacter"/>
                                                         <datalist id="first_characters">
                                                             <option value="Length">Length</option>
                                                             <option value="Width">Width</option>
@@ -360,7 +375,8 @@
                                         <div class="modal-container">
 
                                             <div class="modal-header">
-                                                <h3>Define character "{{ character.name }}", created by {{ character.username
+                                                <h3>Define character "{{ character.name }}", created by {{
+                                                    character.username
                                                     }}</h3>
                                             </div>
 
@@ -426,10 +442,11 @@
                                                            class="btn btn-primary">Save</a>
                                                         <a v-if="viewFlag == true" v-on:click="use(item)"
                                                            class="btn btn-primary">Use this</a>
-                                                        <a v-if="viewFlag == true" v-on:click="enhance(item)"
-                                                           class="btn btn-primary">Clone and enhance</a>
                                                         <!--<a v-if="viewFlag == true" v-on:click="enhance(item)"-->
-                                                           <!--class="btn btn-primary">Modify and Use <b title="Use this option when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>-->
+                                                        <!--class="btn btn-primary">Clone and enhance</a>-->
+                                                        <a v-if="viewFlag == true" v-on:click="enhance(item)"
+                                                           class="btn btn-primary">Modify and Use <b
+                                                                title="Use this option when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>
                                                         <a v-on:click="cancelCharacter()"
                                                            class="btn btn-danger">Cancel</a>
                                                     </div>
@@ -455,10 +472,11 @@
                                             <div class="modal-body">
                                                 <div v-if="!character.method_as">
                                                     <div>
-                                                        Please <b>review the method definition carefully</b>. Is this what
-                                                            you would
-                                                            like
-                                                            to save for <i>{{ character.name }}</i>?
+                                                        Please <b>review the method definition carefully</b>. Is this
+                                                        what
+                                                        you would
+                                                        like
+                                                        to save for <i>{{ character.name }}</i>?
                                                     </div>
                                                     <br>
                                                     <div v-if="character.method_from">
@@ -479,10 +497,11 @@
                                                 </div>
                                                 <div v-if="character.method_as">
                                                     <div>
-                                                        Please <b>review the method definition carefully</b>. Is this what
-                                                            you
-                                                            would like
-                                                            to save for <i>{{ character.name }}</i>?
+                                                        Please <b>review the method definition carefully</b>. Is this
+                                                        what
+                                                        you
+                                                        would like
+                                                        to save for <i>{{ character.name }}</i>?
                                                     </div>
                                                     <div>
                                                         <img class="img-method"
@@ -570,7 +589,8 @@
                                             character.name }}</i>.
                                         </div>
                                         <div v-if="!character.summary">
-                                            Summary function not selected. Categorical characters do not need a summary function.
+                                            Summary function not selected. Categorical characters do not need a summary
+                                            function.
                                         </div>
                                         <div class="modal-footer">
                                             <a class="btn btn-primary ok-btn"
@@ -617,21 +637,25 @@
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
                                         <hr>
-                                        <div v-if="existColorDetails.length > 0" style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                        <div v-if="existColorDetails.length > 0"
+                                             style="border-radius: 5px; border: 1px solid; padding: 15px;">
                                             <div style="float: right;">
-                                                <a class="btn btn-primary" v-if="existColorDetailsFlag == false" v-on:click="existColorDetailsFlag = true;">
+                                                <a class="btn btn-primary" v-if="existColorDetailsFlag == false"
+                                                   v-on:click="existColorDetailsFlag = true;">
                                                     <span class="glyphicon glyphicon-chevron-down"></span>
                                                 </a>
-                                                <a class="btn btn-primary" v-if="existColorDetailsFlag == true" v-on:click="existColorDetailsFlag = false;">
+                                                <a class="btn btn-primary" v-if="existColorDetailsFlag == true"
+                                                   v-on:click="existColorDetailsFlag = false;">
                                                     <span class="glyphicon glyphicon-chevron-up"></span>
                                                 </a>
                                             </div>
 
-                                            <div style="margin-top: 10px;">
+                                            <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
                                                 <div>
                                                     <b>Values used before for this character and taxon</b>
                                                 </div>
-                                                <table class="table table-bordered" v-if="existColorDetailsFlag == true">
+                                                <table class="table table-bordered"
+                                                       v-if="existColorDetailsFlag == true">
                                                     <thead>
                                                     <tr>
                                                         <th>
@@ -639,6 +663,12 @@
                                                         </th>
                                                         <th>
                                                             pre constraint
+                                                        </th>
+                                                        <th>
+                                                            certainty constraint
+                                                        </th>
+                                                        <th>
+                                                            degree constraint
                                                         </th>
                                                         <th>
                                                             brightness
@@ -678,6 +708,12 @@
                                                             {{ eachDetails.pre_constraint }}
                                                         </td>
                                                         <td>
+                                                            {{ eachDetails.certainty_constraint }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.degree_constraint }}
+                                                        </td>
+                                                        <td>
                                                             {{ eachDetails.brightness }}
                                                         </td>
                                                         <td>
@@ -702,7 +738,8 @@
                                                             {{ eachDetails.username }}
                                                         </td>
                                                         <td>
-                                                            <a class="btn btn-primary" v-on:click="selectExistDetails(eachDetails)">Use this</a>
+                                                            <a class="btn btn-primary"
+                                                               v-on:click="selectExistDetails(eachDetails)">Use this</a>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -711,48 +748,71 @@
                                             </div>
                                         </div>
 
-                                        <div v-if="colorDetails.length > 0" style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
+                                        <div v-if="colorDetails.length > 0"
+                                             style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
                                             <div style="float: right;">
-                                                <a class="btn btn-primary" v-if="currentColorValueExist == false" v-on:click="currentColorValueExist = true;">
+                                                <a class="btn btn-primary" v-if="currentColorValueExist == false"
+                                                   v-on:click="currentColorValueExist = true;">
                                                     <span class="glyphicon glyphicon-chevron-down"></span>
                                                 </a>
-                                                <a class="btn btn-primary" v-if="currentColorValueExist == true" v-on:click="currentColorValueExist = false;">
+                                                <a class="btn btn-primary" v-if="currentColorValueExist == true"
+                                                   v-on:click="currentColorValueExist = false;">
                                                     <span class="glyphicon glyphicon-chevron-up"></span>
                                                 </a>
                                             </div>
                                             <div>
                                                 <b>Current values</b>
                                             </div>
-                                            <div v-for="(eachColor, index) in colorDetails" v-if="currentColorValueExist == true" style="margin-top: 5px;" class="row">
+                                            <div v-for="(eachColor, index) in colorDetails"
+                                                 v-if="currentColorValueExist == true" style="margin-top: 5px;"
+                                                 class="row">
                                                 <div class="col-md-6">
-                                                    <div style="display: inline-block;" v-if="eachColor.negation != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.negation != null">
                                                         {{ eachColor.negation }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachColor.pre_constraint != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.pre_constraint != null">
                                                         {{ eachColor.pre_constraint }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachColor.brightness != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.certainty_constraint != null">
+                                                        {{ eachColor.certainty_constraint }}
+                                                    </div>
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.degree_constraint != null">
+                                                        {{ eachColor.degree_constraint }}
+                                                    </div>
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.brightness != null">
                                                         {{ eachColor.brightness }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachColor.reflectance != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.reflectance != null">
                                                         {{ eachColor.reflectance }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachColor.saturation != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.saturation != null">
                                                         {{ eachColor.saturation }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachColor.colored != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.colored != null">
                                                         {{ eachColor.colored }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachColor.multi_colored != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.multi_colored != null">
                                                         {{ eachColor.multi_colored }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachColor.post_constraint != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachColor.post_constraint != null">
                                                         {{ eachColor.post_constraint }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="editEachColor(eachColor)">Edit</a>
-                                                    <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="removeEachColor(eachColor)">Remove</a>
+                                                    <a class="btn btn-primary" style="padding: 3px 6px;"
+                                                       v-on:click="editEachColor(eachColor)">Edit</a>
+                                                    <a class="btn btn-primary" style="padding: 3px 6px;"
+                                                       v-on:click="removeEachColor(eachColor)">Remove</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -763,7 +823,8 @@
 
                                         <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                                             <div>
-                                                <b>Formulate a value:</b> type in a blank to select existing phrases or use your own terms(need
+                                                <b>Formulate a value:</b> type in a blank to select existing phrases or
+                                                use your own terms(need
                                                 definition)
                                             </div>
                                             <div>
@@ -786,6 +847,34 @@
                                                     </datalist>
                                                     <h5>
                                                         pre-constraint
+                                                    </h5>
+                                                </div>
+                                                <div style="display: inline-block;">
+                                                    <select style="width: 90px;"
+                                                            v-model="currentColorValue.certainty_constraint"
+                                                            v-on:change="changeColorSection(currentColorValue, 'certainty_constraint', $event)">
+                                                        <option value="doubtfully">doubtfully</option>
+                                                        <option value="possibly">possibly</option>
+                                                        <option value="presumably">presumably</option>
+                                                        <option value="approximately">approximately</option>
+                                                        <option value="definitely">definitely</option>
+                                                    </select>
+                                                    <h5>
+                                                        certainty-constraint
+                                                    </h5>
+                                                </div>
+                                                <div style="display: inline-block;">
+                                                    <select style="width: 90px;"
+                                                            v-model="currentColorValue.degree_constraint"
+                                                            v-on:change="changeColorSection(currentColorValue, 'degree_constraint', $event)">
+                                                        <option value="imperceptibly">imperceptibly</option>
+                                                        <option value="scarcely">scarcely</option>
+                                                        <option value="moderately">moderately</option>
+                                                        <option value="considerably">considerably</option>
+                                                        <option value="extremely">extremely</option>
+                                                    </select>
+                                                    <h5>
+                                                        degree-constraint
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
@@ -852,10 +941,12 @@
                                                     </h5>
                                                 </div>
                                             </div>
-                                            <div v-if="currentColorValue.detailFlag == 'negation'" style="margin-top: 10px;">
+                                            <div v-if="currentColorValue.detailFlag == 'negation'"
+                                                 style="margin-top: 10px;">
                                                 <input type="radio" id="not" v-model="currentColorValue.negation"
                                                        v-bind:value="'Not'"/> <label for="not">Not</label> <br/>
-                                                <input type="radio" id="unselect-not" v-model="currentColorValue.negation"
+                                                <input type="radio" id="unselect-not"
+                                                       v-model="currentColorValue.negation"
                                                        v-bind:value="''"/> <label for="unselect-not">Unselect
                                                 Not</label>
                                             </div>
@@ -915,29 +1006,36 @@
                                                     <!--Hong modified this: Did you mean <b>{{ exactColor.term }}</b>?<br/>
                                                     Current Definition: <input
                                                         v-model="app.exactColor.definition"
-                                                        style="width: 70%;">   --> 
-                                                    <br/><br/>If definition is lacking, you can propose or edit the definition above. <br/>
-                
+                                                        style="width: 70%;">   -->
+                                                    <br/><br/>If definition is lacking, you can propose or edit the
+                                                    definition above. <br/>
+
 
                                                 </div>
-                                                <div v-if="searchColorFlag !=2" v-for="(eachOption, index) in extraColors">
+                                                <div v-if="searchColorFlag !=2"
+                                                     v-for="(eachOption, index) in extraColors">
                                                     <input type="radio"
                                                            v-bind:id="'extra-option-' + index"
                                                            value=""
                                                            v-on:change="selectExtraOption(eachOption.flag, eachOption.value, currentColorValue.detailFlag)"
                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label v-bind:for="'extra-option-' + index">{{ eachOption.value }} describes {{ changeFlagToLabel(eachOption.flag) }}, move {{ eachOption.value }} to {{ changeFlagToLabel(eachOption.flag) }}</label>
+                                                    <label v-bind:for="'extra-option-' + index">{{ eachOption.value }}
+                                                        describes {{ changeFlagToLabel(eachOption.flag) }}, move {{
+                                                        eachOption.value }} to {{ changeFlagToLabel(eachOption.flag)
+                                                        }}</label>
                                                 </div>
                                                 <div v-if="searchColorFlag !=2 ">
                                                     <!--<input type="radio" id="user-defined"-->
-                                                           <!--v-bind:value="defaultColorValue + '(user defined)'"-->
-                                                           <!--v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"-->
-                                                           <!--v-model="currentColorValue[currentColorValue.detailFlag]">-->
+                                                    <!--v-bind:value="defaultColorValue + '(user defined)'"-->
+                                                    <!--v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"-->
+                                                    <!--v-model="currentColorValue[currentColorValue.detailFlag]">-->
                                                     <input type="radio" id="user-defined"
                                                            v-bind:value="defaultColorValue"
                                                            v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"
                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label for="user-defined">Use my term '{{ defaultColorValue }}'(as a {{ changeFlagToLabel(currentColorValue.detailFlag) }}). Please define the term, all input required:</label>
+                                                    <label for="user-defined">Use my term '{{ defaultColorValue }}'(as a
+                                                        {{ changeFlagToLabel(currentColorValue.detailFlag) }}). Please
+                                                        define the term, all input required:</label>
                                                     <div for="user-defined">
                                                         Definition: <input
                                                             v-model="userColorDefinition[currentColorValue.detailFlag]"
@@ -947,8 +1045,8 @@
                                                                class="color-definition-input">
                                                         Sample Sentence:
                                                         <input
-                                                            v-model="colorSampleText[currentColorValue.detailFlag]"
-                                                            class="color-definition-input" placeholder=""><br/>
+                                                                v-model="colorSampleText[currentColorValue.detailFlag]"
+                                                                class="color-definition-input" placeholder=""><br/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -968,7 +1066,8 @@
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="saveColorValue(true)">
                                                     Save & New </a>
-                                                <a v-on:click="colorDetailsFlag = false;" class="btn btn-danger">Cancel</a>
+                                                <a v-on:click="colorDetailsFlag = false;"
+                                                   class="btn btn-danger">Cancel</a>
                                             </div>
                                         </div>
                                     </div>
@@ -985,21 +1084,25 @@
                                     <div class="modal-header">
                                         <b>{{ currentCharacter.name }}</b> <br/>
                                         <hr>
-                                        <div v-if="existNonColorDetails.length > 0" style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                        <div v-if="existNonColorDetails.length > 0"
+                                             style="border-radius: 5px; border: 1px solid; padding: 15px;">
                                             <div style="float: right;">
-                                                <a class="btn btn-primary" v-if="existNonColorDetailsFlag == false" v-on:click="existNonColorDetailsFlag = true;">
+                                                <a class="btn btn-primary" v-if="existNonColorDetailsFlag == false"
+                                                   v-on:click="existNonColorDetailsFlag = true;">
                                                     <span class="glyphicon glyphicon-chevron-down"></span>
                                                 </a>
-                                                <a class="btn btn-primary" v-if="existNonColorDetailsFlag == true" v-on:click="existNonColorDetailsFlag = false;">
+                                                <a class="btn btn-primary" v-if="existNonColorDetailsFlag == true"
+                                                   v-on:click="existNonColorDetailsFlag = false;">
                                                     <span class="glyphicon glyphicon-chevron-up"></span>
                                                 </a>
                                             </div>
 
-                                            <div style="margin-top: 10px;">
+                                            <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
                                                 <div>
                                                     <b>Values used before for this character and taxon</b>
                                                 </div>
-                                                <table class="table table-bordered" v-if="existNonColorDetailsFlag == true">
+                                                <table class="table table-bordered"
+                                                       v-if="existNonColorDetailsFlag == true">
                                                     <thead>
                                                     <tr>
                                                         <th>
@@ -1007,6 +1110,12 @@
                                                         </th>
                                                         <th>
                                                             pre constraint
+                                                        </th>
+                                                        <th>
+                                                            certainty constraint
+                                                        </th>
+                                                        <th>
+                                                            degree constraint
                                                         </th>
                                                         <th>
                                                             {{ currentNonColorValue.placeholderName }}
@@ -1034,6 +1143,12 @@
                                                             {{ eachDetails.pre_constraint }}
                                                         </td>
                                                         <td>
+                                                            {{ eachDetails.certainty_constraint }}
+                                                        </td>
+                                                        <td>
+                                                            {{ eachDetails.degree_constraint }}
+                                                        </td>
+                                                        <td>
                                                             {{ eachDetails.main_value }}
                                                         </td>
                                                         <td>
@@ -1046,7 +1161,9 @@
                                                             {{ eachDetails.username }}
                                                         </td>
                                                         <td>
-                                                            <a class="btn btn-primary" v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
+                                                            <a class="btn btn-primary"
+                                                               v-on:click="selectExistNonColorDetails(eachDetails)">Use
+                                                                this</a>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -1054,36 +1171,55 @@
 
                                             </div>
                                         </div>
-                                        <div v-if="nonColorDetails.length > 0" style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
+                                        <div v-if="nonColorDetails.length > 0"
+                                             style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
                                             <div style="float: right;">
-                                                <a class="btn btn-primary" v-if="currentNonColorValueExist == false" v-on:click="currentNonColorValueExist = true;">
+                                                <a class="btn btn-primary" v-if="currentNonColorValueExist == false"
+                                                   v-on:click="currentNonColorValueExist = true;">
                                                     <span class="glyphicon glyphicon-chevron-down"></span>
                                                 </a>
-                                                <a class="btn btn-primary" v-if="currentNonColorValueExist == true" v-on:click="currentNonColorValueExist = false;">
+                                                <a class="btn btn-primary" v-if="currentNonColorValueExist == true"
+                                                   v-on:click="currentNonColorValueExist = false;">
                                                     <span class="glyphicon glyphicon-chevron-up"></span>
                                                 </a>
                                             </div>
                                             <div>
                                                 <b>Current values</b>
                                             </div>
-                                            <div v-for="(eachValue, index) in nonColorDetails" v-if="currentNonColorValueExist == true" class="row" style="margin-top: 5px;">
+                                            <div v-for="(eachValue, index) in nonColorDetails"
+                                                 v-if="currentNonColorValueExist == true" class="row"
+                                                 style="margin-top: 5px;">
                                                 <div class="col-md-6">
-                                                    <div style="display: inline-block;" v-if="eachValue.negation != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachValue.negation != null">
                                                         {{ eachValue.negation }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachValue.pre_constraint != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachValue.pre_constraint != null">
                                                         {{ eachValue.pre_constraint }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachValue.main_value != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachValue.certainty_constraint != null">
+                                                        {{ eachValue.certainty_constraint }}
+                                                    </div>
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachValue.degree_constraint != null">
+                                                        {{ eachValue.degree_constraint }}
+                                                    </div>
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachValue.main_value != null">
                                                         {{ eachValue.main_value }}
                                                     </div>
-                                                    <div style="display: inline-block;" v-if="eachValue.post_constraint != null">
+                                                    <div style="display: inline-block;"
+                                                         v-if="eachValue.post_constraint != null">
                                                         {{ eachValue.post_constraint }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="editEachNonColor(eachValue)">Edit</a>
-                                                    <a class="btn btn-primary" style="padding: 3px 6px;" v-on:click="removeEachNonColor(eachValue)">Remove</a>
+                                                    <a class="btn btn-primary" style="padding: 3px 6px;"
+                                                       v-on:click="editEachNonColor(eachValue)">Edit</a>
+                                                    <a class="btn btn-primary" style="padding: 3px 6px;"
+                                                       v-on:click="removeEachNonColor(eachValue)">Remove</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -1093,7 +1229,8 @@
 
                                         <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                                             <div>
-                                                <b>Formulate a value:</b> select existing phrases or use your own terms(need
+                                                <b>Formulate a value:</b> select existing phrases or use your own
+                                                terms(need
                                                 definition)
                                             </div>
                                             <div>
@@ -1116,6 +1253,34 @@
                                                     </datalist>
                                                     <h5>
                                                         pre-constraint
+                                                    </h5>
+                                                </div>
+                                                <div style="display: inline-block;">
+                                                    <select style="width: 90px;"
+                                                            v-model="currentNonColorValue.certainty_constraint"
+                                                            v-on:change="changeNonColorSection(currentNonColorValue, 'certainty_constraint', $event)">
+                                                        <option value="doubtfully">doubtfully</option>
+                                                        <option value="possibly">possibly</option>
+                                                        <option value="presumably">presumably</option>
+                                                        <option value="approximately">approximately</option>
+                                                        <option value="definitely">definitely</option>
+                                                    </select>
+                                                    <h5>
+                                                        certainty-constraint
+                                                    </h5>
+                                                </div>
+                                                <div style="display: inline-block;">
+                                                    <select style="width: 90px;"
+                                                            v-model="currentNonColorValue.degree_constraint"
+                                                            v-on:change="changeNonColorSection(currentNonColorValue, 'degree_constraint', $event)">
+                                                        <option value="imperceptibly">imperceptibly</option>
+                                                        <option value="scarcely">scarcely</option>
+                                                        <option value="moderately">moderately</option>
+                                                        <option value="considerably">considerably</option>
+                                                        <option value="extremely">extremely</option>
+                                                    </select>
+                                                    <h5>
+                                                        degree-constraint
                                                     </h5>
                                                 </div>
                                                 <div style="display: inline-block;">
@@ -1142,10 +1307,12 @@
                                                     </h5>
                                                 </div>
                                             </div>
-                                            <div v-if="currentNonColorValue.detailFlag == 'negation'" style="margin-top: 10px;">
+                                            <div v-if="currentNonColorValue.detailFlag == 'negation'"
+                                                 style="margin-top: 10px;">
                                                 <input type="radio" id="non-not" v-model="currentNonColorValue.negation"
                                                        v-bind:value="'Not'"/> <label for="non-not">Not</label> <br/>
-                                                <input type="radio" id="non-unselect-not" v-model="currentNonColorValue.negation"
+                                                <input type="radio" id="non-unselect-not"
+                                                       v-model="currentNonColorValue.negation"
                                                        v-bind:value="''"/> <label for="non-unselect-not">Unselect
                                                 Not</label>
                                             </div>
@@ -1201,10 +1368,11 @@
                                                            v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"
                                                            v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
                                                     <!--<input type="radio" id="non-user-defined"-->
-                                                           <!--v-bind:value="defaultNonColorValue + '(user defined)'"-->
-                                                           <!--v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"-->
-                                                           <!--v-model="currentNonColorValue[currentNonColorValue.detailFlag]">-->
-                                                    <label for="non-user-defined">Use my term '{{ defaultNonColorValue }}'(please define the term, all input required):</label>
+                                                    <!--v-bind:value="defaultNonColorValue + '(user defined)'"-->
+                                                    <!--v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"-->
+                                                    <!--v-model="currentNonColorValue[currentNonColorValue.detailFlag]">-->
+                                                    <label for="non-user-defined">Use my term '{{ defaultNonColorValue
+                                                        }}'(please define the term, all input required):</label>
                                                     <div for="user-defined">
                                                         Definition: <input
                                                             v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
@@ -1254,7 +1422,8 @@
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            There are values in the cells to be filled. Overwrite or keep the old values?
+                                            There are values in the cells to be filled. Overwrite or keep the old
+                                            values?
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -1265,6 +1434,36 @@
                                                     Overwrite </a>
                                                 <a v-on:click="keepExistingValue()"
                                                    class="btn btn-danger">Keep existing values</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+                <div v-if="toRemoveStandardConfirmFlag" @close="toRemoveStandardConfirmFlag = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container">
+                                    <div class="modal-header">
+                                        Confirm to overwrite?
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            Are you sure you want to remove {{ userCharacters.find(each => each.id ==
+                                            toRemoveCharacterId).name }}?
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="confirmRemoveCharacter()">
+                                                    Remove </a>
+                                                <a v-on:click="toRemoveStandardConfirmFlag = false"
+                                                   class="btn btn-danger">Cancel</a>
                                             </div>
                                         </div>
                                     </div>
@@ -1302,7 +1501,6 @@
 
     Vue.use(LiquorTree);
     Vue.use({ModelSelect});
-  
 
 
     export default {
@@ -1459,6 +1657,8 @@
                 existNonColorDetailsFlag: false,
                 copyValue: null,
                 confirmOverwriteFlag: false,
+                toRemoveCharacterId: null,
+                toRemoveStandardConfirmFlag: false,
             }
         },
         components: {
@@ -1553,7 +1753,7 @@
                 }
                 console.log('selectedCharacter', selectedCharacter);
             },
-            editCharacter(character, editFlag = false, standardFlag = false) {
+            editCharacter(character, editFlag = false, standardFlag = false, enhanceFlag = false) {
                 var app = this;
                 app.editFlag = editFlag;
                 console.log('app.editFlag', app.editFlag);
@@ -1579,51 +1779,130 @@
                 app.item = app.character.id;
                 sessionStorage.setItem("characterName", app.character.name);
 
-                if (app.checkHaveUnit(app.character.name)) {
-                    // Initializing the methodFieldData //
-                    app.methodFieldData.fromTerm = null;
-                    app.methodFieldData.fromId = null;
-                    app.methodFieldData.toTerm = null;
-                    app.methodFieldData.toId = null;
-                    app.methodFieldData.includeTerm = null;
-                    app.methodFieldData.includeId = null;
-                    app.methodFieldData.excludeTerm = null;
-                    app.methodFieldData.excludeId = null;
-                    app.methodFieldData.whereTerm = null;
-                    app.methodFieldData.whereId = null;
-                    app.methodFieldData.fromNeedMore = false;
-                    app.methodFieldData.toNeedMore = false;
-                    app.methodFieldData.includeNeedMore = false;
-                    app.methodFieldData.excludeNeedMore = false;
-                    app.methodFieldData.whereNeedMore = false;
-                    app.methodFieldData.fromSynonyms = [];
-                    app.methodFieldData.toSynonyms = [];
-                    app.methodFieldData.includeSynonyms = [];
-                    app.methodFieldData.excludeSynonyms = [];
-                    app.methodFieldData.whereSynonyms = [];
-                    app.methodFieldData.noneSynonymFlag = {
-                        from: false,
-                        to: false,
-                        include: false,
-                        exclude: false,
-                        where: false,
-                    };
-                    //
-                    app.parentData = [];
-                    app.parentData.push(app.character.method_as);
-                    app.parentData[3] = app.user;
-                    app.parentData[4] = app.character.method_from;
-                    app.parentData[5] = app.character.method_to;
-                    app.parentData[6] = app.character.method_include;
-                    app.parentData[7] = app.character.method_exclude;
-                    app.parentData[8] = app.character.method_where;
-                    app.parentData[9] = app.methodFieldData;
-                    app.metadataFlag = 'method';
-                    app.currentMetadata = method;
+                if (enhanceFlag) {
+                    switch (app.metadataFlag) {
+                        case 'method':
+                            app.methodFieldData.fromTerm = null;
+                            app.methodFieldData.fromId = null;
+                            app.methodFieldData.toTerm = null;
+                            app.methodFieldData.toId = null;
+                            app.methodFieldData.includeTerm = null;
+                            app.methodFieldData.includeId = null;
+                            app.methodFieldData.excludeTerm = null;
+                            app.methodFieldData.excludeId = null;
+                            app.methodFieldData.whereTerm = null;
+                            app.methodFieldData.whereId = null;
+                            app.methodFieldData.fromNeedMore = false;
+                            app.methodFieldData.toNeedMore = false;
+                            app.methodFieldData.includeNeedMore = false;
+                            app.methodFieldData.excludeNeedMore = false;
+                            app.methodFieldData.whereNeedMore = false;
+                            app.methodFieldData.fromSynonyms = [];
+                            app.methodFieldData.toSynonyms = [];
+                            app.methodFieldData.includeSynonyms = [];
+                            app.methodFieldData.excludeSynonyms = [];
+                            app.methodFieldData.whereSynonyms = [];
+                            app.methodFieldData.noneSynonymFlag = {
+                                from: false,
+                                to: false,
+                                include: false,
+                                exclude: false,
+                                where: false,
+                            };
+                            //
+                            app.parentData = [];
+                            app.parentData.push(app.character.method_as);
+                            app.parentData[3] = app.user;
+                            app.parentData[4] = app.character.method_from;
+                            app.parentData[5] = app.character.method_to;
+                            app.parentData[6] = app.character.method_include;
+                            app.parentData[7] = app.character.method_exclude;
+                            app.parentData[8] = app.character.method_where;
+                            app.parentData[9] = app.methodFieldData;
+                            app.currentMetadata = method;
+                            break;
+                        case 'unit':
+                            app.parentData = app.character.unit;
+                            app.currentMetadata = unit;
+                            break;
+                        case 'tag':
+                            app.parentData = app.character.standard_tag;
+                            app.currentMetadata = tag;
+                            break;
+                        case 'summary':
+                            app.parentData = app.character.summary;
+                            app.currentMetadata = summary;
+                            break;
+                        case 'creator':
+                            app.parentData = app.character.username + ' via CR';//app.character.creator;
+                            app.currentMetadata = creator;
+                            break;
+                        case 'usage':
+                            axios.get('/chrecorder/public/api/v1/get-usage/' + app.character.id)
+                                .then(function (resp) {
+                                    app.parentData = [];
+                                    app.parentData[0] = resp.data.usage_count;
+                                    app.parentData[1] = app.user.name;
+                                    app.parentData[2] = app.taxonName;
+                                    app.currentMetadata = usage;
+                                });
+
+                            break;
+                        case 'history':
+                            app.parentData = app.character.history;
+                            app.currentMetadata = history;
+                            break;
+                        default:
+                            break;
+                    }
                 } else {
-                    app.parentData = app.character.standard_tag;
-                    app.metadataFlag = 'tag';
-                    app.currentMetadata = tag;
+                    if (app.checkHaveUnit(app.character.name)) {
+                        // Initializing the methodFieldData //
+                        app.methodFieldData.fromTerm = null;
+                        app.methodFieldData.fromId = null;
+                        app.methodFieldData.toTerm = null;
+                        app.methodFieldData.toId = null;
+                        app.methodFieldData.includeTerm = null;
+                        app.methodFieldData.includeId = null;
+                        app.methodFieldData.excludeTerm = null;
+                        app.methodFieldData.excludeId = null;
+                        app.methodFieldData.whereTerm = null;
+                        app.methodFieldData.whereId = null;
+                        app.methodFieldData.fromNeedMore = false;
+                        app.methodFieldData.toNeedMore = false;
+                        app.methodFieldData.includeNeedMore = false;
+                        app.methodFieldData.excludeNeedMore = false;
+                        app.methodFieldData.whereNeedMore = false;
+                        app.methodFieldData.fromSynonyms = [];
+                        app.methodFieldData.toSynonyms = [];
+                        app.methodFieldData.includeSynonyms = [];
+                        app.methodFieldData.excludeSynonyms = [];
+                        app.methodFieldData.whereSynonyms = [];
+                        app.methodFieldData.noneSynonymFlag = {
+                            from: false,
+                            to: false,
+                            include: false,
+                            exclude: false,
+                            where: false,
+                        };
+                        //
+                        app.parentData = [];
+                        app.parentData.push(app.character.method_as);
+                        app.parentData[3] = app.user;
+                        app.parentData[4] = app.character.method_from;
+                        app.parentData[5] = app.character.method_to;
+                        app.parentData[6] = app.character.method_include;
+                        app.parentData[7] = app.character.method_exclude;
+                        app.parentData[8] = app.character.method_where;
+                        app.parentData[9] = app.methodFieldData;
+                        app.metadataFlag = 'method';
+                        app.currentMetadata = method;
+                    } else {
+                        app.parentData = app.character.standard_tag;
+                        app.metadataFlag = 'tag';
+                        app.currentMetadata = tag;
+                    }
+
                 }
 
                 app.detailsFlag = true;
@@ -1836,19 +2115,40 @@
             },
             removeStandardCharacter(characterId) {
                 var app = this;
+                console.log('characterId', characterId);
+                app.toRemoveCharacterId = characterId;
+                app.toRemoveStandardConfirmFlag = true;
+//                axios.post("/chrecorder/public/api/v1/character/delete/" + app.user.id + "/" + characterId)
+//                    .then(function (resp) {
+//                        app.toRemoveCharacterId = null;
+//                        app.userCharacters = resp.data.characters;
+//                        app.headers = resp.data.headers;
+//                        app.values = resp.data.values;
+//                        if (app.userCharacters.length == 0) {
+//                            app.matrixShowFlag = false;
+//                        }
+//                        app.refreshUserCharacters();
+//
+//                    });
 
-                axios.post("/chrecorder/public/api/v1/character/delete/" + app.user.id + "/" + characterId)
+            },
+            confirmRemoveCharacter() {
+                var app = this;
+
+                axios.post("/chrecorder/public/api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
                     .then(function (resp) {
+                        app.toRemoveCharacterId = null;
+                        app.toRemoveStandardConfirmFlag = false;
                         app.userCharacters = resp.data.characters;
                         app.headers = resp.data.headers;
                         app.values = resp.data.values;
+                        app.defaultCharacters = resp.data.defaultCharacters;
                         if (app.userCharacters.length == 0) {
                             app.matrixShowFlag = false;
                         }
                         app.refreshUserCharacters();
-
+                        app.refreshDefaultCharacters();
                     });
-
             },
             removeUserCharacter(characterId) {
                 var app = this;
@@ -1938,7 +2238,7 @@
                     var tempFlag = false;
                     console.log('sadfsd');
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name)
-                        .then(function(resp) {
+                        .then(function (resp) {
                             console.log('search term resp', resp.data);
                             for (var i = 0; i < resp.data.entries.length; i++) {
                                 if (resp.data.entries[i].term == app.character.name) {
@@ -1948,7 +2248,7 @@
                         });
                     if (app.character['method_from'] != null && app.character['method_from'] != '') {
                         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_from'])
-                            .then(function(resp) {
+                            .then(function (resp) {
                                 console.log('method_from search resp', resp.data);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
@@ -1983,7 +2283,7 @@
 
                     if (app.character['method_to'] != null && app.character['method_to'] != '') {
                         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_to'])
-                            .then(function(resp) {
+                            .then(function (resp) {
                                 console.log('method_to search resp', resp.data);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
@@ -2017,7 +2317,7 @@
                     }
                     if (app.character['method_include'] != null && app.character['method_include'] != '') {
                         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_include'])
-                            .then(function(resp) {
+                            .then(function (resp) {
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.includeTerm = resp.data.entries[i].term;
@@ -2051,7 +2351,7 @@
 
                     if (app.character['method_exclude'] != null && app.character['method_exclude'] != '') {
                         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_exclude'])
-                            .then(function(resp) {
+                            .then(function (resp) {
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.excludeTerm = resp.data.entries[i].term;
@@ -2085,7 +2385,7 @@
 
                     if (app.character['method_where'] != null && app.character['method_where'] != '') {
                         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_where'])
-                            .then(function(resp) {
+                            .then(function (resp) {
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.whereTerm = resp.data.entries[i].term;
@@ -2120,7 +2420,7 @@
                     if (tempFlag == false) {
 
                         var jsonClass = {
-                            "user":  app.sharedFlag? '': app.user.name,
+                            "user": app.sharedFlag ? '' : app.user.name,
                             "ontology": 'carex',
                             "term": app.character.name,
                             "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
@@ -2158,7 +2458,7 @@
                             .then(function (resp) {
                                 console.log('class resp', resp);
                                 axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                    "user":  app.sharedFlag? '': app.user.name,
+                                    "user": app.sharedFlag ? '' : app.user.name,
                                     "ontology": 'carex'
                                 })
                                     .then(function (resp) {
@@ -2170,7 +2470,7 @@
                             });
                     } else {
                         var jsonClass = {
-                            "user":  app.sharedFlag? '': app.user.name,
+                            "user": app.sharedFlag ? '' : app.user.name,
                             "ontology": 'carex',
                             "term": app.character.name + '(' + app.user.name + ')',
                             "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
@@ -2210,7 +2510,7 @@
                             .then(function (resp) {
                                 console.log('class resp', resp);
                                 axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                    "user":  app.sharedFlag? '': app.user.name,
+                                    "user": app.sharedFlag ? '' : app.user.name,
                                     "ontology": 'carex'
                                 })
                                     .then(function (resp) {
@@ -2245,7 +2545,7 @@
 //                        app.metadataFlag = 'tag';
                         app.currentMetadata = null;
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             app.parentData = [];
                             app.parentData[0] = app.character.method_as;
                             app.parentData[3] = app.user;
@@ -2310,7 +2610,6 @@
                         app.showDetails('unit', app.metadataFlag);
                     }
                 }
-
 
 
             },
@@ -2388,7 +2687,7 @@
                 app.viewFlag = false;
                 app.enhanceFlag = true;
                 setTimeout(function () {
-                    app.editCharacter(selectedCharacter);
+                    app.editCharacter(selectedCharacter, false, false, true);
                 }, 1);
             },
             methodConfirm() {
@@ -2733,10 +3032,12 @@
                         app.headers = resp.data.headers;
                         app.values = resp.data.values;
                         app.userTags = resp.data.userTags;
+                        app.defaultCharacters = resp.data.defaultCharacters;
                         if (app.userCharacters.length == 0) {
                             app.matrixShowFlag = false;
                         }
                         app.refreshUserCharacters();
+                        app.refreshDefaultCharacters();
                     });
             },
             changeUnit(characterId, unit) {
@@ -3083,7 +3384,7 @@
 
                                     for (var objKey in objColorValues) {
                                         for (var l = 0; l < objColorValues[objKey].length; l++) {
-                                            objColorValues[objKey][l].count = objColorValues[objKey].filter(function(each) {
+                                            objColorValues[objKey][l].count = objColorValues[objKey].filter(function (each) {
                                                 if (objColorValues[objKey][l].multi_colored != null && objColorValues[objKey][l].multi_colored != '') {
                                                     return each.value.endsWith(objColorValues[objKey][l].value);
                                                 } else {
@@ -3140,7 +3441,7 @@
                                         for (var l = 0; l < arraySortedColor.length; l++) {
                                             cloneSortedColor[l] = arraySortedColor[l];
                                             for (var m = 0; m < arraySortedColor[l].length; m++) {
-                                                var tempArray = arraySortedColor[l].filter(function(each) {
+                                                var tempArray = arraySortedColor[l].filter(function (each) {
                                                     if (arraySortedColor[l][m].multi_colored != null && arraySortedColor[l][m].multi_colored != '') {
                                                         return (each.value.endsWith(arraySortedColor[l][m].value)) && (each.value != arraySortedColor[l][m].value);
                                                     } else {
@@ -3151,8 +3452,8 @@
                                                         }
                                                     }
                                                 });
-                                                cloneSortedColor[l] = cloneSortedColor[l].filter( function( el ) {
-                                                    return !tempArray.includes( el );
+                                                cloneSortedColor[l] = cloneSortedColor[l].filter(function (el) {
+                                                    return !tempArray.includes(el);
                                                 });
                                             }
                                         }
@@ -3329,18 +3630,18 @@
                                     }
                                     for (var objKey in objNonColorValues) {
                                         for (var l = 0; l < objNonColorValues[objKey].length; l++) {
-                                            objNonColorValues[objKey][l].count = objNonColorValues[objKey].filter(function(each) {
+                                            objNonColorValues[objKey][l].count = objNonColorValues[objKey].filter(function (each) {
                                                 return each.value.endsWith(objNonColorValues[objKey][l].value);
                                             }).length;
                                         }
                                         for (var l = 0; l < objNonColorValues[objKey].length; l++) {
                                             if (objNonColorValues[objKey][l].count > 1) {
-                                                var tempArray = objNonColorValues[objKey].filter(function(each) {
+                                                var tempArray = objNonColorValues[objKey].filter(function (each) {
                                                     return each.value.endsWith(objNonColorValues[objKey][l].value) && each.value != objNonColorValues[objKey][l].value;
                                                 });
-                                                objNonColorValues[objKey] = objNonColorValues[objKey].filter( function( el ) {
-                                                    return !tempArray.includes( el );
-                                                } );
+                                                objNonColorValues[objKey] = objNonColorValues[objKey].filter(function (el) {
+                                                    return !tempArray.includes(el);
+                                                });
                                             }
                                         }
                                         objNonColorValues[objKey] = app.sortNonColorValue(objNonColorValues[objKey]);
@@ -3364,11 +3665,11 @@
                                         for (var l = 0; l < arraySortedNonColor.length; l++) {
                                             cloneSortedNonColor[l] = arraySortedNonColor[l];
                                             for (var m = 0; m < arraySortedNonColor[l].length; m++) {
-                                                var tempArray = arraySortedNonColor[l].filter(function(each) {
+                                                var tempArray = arraySortedNonColor[l].filter(function (each) {
                                                     return each.value.endsWith(arraySortedNonColor[l][m].value) && each.value != arraySortedNonColor[l][m].value;
                                                 });
-                                                cloneSortedNonColor[l] = cloneSortedNonColor[l].filter( function( el ) {
-                                                    return !tempArray.includes( el );
+                                                cloneSortedNonColor[l] = cloneSortedNonColor[l].filter(function (el) {
+                                                    return !tempArray.includes(el);
                                                 });
                                             }
                                         }
@@ -3472,16 +3773,20 @@
                 arrayColorValues.sort((a, b) => (a.saturation != '' && a.saturation != null) ? -1 : 1);
 //                arrayColorValues.sort((a, b) => (a.colored.split(' ').length > b.colored.split(' ').length) ? -1 : 1);
 
-                arrayColorValues.sort(function(x,y){ return x.colored == 'white' ? -1 : y.colored == 'white' ? 1 : 0; });
-                arrayColorValues.sort(function(x,y){ return x.colored == 'black' ? 1 : y.colored == 'black' ? -1 : 0; });
+                arrayColorValues.sort(function (x, y) {
+                    return x.colored == 'white' ? -1 : y.colored == 'white' ? 1 : 0;
+                });
+                arrayColorValues.sort(function (x, y) {
+                    return x.colored == 'black' ? 1 : y.colored == 'black' ? -1 : 0;
+                });
 
                 var obj = {};
 
-                for (var i = 0; i < arrayColorValues.length; i++ )
+                for (var i = 0; i < arrayColorValues.length; i++)
                     obj[arrayColorValues[i]['value']] = arrayColorValues[i];
 
                 var returnArray = [];
-                for ( var key in obj )
+                for (var key in obj)
                     returnArray.push(obj[key]);
                 return returnArray;
             },
@@ -3489,11 +3794,11 @@
                 arrayNonColorValue.sort((a, b) => (a.value > b.value) ? 1 : -1)
                 var obj = {};
 
-                for (var i = 0; i < arrayNonColorValue.length; i++ )
+                for (var i = 0; i < arrayNonColorValue.length; i++)
                     obj[arrayNonColorValue[i]['value']] = arrayNonColorValue[i];
 
                 var returnArray = [];
-                for ( var key in obj )
+                for (var key in obj)
                     returnArray.push(obj[key]);
 
                 return returnArray;
@@ -3565,8 +3870,16 @@
                 axios.post('/chrecorder/public/api/v1/export-description', {template: app.descriptionText, taxon: app.taxonName})
                     .then(function (resp) {
                         console.log('resp', resp.data);
-                        if (resp.data.is_scucess == 1) {
+                        if (resp.data.is_success == 1) {
                             window.location.href = resp.data.doc_url;
+                            axios.post('/chrecorder/public/api/v1/export-description-csv', {template: app.descriptionText, taxon: app.taxonName})
+                                .then(function(resp) {
+                                    if (resp.data.is_success == 1) {
+                                        window.location.href = resp.data.doc_url;
+                                    } else {
+                                        alert('Error occurred while exporting csv file!');
+                                    }
+                                });
                         } else {
                             alert('Error occurred while exporting data!');
                         }
@@ -3617,7 +3930,7 @@
 
                 if (app.currentColorValue['brightness'] && app.currentColorValue.confirmedFlag['brightness'] == false) {
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['brightness'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('brightness'))
-                        .then(function(resp) {
+                        .then(function (resp) {
                             console.log('brightness', resp.data);
                             if (!resp.data.entries.find(each => each.term == app.currentColorValue['brightness'])) {
                                 app.searchColorSelection(app.currentColorValue, 'brightness');
@@ -3628,7 +3941,7 @@
                         });
                 } else if (app.currentColorValue['saturation'] && app.currentColorValue.confirmedFlag['saturation'] == false) {
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['saturation'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('saturation'))
-                        .then(function(resp) {
+                        .then(function (resp) {
                             console.log('saturation', resp.data);
                             if (!resp.data.entries.find(each => each.term == app.currentColorValue['saturation'])) {
                                 app.searchColorSelection(app.currentColorValue, 'saturation');
@@ -3639,7 +3952,7 @@
                         });
                 } else if (app.currentColorValue['reflectance'] && app.currentColorValue.confirmedFlag['reflectance'] == false) {
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['reflectance'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('reflectance'))
-                        .then(function(resp) {
+                        .then(function (resp) {
                             console.log('reflectance', resp.data);
                             if (!resp.data.entries.find(each => each.term == app.currentColorValue['reflectance'])) {
                                 app.searchColorSelection(app.currentColorValue, 'reflectance');
@@ -3650,7 +3963,7 @@
                         });
                 } else if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false) {
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['colored'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('colored'))
-                        .then(function(resp) {
+                        .then(function (resp) {
                             console.log('colored', resp.data);
                             if (!resp.data.entries.find(each => each.term == app.currentColorValue['colored'])) {
                                 app.searchColorSelection(app.currentColorValue, 'colored');
@@ -3661,7 +3974,7 @@
                         });
                 } else if (app.currentColorValue['multi_colored'] && app.currentColorValue.confirmedFlag['multi_colored'] == false) {
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['multi_colored'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('multi_colored'))
-                        .then(function(resp) {
+                        .then(function (resp) {
                             console.log('multi_colored', resp.data);
                             if (!resp.data.entries.find(each => each.term == app.currentColorValue['multi_colored'])) {
                                 app.searchColorSelection(app.currentColorValue, 'multi_colored');
@@ -3703,7 +4016,7 @@
 //                                    if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
                                     if (app.searchColorFlag == 0 && postFlag == true) {
                                         axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue[key] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(key))
-                                            .then(function(resp) {
+                                            .then(function (resp) {
                                                 if (resp.data.entries.length == 0) {
                                                     postValue[key] = app.currentColorValue[key];
                                                     console.log('colorSampleText', app.colorSampleText[key]);
@@ -3834,7 +4147,6 @@
                 }
 
 
-
 //                for (var i = 0; i < app.colorDetails.length; i++) {
 //                  }
 
@@ -3900,7 +4212,7 @@
 //                                    postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
 
                                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'])
-                                    .then(function(resp) {
+                                    .then(function (resp) {
                                         if (resp.data.entries.length == 0) {
                                             postValue['main_value'] = app.currentNonColorValue['main_value'];
                                             var date = new Date();
@@ -4014,7 +4326,6 @@
                 }
 
 
-
             },
             removeNonColorValue() {
                 var app = this;
@@ -4030,6 +4341,8 @@
             checkColorProperty(property) {
                 if (property == 'negation'
                     || property == 'pre_constraint'
+                    || property == 'certainty_constraint'
+                    || property == 'degree_constraint'
                     || property == 'brightness'
                     || property == 'reflectance'
                     || property == 'saturation'
@@ -4053,6 +4366,8 @@
                     for (var j = 0; j < result.length; j++) {
                         if (array[i].negation == result[j].negation
                             && array[i].pre_constraint == result[j].pre_constraint
+                            && array[i].certainty_constraint == result[j].certainty_constraint
+                            && array[i].degree_constraint == result[j].degree_constraint
                             && array[i].main_value == result[j].main_value
                             && array[i].post_constraint == result[j].post_constraint) {
                             result[j].count = result[j].count + 1;
@@ -4078,6 +4393,8 @@
                     for (var j = 0; j < result.length; j++) {
                         if (array[i].negation == result[j].negation
                             && array[i].pre_constraint == result[j].pre_constraint
+                            && array[i].certainty_constraint == result[j].certainty_constraint
+                            && array[i].degree_constraint == result[j].degree_constraint
                             && array[i].brightness == result[j].brightness
                             && array[i].reflectance == result[j].reflectance
                             && array[i].saturation == result[j].saturation
@@ -4127,7 +4444,7 @@
                         let valuesEqual = true;
                         for (let i = 0; i < currentKeys.length; i++) {
                             const key = currentKeys[i];
-                            if ( current[key] !== comparison[key] ) {
+                            if (current[key] !== comparison[key]) {
                                 valuesEqual = false;
                                 break;
                             }
@@ -4198,18 +4515,18 @@
 
                                 if (app.colorDetails.length == 0) {
                                     app.currentColorValueExist = false;
-                                    app.colorComment = {};
-                                    app.colorTaxon = {
-                                        'brightness': app.taxonName,
-                                        'reflectance': app.taxonName,
-                                        'saturation': app.taxonName,
-                                        'colored': app.taxonName,
-                                        'multi_colored': app.taxonName,
-                                    };
-                                    app.colorSampleText = {};
-                                    app.colorDefinition = {};
-                                    app.userColorDefinition = {};
-                                    app.colorDetails.push({value_id: value.id, detailFlag: null});
+//                                    app.colorComment = {};
+//                                    app.colorTaxon = {
+//                                        'brightness': app.taxonName,
+//                                        'reflectance': app.taxonName,
+//                                        'saturation': app.taxonName,
+//                                        'colored': app.taxonName,
+//                                        'multi_colored': app.taxonName,
+//                                    };
+//                                    app.colorSampleText = {};
+//                                    app.colorDefinition = {};
+//                                    app.userColorDefinition = {};
+//                                    app.colorDetails.push({value_id: value.id, detailFlag: null});
                                 } else {
                                     console.log('currentColorValue', app.currentColorValue);
                                     app.currentColorValueExist = true;
@@ -4252,24 +4569,24 @@
                                 app.existNonColorDetails = app.removeNonColorDuplicates(app.existNonColorDetails);
                                 if (app.nonColorDetails.length == 0) {
                                     app.currentNonColorValueExist = false;
-                                    app.nonColorComment = {};
-                                    app.nonColorTaxon = {
-                                        'main_value': app.taxonName,
-                                    };
-                                    app.nonColorSampleText = {};
-                                    app.nonColorDefinition = {};
-                                    app.userNonColorDefinition = {};
-                                    app.currentNonColorValue.placeholderName = currentCharacter.name.split('of')[0].toLowerCase();
-                                    if (app.currentNonColorValue.placeholderName[app.currentNonColorValue.placeholderName.length - 1] == ' ') {
-                                        app.currentNonColorValue.placeholderName = app.currentNonColorValue.placeholderName.substring(0, app.currentNonColorValue.placeholderName.length - 1);
-                                    }
-                                    app.currentNonColorValue.placeholderName = app.currentNonColorValue.placeholderName.replace(' ', '-');
-                                    app.currentNonColorValue.taxon = app.taxonName;
-                                    app.nonColorDetails.push({
-                                        value_id: value.id,
-                                        detailFlag: null,
-                                        placeholderName: currentCharacter.name.split(' ')[0].toLowerCase()
-                                    });
+//                                    app.nonColorComment = {};
+//                                    app.nonColorTaxon = {
+//                                        'main_value': app.taxonName,
+//                                    };
+//                                    app.nonColorSampleText = {};
+//                                    app.nonColorDefinition = {};
+//                                    app.userNonColorDefinition = {};
+//                                    app.currentNonColorValue.placeholderName = currentCharacter.name.split('of')[0].toLowerCase();
+//                                    if (app.currentNonColorValue.placeholderName[app.currentNonColorValue.placeholderName.length - 1] == ' ') {
+//                                        app.currentNonColorValue.placeholderName = app.currentNonColorValue.placeholderName.substring(0, app.currentNonColorValue.placeholderName.length - 1);
+//                                    }
+//                                    app.currentNonColorValue.placeholderName = app.currentNonColorValue.placeholderName.replace(' ', '-');
+//                                    app.currentNonColorValue.taxon = app.taxonName;
+//                                    app.nonColorDetails.push({
+//                                        value_id: value.id,
+//                                        detailFlag: null,
+//                                        placeholderName: currentCharacter.name.split(' ')[0].toLowerCase()
+//                                    });
                                 } else {
                                     app.currentNonColorValueExist = true;
                                     app.nonColorComment = {};
@@ -4309,7 +4626,7 @@
                     $(":input").css('background', '#ffffff');
                     event.target.style.background = '#82c8fa';
                 }
-                color.detailFlag = null;
+//                color.detailFlag = null;
                 app.colorExistFlag = false;
 //                if (!color.id) {
 //                    app.colorDetails[app.colorDetails.length - 1][flag] = '';
@@ -4361,7 +4678,11 @@
                         }
                         console.log('app.colorDetails', app.colorDetails);
                     } else {
-                        app.colorDetails[app.colorDetails.length - 1].detailFlag = flag;
+                        if (app.colorDetails.length > 0) {
+                            app.colorDetails[app.colorDetails.length - 1].detailFlag = flag;
+
+                        }
+
                     }
                 }
                 console.log('flag', flag);
@@ -4474,7 +4795,7 @@
                             for (var i = 0; i < arrayFlag.length; i++) {
                                 if (arrayFlag[i] != flag) {
                                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(arrayFlag[i]))
-                                        .then(function(resp) {
+                                        .then(function (resp) {
                                             if (resp.data.entries.length != 0) {
                                                 var tempJson = {
                                                     flag: arrayFlag[i],
@@ -4720,7 +5041,7 @@
                 console.log('color', color);
                 var app = this;
                 axios.post('/chrecorder/public/api/v1/remove-each-color-details', color)
-                    .then(function(resp) {
+                    .then(function (resp) {
                         app.colorDetails = resp.data.colorDetails;
                         app.values = resp.data.values;
                         app.preList = resp.data.preList;
@@ -4740,7 +5061,7 @@
             removeEachNonColor(value) {
                 var app = this;
                 axios.post('/chrecorder/public/api/v1/remove-each-non-color-details', value)
-                    .then(function(resp) {
+                    .then(function (resp) {
                         app.nonColorDetails = resp.data.nonColorDetails;
                         app.values = resp.data.values;
                         app.preList = resp.data.preList;
@@ -4781,6 +5102,8 @@
                 app.colorDetailsFlag = false;
                 app.currentColorValue.negation = colorDetails.negation;
                 app.currentColorValue.pre_constraint = colorDetails.pre_constraint;
+                app.currentColorValue.certainty_constraint = colorDetails.certainty_constraint;
+                app.currentColorValue.degree_constraint = colorDetails.degree_constraint;
                 app.currentColorValue.brightness = colorDetails.brightness;
                 app.currentColorValue.saturation = colorDetails.saturation;
                 app.currentColorValue.reflectance = colorDetails.reflectance;
@@ -4794,6 +5117,8 @@
                 app.nonColorDetailsFlag = false;
                 app.currentNonColorValue.negation = nonColorDetails.negation;
                 app.currentNonColorValue.pre_constraint = nonColorDetails.pre_constraint;
+                app.currentColorValue.certainty_constraint = nonColorDetails.certainty_constraint;
+                app.currentColorValue.degree_constraint = nonColorDetails.degree_constraint;
                 app.currentNonColorValue.main_value = nonColorDetails.main_value;
                 app.currentNonColorValue.post_constraint = nonColorDetails.post_constraint;
                 app.currentNonColorValue.confirmedFlag['main_value'] = true;
@@ -4811,7 +5136,7 @@
                 var app = this;
 
                 axios.post('/chrecorder/public/api/v1/overwrite-value', app.copyValue)
-                    .then(function(resp) {
+                    .then(function (resp) {
                         app.confirmOverwriteFlag = false;
                         app.values = resp.data.values;
                         app.preList = resp.data.preList;
@@ -4825,7 +5150,7 @@
                 var app = this;
 
                 axios.post('/chrecorder/public/api/v1/keep-exist-value', app.copyValue)
-                    .then(function(resp) {
+                    .then(function (resp) {
                         app.confirmOverwriteFlag = false;
                         app.values = resp.data.values;
                         app.preList = resp.data.preList;
@@ -4833,6 +5158,56 @@
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
                     });
+            },
+            calcSummary(row) {
+                var app = this;
+
+                var characterName = row.find(each => each.header_id == 1).value;
+                if (app.checkNumericalCharacter(characterName)) {
+                    if (row.find(each => (each.header_id != 1 && each.value != null && each.value != ''))) {
+                        var sum = 0;
+                        var arrayLength = 0;
+                        for (var i = 0; i < row.length; i++) {
+                            if (row[i].header_id != 1 && row[i].value != null && row[i].value != '' && row[i].value != undefined) {
+                                sum += parseInt(row[i].value, 10); //don't forget to add the base
+                                arrayLength++;
+                            }
+                        }
+
+                        var mean = parseFloat(sum / arrayLength).toFixed(1);
+
+
+                        var tempRpArray = [];
+                        for (var i = 0; i < row.length; i++) {
+                            if (row[i].header_id != 1 && row[i].value != null && row[i].value != '' && row[i].value != undefined) {
+                                tempRpArray.push(row[i].value);
+                            }
+                        }
+
+                        tempRpArray.sort((a, b) => a - b);
+                        var minValue = tempRpArray[0];
+                        var maxValue = tempRpArray[tempRpArray.length - 1];
+                        var minPercentileValue = 0;
+                        var maxPercentileValue = 0;
+                        if (tempRpArray.length % 2 == 0) {
+                            minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1];
+                            maxPercentileValue = tempRpArray[tempRpArray.length / 2];
+                        } else {
+                            if (tempRpArray.length == 1) {
+                                minPercentileValue = tempRpArray[0];
+                                maxPercentileValue = tempRpArray[0];
+                            } else {
+                                minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1.5];
+                                maxPercentileValue = tempRpArray[tempRpArray.length / 2 + 0.5];
+                            }
+                        }
+
+                        var range = '(' + minValue + '-)' + minPercentileValue + '-' + maxPercentileValue + '(-' + maxValue + ')';
+                        return "mean=" + mean + "<br/>" + "range=" + range;
+                    }
+
+                }
+                return ''
             },
         },
         watch: {
@@ -4849,7 +5224,7 @@
         created() {
             var app = this;
             axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=coloration')
-                .then(function(resp) {
+                .then(function (resp) {
                     console.log('colorationData', resp.data);
                     var colorData = resp.data.children[0].children;
                     for (var i = 0; i < colorData.length; i++) {

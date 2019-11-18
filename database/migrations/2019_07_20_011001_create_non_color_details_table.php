@@ -18,6 +18,8 @@ class CreateNonColorDetailsTable extends Migration
             $table->integer('value_id');
             $table->string('negation')->nullable();
             $table->string('pre_constraint')->nullable();
+            $table->string('certainty_constraint')->nullable();
+            $table->string('degree_constraint')->nullable();
             $table->string('main_value')->nullable();
             $table->string('post_constraint')->nullable();
             $table->timestamps();

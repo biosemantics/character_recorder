@@ -85,6 +85,8 @@ class HomeController extends Controller
                             foreach ($colorDetails as $eachColor) {
                                 $value->value = $value->value . ($eachColor->negation ? ($eachColor->negation . ' ') : '') .
                                     ($eachColor->pre_constraint ? ($eachColor->pre_constraint . ' ') : '') .
+                                    ($eachColor->certainty_constraint ? ($eachColor->certainty_constraint . ' ') : '') .
+                                    ($eachColor->degree_constraint ? ($eachColor->degree_constraint . ' ') : '') .
                                     ($eachColor->brightness ? ($eachColor->brightness . ' ') : '') .
                                     ($eachColor->reflectance ? ($eachColor->reflectance . ' ') : '') .
                                     ($eachColor->saturation ? ($eachColor->saturation . ' ') : '') .
@@ -109,6 +111,8 @@ class HomeController extends Controller
                             foreach ($nonColorDetails as $eachValue) {
                                 $value->value = $value->value . ($eachValue->negation ? ($eachValue->negation . ' ') : '') .
                                     ($eachValue->pre_constraint ? ($eachValue->pre_constraint . ' ') : '') .
+                                    ($eachValue->certainty_constraint ? ($eachValue->certainty_constraint . ' ') : '') .
+                                    ($eachValue->degree_constraint ? ($eachValue->degree_constraint . ' ') : '') .
                                     ($eachValue->main_value ? ($eachValue->main_value . ' ') : '') .
                                     ($eachValue->post_constraint ? ($eachValue->post_constraint . ' ') : '');
                                 if ($value->value != '') {
@@ -157,8 +161,8 @@ class HomeController extends Controller
 
         $arrayCharacters = [];
         if (Character::where('owner_name', '=', $username)->first()) {
-            $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('standard_tag', 'ASC')->orderBy('order', 'ASC')->get();
-//            $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
+//            $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('standard_tag', 'ASC')->orderBy('order', 'ASC')->get();
+            $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
         }
         foreach ($arrayCharacters as $c) {
 
@@ -362,8 +366,8 @@ class HomeController extends Controller
         }
 
 
-        $characters = Character::where('owner_name', '=', $username)->orderBy('standard_tag', 'ASC')->get();
-//        $characters = Character::where('owner_name', '=', $username)->get();
+//        $characters = Character::where('owner_name', '=', $username)->orderBy('standard_tag', 'ASC')->get();
+        $characters = Character::where('owner_name', '=', $username)->get();
 
         $usedCharacters = Character::where('owner_name', '=', $username)->get();
         foreach ($usedCharacters as $usedCharacter) {
@@ -868,6 +872,8 @@ class HomeController extends Controller
     }
 
     public function exportDescription(Request $request) {
+
+
         $fileName = $request->input('taxon');
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         $section = $phpWord->addSection();
@@ -891,8 +897,44 @@ class HomeController extends Controller
         $objWriter->save($fileName . '.docx');
 
         return array(
-            'is_scucess'    =>  1,
+            'is_success'    =>  1,
             'doc_url'       =>  '/chrecorder/public/' . $fileName . '.docx',
+        );
+    }
+
+    public function exportDescriptionCsv(Request $request) {
+        $fileName = $request->input('taxon');
+        $htmlString = '<table>';
+        $textLines = explode('<br/>', $request->input('template'));
+        foreach ($textLines as $eachText) {
+            $eachText = str_replace('<b>', '', $eachText);
+            $eachText = str_replace('</b>', '', $eachText);
+            $separatedTexts = explode(':', $eachText);
+            if (count($separatedTexts) > 1) {
+                if ($separatedTexts[1] != ' . ') {
+                    $htmlString = $htmlString . '<tr>';
+                    $htmlString = $htmlString . '<td>' . $separatedTexts[0] . '</td>';
+                    $contentText = explode('; ', $separatedTexts[1]);
+                    foreach($contentText as $eachTd) {
+                        $eachTd = str_replace('.', '', $eachTd);
+                        $htmlString = $htmlString . '<td>' . $eachTd . '</td>';
+                    }
+                    $htmlString = $htmlString . '</tr>';
+                }
+
+            }
+        }
+        $htmlString = $htmlString . '</table>';
+
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+        $spreadsheet = $reader->loadFromString($htmlString);
+
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Csv');
+        $writer->save($fileName . '.csv');
+
+        return array(
+            'is_success'    =>  1,
+            'doc_url'       =>  '/chrecorder/public/' . $fileName .'.csv',
         );
     }
 
@@ -1082,6 +1124,9 @@ class HomeController extends Controller
             $colorDetails->value_id = $request->input('value_id');
             $colorDetails->negation = $request->input('negation');
             $colorDetails->pre_constraint = $request->input('pre_constraint');
+            $colorDetails->certainty_constraint = $request->input('certainty_constraint');
+            $colorDetails->degree_constraint = $request->input('degree_constraint');
+            $colorDetails->pre_constraint = $request->input('pre_constraint');
             $colorDetails->brightness = $request->input('brightness');
             $colorDetails->reflectance = $request->input('reflectance');
             $colorDetails->saturation = $request->input('saturation');
@@ -1095,6 +1140,8 @@ class HomeController extends Controller
                 'value_id' => $request->input('value_id'),
                 'negation' => $request->input('negation') ? $request->input('negation') : null,
                 'pre_constraint' => $request->input('pre_constraint') ? $request->input('pre_constraint') : null,
+                'certainty_constraint' => $request->input('certainty_constraint') ? $request->input('certainty_constraint') : null,
+                'degree_constraint' => $request->input('degree_constraint') ? $request->input('degree_constraint') : null,
                 'brightness' => $request->input('brightness') ? $request->input('brightness') : null,
                 'reflectance' => $request->input('reflectance') ? $request->input('reflectance') : null,
                 'saturation' => $request->input('saturation') ? $request->input('saturation') : null,
@@ -1225,6 +1272,8 @@ class HomeController extends Controller
             $nonColorDetails->value_id = $request->input('value_id');
             $nonColorDetails->negation = $request->input('negation');
             $nonColorDetails->pre_constraint = $request->input('pre_constraint');
+            $nonColorDetails->certainty_constraint = $request->input('certainty_constraint');
+            $nonColorDetails->degree_constraint = $request->input('degree_constraint');
             $nonColorDetails->main_value = $request->input('main_value');
             $nonColorDetails->post_constraint = $request->input('post_constraint');
 
@@ -1234,6 +1283,8 @@ class HomeController extends Controller
                 'value_id' => $request->input('value_id'),
                 'negation' =>  $request->input('negation') ?  $request->input('negation') : null,
                 'pre_constraint' =>  $request->input('pre_constraint') ?  $request->input('pre_constraint') : null,
+                'certainty_constraint' =>  $request->input('certainty_constraint') ?  $request->input('certainty_constraint') : null,
+                'degree_constraint' =>  $request->input('degree_constraint') ?  $request->input('degree_constraint') : null,
                 'main_value' =>  $request->input('main_value') ?  $request->input('main_value') : null,
                 'post_constraint' =>  $request->input('post_constraint') ?  $request->input('post_constraint') : null,
             ]);
