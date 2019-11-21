@@ -3899,15 +3899,17 @@
                         }
 
                     });
-                await setTimeout(function() {console.log('123')}, 2000);
-                await axios.post('/chrecorder/public/api/v1/export-description-csv', {template: app.descriptionText, taxon: app.taxonName})
-                    .then(function(resp) {
-                        if (resp.data.is_success == 1) {
-                            window.location.href = resp.data.doc_url;
-                        } else {
-                            alert('Error occurred while exporting csv file!');
-                        }
-                    });
+                setTimeout(function() {
+                    axios.post('/chrecorder/public/api/v1/export-description-csv', {template: app.descriptionText, taxon: app.taxonName})
+                        .then(function(resp) {
+                            if (resp.data.is_success == 1) {
+                                window.location.href = resp.data.doc_url;
+                            } else {
+                                alert('Error occurred while exporting csv file!');
+                            }
+                        });
+                }, 2000);
+
             },
             checkValueArray(tempArray) {
                 var app = this;
