@@ -624,35 +624,38 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         foreach ($standardCharacters as $eachCharacter) {
-            $character = new Character([
-                'name' => $eachCharacter['name'],
-                'method_from' => $eachCharacter['method_from'],
-                'method_to' => $eachCharacter['method_to'],
-                'method_include' => $eachCharacter['method_include'],
-                'method_exclude' => $eachCharacter['method_exclude'],
-                'method_where' => $eachCharacter['method_where'],
-                'unit' => $eachCharacter['unit'],
-                'standard' => $eachCharacter['standard'],
-                'creator' => $eachCharacter['creator'],
-                'username' => $eachCharacter['username'],
-                'owner_name' => $username,
-                'usage_count' => 0,
-                'show_flag' => $eachCharacter['show_flag'],
-                'standard_tag' => $eachCharacter['standard_tag'],
-                'summary' => $eachCharacter['summary'],
-            ]);
-
-            $character->save();
-
-            $character->order = $character->id;
-            $character->save();
-
-            if (!UserTag::where('user_id', '=', Auth::id())->where('tag_name', '=', $eachCharacter['standard_tag'])->first()) {
-                UserTag::create([
-                    'user_id' => Auth::id(),
-                    'tag_name' => $eachCharacter['standard_tag']
+            if (!Character::where('name', '=', $eachCharacter['name'])->where('owner_name', '=', $username)->first()) {
+                $character = new Character([
+                    'name' => $eachCharacter['name'],
+                    'method_from' => $eachCharacter['method_from'],
+                    'method_to' => $eachCharacter['method_to'],
+                    'method_include' => $eachCharacter['method_include'],
+                    'method_exclude' => $eachCharacter['method_exclude'],
+                    'method_where' => $eachCharacter['method_where'],
+                    'unit' => $eachCharacter['unit'],
+                    'standard' => $eachCharacter['standard'],
+                    'creator' => $eachCharacter['creator'],
+                    'username' => $eachCharacter['username'],
+                    'owner_name' => $username,
+                    'usage_count' => 0,
+                    'show_flag' => $eachCharacter['show_flag'],
+                    'standard_tag' => $eachCharacter['standard_tag'],
+                    'summary' => $eachCharacter['summary'],
                 ]);
+
+                $character->save();
+
+                $character->order = $character->id;
+                $character->save();
+
+                if (!UserTag::where('user_id', '=', Auth::id())->where('tag_name', '=', $eachCharacter['standard_tag'])->first()) {
+                    UserTag::create([
+                        'user_id' => Auth::id(),
+                        'tag_name' => $eachCharacter['standard_tag']
+                    ]);
+                }
             }
+
         }
 
         $returnCharacters = $this->getArrayCharacters();
