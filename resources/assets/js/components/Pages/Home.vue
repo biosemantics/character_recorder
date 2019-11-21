@@ -3899,6 +3899,7 @@
                         }
 
                     });
+                setTimeout(function() {console.log('123')}, 2000);
                 await axios.post('/chrecorder/public/api/v1/export-description-csv', {template: app.descriptionText, taxon: app.taxonName})
                     .then(function(resp) {
                         if (resp.data.is_success == 1) {
