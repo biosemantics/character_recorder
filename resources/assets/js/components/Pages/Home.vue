@@ -448,7 +448,7 @@
                                                         <!--<a v-if="viewFlag == true" v-on:click="enhance(item)"-->
                                                         <!--class="btn btn-primary">Clone and enhance</a>-->
                                                         <a v-if="viewFlag == true" v-on:click="enhance(item)"
-                                                           class="btn btn-primary">Modify and Use &nbps;&nbps;&nbps;&nbps;&nbps;<b style="border: 1px solid #ffffff;"
+                                                           class="btn btn-primary">Modify and Use &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b style="border: 1px solid #ffffff; background: #003366;"
                                                                 title="Use this option when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>
                                                         <a v-on:click="cancelCharacter()"
                                                            class="btn btn-danger">Cancel</a>
@@ -856,6 +856,7 @@
                                                     <select style="width: 90px; height: 26px;"
                                                             v-model="currentColorValue.certainty_constraint"
                                                             v-on:change="changeColorSection(currentColorValue, 'certainty_constraint', $event)">
+                                                        <option value=""></option>
                                                         <option value="doubtfully">doubtfully</option>
                                                         <option value="possibly">possibly</option>
                                                         <option value="presumably">presumably</option>
@@ -870,6 +871,7 @@
                                                     <select style="width: 90px; height: 26px;"
                                                             v-model="currentColorValue.degree_constraint"
                                                             v-on:change="changeColorSection(currentColorValue, 'degree_constraint', $event)">
+                                                        <option value=""></option>
                                                         <option value="imperceptibly">imperceptibly</option>
                                                         <option value="scarcely">scarcely</option>
                                                         <option value="moderately">moderately</option>
@@ -1262,6 +1264,7 @@
                                                     <select style="width: 90px; height: 26px;"
                                                             v-model="currentNonColorValue.certainty_constraint"
                                                             v-on:change="changeNonColorSection(currentNonColorValue, 'certainty_constraint', $event)">
+                                                        <option value=""></option>
                                                         <option value="doubtfully">doubtfully</option>
                                                         <option value="possibly">possibly</option>
                                                         <option value="presumably">presumably</option>
@@ -1276,6 +1279,7 @@
                                                     <select style="width: 90px; height: 26px;"
                                                             v-model="currentNonColorValue.degree_constraint"
                                                             v-on:change="changeNonColorSection(currentNonColorValue, 'degree_constraint', $event)">
+                                                        <option value=""></option>
                                                         <option value="imperceptibly">imperceptibly</option>
                                                         <option value="scarcely">scarcely</option>
                                                         <option value="moderately">moderately</option>
@@ -1455,9 +1459,15 @@
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            Are you sure you want to remove {{ userCharacters.find(each => each.id ==
-                                            toRemoveCharacterId).name }}?
+                                            Are you sure you want to remove {{ userCharacters.find(each => each.id == toRemoveCharacterId).name }}?
                                         </div>
+                                        <i v-if="userCharacters.find(each => each.id == toRemoveCharacterId).standard == 1">
+                                            This recommended character can be restored by selecting the character in "Search/create character' search box (see the image below).
+                                        </i>
+                                        <i v-if="userCharacters.find(each => each.id == toRemoveCharacterId).standard == 0">
+                                            This user-defined character may not be restored after being deleted if it is not used by others. But you can always recreate this character by selecting 'Click HERE to create new character' as shown in the image below.
+                                        </i>
+                                        <img src="/chrecorder/public/images/remove_confirm_image.png">
                                     </div>
                                     <div class="modal-footer">
                                         <div class="row">
