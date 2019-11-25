@@ -1461,6 +1461,8 @@
                                         <div>
                                             Are you sure you want to remove {{ userCharacters.find(each => each.id == toRemoveCharacterId).name }}?
                                         </div>
+                                        <br/>
+                                        <br/>
                                         <i v-if="userCharacters.find(each => each.id == toRemoveCharacterId).standard == 1">
                                             This recommended character can be restored by selecting the character in "Search/create character' search box (see the image below).
                                         </i>
