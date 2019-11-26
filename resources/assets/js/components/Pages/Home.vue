@@ -1167,8 +1167,7 @@
                                                         </td>
                                                         <td>
                                                             <a class="btn btn-primary"
-                                                               v-on:click="selectExistNonColorDetails(eachDetails)">Use
-                                                                this</a>
+                                                               v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -5170,8 +5169,8 @@
                 app.nonColorDetailsFlag = false;
                 app.currentNonColorValue.negation = nonColorDetails.negation;
                 app.currentNonColorValue.pre_constraint = nonColorDetails.pre_constraint;
-                app.currentColorValue.certainty_constraint = nonColorDetails.certainty_constraint;
-                app.currentColorValue.degree_constraint = nonColorDetails.degree_constraint;
+                app.currentNonColorValue.certainty_constraint = nonColorDetails.certainty_constraint;
+                app.currentNonColorValue.degree_constraint = nonColorDetails.degree_constraint;
                 app.currentNonColorValue.main_value = nonColorDetails.main_value;
                 app.currentNonColorValue.post_constraint = nonColorDetails.post_constraint;
                 app.currentNonColorValue.confirmedFlag['main_value'] = true;
