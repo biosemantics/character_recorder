@@ -3912,7 +3912,15 @@
 
                     });
                 setTimeout(function() {
-                    axios.post('/chrecorder/public/api/v1/export-description-csv', {template: app.descriptionText, taxon: app.taxonName})
+                    console.log('app.userTags', app.userTags);
+                    axios.post('/chrecorder/public/api/v1/export-description-csv',
+                        {
+                            userCharacters: app.userCharacters,
+                            values: app.values,
+                            userTags: app.userTags,
+                            headers: app.headers,
+                            taxon: app.taxonName
+                        })
                         .then(function(resp) {
                             if (resp.data.is_success == 1) {
                                 window.location.href = resp.data.doc_url;

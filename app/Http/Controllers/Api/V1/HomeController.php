@@ -907,26 +907,52 @@ class HomeController extends Controller
 
     public function exportDescriptionCsv(Request $request) {
         $fileName = $request->input('taxon');
+        $userCharacters = $request->input('userCharacters');
+        $headers = $request->input('headers');
+        $values = $request->input('values');
+        $userTags = $request->input('userTags');
+
+
         $htmlString = '<table>';
-        $textLines = explode('<br/>', $request->input('template'));
-        foreach ($textLines as $eachText) {
-            $eachText = str_replace('<b>', '', $eachText);
-            $eachText = str_replace('</b>', '', $eachText);
-            $separatedTexts = explode(':', $eachText);
-            if (count($separatedTexts) > 1) {
-                if ($separatedTexts[1] != ' . ') {
-                    $htmlString = $htmlString . '<tr>';
-                    $htmlString = $htmlString . '<td>' . $separatedTexts[0] . '</td>';
-                    $contentText = explode('; ', $separatedTexts[1]);
-                    foreach($contentText as $eachTd) {
-                        $eachTd = str_replace('.', '', $eachTd);
-                        $htmlString = $htmlString . '<td>' . $eachTd . '</td>';
+
+        if (count($headers) > 0) {
+            $htmlString .= '<tr><th>Character</th><th>Summary</th>';
+            foreach ($headers as $eachHeader) {
+                if ($eachHeader['header'] != 'Character') {
+                    $htmlString .= '<th>' . $eachHeader['header'] . '</th>';
+                }
+            }
+        }
+        foreach ($userTags as $eachTag) {
+
+            foreach ($userCharacters as $eachUserCharacter) {
+                if ($eachUserCharacter['standard_tag'] == $eachTag['tag_name']) {
+                    $htmlString .= '<tr>';
+                    foreach ($values as $eachRow) {
+                        if ($eachUserCharacter['id'] == $eachRow[0]['character_id']) {
+                            foreach ($eachRow as $eachValue) {
+                                if ($eachValue['header_id'] == 1) {
+                                    $htmlString .= '<td>' . $eachValue['value'] . '</td>';
+                                    if (substr($eachValue['value'], 0, 6) == 'Length') {
+                                        $htmlString .= '<td>' . $this->calcSummary($eachRow) . '</td>';
+                                    } else {
+                                        $htmlString .= '<td></td>';
+                                    }
+                                }
+                            }
+                            foreach ($eachRow as $eachValue) {
+                                if ($eachValue['header_id'] != 1) {
+                                    $htmlString .= '<td>' . $eachValue['value'] . '</td>';
+                                }
+                            }
+                        }
                     }
-                    $htmlString = $htmlString . '</tr>';
+                    $htmlString .= '</tr>';
                 }
 
             }
         }
+
         $htmlString = $htmlString . '</table>';
 
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
@@ -939,6 +965,59 @@ class HomeController extends Controller
             'is_success'    =>  1,
             'doc_url'       =>  '/chrecorder/public/' . $fileName .'.csv',
         );
+    }
+
+    public function calcSummary($arrayRow) {
+        $returnValue = '';
+        $sum = 0;
+        $arrayLength = 0;
+        $tempRpArray = [];
+        $mean = '';
+        $range = '';
+        foreach ($arrayRow as $eachValue) {
+            if ($eachValue['header_id'] != 1) {
+                $sum = $sum + (float)$eachValue['value'];
+                if (number_format((float)$eachValue['value'], 2, '.', '') != 0.00) {
+                    array_push($tempRpArray, number_format((float)$eachValue['value'], 2, '.', ''));
+                    $arrayLength++;
+                }
+            }
+        }
+        if (count($tempRpArray) > 0) {
+            $mean = number_format((float)($sum / $arrayLength), 2, '.', '');
+
+            sort($tempRpArray);
+
+            $minValue = number_format((float)$tempRpArray[0], 2, '.', '');
+            $maxValue = number_format((float)$tempRpArray[count($tempRpArray) - 1], 2, '.', '');
+            $minPercentileValue = 0;
+            $maxPercentileValue = 0;
+
+            if (count($tempRpArray) % 2 == 0) {
+                $minPercentileValue = $tempRpArray[count($tempRpArray) / 2 - 1];
+                $maxPercentileValue = $tempRpArray[count($tempRpArray) / 2];
+            } else {
+                if (count($tempRpArray) == 1) {
+                    $minPercentileValue = $tempRpArray[0];
+                    $maxPercentileValue = $tempRpArray[0];
+                } else {
+                    $minPercentileValue = $tempRpArray[count($tempRpArray) / 2 - 1.5];
+                    $maxPercentileValue = $tempRpArray[count($tempRpArray) / 2 + 0.5];
+                }
+            }
+
+            $range = '';
+            if ($minValue == $maxValue) {
+                $range = (string)$minValue;
+            } else {
+                $range = '(' . (string)$minValue . '-)' . (string)$minPercentileValue . '-' . (string)$maxPercentileValue . '(-' . (string)$maxValue . ')';
+            }
+
+            $returnValue = 'mean=' . (string)$mean . ', ' . 'range=' . $range;
+        }
+
+
+        return $returnValue;
     }
 
     public function updateSummary(Request $request) {
