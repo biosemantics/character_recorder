@@ -53,18 +53,18 @@
                                     <a class="btn btn-primary" v-on:click="importMatrix()"
                                        style="width: 200px; background-color: grey; border-color: grey;">Import (CR)
                                         Matrix</a>
-                                    <a class="btn btn-primary" v-on:click="collapsedFlag = true;"
+                                    <a class="btn btn-primary" v-on:click="confirmCollapse();collapsedFlag = true;"
                                        style="width: 40px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
                                 </div>
                                 <div class="margin-top-10"
-                                     v-if="userCharacters.find(ch => ch.standard == 0 && ch.username.includes(user.name))">
+                                     v-if="userCharacters.find(ch => ch.standard == 0)">
                                     <h4><b><u>You've selected characters:</u></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="btn btn-add display-block" v-on:click="removeAllCharacters()"><span
                                                 class="glyphicon glyphicon-remove"
                                                 :set="previousUserCharacter=''"></span></a>
                                     </h4>
                                     <div v-for="eachCharacter in userCharacters"
-                                         v-if="eachCharacter.standard == 0 && eachCharacter.username.includes(user.name)"
+                                         v-if="eachCharacter.standard == 0"
                                          v-tooltip="eachCharacter.tooltip"
                                          style="display: table; font-weight: bold; cursor: pointer;">
                                         <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag">
@@ -83,18 +83,18 @@
                                     </div>
                                 </div>
                                 <div class="margin-top-10"
-                                     v-if="userCharacters.find(ch => ch.standard == 1 || !ch.username.includes(user.name))">
+                                     v-if="userCharacters.find(ch => ch.standard == 1)">
                                     <h4><b><u>You've selected recommended characters:</u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     </b>
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeAllStandardFlag = true;"><span
                                                 class="glyphicon glyphicon-remove"></span></a></h4>
-                                    <div v-for="eachTag in standardCharactersTags" style="display: table; cursor: pointer;">
+                                    <div v-for="eachTag in standardCharactersTags" v-if="userCharacters.find(ch => ch.standard_tag == eachTag && ch.standard == 1)" style="display: table; cursor: pointer;">
                                         <b>{{ eachTag }}</b>
                                         <div v-for="eachCharacter in userCharacters"
-                                            v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1 || !eachCharacter.username.includes(user.name))"
+                                            v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)"
                                             v-tooltip="eachCharacter.tooltip" style="text-indent: 50px;">
-                                            <i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <i v-bind:style="{color:userCharacters.filter(ch => ch.name == eachCharacter.name).length>1?'#dd6b20':'#636b6f'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <a class="btn btn-add display-block"
                                                    v-on:click="removeStandardCharacter(eachCharacter.id)"
                                                 ><span
@@ -124,7 +124,7 @@
                                     <a class="btn btn-primary" v-on:click="importMatrix()"
                                        style="width: 200px; background-color: grey; border-color: grey;">Import (CR)
                                         Matrix</a>
-                                    <a class="btn btn-primary" v-on:click="collapsedFlag = true;"
+                                    <a class="btn btn-primary" v-on:click="confirmCollapse();collapsedFlag = true;"
                                        style="width: 40px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
                                 </div>
                             </div>
@@ -353,7 +353,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input v-model="lastCharacter">
+                                                        <input v-model="lastCharacter" placeholder="enter a singular noun">
                                                     </div>
 
                                                     <!--<input autofocus v-model="character.name" v-on:input="checkMsg"/>-->
@@ -592,8 +592,7 @@
                                             character.name }}</i>.
                                         </div>
                                         <div v-if="!character.summary">
-                                            Summary function not selected. Categorical characters do not need a summary
-                                            function.
+                                            Summary function not selected. Categorical characters do not need a summary function.
                                         </div>
                                         <div class="modal-footer">
                                             <a class="btn btn-primary ok-btn"
@@ -637,422 +636,428 @@
                         <div class="modal-mask">
                             <div class="modal-wrapper">
                                 <div class="modal-container">
-                                    <div class="modal-header">
-                                        <b>{{ currentCharacter.name }}</b> <br/>
-                                        <hr>
-                                        <div v-if="existColorDetails.length > 0"
-                                             style="border-radius: 5px; border: 1px solid; padding: 15px;">
-                                            <div style="float: right;">
-                                                <a class="btn btn-primary" v-if="existColorDetailsFlag == false"
-                                                   v-on:click="existColorDetailsFlag = true;">
-                                                    <span class="glyphicon glyphicon-chevron-down"></span>
-                                                </a>
-                                                <a class="btn btn-primary" v-if="existColorDetailsFlag == true"
-                                                   v-on:click="existColorDetailsFlag = false;">
-                                                    <span class="glyphicon glyphicon-chevron-up"></span>
-                                                </a>
+                                    <div style="max-height:800px; overflow-y:scroll;">
+                                        <div class="modal-header">
+                                            <b>{{ currentCharacter.name }}</b> <br/>
+                                            <hr>
+                                            <div v-if="existColorDetails.length > 0"
+                                                style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                                <div style="float: right;">
+                                                    <a class="btn btn-primary" v-if="existColorDetailsFlag == false"
+                                                    v-on:click="existColorDetailsFlag = true;">
+                                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                                    </a>
+                                                    <a class="btn btn-primary" v-if="existColorDetailsFlag == true"
+                                                    v-on:click="existColorDetailsFlag = false;">
+                                                        <span class="glyphicon glyphicon-chevron-up"></span>
+                                                    </a>
+                                                </div>
+
+                                                <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
+                                                    <div>
+                                                        <b>Values used before for this character and taxon</b>
+                                                    </div>
+                                                    <table class="table table-bordered"
+                                                        v-if="existColorDetailsFlag == true">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>
+                                                                negation
+                                                            </th>
+                                                            <th>
+                                                                pre constraint
+                                                            </th>
+                                                            <th>
+                                                                certainty constraint
+                                                            </th>
+                                                            <th>
+                                                                degree constraint
+                                                            </th>
+                                                            <th>
+                                                                brightness
+                                                            </th>
+                                                            <th>
+                                                                reflectance
+                                                            </th>
+                                                            <th>
+                                                                saturation
+                                                            </th>
+                                                            <th>
+                                                                color
+                                                            </th>
+                                                            <th>
+                                                                pattern
+                                                            </th>
+                                                            <th>
+                                                                post constraint
+                                                            </th>
+                                                            <th>
+                                                                count
+                                                            </th>
+                                                            <th>
+                                                                author
+                                                            </th>
+                                                            <th>
+
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr v-for="eachDetails in existColorDetails">
+                                                            <td>
+                                                                {{ eachDetails.negation }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.pre_constraint }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.certainty_constraint }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.degree_constraint }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.brightness }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.reflectance }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.saturation }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.colored }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.multi_colored }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.post_constraint }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.count }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.username }}
+                                                            </td>
+                                                            <td>
+                                                                <a class="btn btn-primary"
+                                                                v-on:click="selectExistDetails(eachDetails)">Use this</a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
                                             </div>
 
-                                            <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
+                                            <div v-if="colorDetails.length > 0"
+                                                style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
+                                                <div style="float: right;">
+                                                    <a class="btn btn-primary" v-if="currentColorValueExist == false"
+                                                    v-on:click="currentColorValueExist = true;">
+                                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                                    </a>
+                                                    <a class="btn btn-primary" v-if="currentColorValueExist == true"
+                                                    v-on:click="currentColorValueExist = false;">
+                                                        <span class="glyphicon glyphicon-chevron-up"></span>
+                                                    </a>
+                                                </div>
                                                 <div>
-                                                    <b>Values used before for this character and taxon</b>
+                                                    <b>Current values</b>
                                                 </div>
-                                                <table class="table table-bordered"
-                                                       v-if="existColorDetailsFlag == true">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>
+                                                <div v-for="(eachColor, index) in colorDetails"
+                                                    v-if="currentColorValueExist == true" style="margin-top: 5px;"
+                                                    class="row">
+                                                    <div class="col-md-6">
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.negation != null">
+                                                            {{ eachColor.negation }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.pre_constraint != null">
+                                                            {{ eachColor.pre_constraint }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.certainty_constraint != null">
+                                                            {{ eachColor.certainty_constraint }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.degree_constraint != null">
+                                                            {{ eachColor.degree_constraint }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.brightness != null">
+                                                            {{ eachColor.brightness }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.reflectance != null">
+                                                            {{ eachColor.reflectance }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.saturation != null">
+                                                            {{ eachColor.saturation }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.colored != null">
+                                                            {{ eachColor.colored }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.multi_colored != null">
+                                                            {{ eachColor.multi_colored }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachColor.post_constraint != null">
+                                                            {{ eachColor.post_constraint }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <a class="btn btn-primary" style="padding: 3px 6px;"
+                                                        v-on:click="editEachColor(eachColor)">Edit</a>
+                                                        <a class="btn btn-primary" style="padding: 3px 6px;"
+                                                        v-on:click="removeEachColor(eachColor)">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-body">
+
+                                            <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                                <div>
+                                                    <b>Formulate a value:</b> type in a blank to select existing phrases or
+                                                    use your own terms(need
+                                                    definition)
+                                                </div>
+                                                <div>
+                                                    <div style="display: inline-block;">
+                                                        <!-- <input v-on:focus="changeColorSection(currentColorValue, 'negation', $event)"
+                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
+                                                            v-model="currentColorValue.negation" placeholder=""> -->
+                                                        <select style="width: 90px; height: 26px;"
+                                                                v-model="currentNonColorValue.negation"
+                                                                v-on:change="changeColorSection(currentNonColorValue, 'negation', $event)">
+                                                            <option value=""></option>
+                                                            <option value="not">not</option>
+                                                        </select>
+                                                        <h5>
                                                             negation
-                                                        </th>
-                                                        <th>
-                                                            pre constraint
-                                                        </th>
-                                                        <th>
-                                                            certainty constraint
-                                                        </th>
-                                                        <th>
-                                                            degree constraint
-                                                        </th>
-                                                        <th>
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeColorSection(currentColorValue, 'pre_constraint', $event)"
+                                                            style="width: 90px; height: 26px;"
+                                                            v-model="currentColorValue.pre_constraint"
+                                                            list="pre_list">
+                                                        <datalist id="pre_list">
+                                                            <option v-for="each in preList" :value="each">{{ each }}
+                                                            </option>
+                                                        </datalist>
+                                                        <h5>
+                                                            pre-constraint
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <select style="width: 90px; height: 26px;"
+                                                                v-model="currentColorValue.certainty_constraint"
+                                                                v-on:change="changeColorSection(currentColorValue, 'certainty_constraint', $event)">
+                                                            <option value=""></option>
+                                                            <option value="doubtfully">doubtfully</option>
+                                                            <option value="possibly">possibly</option>
+                                                            <option value="presumably">presumably</option>
+                                                            <option value="approximately">approximately</option>
+                                                            <option value="definitely">definitely</option>
+                                                        </select>
+                                                        <h5>
+                                                            certainty-constraint
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <select style="width: 90px; height: 26px;"
+                                                                v-model="currentColorValue.degree_constraint"
+                                                                v-on:change="changeColorSection(currentColorValue, 'degree_constraint', $event)">
+                                                            <option value=""></option>
+                                                            <option value="imperceptibly">imperceptibly</option>
+                                                            <option value="scarcely">scarcely</option>
+                                                            <option value="moderately">moderately</option>
+                                                            <option value="considerably">considerably</option>
+                                                            <option value="extremely">extremely</option>
+                                                        </select>
+                                                        <h5>
+                                                            degree-constraint
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeColorSection(currentColorValue, 'brightness', $event)"
+                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'brightness')"
+                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
+                                                            v-model="currentColorValue.brightness"
+                                                            class="color-input">
+                                                        <h5>
                                                             brightness
-                                                        </th>
-                                                        <th>
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeColorSection(currentColorValue, 'reflectance', $event)"
+                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'reflectance')"
+                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
+                                                            v-model="currentColorValue.reflectance"
+                                                            class="color-input">
+                                                        <h5>
                                                             reflectance
-                                                        </th>
-                                                        <th>
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeColorSection(currentColorValue, 'saturation', $event)"
+                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'saturation')"
+                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
+                                                            v-model="currentColorValue.saturation"
+                                                            class="color-input">
+                                                        <h5>
                                                             saturation
-                                                        </th>
-                                                        <th>
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeColorSection(currentColorValue, 'colored', $event)"
+                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'colored')"
+                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
+                                                            v-model="currentColorValue.colored"
+                                                            class="color-input">
+                                                        <h5>
                                                             color
-                                                        </th>
-                                                        <th>
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeColorSection(currentColorValue, 'multi_colored', $event)"
+                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'multi_colored')"
+                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
+                                                            v-model="currentColorValue.multi_colored"
+                                                            class="color-input">
+                                                        <h5>
                                                             pattern
-                                                        </th>
-                                                        <th>
-                                                            post constraint
-                                                        </th>
-                                                        <th>
-                                                            count
-                                                        </th>
-                                                        <th>
-                                                            author
-                                                        </th>
-                                                        <th>
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeColorSection(currentColorValue, 'post_constraint', $event)"
+                                                            style="width: 90px;"
+                                                            v-model="currentColorValue.post_constraint"
+                                                            list="post_list">
+                                                        <datalist id="post_list">
+                                                            <option v-for="each in postList" :value="each">{{ each }}
+                                                            </option>
+                                                        </datalist>
+                                                        <h5>
+                                                            post-constraint
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                                <div v-if="currentColorValue.detailFlag == 'negation'"
+                                                    style="margin-top: 10px;">
+                                                    <input type="radio" id="not" v-model="currentColorValue.negation"
+                                                        v-bind:value="'Not'"/> <label for="not">Not</label> <br/>
+                                                    <input type="radio" id="unselect-not"
+                                                        v-model="currentColorValue.negation"
+                                                        v-bind:value="''"/> <label for="unselect-not">Unselect
+                                                    Not</label>
+                                                </div>
+                                                <div v-if="(currentColorValue.detailFlag == 'brightness'
+                                                || currentColorValue.detailFlag == 'reflectance'
+                                                || currentColorValue.detailFlag == 'saturation'
+                                                || currentColorValue.detailFlag == 'colored'
+                                                || currentColorValue.detailFlag == 'multi_colored') && colorExistFlag"
+                                                    style="margin-top: 10px;">
+                                                    <!--<input style="width: 300px;" v-model="colorSearchText" placeholder="Enter a term to filter the term tree"/>-->
+                                                    <tree
+                                                            :data="treeData"
+                                                            :options="colorTreeOption"
+                                                            :filter="filterFlag?currentColorValue[currentColorValue.detailFlag]:null"
+                                                            ref="colorTree"
+                                                            @node:selected="onTreeNodeSelected"
+                                                            style="max-height: 300px;">
+                                                        <div slot-scope="{ node }" class="node-container">
+                                                            <div class="node-text" v-tooltip="node.text">{{ node.text }}
+                                                            </div>
+                                                        </div>
+                                                    </tree>
+                                                </div>
+                                                <div v-if="(currentColorValue.detailFlag == 'brightness'
+                                                || currentColorValue.detailFlag == 'reflectance'
+                                                || currentColorValue.detailFlag == 'saturation'
+                                                || currentColorValue.detailFlag == 'colored'
+                                                || currentColorValue.detailFlag == 'multi_colored') && !colorExistFlag"
+                                                    style="margin-top: 10px;">
 
-                                                        </th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr v-for="eachDetails in existColorDetails">
-                                                        <td>
-                                                            {{ eachDetails.negation }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.pre_constraint }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.certainty_constraint }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.degree_constraint }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.brightness }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.reflectance }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.saturation }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.colored }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.multi_colored }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.post_constraint }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.count }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.username }}
-                                                        </td>
-                                                        <td>
-                                                            <a class="btn btn-primary"
-                                                               v-on:click="selectExistDetails(eachDetails)">Use this</a>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-
-                                            </div>
-                                        </div>
-
-                                        <div v-if="colorDetails.length > 0"
-                                             style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
-                                            <div style="float: right;">
-                                                <a class="btn btn-primary" v-if="currentColorValueExist == false"
-                                                   v-on:click="currentColorValueExist = true;">
-                                                    <span class="glyphicon glyphicon-chevron-down"></span>
-                                                </a>
-                                                <a class="btn btn-primary" v-if="currentColorValueExist == true"
-                                                   v-on:click="currentColorValueExist = false;">
-                                                    <span class="glyphicon glyphicon-chevron-up"></span>
-                                                </a>
-                                            </div>
-                                            <div>
-                                                <b>Current values</b>
-                                            </div>
-                                            <div v-for="(eachColor, index) in colorDetails"
-                                                 v-if="currentColorValueExist == true" style="margin-top: 5px;"
-                                                 class="row">
-                                                <div class="col-md-6">
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.negation != null">
-                                                        {{ eachColor.negation }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.pre_constraint != null">
-                                                        {{ eachColor.pre_constraint }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.certainty_constraint != null">
-                                                        {{ eachColor.certainty_constraint }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.degree_constraint != null">
-                                                        {{ eachColor.degree_constraint }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.brightness != null">
-                                                        {{ eachColor.brightness }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.reflectance != null">
-                                                        {{ eachColor.reflectance }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.saturation != null">
-                                                        {{ eachColor.saturation }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.colored != null">
-                                                        {{ eachColor.colored }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.multi_colored != null">
-                                                        {{ eachColor.multi_colored }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachColor.post_constraint != null">
-                                                        {{ eachColor.post_constraint }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <a class="btn btn-primary" style="padding: 3px 6px;"
-                                                       v-on:click="editEachColor(eachColor)">Edit</a>
-                                                    <a class="btn btn-primary" style="padding: 3px 6px;"
-                                                       v-on:click="removeEachColor(eachColor)">Remove</a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="modal-body">
-
-                                        <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
-                                            <div>
-                                                <b>Formulate a value:</b> type in a blank to select existing phrases or
-                                                use your own terms(need
-                                                definition)
-                                            </div>
-                                            <div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(currentColorValue, 'negation', $event)"
-                                                           style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="currentColorValue.negation" placeholder="">
-                                                    <h5>
-                                                        negation
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(currentColorValue, 'pre_constraint', $event)"
-                                                           style="width: 90px; height: 26px;"
-                                                           v-model="currentColorValue.pre_constraint"
-                                                           list="pre_list">
-                                                    <datalist id="pre_list">
-                                                        <option v-for="each in preList" :value="each">{{ each }}
-                                                        </option>
-                                                    </datalist>
-                                                    <h5>
-                                                        pre-constraint
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <select style="width: 90px; height: 26px;"
-                                                            v-model="currentColorValue.certainty_constraint"
-                                                            v-on:change="changeColorSection(currentColorValue, 'certainty_constraint', $event)">
-                                                        <option value=""></option>
-                                                        <option value="doubtfully">doubtfully</option>
-                                                        <option value="possibly">possibly</option>
-                                                        <option value="presumably">presumably</option>
-                                                        <option value="approximately">approximately</option>
-                                                        <option value="definitely">definitely</option>
-                                                    </select>
-                                                    <h5>
-                                                        certainty-constraint
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <select style="width: 90px; height: 26px;"
-                                                            v-model="currentColorValue.degree_constraint"
-                                                            v-on:change="changeColorSection(currentColorValue, 'degree_constraint', $event)">
-                                                        <option value=""></option>
-                                                        <option value="imperceptibly">imperceptibly</option>
-                                                        <option value="scarcely">scarcely</option>
-                                                        <option value="moderately">moderately</option>
-                                                        <option value="considerably">considerably</option>
-                                                        <option value="extremely">extremely</option>
-                                                    </select>
-                                                    <h5>
-                                                        degree-constraint
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(currentColorValue, 'brightness', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'brightness')"
-                                                           style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="currentColorValue.brightness"
-                                                           class="color-input">
-                                                    <h5>
-                                                        brightness
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(currentColorValue, 'reflectance', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'reflectance')"
-                                                           style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="currentColorValue.reflectance"
-                                                           class="color-input">
-                                                    <h5>
-                                                        reflectance
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(currentColorValue, 'saturation', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'saturation')"
-                                                           style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="currentColorValue.saturation"
-                                                           class="color-input">
-                                                    <h5>
-                                                        saturation
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(currentColorValue, 'colored', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'colored')"
-                                                           style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="currentColorValue.colored"
-                                                           class="color-input">
-                                                    <h5>
-                                                        color
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(currentColorValue, 'multi_colored', $event)"
-                                                           v-on:keyup.enter="searchColorSelection(currentColorValue, 'multi_colored')"
-                                                           style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="currentColorValue.multi_colored"
-                                                           class="color-input">
-                                                    <h5>
-                                                        pattern
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeColorSection(currentColorValue, 'post_constraint', $event)"
-                                                           style="width: 90px;"
-                                                           v-model="currentColorValue.post_constraint"
-                                                           list="post_list">
-                                                    <datalist id="post_list">
-                                                        <option v-for="each in postList" :value="each">{{ each }}
-                                                        </option>
-                                                    </datalist>
-                                                    <h5>
-                                                        post-constraint
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                            <div v-if="currentColorValue.detailFlag == 'negation'"
-                                                 style="margin-top: 10px;">
-                                                <input type="radio" id="not" v-model="currentColorValue.negation"
-                                                       v-bind:value="'Not'"/> <label for="not">Not</label> <br/>
-                                                <input type="radio" id="unselect-not"
-                                                       v-model="currentColorValue.negation"
-                                                       v-bind:value="''"/> <label for="unselect-not">Unselect
-                                                Not</label>
-                                            </div>
-                                            <div v-if="(currentColorValue.detailFlag == 'brightness'
-                                            || currentColorValue.detailFlag == 'reflectance'
-                                            || currentColorValue.detailFlag == 'saturation'
-                                            || currentColorValue.detailFlag == 'colored'
-                                            || currentColorValue.detailFlag == 'multi_colored') && colorExistFlag"
-                                                 style="margin-top: 10px;">
-                                                <!--<input style="width: 300px;" v-model="colorSearchText" placeholder="Enter a term to filter the term tree"/>-->
-                                                <tree
-                                                        :data="treeData"
-                                                        :options="colorTreeOption"
-                                                        :filter="currentColorValue[currentColorValue.detailFlag]"
-                                                        ref="tree"
-                                                        @node:selected="onTreeNodeSelected"
-                                                        style="max-height: 300px;">
-                                                    <div slot-scope="{ node }" class="node-container">
-                                                        <div class="node-text" v-tooltip="node.text">{{ node.text }}
+                                                    <div v-for="flag in colorFlags" v-if="colorSynonyms[flag]" :key="flag">
+                                                        <big>{{flag}}</big>
+                                                        <div style="margin-left:20px">
+                                                            <div v-for="eachSynonym in colorSynonyms[flag]">
+                                                                <b>Did you mean?</b>
+                                                                <input type="radio" v-bind:id="eachSynonym.term"
+                                                                    v-bind:value="eachSynonym.term"
+                                                                    v-on:change="selectedSynonymForColor(flag)"
+                                                                    v-model="currentColorValue[flag]">
+                                                                <label v-bind:for="eachSynonym.term"> {{ eachSynonym.term }} ({{
+                                                                    eachSynonym.parentTerm }}): </label> {{
+                                                                eachSynonym.definition ? eachSynonym.definition : 'No definition' }}
+                                                                <!-- <a class="btn"
+                                                                v-on:click="expandCommentSection(eachSynonym, currentColorValue.detailFlag)"><span
+                                                                        class="glyphicon glyphicon-comment"></span></a>
+                                                                <div v-if="eachSynonym.commentFlag == true">
+                                                                    Do not like this term? improve or add definition for it:
+                                                                    <input
+                                                                            v-model="colorComment[currentColorValue.detailFlag]"
+                                                                            style="width: 100%;">
+                                                                </div> -->
+                                                            </div>
+                                                            <input type="radio" id="user-defined"
+                                                                v-bind:value="defaultColorValue[flag]"
+                                                                v-on:change="selectUserDefinedTerm(currentColorValue, flag, defaultColorValue[flag])"
+                                                                v-model="currentColorValue[flag]">
+                                                            <label for="user-defined">Use my term '{{ defaultColorValue[flag] }}'(as a
+                                                                {{ changeFlagToLabel(flag) }}). Please
+                                                                define the term, all input required:</label>
+                                                            <div for="user-defined">
+                                                                Definition: <input
+                                                                    v-model="userColorDefinition[flag]"
+                                                                    class="color-definition-input">
+                                                                Used for Taxon:
+                                                                <input v-model="colorTaxon[flag]"
+                                                                    class="color-definition-input">
+                                                                Sample Sentence:
+                                                                <input
+                                                                        v-model="colorSampleText[flag]"
+                                                                        class="color-definition-input" placeholder=""><br/>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </tree>
-                                            </div>
-                                            <div v-if="(currentColorValue.detailFlag == 'brightness'
-                                            || currentColorValue.detailFlag == 'reflectance'
-                                            || currentColorValue.detailFlag == 'saturation'
-                                            || currentColorValue.detailFlag == 'colored'
-                                            || currentColorValue.detailFlag == 'multi_colored') && !colorExistFlag"
-                                                 style="margin-top: 10px;">
+                                                    <div v-if="searchColorFlag == 2">
+                                                        Did you mean <b>{{ exactColor.term }}</b>?<br/>
+                                                        Definition of <b> {{ exactColor.term }} </b>: <input
+                                                            v-model="colorDefinition[currentColorValue.detailFlag]"
+                                                            style="width: 70%;">
+                                                        <!--Hong modified this: Did you mean <b>{{ exactColor.term }}</b>?<br/>
+                                                        Current Definition: <input
+                                                            v-model="app.exactColor.definition"
+                                                            style="width: 70%;">   -->
+                                                        <br/><br/>If definition is lacking, you can propose or edit the
+                                                        definition above. <br/>
 
-                                                <div v-if="searchColorFlag == 1">
-                                                    <div v-for="eachSynonym in colorSynonyms">
-                                                        <b>Did you mean?</b>
-                                                        <input type="radio" v-bind:id="eachSynonym.term"
-                                                               v-bind:value="eachSynonym.term"
-                                                               v-on:change="selectedSynonymForColor(currentColorValue.detailFlag)"
-                                                               v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                        <label v-bind:for="eachSynonym.term"> {{ eachSynonym.term }} ({{
-                                                            eachSynonym.parentTerm }}): </label> {{
-                                                        eachSynonym.definition ? eachSynonym.definition : 'No definition' }}
-                                                        <a class="btn"
-                                                           v-on:click="expandCommentSection(eachSynonym, currentColorValue.detailFlag)"><span
-                                                                class="glyphicon glyphicon-comment"></span></a>
-                                                        <div v-if="eachSynonym.commentFlag == true">
-                                                            Do not like this term? improve or add definition for it:
-                                                            <input
-                                                                    v-model="colorComment[currentColorValue.detailFlag]"
-                                                                    style="width: 100%;">
-                                                        </div>
+
                                                     </div>
-                                                </div>
-                                                <div v-if="searchColorFlag == 2">
-                                                    Did you mean <b>{{ exactColor.term }}</b>?<br/>
-                                                    Definition of <b> {{ exactColor.term }} </b>: <input
-                                                        v-model="colorDefinition[currentColorValue.detailFlag]"
-                                                        style="width: 70%;">
-                                                    <!--Hong modified this: Did you mean <b>{{ exactColor.term }}</b>?<br/>
-                                                    Current Definition: <input
-                                                        v-model="app.exactColor.definition"
-                                                        style="width: 70%;">   -->
-                                                    <br/><br/>If definition is lacking, you can propose or edit the
-                                                    definition above. <br/>
-
-
-                                                </div>
-                                                <div v-if="searchColorFlag !=2"
-                                                     v-for="(eachOption, index) in extraColors">
-                                                    <input type="radio"
-                                                           v-bind:id="'extra-option-' + index"
-                                                           value=""
-                                                           v-on:change="selectExtraOption(eachOption.flag, eachOption.value, currentColorValue.detailFlag)"
-                                                           v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label v-bind:for="'extra-option-' + index">{{ eachOption.value }}
-                                                        describes {{ changeFlagToLabel(eachOption.flag) }}, move {{
-                                                        eachOption.value }} to {{ changeFlagToLabel(eachOption.flag)
-                                                        }}</label>
-                                                </div>
-                                                <div v-if="searchColorFlag !=2 ">
-                                                    <!--<input type="radio" id="user-defined"-->
-                                                    <!--v-bind:value="defaultColorValue + '(user defined)'"-->
-                                                    <!--v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"-->
-                                                    <!--v-model="currentColorValue[currentColorValue.detailFlag]">-->
-                                                    <input type="radio" id="user-defined"
-                                                           v-bind:value="defaultColorValue"
-                                                           v-on:change="selectUserDefinedTerm(currentColorValue, currentColorValue.detailFlag, defaultColorValue)"
-                                                           v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                    <label for="user-defined">Use my term '{{ defaultColorValue }}'(as a
-                                                        {{ changeFlagToLabel(currentColorValue.detailFlag) }}). Please
-                                                        define the term, all input required:</label>
-                                                    <div for="user-defined">
-                                                        Definition: <input
-                                                            v-model="userColorDefinition[currentColorValue.detailFlag]"
-                                                            class="color-definition-input">
-                                                        Used for Taxon:
-                                                        <input v-model="colorTaxon[currentColorValue.detailFlag]"
-                                                               class="color-definition-input">
-                                                        Sample Sentence:
-                                                        <input
-                                                                v-model="colorSampleText[currentColorValue.detailFlag]"
-                                                                class="color-definition-input" placeholder=""><br/>
-                                                    </div>
+                                                    <!-- <div v-if="searchColorFlag !=2"
+                                                        v-for="(eachOption, index) in extraColors">
+                                                        <input type="radio"
+                                                            v-bind:id="'extra-option-' + index"
+                                                            value=""
+                                                            v-on:change="selectExtraOption(eachOption.flag, eachOption.value, currentColorValue.detailFlag)"
+                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
+                                                        <label v-bind:for="'extra-option-' + index">{{ eachOption.value }}
+                                                            describes {{ changeFlagToLabel(eachOption.flag) }}, move {{
+                                                            eachOption.value }} to {{ changeFlagToLabel(eachOption.flag)
+                                                            }}</label>
+                                                    </div> -->
+                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -1088,320 +1093,319 @@
                         <div class="modal-mask">
                             <div class="modal-wrapper">
                                 <div class="modal-container">
-                                    <div class="modal-header">
-                                        <b>{{ currentCharacter.name }}</b> <br/>
-                                        <hr>
-                                        <div v-if="existNonColorDetails.length > 0"
-                                             style="border-radius: 5px; border: 1px solid; padding: 15px;">
-                                            <div style="float: right;">
-                                                <a class="btn btn-primary" v-if="existNonColorDetailsFlag == false"
-                                                   v-on:click="existNonColorDetailsFlag = true;">
-                                                    <span class="glyphicon glyphicon-chevron-down"></span>
-                                                </a>
-                                                <a class="btn btn-primary" v-if="existNonColorDetailsFlag == true"
-                                                   v-on:click="existNonColorDetailsFlag = false;">
-                                                    <span class="glyphicon glyphicon-chevron-up"></span>
-                                                </a>
-                                            </div>
+                                    <div style="max-height:800px; overflow-y:scroll;">
+                                        <div class="modal-header">
+                                            <b>{{ currentCharacter.name }}</b> <br/>
+                                            <hr>
+                                            <div v-if="existNonColorDetails.length > 0"
+                                                style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                                <div style="float: right;">
+                                                    <a class="btn btn-primary" v-if="existNonColorDetailsFlag == false"
+                                                    v-on:click="existNonColorDetailsFlag = true;">
+                                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                                    </a>
+                                                    <a class="btn btn-primary" v-if="existNonColorDetailsFlag == true"
+                                                    v-on:click="existNonColorDetailsFlag = false;">
+                                                        <span class="glyphicon glyphicon-chevron-up"></span>
+                                                    </a>
+                                                </div>
 
-                                            <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
+                                                <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
+                                                    <div>
+                                                        <b>Values used before for this character and taxon</b>
+                                                    </div>
+                                                    <table class="table table-bordered"
+                                                        v-if="existNonColorDetailsFlag == true">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>
+                                                                negation
+                                                            </th>
+                                                            <th>
+                                                                pre constraint
+                                                            </th>
+                                                            <th>
+                                                                certainty constraint
+                                                            </th>
+                                                            <th>
+                                                                degree constraint
+                                                            </th>
+                                                            <th>
+                                                                {{ currentNonColorValue.placeholderName }}
+                                                            </th>
+                                                            <th>
+                                                                post constraint
+                                                            </th>
+                                                            <th>
+                                                                count
+                                                            </th>
+                                                            <th>
+                                                                author
+                                                            </th>
+                                                            <th>
+
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr v-for="eachDetails in existNonColorDetails">
+                                                            <td>
+                                                                {{ eachDetails.negation }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.pre_constraint }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.certainty_constraint }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.degree_constraint }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.main_value }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.post_constraint }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.count }}
+                                                            </td>
+                                                            <td>
+                                                                {{ eachDetails.username }}
+                                                            </td>
+                                                            <td>
+                                                                <a class="btn btn-primary"
+                                                                v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                            <div v-if="nonColorDetails.length > 0"
+                                                style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
+                                                <div style="float: right;">
+                                                    <a class="btn btn-primary" v-if="currentNonColorValueExist == false"
+                                                    v-on:click="currentNonColorValueExist = true;">
+                                                        <span class="glyphicon glyphicon-chevron-down"></span>
+                                                    </a>
+                                                    <a class="btn btn-primary" v-if="currentNonColorValueExist == true"
+                                                    v-on:click="currentNonColorValueExist = false;">
+                                                        <span class="glyphicon glyphicon-chevron-up"></span>
+                                                    </a>
+                                                </div>
                                                 <div>
-                                                    <b>Values used before for this character and taxon</b>
+                                                    <b>Current values</b>
                                                 </div>
-                                                <table class="table table-bordered"
-                                                       v-if="existNonColorDetailsFlag == true">
-                                                    <thead>
-                                                    <tr>
-                                                        <th>
+                                                <div v-for="(eachValue, index) in nonColorDetails"
+                                                    v-if="currentNonColorValueExist == true" class="row"
+                                                    style="margin-top: 5px;">
+                                                    <div class="col-md-6">
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachValue.negation != null">
+                                                            {{ eachValue.negation }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachValue.pre_constraint != null">
+                                                            {{ eachValue.pre_constraint }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachValue.certainty_constraint != null">
+                                                            {{ eachValue.certainty_constraint }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachValue.degree_constraint != null">
+                                                            {{ eachValue.degree_constraint }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachValue.main_value != null">
+                                                            {{ eachValue.main_value }}
+                                                        </div>
+                                                        <div style="display: inline-block;"
+                                                            v-if="eachValue.post_constraint != null">
+                                                            {{ eachValue.post_constraint }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <a class="btn btn-primary" style="padding: 3px 6px;"
+                                                        v-on:click="editEachNonColor(eachValue)">Edit</a>
+                                                        <a class="btn btn-primary" style="padding: 3px 6px;"
+                                                        v-on:click="removeEachNonColor(eachValue)">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="modal-body">
+
+                                            <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                                <div>
+                                                    <b>Formulate a value:</b> select existing phrases or use your own
+                                                    terms(need
+                                                    definition)
+                                                </div>
+                                                <div>
+                                                    <div style="display: inline-block;">
+                                                        <!-- <input v-on:focus="changeNonColorSection(currentNonColorValue, 'negation', $event)"
+                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
+                                                            v-model="currentNonColorValue.negation" placeholder=""> -->
+                                                        <select style="width: 90px; height: 26px;"
+                                                                v-model="currentNonColorValue.negation"
+                                                                v-on:change="changeNonColorSection(currentNonColorValue, 'negation', $event)">
+                                                            <option value=""></option>
+                                                            <option value="not">not</option>
+                                                        </select>
+                                                        <h5>
                                                             negation
-                                                        </th>
-                                                        <th>
-                                                            pre constraint
-                                                        </th>
-                                                        <th>
-                                                            certainty constraint
-                                                        </th>
-                                                        <th>
-                                                            degree constraint
-                                                        </th>
-                                                        <th>
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeNonColorSection(currentNonColorValue, 'pre_constraint', $event)"
+                                                            style="width: 90px; height: 26px;"
+                                                            v-model="currentNonColorValue.pre_constraint"
+                                                            list="pre_non_list">
+                                                        <datalist id="pre_non_list">
+                                                            <option v-for="each in preList" :value="each">{{ each }}
+                                                            </option>
+                                                        </datalist>
+                                                        <h5>
+                                                            pre-constraint
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <select style="width: 90px; height: 26px;"
+                                                                v-model="currentNonColorValue.certainty_constraint"
+                                                                v-on:change="changeNonColorSection(currentNonColorValue, 'certainty_constraint', $event)">
+                                                            <option value=""></option>
+                                                            <option value="doubtfully">doubtfully</option>
+                                                            <option value="possibly">possibly</option>
+                                                            <option value="presumably">presumably</option>
+                                                            <option value="approximately">approximately</option>
+                                                            <option value="definitely">definitely</option>
+                                                        </select>
+                                                        <h5>
+                                                            certainty-constraint
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <select style="width: 90px; height: 26px;"
+                                                                v-model="currentNonColorValue.degree_constraint"
+                                                                v-on:change="changeNonColorSection(currentNonColorValue, 'degree_constraint', $event)">
+                                                            <option value=""></option>
+                                                            <option value="imperceptibly">imperceptibly</option>
+                                                            <option value="scarcely">scarcely</option>
+                                                            <option value="moderately">moderately</option>
+                                                            <option value="considerably">considerably</option>
+                                                            <option value="extremely">extremely</option>
+                                                        </select>
+                                                        <h5>
+                                                            degree-constraint
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeNonColorSection(currentNonColorValue, 'main_value', $event)"
+                                                            v-on:keyup.enter="searchNonColorSelection(currentNonColorValue, 'main_value')"
+                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
+                                                            v-model="currentNonColorValue.main_value"
+                                                            >
+                                                        <h5>
                                                             {{ currentNonColorValue.placeholderName }}
-                                                        </th>
-                                                        <th>
-                                                            post constraint
-                                                        </th>
-                                                        <th>
-                                                            count
-                                                        </th>
-                                                        <th>
-                                                            author
-                                                        </th>
-                                                        <th>
+                                                        </h5>
+                                                    </div>
+                                                    <div style="display: inline-block;">
+                                                        <input v-on:focus="changeNonColorSection(currentNonColorValue, 'post_constraint', $event)"
+                                                            style="width: 90px;"
+                                                            v-model="currentNonColorValue.post_constraint"
+                                                            list="post_non_list">
+                                                        <datalist id="post_non_list" v-if="postList.length > 0">
+                                                            <option v-for="each in postList" :value="each">{{ each }}
+                                                            </option>
+                                                        </datalist>
+                                                        <h5>
+                                                            post-constraint
+                                                        </h5>
+                                                    </div>
+                                                </div>
+                                                <!-- <div v-if="currentNonColorValue.detailFlag == 'negation'"
+                                                    style="margin-top: 10px;">
+                                                    <input type="radio" id="non-not" v-model="currentNonColorValue.negation"
+                                                        v-bind:value="'Not'"/> <label for="non-not">Not</label> <br/>
+                                                    <input type="radio" id="non-unselect-not"
+                                                        v-model="currentNonColorValue.negation"
+                                                        v-bind:value="''"/> <label for="non-unselect-not">Unselect
+                                                    Not</label>
+                                                </div> -->
+                                                <div v-if="(currentNonColorValue.detailFlag == 'main_value') && nonColorExistFlag"
+                                                    style="margin-top: 10px;">
+                                                    <!--<input style="width: 300px;" v-model="nonColorSearchText" placeholder="Enter a term to filter the term tree"/>-->
+                                                    <tree
+                                                            :data="textureTreeData"
+                                                            :options="colorTreeOption"
+                                                            :filter="filterFlag?currentNonColorValue.main_value:null"
+                                                            ref="nonColorTree"
+                                                            @node:selected="onTextureTreeNodeSelected"
+                                                            style="max-height: 300px;">
+                                                        <div slot-scope="{ node }" class="node-container">
+                                                            <div class="node-text" v-tooltip="node.text">{{ node.text }}
+                                                            </div>
+                                                        </div>
+                                                    </tree>
+                                                </div>
+                                                <div v-if="(currentNonColorValue.detailFlag == 'main_value') && !nonColorExistFlag"
+                                                    style="margin-top: 10px;">
 
-                                                        </th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr v-for="eachDetails in existNonColorDetails">
-                                                        <td>
-                                                            {{ eachDetails.negation }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.pre_constraint }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.certainty_constraint }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.degree_constraint }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.main_value }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.post_constraint }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.count }}
-                                                        </td>
-                                                        <td>
-                                                            {{ eachDetails.username }}
-                                                        </td>
-                                                        <td>
-                                                            <a class="btn btn-primary"
-                                                               v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
-                                                </table>
-
-                                            </div>
-                                        </div>
-                                        <div v-if="nonColorDetails.length > 0"
-                                             style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
-                                            <div style="float: right;">
-                                                <a class="btn btn-primary" v-if="currentNonColorValueExist == false"
-                                                   v-on:click="currentNonColorValueExist = true;">
-                                                    <span class="glyphicon glyphicon-chevron-down"></span>
-                                                </a>
-                                                <a class="btn btn-primary" v-if="currentNonColorValueExist == true"
-                                                   v-on:click="currentNonColorValueExist = false;">
-                                                    <span class="glyphicon glyphicon-chevron-up"></span>
-                                                </a>
-                                            </div>
-                                            <div>
-                                                <b>Current values</b>
-                                            </div>
-                                            <div v-for="(eachValue, index) in nonColorDetails"
-                                                 v-if="currentNonColorValueExist == true" class="row"
-                                                 style="margin-top: 5px;">
-                                                <div class="col-md-6">
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachValue.negation != null">
-                                                        {{ eachValue.negation }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachValue.pre_constraint != null">
-                                                        {{ eachValue.pre_constraint }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachValue.certainty_constraint != null">
-                                                        {{ eachValue.certainty_constraint }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachValue.degree_constraint != null">
-                                                        {{ eachValue.degree_constraint }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachValue.main_value != null">
-                                                        {{ eachValue.main_value }}
-                                                    </div>
-                                                    <div style="display: inline-block;"
-                                                         v-if="eachValue.post_constraint != null">
-                                                        {{ eachValue.post_constraint }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <a class="btn btn-primary" style="padding: 3px 6px;"
-                                                       v-on:click="editEachNonColor(eachValue)">Edit</a>
-                                                    <a class="btn btn-primary" style="padding: 3px 6px;"
-                                                       v-on:click="removeEachNonColor(eachValue)">Remove</a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="modal-body">
-
-                                        <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
-                                            <div>
-                                                <b>Formulate a value:</b> select existing phrases or use your own
-                                                terms(need
-                                                definition)
-                                            </div>
-                                            <div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeNonColorSection(currentNonColorValue, 'negation', $event)"
-                                                           style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="currentNonColorValue.negation" placeholder="">
-                                                    <h5>
-                                                        negation
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeNonColorSection(currentNonColorValue, 'pre_constraint', $event)"
-                                                           style="width: 90px; height: 26px;"
-                                                           v-model="currentNonColorValue.pre_constraint"
-                                                           list="pre_non_list">
-                                                    <datalist id="pre_non_list">
-                                                        <option v-for="each in preList" :value="each">{{ each }}
-                                                        </option>
-                                                    </datalist>
-                                                    <h5>
-                                                        pre-constraint
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <select style="width: 90px; height: 26px;"
-                                                            v-model="currentNonColorValue.certainty_constraint"
-                                                            v-on:change="changeNonColorSection(currentNonColorValue, 'certainty_constraint', $event)">
-                                                        <option value=""></option>
-                                                        <option value="doubtfully">doubtfully</option>
-                                                        <option value="possibly">possibly</option>
-                                                        <option value="presumably">presumably</option>
-                                                        <option value="approximately">approximately</option>
-                                                        <option value="definitely">definitely</option>
-                                                    </select>
-                                                    <h5>
-                                                        certainty-constraint
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <select style="width: 90px; height: 26px;"
-                                                            v-model="currentNonColorValue.degree_constraint"
-                                                            v-on:change="changeNonColorSection(currentNonColorValue, 'degree_constraint', $event)">
-                                                        <option value=""></option>
-                                                        <option value="imperceptibly">imperceptibly</option>
-                                                        <option value="scarcely">scarcely</option>
-                                                        <option value="moderately">moderately</option>
-                                                        <option value="considerably">considerably</option>
-                                                        <option value="extremely">extremely</option>
-                                                    </select>
-                                                    <h5>
-                                                        degree-constraint
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeNonColorSection(currentNonColorValue, 'main_value', $event)"
-                                                           v-on:keyup.enter="searchNonColorSelection(currentNonColorValue, 'main_value')"
-                                                           style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                           v-model="currentNonColorValue.main_value"
-                                                           :placeholder="currentNonColorValue.placeholderName">
-                                                    <h5>
-                                                        {{ currentNonColorValue.placeholderName }}
-                                                    </h5>
-                                                </div>
-                                                <div style="display: inline-block;">
-                                                    <input v-on:focus="changeNonColorSection(currentNonColorValue, 'post_constraint', $event)"
-                                                           style="width: 90px;"
-                                                           v-model="currentNonColorValue.post_constraint"
-                                                           list="post_non_list">
-                                                    <datalist id="post_non_list" v-if="postList.length > 0">
-                                                        <option v-for="each in postList" :value="each">{{ each }}
-                                                        </option>
-                                                    </datalist>
-                                                    <h5>
-                                                        post-constraint
-                                                    </h5>
-                                                </div>
-                                            </div>
-                                            <div v-if="currentNonColorValue.detailFlag == 'negation'"
-                                                 style="margin-top: 10px;">
-                                                <input type="radio" id="non-not" v-model="currentNonColorValue.negation"
-                                                       v-bind:value="'Not'"/> <label for="non-not">Not</label> <br/>
-                                                <input type="radio" id="non-unselect-not"
-                                                       v-model="currentNonColorValue.negation"
-                                                       v-bind:value="''"/> <label for="non-unselect-not">Unselect
-                                                Not</label>
-                                            </div>
-                                            <div v-if="(currentNonColorValue.detailFlag == 'main_value') && nonColorExistFlag"
-                                                 style="margin-top: 10px;">
-                                                <!--<input style="width: 300px;" v-model="nonColorSearchText" placeholder="Enter a term to filter the term tree"/>-->
-                                                <tree
-                                                        :data="textureTreeData"
-                                                        :options="colorTreeOption"
-                                                        :filter="currentNonColorValue.main_value"
-                                                        ref="tree"
-                                                        @node:selected="onTextureTreeNodeSelected"
-                                                        style="max-height: 300px;">
-                                                    <div slot-scope="{ node }" class="node-container">
-                                                        <div class="node-text" v-tooltip="node.text">{{ node.text }}
+                                                    <div v-if="searchNonColorFlag == 1">
+                                                        <div v-for="eachSynonym in nonColorSynonyms">
+                                                            <b>Did you mean? </b>
+                                                            <input type="radio" v-bind:id="eachSynonym.term"
+                                                                v-bind:value="eachSynonym.term"
+                                                                v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
+                                                            <label v-bind:for="eachSynonym.term">{{ eachSynonym.term }} ({{
+                                                                eachSynonym.parentTerm }}): </label> {{
+                                                            eachSynonym.definition ? eachSynonym.definition : 'No definition' }}
+                                                            <!-- <a class="btn"
+                                                            v-on:click="expandCommentSection(eachSynonym, currentNonColorValue.detailFlag)"><span
+                                                                    class="glyphicon glyphicon-comment"></span></a>
+                                                            <div v-if="eachSynonym.commentFlag == true">
+                                                                Don't you like this term? improve or add definition for it:
+                                                                <input
+                                                                        v-model="nonColorComment[currentNonColorValue.detailFlag]"
+                                                                        style="width: 100%;">
+                                                            </div> -->
                                                         </div>
                                                     </div>
-                                                </tree>
-                                            </div>
-                                            <div v-if="(currentNonColorValue.detailFlag == 'main_value') && !nonColorExistFlag"
-                                                 style="margin-top: 10px;">
+                                                    <!-- <div v-if="searchNonColorFlag == 2">
+                                                        Did you mean <b>{{ exactNonColor.term }}</b>?<br/>
+                                                        Definition of <b> {{ exactNonColor.term }} </b>: <input
+                                                            v-model="nonColorDefinition[currentNonColorValue.detailFlag]"
+                                                            style="width: 70%;">
+                                                        <br/><br/>If definition is lacking, you can propose or edit the
+                                                        definition above. <br/>
 
-                                                <div v-if="searchNonColorFlag == 1">
-                                                    <div v-for="eachSynonym in nonColorSynonyms">
-                                                        <b>Did you mean? </b>
-                                                        <input type="radio" v-bind:id="eachSynonym.term"
-                                                               v-bind:value="eachSynonym.term"
-                                                               v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
-                                                        <label v-bind:for="eachSynonym.term">{{ eachSynonym.term }} ({{
-                                                            eachSynonym.parentTerm }}): </label> {{
-                                                        eachSynonym.definition ? eachSynonym.definition : 'No definition' }}
-                                                        <a class="btn"
-                                                           v-on:click="expandCommentSection(eachSynonym, currentNonColorValue.detailFlag)"><span
-                                                                class="glyphicon glyphicon-comment"></span></a>
-                                                        <div v-if="eachSynonym.commentFlag == true">
-                                                            Don't you like this term? improve or add definition for it:
-                                                            <input
-                                                                    v-model="nonColorComment[currentNonColorValue.detailFlag]"
-                                                                    style="width: 100%;">
+                                                    </div> -->
+                                                    <div v-if="searchNonColorFlag !=2 ">
+                                                        <input type="radio" id="non-user-defined"
+                                                            v-bind:value="defaultNonColorValue"
+                                                            v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"
+                                                            v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
+                                                        <!--<input type="radio" id="non-user-defined"-->
+                                                        <!--v-bind:value="defaultNonColorValue + '(user defined)'"-->
+                                                        <!--v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"-->
+                                                        <!--v-model="currentNonColorValue[currentNonColorValue.detailFlag]">-->
+                                                        <label for="non-user-defined">Use my term '{{ defaultNonColorValue
+                                                            }}'(please define the term, all input required):</label>
+                                                        <div for="user-defined">
+                                                            Definition: <input
+                                                                v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
+                                                                class="non-color-input-definition">
+                                                            Taxon: <input
+                                                                v-model="nonColorTaxon[currentNonColorValue.detailFlag]"
+                                                                class="non-color-input-definition">
+                                                            Sample Sentence: <input
+                                                                v-model="nonColorSampleText[currentNonColorValue.detailFlag]"
+                                                                class="non-color-input-definition">
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div v-if="searchNonColorFlag == 2">
-                                                    Did you mean <b>{{ exactNonColor.term }}</b>?<br/>
-                                                    Definition of <b> {{ exactNonColor.term }} </b>: <input
-                                                        v-model="nonColorDefinition[currentNonColorValue.detailFlag]"
-                                                        style="width: 70%;">
-                                                    <!--Hong modified this: Did you mean <b>{{ exactColor.term }}</b>?<br/>
-                                                    Current Definition: <input
-                                                        v-model="app.exactColor.definition"
-                                                        style="width: 70%;">   -->
-                                                    <br/><br/>If definition is lacking, you can propose or edit the
-                                                    definition above. <br/>
-
-                                                    <!--Here is what we known about <b>{{ exactNonColor.term }}</b>-->
-                                                    <!--Definition: <input-->
-                                                        <!--v-model="nonColorDefinition[currentNonColorValue.detailFlag]"-->
-                                                        <!--style="width: 70%;">-->
-
-                                                </div>
-                                                <div v-if="searchNonColorFlag !=2 ">
-                                                    <input type="radio" id="non-user-defined"
-                                                           v-bind:value="defaultNonColorValue"
-                                                           v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"
-                                                           v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
-                                                    <!--<input type="radio" id="non-user-defined"-->
-                                                    <!--v-bind:value="defaultNonColorValue + '(user defined)'"-->
-                                                    <!--v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"-->
-                                                    <!--v-model="currentNonColorValue[currentNonColorValue.detailFlag]">-->
-                                                    <label for="non-user-defined">Use my term '{{ defaultNonColorValue
-                                                        }}'(please define the term, all input required):</label>
-                                                    <div for="user-defined">
-                                                        Definition: <input
-                                                            v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
-                                                            class="non-color-input-definition">
-                                                        Taxon: <input
-                                                            v-model="nonColorTaxon[currentNonColorValue.detailFlag]"
-                                                            class="non-color-input-definition">
-                                                        Sample Sentence: <input
-                                                            v-model="nonColorSampleText[currentNonColorValue.detailFlag]"
-                                                            class="non-color-input-definition">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1423,7 +1427,7 @@
                                                    :disabled="saveNonColorButtonFlag"
                                                    v-on:click="saveNonColorValue(true)">
                                                     Save & New </a>
-                                                <a v-on:click="nonColorDetailsFlag = false;"
+                                                <a v-on:click="nonColorDetailsFlag = false;currentNonColorValue.main_value='';currentNonColorValue.negation = null;currentNonColorValue.pre_constraint = null;currentNonColorValue.certainty_constraint = null;currentNonColorValue.degree_constraint = null;currentNonColorValue.post_constraint = null;currentNonColorValue.confirmedFlag['main_value'] = false;"
                                                    class="btn btn-danger">Cancel</a>
                                             </div>
                                         </div>
@@ -1492,6 +1496,64 @@
                                                    v-on:click="confirmRemoveCharacter()">
                                                     Remove </a>
                                                 <a v-on:click="toRemoveStandardConfirmFlag = false"
+                                                   class="btn btn-danger">Cancel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+                <div v-if="toRemoveHeaderConfirmFlag" @close="toRemoveHeaderConfirmFlag = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container">
+                                    <div class="modal-header">
+                                        Confirm to remove?
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            Are you sure you want to remove {{ headers.find(each => each.id == toRemoveHeaderId).header }}?
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="confirmRemoveHeader()">
+                                                    Remove </a>
+                                                <a v-on:click="toRemoveHeaderConfirmFlag = false"
+                                                   class="btn btn-danger">Cancel</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+                <div v-if="toCollapseConfirmFlag" @close="toCollapseConfirmFlag = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container">
+                                    <div class="modal-header">
+                                        Confirmation
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            Do you want a matrix with your selected characters be displayed?
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="toCollapseConfirmFlag=false;generateMatrix()">
+                                                    Yes </a>
+                                                <a v-on:click="toCollapseConfirmFlag = false"
                                                    class="btn btn-danger">Cancel</a>
                                             </div>
                                         </div>
@@ -1579,6 +1641,7 @@
                 },
                 isLoading: false,
                 userTags: [],
+                oldUserTags: [],
                 currentTab: '',
                 descriptionText: '',
                 descriptionFlag: false,
@@ -1598,13 +1661,13 @@
                 },
                 colorExistFlag: false,
                 searchColor: [],
-                colorSynonyms: [],
+                colorSynonyms: {},
                 colorExactSynonyms: [],
                 colorExactMatch: [],
                 searchColorFlag: 0,
                 exactColor: {},
                 colorDetailId: null,
-                defaultColorValue: '',
+                defaultColorValue: [],
                 colorComment: {},
                 colorTaxon: {},
                 colorSampleText: {},
@@ -1640,6 +1703,13 @@
                         multi_colored: false,
                     }
                 },
+                colorFlags: [
+                    "brightness",
+                    "reflectance",
+                    "saturation",
+                    "colored",
+                    "multi_colored",
+                ],
                 currentNonColorValue: {
                     confirmedFlag: {
                         main_value: false,
@@ -1688,6 +1758,9 @@
                 confirmOverwriteFlag: false,
                 toRemoveCharacterId: null,
                 toRemoveStandardConfirmFlag: false,
+                toRemoveHeaderId: null,
+                toRemoveHeaderConfirmFlag: false,
+                toCollapseConfirmFlag: false,
                 standardCharactersTags: [
                     'Habit',
                     'Stems',
@@ -1697,10 +1770,12 @@
                     'Inflorescence units',
                     'Perigynia',
                     'Pistillate scales',
-                    'Achenes'
+                    'Achenes',
+                    'Anthers',
                 ],
                 saveColorButtonFlag: false,
                 saveNonColorButtonFlag: false,
+                filterFlag: true,
             }
         },
         components: {
@@ -1762,11 +1837,11 @@
                 var app = this;
                 var selectedCharacter = app.defaultCharacters.find(ch => ch.id == selectedItem)
 
-                if (!selectedCharacter) {
-                    selectedCharacter = app.userCharacters.find(ch => ch.id == selectedItem);
-                } else if (app.userCharacters.find(ch => ch.name == selectedCharacter.name)) {
-                    selectedCharacter = app.userCharacters.find(ch => ch.name == selectedCharacter.name);
-                }
+                // if (!selectedCharacter) {
+                //     selectedCharacter = app.userCharacters.find(ch => ch.id == selectedItem);
+                // } else if (app.userCharacters.find(ch => ch.name == selectedCharacter.name)) {
+                //     selectedCharacter = app.userCharacters.find(ch => ch.name == selectedCharacter.name && ch.username == selectedCharacter.username);
+                // }
                 if (!selectedCharacter) {
                     app.firstCharacter = '';
                     app.middleCharacter = '';
@@ -2116,9 +2191,10 @@
             },
             showStandardCharacters() {
                 var app = this;
-                app.isLoading = true;
+                // app.isLoading = true;
                 app.standardShowFlag = !app.standardShowFlag;
                 console.log('test', app.userCharacters);
+                console.log('test1', app.defaultCharacters);
                 var postCharacters = [];
                 for (var i = 0; i < app.defaultCharacters.length; i++) {
                     var character = app.defaultCharacters[i];
@@ -2153,6 +2229,7 @@
                         app.userCharacters = resp.data;
                         app.isLoading = false;
                         app.refreshUserCharacters();
+                        app.showTableForTab(app.currentTab);
                     });
             },
             removeStandardCharacter(characterId) {
@@ -2190,7 +2267,14 @@
                         }
                         app.refreshUserCharacters();
                         app.refreshDefaultCharacters();
+                        if (app.userTags.length!= resp.data.userTags.length && !resp.data.userTags.find(ch => ch == app.currentTab)){
+                            app.userTags = resp.data.userTags;
+                            app.showTableForTab(app.userTags[0].tag_name);
+                        }
+                        else app.showTableForTab(app.currentTab);
+                        
                     });
+
             },
             removeUserCharacter(characterId) {
                 var app = this;
@@ -2214,15 +2298,16 @@
                             axios.post("/chrecorder/public/api/v1/user-tag/remove", jsonUserTag)
                                 .then(function (resp) {
                                     console.log("remove UserTag", resp.data);
+                                    app.showTableForTab(app.currentTab);
                                 });
                         }
                         app.refreshUserCharacters();
-
+                        app.showTableForTab(app.currentTab);
                     });
             },
             removeAllCharacters() {
                 var app = this;
-                app.isLoading = true;
+                // app.isLoading = true;
                 axios.post('/chrecorder/public/api/v1/character/remove-all')
                     .then(function (resp) {
                         app.isLoading = false;
@@ -2233,6 +2318,7 @@
                             app.matrixShowFlag = false;
                         }
                         app.refreshUserCharacters();
+                        app.showTableForTab(app.currentTab);
                     });
             },
 
@@ -2278,7 +2364,6 @@
 
                 if ((app.checkHaveUnit(app.character.name) == true) && (tempViewFlag == false)) {
                     var tempFlag = false;
-                    console.log('sadfsd');
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name)
                         .then(function (resp) {
                             console.log('search term resp', resp.data);
@@ -2661,10 +2746,16 @@
                 app.character = app.userCharacters.find(ch => ch.id == characterId);
                 if (!app.character) {
                     app.character = app.defaultCharacters.find(ch => ch.id == characterId);
-                    if (!app.userCharacters.find(ch => ch.name == app.character.name)) {
+                    if (!app.userCharacters.find(ch => ch.name == app.character.name
+                      && ch.method_from == app.character.method_from
+                      && ch.method_to == app.character.method_to
+                      && ch.method_include == app.character.method_include
+                      && ch.method_exclude == app.character.method_exclude
+                      && ch.method_where == app.character.method_where
+                     )) {
                         console.log('app.character', app.character);
 //                app.character.show_flag = false;
-                        app.character.standard = 1;
+                        //app.character.standard = 1;
                         app.characterUsername = app.character.username;
 
                         var checkFields = true;
@@ -2698,9 +2789,11 @@
                             app.showDetails('unit', app.metadataFlag);
                         }
                     } else {
+                        alert("The character already exists for this user!!");
                         app.detailsFlag = false;
                     }
                 } else {
+                    alert("The character already exists for this user!!");
                     app.detailsFlag = false;
                 }
 
@@ -2723,6 +2816,7 @@
                 app.oldCharacter.method_where = selectedCharacter.method_where;
 //                app.editFlag = true;
                 selectedCharacter.creator = app.user.name + ' via CR';
+                selectedCharacter.standard = 0;
                 app.detailsFlag = false;
                 sessionStorage.setItem('viewFlag', false);
                 sessionStorage.setItem('edit_created_other', false);
@@ -2777,7 +2871,12 @@
                         var currentCharacters = resp.data.characters;
 //                        app.character.standard = 0;
 //                        app.character.username = app.characterUsername;
-                        if (currentCharacters.find(ch => ch.name == app.character.name)) {
+                        if (currentCharacters.find(ch => ch.name == app.character.name
+                            && ch.method_from == app.character.method_from
+                            && ch.method_to == app.character.method_to
+                            && ch.method_include == app.character.method_include
+                            && ch.method_exclude == app.character.method_exclude
+                            && ch.method_where == app.character.method_where)) {
                             if (app.editFlag || app.enhanceFlag) {
                                 if (app.character.standard_tag == app.currentTab) {
                                     app.character.show_flag = true;
@@ -2814,7 +2913,7 @@
                                         app.showTableForTab(app.character.standard_tag);
 
                                         app.enhanceFlag = false;
-                                        app.detailsFlag = false;
+                                        app.detailsFlag = false
                                     });
                             } else {
                                 alert("The character already exists for this user!!");
@@ -2876,6 +2975,7 @@
 
                                         app.enhanceFlag = false;
                                         app.detailsFlag = false;
+                                        app.showTableForTab(app.currentTab);
                                     });
                             } else {
                                 axios.post("/chrecorder/public/api/v1/character/create", app.character)
@@ -2898,6 +2998,7 @@
 
 
                                         app.detailsFlag = false;
+                                        app.showTableForTab(app.currentTab);
                                     });
                             }
                         }
@@ -2905,15 +3006,29 @@
                     });
                 console.log("app.character", app.character);
             },
+            confirmCollapse() {
+                var app = this;
+                //alert('');
+                console.log('userTags', app.userTags);
+                console.log('userCharacters', app.userCharacters);
+                console.log('standardCharactersTags', app.standardCharactersTags);
+                console.log(app.userCharacters.find(ch => ch.standard == 1 || !ch.username.includes(app.user.name)));
+                console.log(app.userCharacters.find(ch => ch.standard == 0 && ch.username.includes(app.user.name)));
+                console.log(app.matrixShowFlag);
+                if ((app.userCharacters.find(ch => ch.standard == 1 || !ch.username.includes(app.user.name)) || app.userCharacters.find(ch => ch.standard == 0 && ch.username.includes(app.user.name)))&&!app.matrixShowFlag){
+                    app.toCollapseConfirmFlag = true;
+                }
+            },
             generateMatrix() {
                 var app = this;
-                app.isLoading = true;
+                // app.isLoading = true;
                 if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
                     var jsonMatrix = {
                         'user_id': app.user.id,
                         'column_count': app.columnCount,
                         'taxon': app.taxonName
                     };
+                    app.oldUserTags = [];
                     axios.post('/chrecorder/public/api/v1/matrix-store', jsonMatrix)
                         .then(function (resp) {
                             app.isLoading = false;
@@ -2927,7 +3042,7 @@
                             axios.get('/chrecorder/public/api/v1/user-tag/' + app.user.id)
                                 .then(function (resp) {
                                     app.userTags = resp.data;
-                                    app.showTableForTab(app.userTags[0].tag_name);
+                                    app.showTableForTab(app.currentTab);
                                 });
                             app.refreshUserCharacters(true);
 
@@ -2942,8 +3057,13 @@
             },
             deleteHeader(headerId) {
                 var app = this;
-                app.isLoading = true;
-                axios.post('/chrecorder/public/api/v1/delete-header/' + headerId)
+                app.toRemoveHeaderId = headerId;
+                app.toRemoveHeaderConfirmFlag = true;
+            },
+            confirmRemoveHeader() {
+                var app = this;
+                // app.isLoading = true;
+                axios.post('/chrecorder/public/api/v1/delete-header/' + app.toRemoveHeaderId)
                     .then(function (resp) {
                         console.log('delete header', resp.data);
                         app.headers = resp.data.headers;
@@ -2951,7 +3071,9 @@
                         app.userCharacters = resp.data.characters;
                         app.columnCount = resp.data.headers.length - 1;
                         app.isLoading = false;
+                        app.toRemoveHeaderConfirmFlag = false;
                         app.refreshUserCharacters();
+                        app.showTableForTab(app.currentTab);
 
                     });
             },
@@ -2964,23 +3086,14 @@
             },
             changeColumnCount() {
                 var app = this;
-                app.isLoading = true;
                 if (app.columnCount < app.headers.length - 1) {
                     app.columnCount = app.headers.length - 1;
                     app.isLoading = false;
                     alert("To reduce the size of the matrix, use the remove button (x) in the matrix.");
-                } else {
-                    axios.post('/chrecorder/public/api/v1/add-more-column/' + app.columnCount)
-                        .then(function (resp) {
-                            console.log('addMoreColumn resp', resp.data);
-                            app.userCharacters = resp.data.characters;
-                            app.headers = resp.data.headers;
-                            app.values = resp.data.values;
-                            app.taxonName = resp.data.taxon;
-                            app.isLoading = false;
-                            app.refreshUserCharacters();
-
-                        });
+                } else if (app.columnCount == app.headers.length -1) {
+                }
+                else {
+                    app.generateMatrix();
                 }
             },
             saveItem(event, value) {
@@ -2996,10 +3109,18 @@
                                 event.target.style.color = 'black';
                                 app.userCharacters = resp.data.characters;
                                 app.headers = resp.data.headers;
-                                app.values = resp.data.values;
+                                for (var i=0;i<app.values.length;i++){
+                                    for (var j=0;j<app.values[i].length;j++){
+                                        if (app.values[i][j].id==value.id){
+                                            app.values[i][j]=resp.data.values[i][j];
+                                        }
+                                    }
+                                }
+                                //app.values = resp.data.values;
                                 app.defaultCharacters = resp.data.defaultCharacters;
                                 app.refreshUserCharacters();
                                 app.refreshDefaultCharacters();
+                                app.showTableForTab(app.currentTab);
                             }
                         });
                 }
@@ -3008,8 +3129,8 @@
             },
             removeAllStandardCharacters() {
                 var app = this;
-                app.isLoading = true;
-                axios.post('/chrecorder/public/api/v1/character/remove-all-standard')
+                // app.isLoading = true;
+                axios.get('/chrecorder/public/api/v1/character/remove-all-standard')
                     .then(function (resp) {
                         app.removeAllStandardFlag = false;
                         app.isLoading = false;
@@ -3020,7 +3141,9 @@
                         if (app.userCharacters.length == 0) {
                             app.matrixShowFlag = false;
                         }
+                        console.log('delTags',resp.data.delTags);
                         app.refreshUserCharacters();
+                        app.showTableForTab(app.currentTab);
                     });
             },
             refreshUserCharacters (showTabFlag = false) {
@@ -3045,20 +3168,45 @@
                 }
                 app.characterUsername = app.user.name;
             },
+            tagOrder(tag){
+                var app = this;
+                for (var i=0;i<app.standardCharactersTags.length;i++){
+                    if (app.standardCharactersTags[i] == tag.tag_name){
+                        return i;
+                    }
+                }
+                return 10000;
+            },
             showTableForTab(tagName) {
                 var app = this;
-                app.isLoading = true;
+                // app.isLoading = true;
+                if (!app.userTags.find(tag => tag.tag_name == tagName)){
+                    tagName = app.userTags[0].tag_name;
+                }
                 app.currentTab = tagName;
-                axios.post('/chrecorder/public/api/v1/show-tab-character/' + tagName)
-                    .then(function (resp) {
-                        app.isLoading = false;
-                        app.userCharacters = resp.data.characters;
-                        app.headers = resp.data.headers;
-                        app.values = resp.data.values;
-//                        var height = $('.cr-table').height();
-//                        $('.table-responsive').css('height', height + 150 + 'px');
-                        app.refreshUserCharacters();
-                    });
+                if (app.oldUserTags.length!=app.userTags.length){
+                    app.userTags.sort((a,b) => app.tagOrder(a)-app.tagOrder(b));
+                    app.oldUserTags = app.userTags;
+                }
+
+
+                for (var i=0;i<app.userCharacters.length;i++){
+                    app.userCharacters[i].show_flag = app.userCharacters[i].standard_tag == app.currentTab;
+                }
+                app.isLoading = false;
+
+//                 axios.post('/chrecorder/public/api/v1/show-tab-character/' + tagName)
+//                     .then(function (resp) {
+//                         app.isLoading = false;
+//                         app.userCharacters = resp.data.characters;
+//                         app.headers = resp.data.headers;
+//                         app.values = resp.data.values;
+//                         console.log('values', app.values);
+//                         console.log('headers', app.headers);
+// //                        var height = $('.cr-table').height();
+// //                        $('.table-responsive').css('height', height + 150 + 'px');
+//                         app.refreshUserCharacters();
+//                     });
             },
             hideAllCharacter() {
                 var app = this;
@@ -3099,6 +3247,7 @@
                         app.headers = resp.data.headers;
                         app.values = resp.data.values;
                         app.refreshUserCharacters();
+                        app.showTableForTab(app.currentTab);
                     });
             },
             changeSummary(characterId, summary) {
@@ -3114,6 +3263,7 @@
                         app.headers = resp.data.headers;
                         app.values = resp.data.values;
                         app.refreshUserCharacters();
+                        app.showTableForTab(app.currentTab);
                     });
             },
             upUserValue(valueId) {
@@ -3137,7 +3287,7 @@
                 var valueIndex = showedValues.indexOf(app.values.find(value => value[0].character_id == valueId));
                 if ((directionFlag == true) && (valueIndex < maxLength - 1)) {
                     var tmp = showedValues[valueIndex];
-                    app.isLoading = true;
+                    // app.isLoading = true;
                     console.log('tmp', tmp);
 //                    app.values.splice(valueIndex, 1);
 //                    app.values.splice(valueIndex + 1, 0, tmp);
@@ -3152,10 +3302,11 @@
                             app.userCharacters = resp.data.characters;
                             console.log('app.userCharacters', app.userCharacters);
                             app.refreshUserCharacters();
+                            app.showTableForTab(app.currentTab);
                         });
                 } else if ((directionFlag == false) && (valueIndex > 0)) {
                     var tmp = showedValues[valueIndex];
-                    app.isLoading = true;
+                    // app.isLoading = true;
 //                    app.values.splice(valueIndex, 1);
 //                    app.values.splice(valueIndex - 1, 0, tmp);
                     axios.post('/chrecorder/public/api/v1/character/change-order', {
@@ -3163,10 +3314,11 @@
                         characterId: tmp[0].character_id,
                     })
                         .then(function (resp) {
-                            app.isLoading = false;
+                            // app.isLoading = false;
                             app.values = resp.data.values;
                             app.userCharacters = resp.data.characters;
                             app.refreshUserCharacters();
+                            app.showTableForTab(app.currentTab);
                         });
                 }
 
@@ -3981,79 +4133,47 @@
             },
             async saveColorValue(newFlag = false) {
                 var app = this;
+                if (app.saveColorButtonFlag){
+                    return;
+                }
 
 
                 var postFlag = true;
-                var comparedFlag = false;
+                var comparedFlag = true;
                 app.saveColorButtonFlag = true;
                 console.log('currentColorValue', app.currentColorValue);
                 console.log('app.currentColorValue.colored', app.currentColorValue.colored);
 
-                if (app.currentColorValue['brightness'] && app.currentColorValue.confirmedFlag['brightness'] == false) {
-                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['brightness'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('brightness'))
-                        .then(function (resp) {
-                            console.log('brightness', resp.data);
-                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['brightness'])) {
-                                app.searchColorSelection(app.currentColorValue, 'brightness');
-                                app.saveColorButtonFlag = false;
-                            } else {
-                                comparedFlag = true;
-                            }
-
-                        });
-                } else if (app.currentColorValue['saturation'] && app.currentColorValue.confirmedFlag['saturation'] == false) {
-                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['saturation'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('saturation'))
-                        .then(function (resp) {
-                            console.log('saturation', resp.data);
-                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['saturation'])) {
-                                app.searchColorSelection(app.currentColorValue, 'saturation');
-                                app.saveColorButtonFlag = false;
-                            } else {
-                                comparedFlag = true;
-                            }
-
-                        });
-                } else if (app.currentColorValue['reflectance'] && app.currentColorValue.confirmedFlag['reflectance'] == false) {
-                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['reflectance'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('reflectance'))
-                        .then(function (resp) {
-                            console.log('reflectance', resp.data);
-                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['reflectance'])) {
-                                app.searchColorSelection(app.currentColorValue, 'reflectance');
-                                app.saveColorButtonFlag = false;
-                            } else {
-                                comparedFlag = true;
-                            }
-
-                        });
-                } else if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false) {
-                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['colored'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('colored'))
-                        .then(function (resp) {
-                            console.log('colored', resp.data);
-                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['colored'])) {
-                                app.searchColorSelection(app.currentColorValue, 'colored');
-                                app.saveColorButtonFlag = false;
-                            } else {
-                                comparedFlag = true;
-                            }
-
-                        });
-                } else if (app.currentColorValue['multi_colored'] && app.currentColorValue.confirmedFlag['multi_colored'] == false) {
-                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue['multi_colored'] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName('multi_colored'))
-                        .then(function (resp) {
-                            console.log('multi_colored', resp.data);
-                            if (!resp.data.entries.find(each => each.term == app.currentColorValue['multi_colored'])) {
-                                app.searchColorSelection(app.currentColorValue, 'multi_colored');
-                                app.saveColorButtonFlag = false;
-                            } else {
-                                comparedFlag = true;
-                            }
-
-                        });
-                } else {
-                    comparedFlag = true;
+                if (app.currentColorValue['brightness'] && app.currentColorValue.confirmedFlag['brightness'] == false && !app.colorSynonyms['brightness']) {
+                    comparedFlag = false;
+                    app.saveColorButtonFlag = false;
+                    app.searchColorSelection(app.currentColorValue, 'brightness');
+                }
+                if (app.currentColorValue['saturation'] && app.currentColorValue.confirmedFlag['saturation'] == false && !app.colorSynonyms['saturation']) {
+                    comparedFlag = false;
+                    app.saveColorButtonFlag = false;
+                    app.searchColorSelection(app.currentColorValue, 'saturation');
+                }
+                if (app.currentColorValue['reflectance'] && app.currentColorValue.confirmedFlag['reflectance'] == false && !app.colorSynonyms['reflectance']) {
+                    comparedFlag = false;
+                    app.saveColorButtonFlag = false;
+                    app.searchColorSelection(app.currentColorValue, 'reflectance');
+                }
+                if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored']) {
+                    comparedFlag = false;
+                    app.saveColorButtonFlag = false;
+                    app.searchColorSelection(app.currentColorValue, 'colored');
+                }
+                if (app.currentColorValue['multi_colored'] && app.currentColorValue.confirmedFlag['multi_colored'] == false && !app.colorSynonyms['multi_colored']) {
+                    comparedFlag = false;
+                    app.saveColorButtonFlag = false;
+                    app.searchColorSelection(app.currentColorValue, 'multi_colored');
                 }
 
-                if (comparedFlag) {
+                if (!comparedFlag) {
+                    app.colorExistFlag = false;
+                }
+                else {
                     if ((app.currentColorValue.colored == undefined || app.currentColorValue.colored == 'undefined' || app.currentColorValue.colored == null || app.currentColorValue.colored == '')
                         && (app.currentColorValue.multi_colored == undefined || app.currentColorValue.multi_colored == 'undefined' || app.currentColorValue.multi_colored == null || app.currentColorValue.multi_colored == '')
                         && (app.currentColorValue.negation == undefined || app.currentColorValue.negation == 'undefined' || app.currentColorValue.negation == null || app.currentColorValue.negation == '')
@@ -4071,6 +4191,7 @@
                             });
                     } else {
                         var postValue = {};
+                        var requestBody = {};
                         postValue['value_id'] = app.currentColorValue['value_id'];
                         if (app.currentColorValue.id) {
                             postValue['id'] = app.currentColorValue.id;
@@ -4078,102 +4199,66 @@
                         for (var key in app.currentColorValue) {
                             if (app.checkColorProperty(key)) {
                                 postValue[key] = app.currentColorValue[key];
-                                var requestBody = {};
-                                if (app.currentColorValue[key] != null && app.currentColorValue[key] != '') {
-//                                    if (app.currentColorValue[key].endsWith('(user defined)') && postFlag == true) {
-                                    if (app.searchColorFlag == 0 && postFlag == true) {
-                                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorValue[key] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(key))
+                            }
+                        }
+                        for (var i=0;i<app.colorFlags.length;i++){
+                            const flag=app.colorFlags[i];
+                            if (app.currentColorValue[flag] == app.defaultColorValue[flag]){
+                                var date = new Date();
+                                requestBody = {
+                                    "user": app.sharedFlag ? '' : app.user.name,
+                                    "ontology": "carex",
+                                    "term": postValue['main_value'],
+                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+app.changeToSubClassName(flag),
+                                    "definition": app.userColorDefinition['main_value'],
+                                    "elucidation": "",
+                                    "createdBy": app.user.name,
+                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                    "definitionSrc": app.user.name,
+                                    "examples": app.colorSampleText['main_value'] + ", used in taxon " + app.colorTaxon['main_value'],
+                                    "logicDefinition": "",
+                                };
+                                console.log(requestBody);
+                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                    .then(function (resp) {
+                                        console.log('shark api class resp', resp);
+                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                            user: app.sharedFlag ? '' : app.user.name,
+                                            ontology: 'carex'
+                                        })
                                             .then(function (resp) {
-                                                if (resp.data.entries.length == 0) {
-                                                    postValue[key] = app.currentColorValue[key];
-                                                    console.log('colorSampleText', app.colorSampleText[key]);
-                                                    var date = new Date();
-                                                    requestBody = {
-                                                        "user": app.sharedFlag ? '' : app.user.name,
-                                                        "ontology": "carex",
-                                                        "term": postValue[key],
-                                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + app.changeToSubClassName(key),
-                                                        "definition": app.userColorDefinition[key],
-                                                        "elucidation": "",
-                                                        "createdBy": app.user.name,
-                                                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                                        "definitionSrc": app.user.name,
-                                                        "examples": app.colorSampleText[key] + ", used in taxon " + app.colorTaxon[key],
-                                                        "logicDefinition": "",
-                                                    };
-                                                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-                                                        .then(function (resp) {
-                                                            console.log('shark api class resp', resp);
-                                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                                user: app.sharedFlag ? '' : app.user.name,
-                                                                ontology: 'carex'
-                                                            })
-                                                                .then(function (resp) {
-                                                                    console.log('save api resp', resp);
-                                                                });
-                                                        });
-                                                }
+                                                console.log('save api resp', resp);
                                             });
-//                                        if (app.userColorDefinition[key] == ''
-//                                            || app.userColorDefinition[key] == null
-//                                            || app.userColorDefinition[key] == undefined
-//                                            || app.colorSampleText[key] == ''
-//                                            || app.colorSampleText[key] == null
-//                                            || app.colorSampleText[key] == undefined
-//                                            || app.colorTaxon[key] == ''
-//                                            || app.colorTaxon[key] == null
-//                                            || app.colorTaxon[key] == undefined) {
-//                                            postFlag = false;
-//                                        } else if (postFlag == true) {
-//                                            postValue[key] = app.currentColorValue[key].substr(0, app.currentColorValue[key].length - 14);
-
-//                                        }
-
-
-                                    } else if (app.colorDefinition[key] && postFlag == true) {
-                                        requestBody = {
-                                            "user": app.sharedFlag ? '' : app.user.name,
-                                            "ontology": "carex",
-                                            "definition": app.colorDefinition[key],
-                                            "providedBy": app.user.name,
-                                            "exampleSentence": "",
-                                            "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
-                                        };
-                                        axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
+                                    });
+                            }
+                            else if (app.colorSynonyms[flag]){
+                                var synonym=app.colorSynonyms[flag].find( eachSynonym => eachSynonym.term == app.currentColorValue[flag]);
+                                var date = new Date();
+                                requestBody = {
+                                    "user": app.sharedFlag ? '' : app.user.name,
+                                    "ontology": "carex",
+                                    "term": postValue['main_value'],
+                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+app.changeToSubClassName(flag),
+                                    "definition": synonym.definition,
+                                    "elucidation": "",
+                                    "createdBy": app.user.name,
+                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                    "definitionSrc": app.user.name,
+                                    "examples": app.colorSampleText['main_value'] + ", used in taxon " + app.colorTaxon['main_value'],
+                                    "logicDefinition": "",
+                                };
+                                console.log(requestBody);
+                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                    .then(function (resp) {
+                                        console.log('shark api class resp', resp);
+                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                            user: app.sharedFlag ? '' : app.user.name,
+                                            ontology: 'carex'
+                                        })
                                             .then(function (resp) {
-                                                console.log('shark api definition resp', resp);
-                                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                    user: app.sharedFlag ? '' : app.user.name,
-                                                    ontology: 'carex'
-                                                })
-                                                    .then(function (resp) {
-                                                        console.log('save api resp', resp);
-                                                    });
+                                                console.log('save api resp', resp);
                                             });
-                                    } else if (app.colorComment[key] && postFlag == true) {
-                                        requestBody = {
-                                            "user": app.sharedFlag ? '' : app.user.name,
-                                            "ontology": "carex",
-                                            "comment": app.colorComment[key],
-                                            "providedBy": app.user.name,
-                                            "exampleSentence": "",
-                                            "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue[key]
-                                        };
-                                        axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                                            .then(function (resp) {
-                                                console.log('shark api comment resp', resp);
-                                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                                    user: app.sharedFlag ? '' : app.user.name,
-                                                    ontology: 'carex'
-                                                })
-                                                    .then(function (resp) {
-                                                        console.log('save api resp', resp);
-                                                    });
-                                            });
-
-                                    }
-                                }
-
+                                    });
                             }
                         }
                         console.log('postFlag', postFlag);
@@ -4202,6 +4287,7 @@
                                         app.colorDefinition = {};
                                         app.userColorDefinition = {};
                                         app.currentColorValue.taxon = app.taxonName;
+                                        app.colorSynonyms = {};
                                     }
                                     app.colorDetails = resp.data.colorDetails;
                                     app.allColorValues = resp.data.allColorValues;
@@ -4236,9 +4322,28 @@
             },
             saveNonColorValue(newFlag = false) {
                 var app = this;
+                if (app.saveNonColorButtonFlag){
+                    return;
+                }
+                
+                var characterId = app.values.find(eachValue => eachValue.find(eachItem => eachItem.id == app.currentNonColorValue.value_id) != null)[0].character_id;
+                var characterName = app.userCharacters.find(ch => ch.id == characterId).name;
+                console.log('characterName', characterName);
 
+                var searchText = characterName.split(' of ')[0].toLowerCase();
+                if (searchText[searchText - 1] == ' ') {
+                    searchText = searchText.substring(0, searchText.length - 1);
+                    console.log('searchText1', searchText);
+                }
+                searchText = searchText.replace(' ', '-');
+
+                searchText = searchText.replace(' ', '-');
                 var postFlag = true;
                 app.saveNonColorButtonFlag = true;
+                console.log('app.currentNonColorValue',app.currentNonColorValue);
+                console.log('app.currentNonColorValue.confirmedFlag',app.currentNonColorValue.confirmedFlag);
+                console.log("app.currentNonColorValue['main_value']",app.currentNonColorValue['main_value']);
+                console.log("app.currentNonColorValue.confirmedFlag['main_value']",app.currentNonColorValue.confirmedFlag['main_value']);
                 if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false) {
                     app.saveNonColorButtonFlag = false;
                     app.searchNonColorSelection(app.currentNonColorValue, 'main_value');
@@ -4271,7 +4376,9 @@
                         var requestBody = {};
                         if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '') {
     //                            if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
-                            if (app.searchNonColorFlag == 0 && postFlag == true) {
+                            console.log('a1');
+                            if ((app.searchNonColorFlag == 0 || app.searchNonColorFlag ==1 && app.currentNonColorValue['main_value'] == app.defaultNonColorValue) && postFlag == true) {
+                                console.log('a2');
     //                                if (app.userNonColorDefinition['main_value'] == ''
     //                                    || app.userNonColorDefinition['main_value'] == null
     //                                    || app.userNonColorDefinition['main_value'] == undefined
@@ -4284,7 +4391,7 @@
     //                                    postFlag = false;
     //                                } else if (postFlag == true) {
     //                                    postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
-
+                                
                                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'])
                                     .then(function (resp) {
                                         if (resp.data.entries.length == 0) {
@@ -4294,7 +4401,7 @@
                                                 "user": app.sharedFlag ? '' : app.user.name,
                                                 "ontology": "carex",
                                                 "term": postValue['main_value'],
-                                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#texture",
+                                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+searchText,
                                                 "definition": app.userNonColorDefinition['main_value'],
                                                 "elucidation": "",
                                                 "createdBy": app.user.name,
@@ -4319,53 +4426,84 @@
 
     //                                }
 
-                            } else if (app.nonColorDefinition['main_value'] && postFlag == true) {
-                                requestBody = {
-                                    "user": app.sharedFlag ? '' : app.user.name,
-                                    "ontology": "carex",
-                                    "definition": app.nonColorDefinition['main_value'],
-                                    "providedBy": app.user.name,
-                                    "exampleSentence": "",
-                                    "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
-                                };
-                                axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
-                                    .then(function (resp) {
-                                        console.log('shark api definition resp', resp);
-                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            user: app.sharedFlag ? '' : app.user.name,
-                                            ontology: 'carex'
-                                        })
-                                            .then(function (resp) {
-                                                console.log('save api resp', resp);
-                                            });
-                                    });
-                            } else if (app.nonColorComment['main_value'] && postFlag == true) {
-                                requestBody = {
-                                    "user": app.sharedFlag ? '' : app.user.name,
-                                    "ontology": "carex",
-                                    "comment": app.nonColorComment['main_value'],
-                                    "providedBy": app.user.name,
-                                    "exampleSentence": "",
-                                    "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
-                                };
-                                axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                                    .then(function (resp) {
-                                        console.log('shark api comment resp', resp);
-                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            user: app.sharedFlag ? '' : app.user.name,
-                                            ontology: 'carex'
-                                        })
-                                            .then(function (resp) {
-                                                console.log('save api resp', resp);
-                                            });
-                                    });
-
+                            } else if (app.searchNonColorFlag == 1 && postFlag == true) {
+                                console.log('a3');
+                                    console.log('a5');
+                                    var synonym=app.nonColorSynonyms.find( eachSynonym => eachSynonym.term == app.currentNonColorValue['main_value']);
+                                    var date = new Date();
+                                    requestBody = {
+                                        "user": app.sharedFlag ? '' : app.user.name,
+                                        "ontology": "carex",
+                                        "term": postValue['main_value'],
+                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+searchText,
+                                        "definition": synonym.definition,
+                                        "elucidation": "",
+                                        "createdBy": app.user.name,
+                                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                        "definitionSrc": app.user.name,
+                                        "examples": app.nonColorSampleText['main_value'] + ", used in taxon " + app.nonColorTaxon['main_value'],
+                                        "logicDefinition": "",
+                                    };
+                                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                        .then(function (resp) {
+                                            console.log('shark api class resp', resp);
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                user: app.sharedFlag ? '' : app.user.name,
+                                                ontology: 'carex'
+                                            })
+                                                .then(function (resp) {
+                                                    console.log('save api resp', resp);
+                                                });
+                                        });
+                                // requestBody = {
+                                //     "user": app.sharedFlag ? '' : app.user.name,
+                                //     "ontology": "carex",
+                                //     "definition": app.nonColorDefinition['main_value'],
+                                //     "providedBy": app.user.name,
+                                //     "exampleSentence": "",
+                                //     "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
+                                // };
+                                // axios.post('http://shark.sbs.arizona.edu:8080/definition', requestBody)
+                                //     .then(function (resp) {
+                                //         console.log('shark api definition resp', resp);
+                                //         axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                //             user: app.sharedFlag ? '' : app.user.name,
+                                //             ontology: 'carex'
+                                //         })
+                                //             .then(function (resp) {
+                                //                 console.log('save api resp', resp);
+                                //             });
+                                //     });
                             }
+                            // else if (app.nonColorComment['main_value'] && postFlag == true) {
+                            //     console.log('a4');
+                            //     requestBody = {
+                            //         "user": app.sharedFlag ? '' : app.user.name,
+                            //         "ontology": "carex",
+                            //         "comment": app.nonColorComment['main_value'],
+                            //         "providedBy": app.user.name,
+                            //         "exampleSentence": "",
+                            //         "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
+                            //     };
+                            //     axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
+                            //         .then(function (resp) {
+                            //             console.log('shark api comment resp', resp);
+                            //             axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                            //                 user: app.sharedFlag ? '' : app.user.name,
+                            //                 ontology: 'carex'
+                            //             })
+                            //                 .then(function (resp) {
+                            //                     console.log('save api resp', resp);
+                            //                 });
+                            //         });
+
+                            // }
                         }
 
     //                }
 
                         if (postFlag == true) {
+                            console.log('a6');
                             axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
                                 .then(function (resp) {
                                     app.saveNonColorButtonFlag = false;
@@ -4548,6 +4686,7 @@
                         multi_colored: false,
                     }
                 };
+                app.currentNonColorValue.detailFlag =null;
                 app.currentColorValue.detailsFlag = null;
                 app.currentColorValue.value_id = value.id;
                 app.currentNonColorValue.confirmedFlag = {
@@ -4565,11 +4704,13 @@
 
                 app.saveNonColorButtonFlag = false;
                 app.saveColorButtonFlag = false;
-//                console.log('test', value);
+                console.log('test', value);
                 var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
                 app.currentCharacter = currentCharacter;
+                console.log('currentCharacter', currentCharacter.name)
 
                 if (!app.checkHaveUnit(currentCharacter.name)) {
+                    console.log('!checkHaveUnit');
                     axios.get('/chrecorder/public/api/v1/get-constraint/' + currentCharacter.name)
                         .then(function (resp) {
                             app.preList = resp.data.preList;
@@ -4577,6 +4718,23 @@
                         });
                     if (currentCharacter.name.startsWith('Color')) {
                         app.colorDetailsFlag = true;
+                        
+                        app.colorDetailsFlag = true;
+                        app.currentColorValueExist = true;
+                        app.colorComment = {};
+                        app.colorTaxon = {
+                            'brightness': app.taxonName,
+                            'reflectance': app.taxonName,
+                            'saturation': app.taxonName,
+                            'colored': app.taxonName,
+                            'multi_colored': app.taxonName,
+                        };
+                        app.colorSampleText = {};
+                        app.colorDefinition = {};
+                        app.userColorDefinition = {};
+                        app.currentColorValue.taxon = app.taxonName;
+
+                        app.colorSynonyms=[];
                         axios.get('/chrecorder/public/api/v1/get-color-details/' + value.id)
                             .then(function (resp) {
                                 console.log('get-color resp', resp.data);
@@ -4632,7 +4790,23 @@
                             });
                     } else {
                         app.nonColorDetailsFlag = true;
-
+                        
+                        app.nonColorDetailsFlag = true;
+                        app.currentNonColorValueExist = true;
+                        app.nonColorComment = {};
+                        app.nonColorTaxon = {
+                            'main_value': app.taxonName,
+                        };
+                        app.nonColorSampleText = {};
+                        app.nonColorDefinition = {};
+                        app.userNonColorDefinition = {};
+                        app.currentNonColorValue.taxon = app.taxonName;
+ 
+                        app.currentNonColorValue.placeholderName = currentCharacter.name.split('of')[0].toLowerCase();
+                        if (app.currentNonColorValue.placeholderName[app.currentNonColorValue.placeholderName.length - 1] == ' ') {
+                            app.currentNonColorValue.placeholderName = app.currentNonColorValue.placeholderName.substring(0, app.currentNonColorValue.placeholderName.length - 1);
+                        }
+                        app.currentNonColorValue.placeholderName = app.currentNonColorValue.placeholderName.replace(' ', '-');
 
                         axios.get('/chrecorder/public/api/v1/get-non-color-details/' + value.id)
                             .then(function (resp) {
@@ -4702,6 +4876,9 @@
                 }
 //                color.detailFlag = null;
                 app.colorExistFlag = false;
+                color.detailFlag = flag;
+                app.currentColorValue.confirmedFlag[flag] = false;
+                app.colorSynonyms[flag] = undefined;
 //                if (!color.id) {
 //                    app.colorDetails[app.colorDetails.length - 1][flag] = '';
 //                } else {
@@ -4713,11 +4890,23 @@
 //                }
 
                 if (app.checkHaveColorValueSet(flag)) {
+                    color.detailFlag = ' ';
+
                     axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
                         .then(function (resp) {
                             app.$store.state.colorTreeData = resp.data;
+
                             color.detailFlag = flag;
                             app.colorExistFlag = true;
+                            
+                            app.filterFlag = false;
+                            const timerID=setTimeout(() => {
+                                app.filterFlag = true;
+                            }, 100)
+                            if (app.colorDetailsFlag){
+                                app.colorDetailsFlag = false;
+                                app.colorDetailsFlag = true;
+                            }
                             console.log('color', color);
                             if (color.id) {
                                 app.colorDetailId = color.id;
@@ -4785,14 +4974,24 @@
 //                } else if (flag == 'main_value') {
 //                    event.target.placeholder = searchText[0];
 //                }
-                app.nonColorExistFlag = false;
 
                 if (flag == 'main_value') {
+                    app.currentNonColorValue.confirmedFlag['main_value'] = false;
                     axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText)
                         .then(function (resp) {
                             app.textureTreeData = resp.data;
-                            nonColor.detailFlag = flag;
+                            app.currentNonColorValue.detailFlag = flag;
+                            if (app.nonColorDetailsFlag){
+                                app.nonColorDetailsFlag = false;
+                                app.nonColorDetailsFlag = true;
+                            }
+
+                            app.filterFlag = false;
                             app.nonColorExistFlag = true;
+                            const timerID=setTimeout(() => {
+                                app.filterFlag = true;
+                            }, 100)
+
                             if (nonColor.id) {
                                 app.nonColorDetailId = nonColor.id;
                                 for (var i = 0; i < app.nonColorDetails.length; i++) {
@@ -4824,8 +5023,6 @@
                         }
                     }
                 }
-
-
             },
             changeToSubClassName(flag) {
                 var searchFlag = flag;
@@ -4853,8 +5050,7 @@
             },
             async searchColorSelection(color, flag) {
                 var app = this;
-                app.colorExistFlag = false;
-                app.defaultColorValue = color[flag];
+                app.defaultColorValue[flag] = color[flag];
                 app.extraColors = [];
                 var arrayFlag = [
                     'brightness',
@@ -4863,9 +5059,11 @@
                     'colored',
                     'multi_colored'
                 ];
+                app.colorSynonyms[flag]=[];
 //                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + color[flag])
-                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(flag))
+                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag])
                     .then(async function (resp) {
+                        console.log(color[flag]);
                         console.log('search carex resp', resp.data);
                         app.searchColor = resp.data.entries;
                         if (app.searchColor.length == 0) {
@@ -4886,31 +5084,22 @@
                                 }
                             }
                             app.currentColorValue.confirmedFlag[flag] = true;
-//
-//                            if (color.id && !color[flag].endsWith('(user defined)')) {
-//                                app.currentColorValue[flag] = color[flag] + '(user defined)';
-//                                app.currentColorValue.confirmedFlag[flag] = true;
-//                                for (var i = 0; i < app.colorDetails.length; i++) {
-//                                    if (app.colorDetails[i].id == color.id) {
-//                                        app.colorDetails[i][flag] = color[flag] + '(user defined)';
-//                                    }
-//                                }
-//                            } else if (!color[flag].endsWith('(user defined)')) {
-//                                app.currentColorValue[flag] = color[flag] + '(user defined)';
-//                                app.currentColorValue.confirmedFlag[flag] = true;
-//                            }
-                        } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == color[flag])
-                            || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == color[flag])))) {
+                        } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('ynonym') && eachProperty.value == color[flag]) || eachColor.term == color[flag]))) {
                             app.searchColorFlag = 1;
-                            app.colorSynonyms = app.searchColor.filter(function (eachColor) {
+                            app.colorSynonyms[flag] = app.searchColor.filter(function (eachColor) {
                                 return eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == color[flag])
                                     || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == color[flag])
                                     || (eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == color[flag])) != null || eachColor.term == color[flag];
 
                             });
-                            for (var i = 0; i < app.colorSynonyms.length; i++) {
-                                if (app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-                                    app.colorSynonyms[i].definition = app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                            console.log(flag);
+                            console.log('app.colorSynonyms',app.colorSynonyms);
+                            for (var i = 0; i < app.colorSynonyms[flag].length; i++) {
+                                if (app.colorSynonyms[flag][i].term == color[flag]){
+                                    app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' (' + flag + ')';
+                                }
+                                if (app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
+                                    app.colorSynonyms[flag][i].definition = app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                     //var index = app.colorDetails.indexOf(color);
                                     //app.colorDefinition[index][flag] = app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                 } else {
@@ -4918,28 +5107,11 @@
                                     app.colorDefinition[flag] = null;
                                 }
                             }
-                        } else if (app.searchColor.find(eachColor => eachColor.term == color[flag])) {
-                            app.searchColorFlag = 2;
-                            app.exactColor = app.searchColor.find(eachColor => eachColor.term == color[flag]);
-                            if (app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-                                app.exactColor.definition = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                                //var index = app.colorDetails.indexOf(color);
-                                //app.colorDefinition[index][flag] = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                            } else {
-                                var index = app.colorDetails.indexOf(color);
-                                app.colorDefinition[flag] = null;
-                            }
-                        } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == color[flag]))) {
-                            app.searchColorFlag = 2;
-                            app.exactColor = app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == color[flag]));
-                            if (app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-                                app.exactColor.definition = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                                var index = app.colorDetails.indexOf(color);
-                                app.colorDefinition[flag] = app.exactColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                            } else {
-                                var index = app.colorDetails.indexOf(color);
-                                app.colorDefinition[flag] = null;
-                            }
+                            app.colorExistFlag = true;
+                            app.colorExistFlag = false;
+                        }
+                        else {
+                            app.searchColorFlag = 0;
                         }
                         console.log('app.searchColorFlag', app.searchColorFlag);
                     });
@@ -4948,28 +5120,19 @@
                 var app = this;
                 app.nonColorExistFlag = false;
                 app.defaultNonColorValue = nonColor[flag];
+                app.nonColorMainValue = nonColor[flag];
+                app.nonColorSynonyms = [];
+                app.colorExistFlag = false;
+
 //                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + nonColor[flag])
+                console.log(nonColor[flag]);
                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + nonColor[flag])
                     .then(function (resp) {
                         console.log('search carex resp', resp.data);
                         app.searchNonColor = resp.data.entries;
-                        if (app.searchNonColor.length == 0) {
-                            app.searchNonColorFlag = 0;
-                            app.currentNonColorValue.confirmedFlag['main_value'] = true;
-//                            if (nonColor.id && !nonColor[flag].endsWith('(user defined)')) {
-//                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
-//                                app.currentNonColorValue.confirmedFlag[flag] = true;
-//                                for (var i = 0; i < app.nonColorDetails.length; i++) {
-//                                    if (app.nonColorDetails[i].id == nonColor.id) {
-//                                        app.nonColorDetails[i][flag] = nonColor[flag] + '(user defined)';
-//                                    }
-//                                }
-//                            } else if (!nonColor[flag].endsWith('(user defined)')) {
-//                                app.currentNonColorValue[flag] = nonColor[flag] + '(user defined)';
-//                                app.currentNonColorValue.confirmedFlag[flag] = true;
-//                            }
-                        } else if (app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == nonColor[flag])
-                            || (eachProperty.property.endsWith('has_not_recommended_synonym') && eachProperty.value == nonColor[flag])))) {
+                        app.searchNonColorFlag = 0;
+                        app.currentNonColorValue.confirmedFlag['main_value'] = true;
+                        if (app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('ynonym') && eachProperty.value == nonColor[flag])) || eachValue.term == nonColor[flag])) {
                             app.searchNonColorFlag = 1;
                             app.nonColorSynonyms = app.searchNonColor.filter(function (eachValue) {
                                 return eachValue.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('hasBroadSynonym') && eachProperty.value == nonColor[flag])
@@ -4978,6 +5141,19 @@
 
                             });
                             for (var i = 0; i < app.nonColorSynonyms.length; i++) {
+                                if (app.nonColorSynonyms[i].term == nonColor[flag]){
+                                    var characterId = app.values.find(eachValue => eachValue.find(eachItem => eachItem.id == app.currentNonColorValue.value_id) != null)[0].character_id;
+                                    var characterName = app.userCharacters.find(ch => ch.id == characterId).name;
+                                    console.log('characterName', characterName);
+
+                                    var searchText = characterName.split(' of ')[0].toLowerCase();
+                                    if (searchText[searchText - 1] == ' ') {
+                                        searchText = searchText.substring(0, searchText.length - 1);
+                                        console.log('searchText1', searchText);
+                                    }
+
+                                    app.defaultNonColorValue = app.defaultNonColorValue + ' (' + searchText + ')';
+                                }
                                 if (app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                                     app.nonColorSynonyms[i].definition = app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                                     var index = app.nonColorDetails.indexOf(nonColor);
@@ -4987,30 +5163,21 @@
                                     app.nonColorDefinition[flag] = null;
                                 }
                             }
-                        } else if (app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag])) {
-                            app.searchNonColorFlag = 2;
-                            app.exactNonColor = app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag]);
-                            if (app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-                                app.exactNonColor.definition = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                                var index = app.nonColorDetails.indexOf(nonColor);
-                                app.nonColorDefinition[flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                                app.currentNonColorValue.confirmedFlag['main_value'] = true;
-                            } else {
-                                var index = app.nonColorDetails.indexOf(nonColor);
-                                app.nonColorDefinition[flag] = null;
-                            }
-                        } else if (app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == nonColor[flag]))) {
-                            app.searchNonColorFlag = 2;
-                            app.exactNonColor = app.searchNonColor.find(eachValue => eachValue.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == nonColor[flag]));
-                            if (app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-                                app.exactNonColor.definition = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                                var index = app.nonColorDetails.indexOf(nonColor);
-                                app.nonColorDefinition[flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                            } else {
-                                var index = app.nonColorDetails.indexOf(nonColor);
-                                app.nonColorDefinition[flag] = null;
-                            }
-                        }
+                        } 
+                        
+                        // else if (app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag])) {
+                        //     app.searchNonColorFlag = 2;
+                        //     app.exactNonColor = app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag]);
+                        //     if (app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
+                        //         app.exactNonColor.definition = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                        //         var index = app.nonColorDetails.indexOf(nonColor);
+                        //         app.nonColorDefinition[flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                        //         app.currentNonColorValue.confirmedFlag['main_value'] = true;
+                        //     } else {
+                        //         var index = app.nonColorDetails.indexOf(nonColor);
+                        //         app.nonColorDefinition[flag] = null;
+                        //     }
+                        // }
                         console.log('app.searchNonColorFlag', app.searchNonColorFlag);
                     });
             },
@@ -5034,6 +5201,7 @@
                 app.currentNonColorValue['main_value'] = app.currentNonColorValue['main_value'].substring(0, app.currentNonColorValue['main_value'].length - 1);
                 app.currentNonColorValue['main_value'] = node.data.text;
                 app.defaultNonColorValue = node.data.text;
+                app.searchNonColorFlag = 0;
 
             },
             checkHaveColorValueSet(text) {
@@ -5169,7 +5337,7 @@
             selectedSynonymForColor(detailFlag) {
                 var app = this;
 
-                app.currentColorValue.confirmedFlag[detailFlag] = true;
+                //app.currentColorValue.confirmedFlag[detailFlag] = true;
             },
             selectExtraOption(flag, value, currentFlag) {
                 var app = this;
@@ -5212,8 +5380,29 @@
                 console.log('app.userCharacters', app.userCharacters);
                 console.log('value', value);
                 app.copyValue = value;
-                app.confirmOverwriteFlag = true;
-
+                var i;
+                for (var i=0;i<app.values.length;i++){
+                    for (var j=0;j<app.values[i].length;j++){
+                        if (parseInt(app.values[i][j].header_id)!=1
+                            && app.values[i][j].character_id==value.character_id
+                            && app.values[i][j].header_id!=value.header_id
+                            && app.values[i][j].value!=''
+                            && app.values[i][j].value!=null){
+                                app.confirmOverwriteFlag = true;
+                                return;
+                        }
+                    }
+                }
+                for (var i=0;i<app.values.length;i++){
+                    for (var j=0;j<app.values[i].length;j++){
+                        if (parseInt(app.values[i][j].header_id)!=1
+                            && app.values[i][j].character_id==value.character_id
+                            && app.values[i][j].header_id!=value.header_id){
+                                app.values[i][j].value=app.copyValue.value;
+                        }
+                    }
+                }
+                this.confirmOverwrite();
             },
             confirmOverwrite() {
                 var app = this;
@@ -5244,6 +5433,7 @@
             },
             calcSummary(row) {
                 var app = this;
+                console.log('row',row);
 
                 var characterName = row.find(each => each.header_id == 1).value;
                 if (app.checkNumericalCharacter(characterName)) {
@@ -5252,7 +5442,7 @@
                         var arrayLength = 0;
                         for (var i = 0; i < row.length; i++) {
                             if (row[i].header_id != 1 && row[i].value != null && row[i].value != '' && row[i].value != undefined) {
-                                sum += parseInt(row[i].value, 10); //don't forget to add the base
+                                sum += parseFloat(row[i].value, 10); //don't forget to add the base
                                 arrayLength++;
                             }
                         }
@@ -5325,6 +5515,7 @@
                     }
                     console.log('app.colorationData', app.colorationData);
                 });
+            console.log('standard_characters');
             axios.get('/chrecorder/public/api/v1/standard_characters')
                 .then(function (resp) {
                     console.log('standardCharacters', resp);
@@ -5356,6 +5547,7 @@
                         }
                         app.standardCharacters.push(temp);
                     }
+                    console.log('v1/character');
                     axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
                         .then(function (resp) {
                             console.log('resp character', resp.data);
@@ -5375,18 +5567,21 @@
                                 if (app.values.find(value => value.header_id != 1).length != 0) {
                                     app.matrixShowFlag = true;
                                     app.collapsedFlag = true;
-                                    app.showTableForTab(app.userTags[0].tag_name);
 
                                 }
                             }
 
                             app.refreshUserCharacters();
+                            if (app.currentTab!='')
+                                app.showTableForTab(app.currentTab);
                         });
                 });
 
             axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id)
                 .then(function (resp) {
+                    resp.data.sort((a,b) => app.tagOrder(a)-app.tagOrder(b));
                     app.userTags = resp.data;
+                    app.showTableForTab(app.userTags[0].tag_name);
                     console.log('userTags', app.userTags);
                 });
         },
@@ -5395,8 +5590,6 @@
             app.user.name = app.user.email.split('@')[0];
             app.characterUsername = app.user.name;
             sessionStorage.setItem('userId', app.user.id);
-
-
         },
     }
 

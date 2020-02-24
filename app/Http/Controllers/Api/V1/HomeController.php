@@ -14,6 +14,7 @@ use App\Header;
 use App\Value;
 use App\ColorDetails;
 use App\NonColorDetails;
+use DB;
 
 class HomeController extends Controller
 {
@@ -71,71 +72,148 @@ class HomeController extends Controller
 
         $allCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
         $headers = $this->getHeaders();
+        $values = Value::join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->select('values.id as id','values.character_id as character_id', 'values.header_id as header_id','values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
+        $colorDetails = ColorDetails::join('values','values.id','=','color_details.value_id')->join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->get();
+        $nonColorDetails = NonColorDetails::join('values','values.id','=','non_color_details.value_id')->join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->get();
+
         $characters = [];
-        foreach ($allCharacters as $eachCharacter) {
-            $value_array = [];
-            foreach ($headers as $header) {
-                if ($value = Value::where(['character_id'=>$eachCharacter->id, 'header_id'=>$header->id])->first()) {
-
-                    $currentCharacterName = Character::where('id', '=', $value->character_id)->first()->name;
-                    if (substr($currentCharacterName, 0, 5) == 'Color' && $value->header_id != 1) {
-                        $colorDetails = ColorDetails::where('value_id', '=', $value->id)->get();
-
-                        if ($colorDetails->first()) {
-                            foreach ($colorDetails as $eachColor) {
-                                $value->value = $value->value . ($eachColor->negation ? ($eachColor->negation . ' ') : '') .
-                                    ($eachColor->pre_constraint ? ($eachColor->pre_constraint . ' ') : '') .
-                                    ($eachColor->certainty_constraint ? ($eachColor->certainty_constraint . ' ') : '') .
-                                    ($eachColor->degree_constraint ? ($eachColor->degree_constraint . ' ') : '') .
-                                    ($eachColor->brightness ? ($eachColor->brightness . ' ') : '') .
-                                    ($eachColor->reflectance ? ($eachColor->reflectance . ' ') : '') .
-                                    ($eachColor->saturation ? ($eachColor->saturation . ' ') : '') .
-                                    ($eachColor->colored ? ($eachColor->colored . ' ') : '') .
-                                    ($eachColor->multi_colored ? ($eachColor->multi_colored . ' ') : '') .
-                                    ($eachColor->post_constraint ? ($eachColor->post_constraint . ' ') : '') ;
-                                if ($value->value != '') {
-                                    $value->value = substr($value->value, 0, -1);
-                                    $value->value = $value->value . '; ';
-                                }
-                            }
-                            if ($value->value != '') {
-                                $value->value = substr($value->value, 0, -1);
-                            }
-//                            $value->save();
-                        }
-
-                    } else if (!$this->checkNumericalCharacter($currentCharacterName) && $value->header_id != 1) {
-                        $nonColorDetails = NonColorDetails::where('value_id', '=', $value->id)->get();
-
-                        if ($nonColorDetails->first()) {
-                            foreach ($nonColorDetails as $eachValue) {
-                                $value->value = $value->value . ($eachValue->negation ? ($eachValue->negation . ' ') : '') .
-                                    ($eachValue->pre_constraint ? ($eachValue->pre_constraint . ' ') : '') .
-                                    ($eachValue->certainty_constraint ? ($eachValue->certainty_constraint . ' ') : '') .
-                                    ($eachValue->degree_constraint ? ($eachValue->degree_constraint . ' ') : '') .
-                                    ($eachValue->main_value ? ($eachValue->main_value . ' ') : '') .
-                                    ($eachValue->post_constraint ? ($eachValue->post_constraint . ' ') : '');
-                                if ($value->value != '') {
-                                    $value->value = substr($value->value, 0, -1);
-                                    $value->value = $value->value . '; ';
-                                }
-                            }
-                            if ($value->value != '') {
-                                $value->value = substr($value->value, 0, -1);
-                            }
-                        }
-                    }
-
-                    $value->username = $eachCharacter->username;
-                    $value->unit = $eachCharacter->unit;
-                    $value->summary = $eachCharacter->summary;
-                    $value->standard = $eachCharacter->standard;
-                    array_push($value_array, $value);
-                }
-
-            }
-            array_push($characters, $value_array);
+        $valueFlag = [];
+        $character_id = [];
+        $header_id = [];
+        $value_id = [];
+        $char_count = 0;
+        $i = 0;
+        foreach ($headers as $header){
+            $header_id[$header->id] = $i;
+            $i = $i + 1;
         }
+        foreach ($allCharacters as $ac){
+            $character_id[$ac->id] = $char_count;
+            $characters[$char_count] = [];
+            for ($j = 0; $j < $i ; $j ++){
+                array_push($characters[$char_count],[]);
+            }
+            $char_count = $char_count + 1;
+        }
+
+        foreach ($values as $val){
+            //$val->value = substr($val->value, 0, -1);
+            if (!$val->value){
+                $val->value = '';
+            }
+            $characters[$character_id[$val->character_id]][$header_id[$val->header_id]] = $val;
+            $value_id[$val->id] = 1;
+        }
+
+        foreach ($colorDetails as $col){
+            if ($value_id[$col->value_id]){
+                if ($value_id[$col->value_id] == 1){
+                    $value_id[$col->value_id] = 2;
+                    $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = '';
+                }
+                $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value . ($col->negation ? ($col->negation . ' ') : '') .
+                    ($col->pre_constraint ? ($col->pre_constraint . ' ') : '') .
+                    ($col->certainty_constraint ? ($col->certainty_constraint . ' ') : '') .
+                    ($col->degree_constraint ? ($col->degree_constraint . ' ') : '') .
+                    ($col->brightness ? ($col->brightness . ' ') : '') .
+                    ($col->reflectance ? ($col->reflectance . ' ') : '') .
+                    ($col->saturation ? ($col->saturation . ' ') : '') .
+                    ($col->colored ? ($col->colored . ' ') : '') .
+                    ($col->multi_colored ? ($col->multi_colored . ' ') : '') .
+                    ($col->post_constraint ? ($col->post_constraint . ' ') : '') ;
+                if ($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value != '') {
+                    $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = substr($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value, 0, -1);
+                    $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value . '; ';
+                }
+            }
+        }
+
+        foreach ($nonColorDetails as $nonCol){
+            if ($value_id[$nonCol->value_id]){
+                if ($value_id[$nonCol->value_id] == 1){
+                    $value_id[$nonCol->value_id] = 2;
+                    $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = '';
+                }
+                $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . ($eachValue->negation ? ($eachValue->negation . ' ') : '') .
+                    ($eachValue->pre_constraint ? ($eachValue->pre_constraint . ' ') : '') .
+                    ($eachValue->certainty_constraint ? ($eachValue->certainty_constraint . ' ') : '') .
+                    ($eachValue->degree_constraint ? ($eachValue->degree_constraint . ' ') : '') .
+                    ($eachValue->main_value ? ($eachValue->main_value . ' ') : '') .
+                    ($eachValue->post_constraint ? ($eachValue->post_constraint . ' ') : '');
+                if ($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value != '') {
+                    $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = substr($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value, 0, -1);
+                    $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . '; ';
+                }
+            }
+        }
+
+        // foreach ($allCharacters as $eachCharacter) {
+        //     $value_array = [];
+        //     foreach ($headers as $header) {
+        //         $flag = false;
+        //         foreach ($values as $val){
+        //             if ($val->character_id == $eachCharacter->id && $val->header_id == $header->id){
+        //                 $value = $val;
+        //                 $flag = true;
+        //                 break;
+        //             }
+        //         }
+        //         if ($flag) {
+        //             $currentCharacterName = $eachCharacter->name;
+        //             if (substr($currentCharacterName, 0, 5) == 'Color' && $value->header_id != 1) {
+        //                 foreach($colorDetails as $col){
+        //                     if ($col->value_id == $value->id){
+        //                         $value->value = $value->value . ($eachColor->negation ? ($eachColor->negation . ' ') : '') .
+        //                             ($eachColor->pre_constraint ? ($eachColor->pre_constraint . ' ') : '') .
+        //                             ($eachColor->certainty_constraint ? ($eachColor->certainty_constraint . ' ') : '') .
+        //                             ($eachColor->degree_constraint ? ($eachColor->degree_constraint . ' ') : '') .
+        //                             ($eachColor->brightness ? ($eachColor->brightness . ' ') : '') .
+        //                             ($eachColor->reflectance ? ($eachColor->reflectance . ' ') : '') .
+        //                             ($eachColor->saturation ? ($eachColor->saturation . ' ') : '') .
+        //                             ($eachColor->colored ? ($eachColor->colored . ' ') : '') .
+        //                             ($eachColor->multi_colored ? ($eachColor->multi_colored . ' ') : '') .
+        //                             ($eachColor->post_constraint ? ($eachColor->post_constraint . ' ') : '') ;
+        //                         if ($value->value != '') {
+        //                             $value->value = substr($value->value, 0, -1);
+        //                             $value->value = $value->value . '; ';
+        //                         }
+        //                     }
+        //                 }
+        //                 if ($value->value != '') {
+        //                     $value->value = substr($value->value, 0, -1);
+        //                 }
+
+        //             } else if (!$this->checkNumericalCharacter($currentCharacterName) && $value->header_id != 1) {
+        //                 foreach($nonColorDetails as $nonCol){
+        //                     if ($nonCol->value_id == $value->id){
+        //                         $value->value = $value->value . ($eachValue->negation ? ($eachValue->negation . ' ') : '') .
+        //                             ($eachValue->pre_constraint ? ($eachValue->pre_constraint . ' ') : '') .
+        //                             ($eachValue->certainty_constraint ? ($eachValue->certainty_constraint . ' ') : '') .
+        //                             ($eachValue->degree_constraint ? ($eachValue->degree_constraint . ' ') : '') .
+        //                             ($eachValue->main_value ? ($eachValue->main_value . ' ') : '') .
+        //                             ($eachValue->post_constraint ? ($eachValue->post_constraint . ' ') : '');
+        //                         if ($value->value != '') {
+        //                             $value->value = substr($value->value, 0, -1);
+        //                             $value->value = $value->value . '; ';
+        //                         }
+        //                     }
+        //                 }
+                        
+        //                 if ($value->value != '') {
+        //                     $value->value = substr($value->value, 0, -1);
+        //                 }
+        //             }
+
+        //             // $value->username = $eachCharacter->username;
+        //             // $value->unit = $eachCharacter->unit;
+        //             // $value->summary = $eachCharacter->summary;
+        //             // $value->standard = $eachCharacter->standard;
+        //             array_push($value_array, $value);
+        //         }
+
+        //     }
+        //     array_push($characters, $value_array);
+        // }
 
         event(new MyEvent());
 
@@ -160,17 +238,18 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $arrayCharacters = [];
-        if (Character::where('owner_name', '=', $username)->first()) {
-//            $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('standard_tag', 'ASC')->orderBy('order', 'ASC')->get();
-            $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
-        }
-        foreach ($arrayCharacters as $c) {
 
-            $usageCount = Value::where('character_id', '=', $c->id)
-                ->where('header_id', '>=', 2)
-                ->where('value', '<>', '')
-                ->count();
-            $c->usage_count = $usageCount;
+        $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
+        $usageCounts = [];
+        $usageCounts = Character::where('owner_name','=',$username)->join('values','values.character_id','=','characters.id')->where('header_id','>=',2)->where('value','<>','')->select('characters.id',DB::raw('count(values.id) as usageCount'))->groupBy('characters.id')->get();
+
+        foreach($usageCounts as $uc){
+            foreach($arrayCharacters as $ac){
+                if ($ac->id == $uc->id){
+                    $ac->usageCount = $uc->usageCount;
+                    break;
+                }
+            }
         }
         return $arrayCharacters;
     }
@@ -180,31 +259,36 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $standardCharacters = StandardCharacter::all();
+        $standardUsages = Character::join('standard_characters','standard_characters.name','=','characters.name')->where('standard_characters.username','=','characters.name')->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))->groupBy('standard_characters.id')->get();
 
-        foreach ($standardCharacters as $eachCharacter) {
-            $tempArray = Character::where('username', '=', $eachCharacter->username)
-                ->where('name', '=', $eachCharacter->name)
-                ->get();
-            $tempCount = 0;
-            foreach ($tempArray as $tempCharacter) {
-                $tempCount += $tempCharacter->usage_count;
+        foreach ($standardUsages as $su) {
+            foreach($standardCharacters as $sc){
+                if ($sc->id == $su->id){
+                    $sc->usage_count = $su->usage_count;
+                    break;
+                }
             }
-            $eachCharacter->usage_count = $tempCount;
         }
+        
+        foreach($standardCharacters as $sc){
+            if (!$sc->usage_count){
+                $sc->usage_count = 0;
+            }
+        }
+
         $standardCharacters = $standardCharacters->toArray();
 
         $userCharacters = Character::where('standard', '=', 0)
             ->whereRaw('username LIKE CONCAT("%", owner_name)')
             ->get();
-        foreach ($userCharacters as $eachCharacter) {
-            $tempArray = Character::where('username', '=', $eachCharacter->username)
-                ->where('name', '=', $eachCharacter->name)
-                ->get();
-            $tempCount = 0;
-            foreach ($tempArray as $tempCharacter) {
-                $tempCount += $tempCharacter->usage_count;
+        $userUsages = DB::table('characters as A')->join('characters as B', 'A.name', '=', 'B.name')->where('A.standard','=',0)->whereRaw('A.username like concat("%", A.owner_name)')->where('A.username','=','B.username')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
+        foreach ($userUsages as $uu) {
+            foreach ($userCharacters as $uc){
+                if ($uc->id == $uu->id){
+                    $uc->usage_count = $uu->usage_count;
+                    break;
+                }
             }
-            $eachCharacter->usage_count = $tempCount;
         }
         $userCharacters = $userCharacters->toArray();
 
@@ -331,11 +415,19 @@ class HomeController extends Controller
         $user = User::where('id', '=', $userId)->first();
         $username = explode('@', $user['email'])[0];
 
+        
+        $returnHeaders = [];
+        $returnValues = [];
+        $returnCharacters = [];
+        $returnTaxon = '';
+        $returnAllDetailValues = ['colorValues' => [], 'nonColorValues' => []];
+
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnTaxon = $user->taxon;
         $returnAllDetailValues = $this->getAllColorValues();
+
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -408,24 +500,54 @@ class HomeController extends Controller
         $columnCount = (int)$request->input('column_count');
         $user->taxon = $request->input('taxon');
         $user->save();
-        $previousHeaderCount = Header::where('user_id', '=', $request->input('user_id'))->count();
+        $headers = Header::where('user_id', '=', $request->input('user_id'))->get();
+        $previousHeaderCount = $headers->count();
+        $sampleNum = 1;
+
         if ($previousHeaderCount < $columnCount) {
             for ($i = 0; $i < ($columnCount - $previousHeaderCount); $i++) {
+                $flag = true;
+                while ($flag){
+                    $flag = false;
+                    foreach ($headers as $header){
+                        if ($header->header == 'Sample'.$sampleNum){
+                            $sampleNum = $sampleNum + 1;
+                            $flag = true;
+                        }
+                    }
+                }
                 $header = Header::create([
                     'user_id' => $request->input('user_id'),
-                    'header' => 'Sample' . ($previousHeaderCount + $i + 1)
+                    'header' => 'Sample' . ($sampleNum),
                 ]);
             }
         }
 
         $headers = Header::where('user_id', '=', $request->input('user_id'))->get();
 
+        $headerValues = Value::where('header_id', '=', 1)->get();
+        $values = Value::join('headers', 'headers.id', '=', 'values.header_id')->where('headers.user_id', '=', $request->input('user_id'))->get();
+        $temp = [];
+        $valueFlag = [];
         foreach ($characters as $eachCharacter) {
-            $value = Value::where('character_id', '=', $eachCharacter->id)
-                ->where('header_id', '=', 1)
-                ->first();
-            if ($value == null) {
-                Value::create([
+            $valueFlag[$eachCharacter->id] = [];
+            foreach ($headers as $header){
+                $valueFlag[$eachCharacter->id][$header->id] = 1;
+            }
+        }
+        foreach ($values as $val){
+            $valueFlag[$val->character_id][$val->header_id] = 0;
+        }
+        foreach ($characters as $eachCharacter) {
+            $flag = true;
+            foreach ($headerValues as $hv){
+                if ($hv['character_id'] == $eachCharacter->id){
+                    $flag = false;
+                    break;
+                }
+            }
+            if ($flag) {
+                array_push($temp,[
                     'character_id' => $eachCharacter->id,
                     'header_id' => 1,
                     'value' => $eachCharacter->name,
@@ -433,11 +555,8 @@ class HomeController extends Controller
 
             }
             foreach($headers as $header) {
-                $value = Value::where('character_id', '=', $eachCharacter->id)
-                    ->where('header_id', '=', $header->id)
-                    ->first();
-                if ($value == null) {
-                    Value::create([
+                if ($valueFlag[$eachCharacter->id][$header->id]) {
+                    array_push($temp,[
                         'character_id' => $eachCharacter->id,
                         'header_id' => $header->id,
                         'value' => '',
@@ -445,6 +564,7 @@ class HomeController extends Controller
                 }
             }
         }
+        Value::insert($temp);
 
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
@@ -623,9 +743,26 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
+        $order = Character::max('order') + 1;
+        $characters = Character::where('owner_name', '=', $username)->select('name','method_from','method_to','method_include','method_exclude','method_where','owner_name')->get();
+        $userTags = UserTag::where('user_id', '=', Auth::id())->get();
+        $newCharacters = [];
+        $newUserTags = [];
         foreach ($standardCharacters as $eachCharacter) {
-            if (!Character::where('name', '=', $eachCharacter['name'])->where('owner_name', '=', $username)->first()) {
-                $character = new Character([
+            $flag = true;
+            foreach ($characters as $ch){
+                if ($eachCharacter['name'] == $ch['name']
+                  && $eachCharacter['method_from'] == $ch['method_from']
+                  && $eachCharacter['method_to'] == $ch['method_to']
+                  && $eachCharacter['method_include'] == $ch['method_include']
+                  && $eachCharacter['method_exclude'] == $ch['method_exclude']
+                  && $eachCharacter['method_where'] == $ch['method_where']){
+                    $flag = false;
+                    break;
+                }
+            }
+            if ($flag) {
+                array_push($newCharacters,[
                     'name' => $eachCharacter['name'],
                     'method_from' => $eachCharacter['method_from'],
                     'method_to' => $eachCharacter['method_to'],
@@ -638,25 +775,36 @@ class HomeController extends Controller
                     'username' => $eachCharacter['username'],
                     'owner_name' => $username,
                     'usage_count' => 0,
-                    'show_flag' => $eachCharacter['show_flag'],
+                    'show_flag' => $eachCharacter['show_flag']?1:0,
                     'standard_tag' => $eachCharacter['standard_tag'],
                     'summary' => $eachCharacter['summary'],
+                    'order' => $order,
                 ]);
-
-                $character->save();
-
-                $character->order = $character->id;
-                $character->save();
-
-                if (!UserTag::where('user_id', '=', Auth::id())->where('tag_name', '=', $eachCharacter['standard_tag'])->first()) {
-                    UserTag::create([
+                $order = $order + 1;
+                
+                $flag = true;
+                foreach ($userTags as $tag){
+                    if ($tag['tag_name'] == $eachCharacter['standard_tag']){
+                        $flag = false;
+                        break;
+                    }
+                }
+                foreach ($newUserTags as $tag){
+                    if ($tag['tag_name'] == $eachCharacter['standard_tag']){
+                        $flag = false;
+                        break;
+                    }
+                }
+                if ($flag) {
+                    array_push($newUserTags,[
                         'user_id' => Auth::id(),
                         'tag_name' => $eachCharacter['standard_tag']
                     ]);
                 }
             }
-
         }
+        Character::insert($newCharacters);
+        UserTag::insert($newUserTags);
 
         $returnCharacters = $this->getArrayCharacters();
 
@@ -667,21 +815,29 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
-        $characters = Character::where('owner_name', '=', $username)->where('standard', '=', 1)->get();
-        foreach($characters as $eachCharacter) {
-            if (Value::where('character_id', '=', $eachCharacter->id)->first()) {
-                Value::where('character_id', '=', $eachCharacter->id)->delete();
-            }
-            if (Character::where('standard_tag', '=', $eachCharacter->standard_tag)->where('owner_name', '=', $username)->count() < 2) {
-                UserTag::where('user_id', '=', Auth::id())->where('tag_name', '=', $eachCharacter->standard_tag)->delete();
-            }
-            $eachCharacter->delete();
+        $st_tags = Character::where('owner_name', '=', $username)->groupBy('standard_tag')->having(DB::raw('sum(standard)'),'>',0)->having(DB::raw('sum(standard)-count(*)'),'<',2)->select('standard_tag')->get();
+        $tags = [];
+        foreach($st_tags as $tag){
+            array_push($tags,$tag->standard_tag);
         }
-        if (!Character::where('username', '=', $username)->first()) {
-            if (Header::where('user_id', '=', Auth::id())->first()) {
-                Header::where('user_id', '=', Auth::id())->delete();
-            }
-        }
+        Character::where('owner_name', '=', $username)->where('standard', '=', 1)->delete();
+        UserTag::where('user_id','=',Auth::id())->whereIn('tag_name',$tags)->delete();
+
+        // $characters = Character::where('owner_name', '=', $username)->where('standard', '=', 1)->get();
+        // foreach($characters as $eachCharacter) {
+        //     if (Value::where('character_id', '=', $eachCharacter->id)->first()) {
+        //         Value::where('character_id', '=', $eachCharacter->id)->delete();
+        //     }
+        //     if (Character::where('standard_tag', '=', $eachCharacter->standard_tag)->where('owner_name', '=', $username)->count() < 2) {
+        //         UserTag::where('user_id', '=', Auth::id())->where('tag_name', '=', $eachCharacter->standard_tag)->delete();
+        //     }
+        //     $eachCharacter->delete();
+        // }
+        // if (!Character::where('username', '=', $username)->first()) {
+        //     if (Header::where('user_id', '=', Auth::id())->first()) {
+        //         Header::where('user_id', '=', Auth::id())->delete();
+        //     }
+        // }
 
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
@@ -695,6 +851,7 @@ class HomeController extends Controller
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'tags' => $returnUserTags,
+            'delTags' => $tags,
         ];
 
         return $data;
