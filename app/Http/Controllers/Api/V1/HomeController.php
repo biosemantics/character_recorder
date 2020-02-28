@@ -134,12 +134,12 @@ class HomeController extends Controller
                     $value_id[$nonCol->value_id] = 2;
                     $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = '';
                 }
-                $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . ($eachValue->negation ? ($eachValue->negation . ' ') : '') .
-                    ($eachValue->pre_constraint ? ($eachValue->pre_constraint . ' ') : '') .
-                    ($eachValue->certainty_constraint ? ($eachValue->certainty_constraint . ' ') : '') .
-                    ($eachValue->degree_constraint ? ($eachValue->degree_constraint . ' ') : '') .
-                    ($eachValue->main_value ? ($eachValue->main_value . ' ') : '') .
-                    ($eachValue->post_constraint ? ($eachValue->post_constraint . ' ') : '');
+                $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . ($nonCol->negation ? ($nonCol->negation . ' ') : '') .
+                    ($nonCol->pre_constraint ? ($nonCol->pre_constraint . ' ') : '') .
+                    ($nonCol->certainty_constraint ? ($nonCol->certainty_constraint . ' ') : '') .
+                    ($nonCol->degree_constraint ? ($nonCol->degree_constraint . ' ') : '') .
+                    ($nonCol->main_value ? ($nonCol->main_value . ' ') : '') .
+                    ($nonCol->post_constraint ? ($nonCol->post_constraint . ' ') : '');
                 if ($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value != '') {
                     $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = substr($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value, 0, -1);
                     $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . '; ';
@@ -215,7 +215,7 @@ class HomeController extends Controller
         //     array_push($characters, $value_array);
         // }
 
-        event(new MyEvent());
+        // event(new MyEvent());
 
         return $characters;
     }
@@ -259,7 +259,7 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $standardCharacters = StandardCharacter::all();
-        $standardUsages = Character::join('standard_characters','standard_characters.name','=','characters.name')->where('standard_characters.username','=','characters.name')->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))->groupBy('standard_characters.id')->get();
+        $standardUsages = Character::join('standard_characters','standard_characters.name','=','characters.name')->where('standard_characters.username','=','characters.username')->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))->groupBy('standard_characters.id')->get();
 
         foreach ($standardUsages as $su) {
             foreach($standardCharacters as $sc){

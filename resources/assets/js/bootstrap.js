@@ -53,17 +53,17 @@ $(document).ready(()=>{
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
-import Echo from "laravel-echo"
-window.Pusher = require('pusher-js');
+// import Echo from "laravel-echo"
+// window.Pusher = require('pusher-js');
 
-window.Echo = new Echo({
-    broadcaster: 'pusher',
-    key: '40228f4a5f0fa5fe6b52',
-    // key: '2d65978d3e1e850a0828',
-    cluster: 'us3',
-    // disabledTransports: ['sockjs'],
-    forceTLS: true
-});
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: '40228f4a5f0fa5fe6b52',
+//     // key: '2d65978d3e1e850a0828',
+//     cluster: 'us3',
+//     // disabledTransports: ['sockjs'],
+//     forceTLS: true
+// });
 //
 // var channel = Echo.channel('my-channel');
 // channel.listen('.my-event', function(data) {

@@ -779,3 +779,17 @@ body {
 /*.container .table-responsive {*/
     /*min-height: 500px;*/
 /*}*/
+
+.numberCircle {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+
+    background: none;
+    border: 3px solid black;
+    color: black;
+    text-align: center;
+
+    font: 24px Arial, sans-serif;
+}

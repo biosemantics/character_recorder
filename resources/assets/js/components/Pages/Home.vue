@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="margin-top-10">
                                     <b>I have <input v-model="columnCount" style="width: 180px;"
-                                                     placeholder="3"> specimens.</b>
+                                                     placeholder="3"> specimens / samples.</b>
                                 </div>
                                 <div class="margin-top-10 row">
                                     <div class="col-md-12" style="line-height: 38px;">
@@ -131,10 +131,6 @@
                         </div>
                         <div v-if="collapsedFlag == true">
                             <div style="max-width: 1000px; margin-right: auto; margin-left: auto;">
-                                <div class="col-md-1">
-                                    <a class="btn btn-primary" v-on:click="collapsedFlag = false;" style="width: 40px;"><span
-                                            class="glyphicon glyphicon-chevron-down"></span></a>
-                                </div>
                                 <div class="col-md-2">
                                     <input v-model="taxonName" v-on:blur="changeTaxonName()"
                                            style="line-height: 38px; border: none;">
@@ -143,7 +139,7 @@
                                     <input v-model="columnCount" v-on:keyup.enter="changeColumnCount()"
                                            v-on:blur="changeColumnCount()"
                                            style="width: 40px; margin-left: 30px; line-height: 38px; border:none;">
-                                    Specimens
+                                    Samples
                                 </div>
                                 <div class="col-md-5">
                                     <model-select :options="standardCharacters"
@@ -152,6 +148,10 @@
                                                   @searchchange="printSearchText"
                                                   @select="onSelect"
                                     />
+                                </div>
+                                <div class="col-md-1">
+                                    <a class="btn btn-primary" v-on:click="collapsedFlag = false;" style="width: 40px;"><span
+                                            class="glyphicon glyphicon-chevron-down"></span></a>
                                 </div>
                             </div>
                         </div>
@@ -353,16 +353,22 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input v-model="lastCharacter" placeholder="enter a singular noun">
+                                                        <input v-model="lastCharacter" v-on:focus="nounUndefined = false; lastCharacterDefinition = ''" placeholder="enter a singular noun">
                                                     </div>
 
                                                     <!--<input autofocus v-model="character.name" v-on:input="checkMsg"/>-->
                                                 </div>
+                                                <br>
+                                                <div class ="row" v-if="nounUndefined">
+                                                    <div class = "col-md-12">
+                                                        What is {{lastCharacter}}? : <input v-model="lastCharacterDefinition" style="width:100%" :placeholder="'enter the definition of ' + lastCharacter">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <a class="btn btn-primary ok-btn"
-                                                   v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter }"
-                                                   v-on:click="storeCharacter()">
+                                                   v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter || nounUndefined && !lastCharacterDefinition}"
+                                                   v-on:click="checkStoreCharacter()">
                                                     &nbsp; &nbsp; Next: Define Character &nbsp; &nbsp; </a>
                                                 <a v-on:click="cancelNewCharacter()" class="btn btn-danger">Cancel</a>
                                             </div>
@@ -391,7 +397,7 @@
                                                             <li class="method"
                                                                 v-bind:class="{'back-grey': !checkHaveUnit(character.name)}">
                                                                 <a
-                                                                        :disabled="!checkHaveUnit(character.name)"
+                                                                        :disabled="(!checkHaveUnit(character.name) || editFlag)"
                                                                         v-on:click="showDetails('method', metadataFlag)">1.
                                                                     Method<br><span
                                                                             class="glyphicon glyphicon-edit"></span></a>
@@ -636,7 +642,7 @@
                         <div class="modal-mask">
                             <div class="modal-wrapper">
                                 <div class="modal-container">
-                                    <div style="max-height:800px; overflow-y:scroll;">
+                                    <div style="max-height:80vh; overflow-y:scroll;">
                                         <div class="modal-header">
                                             <b>{{ currentCharacter.name }}</b> <br/>
                                             <hr>
@@ -890,7 +896,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'brightness', $event)"
-                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'brightness')"
+                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.brightness"
                                                             class="color-input">
@@ -900,7 +906,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'reflectance', $event)"
-                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'reflectance')"
+                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.reflectance"
                                                             class="color-input">
@@ -910,7 +916,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'saturation', $event)"
-                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'saturation')"
+                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.saturation"
                                                             class="color-input">
@@ -920,7 +926,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'colored', $event)"
-                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'colored')"
+                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.colored"
                                                             class="color-input">
@@ -930,7 +936,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'multi_colored', $event)"
-                                                            v-on:keyup.enter="searchColorSelection(currentColorValue, 'multi_colored')"
+                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.multi_colored"
                                                             class="color-input">
@@ -987,12 +993,12 @@
                                                 || currentColorValue.detailFlag == 'colored'
                                                 || currentColorValue.detailFlag == 'multi_colored') && !colorExistFlag"
                                                     style="margin-top: 10px;">
-
                                                     <div v-for="flag in colorFlags" v-if="colorSynonyms[flag]" :key="flag">
-                                                        <big>{{flag}}</big>
+                                                        <big>{{flag}} : {{originColorValue[flag]}}</big>
+                                                        <br>
+                                                        <b>Did you mean?</b>
                                                         <div style="margin-left:20px">
                                                             <div v-for="eachSynonym in colorSynonyms[flag]">
-                                                                <b>Did you mean?</b>
                                                                 <input type="radio" v-bind:id="eachSynonym.term"
                                                                     v-bind:value="eachSynonym.term"
                                                                     v-on:change="selectedSynonymForColor(flag)"
@@ -1031,32 +1037,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div v-if="searchColorFlag == 2">
-                                                        Did you mean <b>{{ exactColor.term }}</b>?<br/>
-                                                        Definition of <b> {{ exactColor.term }} </b>: <input
-                                                            v-model="colorDefinition[currentColorValue.detailFlag]"
-                                                            style="width: 70%;">
-                                                        <!--Hong modified this: Did you mean <b>{{ exactColor.term }}</b>?<br/>
-                                                        Current Definition: <input
-                                                            v-model="app.exactColor.definition"
-                                                            style="width: 70%;">   -->
-                                                        <br/><br/>If definition is lacking, you can propose or edit the
-                                                        definition above. <br/>
-
-
-                                                    </div>
-                                                    <!-- <div v-if="searchColorFlag !=2"
-                                                        v-for="(eachOption, index) in extraColors">
-                                                        <input type="radio"
-                                                            v-bind:id="'extra-option-' + index"
-                                                            value=""
-                                                            v-on:change="selectExtraOption(eachOption.flag, eachOption.value, currentColorValue.detailFlag)"
-                                                            v-model="currentColorValue[currentColorValue.detailFlag]">
-                                                        <label v-bind:for="'extra-option-' + index">{{ eachOption.value }}
-                                                            describes {{ changeFlagToLabel(eachOption.flag) }}, move {{
-                                                            eachOption.value }} to {{ changeFlagToLabel(eachOption.flag)
-                                                            }}</label>
-                                                    </div> -->
                                                     
                                                 </div>
                                             </div>
@@ -1074,10 +1054,10 @@
                                                    :disabled="saveColorButtonFlag"
                                                    v-on:click="saveColorValue()">
                                                     Save </a>
-                                                <a class="btn btn-primary ok-btn"
+                                                <!-- <a class="btn btn-primary ok-btn"
                                                    :disabled="saveColorButtonFlag"
                                                    v-on:click="saveColorValue(true)">
-                                                    Save & New </a>
+                                                    Save & New </a> -->
                                                 <a v-on:click="colorDetailsFlag = false;"
                                                    class="btn btn-danger">Cancel</a>
                                             </div>
@@ -1093,7 +1073,7 @@
                         <div class="modal-mask">
                             <div class="modal-wrapper">
                                 <div class="modal-container">
-                                    <div style="max-height:800px; overflow-y:scroll;">
+                                    <div style="max-height:80vh; overflow-y:scroll;">
                                         <div class="modal-header">
                                             <b>{{ currentCharacter.name }}</b> <br/>
                                             <hr>
@@ -1305,7 +1285,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeNonColorSection(currentNonColorValue, 'main_value', $event)"
-                                                            v-on:keyup.enter="searchNonColorSelection(currentNonColorValue, 'main_value')"
+                                                            v-on:keyup.enter="$event.target.blur();saveNonColorValue();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentNonColorValue.main_value"
                                                             >
@@ -1354,10 +1334,10 @@
                                                 </div>
                                                 <div v-if="(currentNonColorValue.detailFlag == 'main_value') && !nonColorExistFlag"
                                                     style="margin-top: 10px;">
+                                                    <b>Did you mean? </b>
 
                                                     <div v-if="searchNonColorFlag == 1">
                                                         <div v-for="eachSynonym in nonColorSynonyms">
-                                                            <b>Did you mean? </b>
                                                             <input type="radio" v-bind:id="eachSynonym.term"
                                                                 v-bind:value="eachSynonym.term"
                                                                 v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
@@ -1375,15 +1355,6 @@
                                                             </div> -->
                                                         </div>
                                                     </div>
-                                                    <!-- <div v-if="searchNonColorFlag == 2">
-                                                        Did you mean <b>{{ exactNonColor.term }}</b>?<br/>
-                                                        Definition of <b> {{ exactNonColor.term }} </b>: <input
-                                                            v-model="nonColorDefinition[currentNonColorValue.detailFlag]"
-                                                            style="width: 70%;">
-                                                        <br/><br/>If definition is lacking, you can propose or edit the
-                                                        definition above. <br/>
-
-                                                    </div> -->
                                                     <div v-if="searchNonColorFlag !=2 ">
                                                         <input type="radio" id="non-user-defined"
                                                             v-bind:value="defaultNonColorValue"
@@ -1619,6 +1590,7 @@
                 firstCharacter: null,
                 middleCharacter: null,
                 lastCharacter: null,
+                lastCharacterDefinition: null,
                 newCharacterFlag: false,
                 detailsFlag: false,
                 metadataFlag: null,
@@ -1653,11 +1625,18 @@
                 colorDetailsFlag: false,
                 colorDetails: [],
                 treeData: this.colorTreeData,
+                colTreeData: [],
                 colorSearchText: null,
                 colorTreeOption: {
                     multiple: true,
                     autoCheckChildren: false,
                     parentSelect: false,
+                    filter: {
+                        matcher(query, node) {
+                            return node.data.text.startsWith(query);
+                        },
+                        showChildren: true
+                    }
                 },
                 colorExistFlag: false,
                 searchColor: [],
@@ -1668,6 +1647,7 @@
                 exactColor: {},
                 colorDetailId: null,
                 defaultColorValue: [],
+                originColorValue: [],
                 colorComment: {},
                 colorTaxon: {},
                 colorSampleText: {},
@@ -1776,6 +1756,7 @@
                 saveColorButtonFlag: false,
                 saveNonColorButtonFlag: false,
                 filterFlag: true,
+                nounUndefined: false,
             }
         },
         components: {
@@ -1842,10 +1823,13 @@
                 // } else if (app.userCharacters.find(ch => ch.name == selectedCharacter.name)) {
                 //     selectedCharacter = app.userCharacters.find(ch => ch.name == selectedCharacter.name && ch.username == selectedCharacter.username);
                 // }
+                app.editFlag = false;
+                sessionStorage.setItem('editFlag', false);
                 if (!selectedCharacter) {
                     app.firstCharacter = '';
                     app.middleCharacter = '';
                     app.lastCharacter = '';
+                    app.nounUndefined = false;
 
                     app.newCharacterFlag = true;
                     app.viewFlag = false;
@@ -1878,6 +1862,7 @@
                     app.viewFlag = !editFlag;
                     sessionStorage.setItem('viewFlag', !editFlag);
                     sessionStorage.setItem('edit_created_other', !editFlag);
+                    sessionStorage.setItem('editFlag', editFlag);
                     app.character = app.userCharacters.find(ch => ch.id == character.character_id);
 //                    app.character.standard = 0;
                 } else {
@@ -1891,6 +1876,7 @@
                     app.editFlag = false;
                     app.viewFlag = true;
                     sessionStorage.setItem('viewFlag', true);
+                    sessionStorage.setItem('editFlag', editFlag);
                     sessionStorage.setItem('edit_created_other', true);
                 }
                 app.item = app.character.id;
@@ -2014,15 +2000,57 @@
                         app.parentData[9] = app.methodFieldData;
                         app.metadataFlag = 'method';
                         app.currentMetadata = method;
-                    } else {
+                    }
+                    else {
                         app.parentData = app.character.standard_tag;
                         app.metadataFlag = 'tag';
                         app.currentMetadata = tag;
                     }
-
                 }
-
                 app.detailsFlag = true;
+            },
+            checkStoreCharacter() {
+                var app = this;
+                var requestBody = {};
+                if (app.nounUndefined){
+                    var date = new Date();
+                    requestBody = {
+                        "user": app.sharedFlag ? '' : app.user.name,
+                        "ontology": "carex",
+                        "term": app.lastCharacter,
+                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                        "definition": app.lastCharacterDefinition,
+                        "elucidation": "",
+                        "createdBy": app.user.name,
+                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                        "definitionSrc": app.user.name,
+                    };
+                    console.log(requestBody);
+                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                        .then(function (resp) {
+                            console.log('shark api class resp', resp);
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                user: app.sharedFlag ? '' : app.user.name,
+                                ontology: 'carex'
+                            })
+                                .then(function (resp) {
+                                    console.log('save api resp', resp);
+                                });
+                        });
+                    app.storeCharacter();
+                    return;
+                }
+                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase())
+                    .then(function(resp){
+                        console.log('term?'+app.lastCharacter, resp.data);
+                        if (!resp.data.entries.length){
+                            app.nounUndefined = true;
+                        }
+                        else {
+                            app.storeCharacter();
+                        }
+                    });
+
             },
             storeCharacter() {
                 var app = this;
@@ -2032,7 +2060,7 @@
                 app.characterUsername = app.user.name;
                 app.character.standard = 0;
                 app.character.creator = app.user.name + ' via CR';
-
+                app.editFlag = false;
 
                 if (app.checkHaveUnit(app.character.name)) {
                     // Initializing the methodFieldData //
@@ -2094,7 +2122,7 @@
 
                 console.log('metadata', metadata);
                 console.log("app.character=", app.character);
-                if (app.checkHaveUnit(app.character.name) || (metadata != 'method' && metadata != 'unit')) {
+                if (( app.checkHaveUnit(app.character.name)) || ( metadata != 'method' && metadata != 'unit' )) {
                     app.metadataFlag = metadata;
                     switch (metadata) {
                         case 'method':
@@ -2325,7 +2353,7 @@
             checkDctionary: async() => {
 
             },
-            async saveCharacter(metadataFlag) {
+            saveCharacter(metadataFlag) {
                 var app = this;
                 console.log('app.character = ', app.character);
                 console.log('metadataFlag', metadataFlag);
@@ -2360,22 +2388,33 @@
 
                 var checkMethod = true;
 
-                var tempViewFlag = (sessionStorage.getItem('viewFlag') == 'true')
+                var tempViewFlag = (sessionStorage.getItem('viewFlag') == 'true');
 
-                if ((app.checkHaveUnit(app.character.name) == true) && (tempViewFlag == false)) {
+                var awaitCount = 0;
+
+                if (!app.editFlag&&(app.checkHaveUnit(app.character.name) == true) && (tempViewFlag == false)) {
                     var tempFlag = false;
-                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name)
+                    awaitCount ++;
+                    console.log('awaitCount',awaitCount);
+                    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
                         .then(function (resp) {
+                            awaitCount --;
+                    console.log('awaitCount',awaitCount);
                             console.log('search term resp', resp.data);
                             for (var i = 0; i < resp.data.entries.length; i++) {
                                 if (resp.data.entries[i].term == app.character.name) {
                                     tempFlag = true;
+                                    break;
                                 }
                             }
                         });
                     if (app.character['method_from'] != null && app.character['method_from'] != '') {
-                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_from'])
+                        awaitCount ++;
+                    console.log('awaitCount',awaitCount);
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_from'].toLowerCase())
                             .then(function (resp) {
+                                awaitCount --;
+                    console.log('awaitCount',awaitCount);
                                 console.log('method_from search resp', resp.data);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
@@ -2409,8 +2448,12 @@
                     }
 
                     if (app.character['method_to'] != null && app.character['method_to'] != '') {
-                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_to'])
+                        awaitCount ++;
+                    console.log('awaitCount',awaitCount);
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_to'].toLowerCase())
                             .then(function (resp) {
+                                awaitCount --;
+                    console.log('awaitCount',awaitCount);
                                 console.log('method_to search resp', resp.data);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
@@ -2443,8 +2486,12 @@
                             });
                     }
                     if (app.character['method_include'] != null && app.character['method_include'] != '') {
-                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_include'])
+                        awaitCount ++;
+                    console.log('awaitCount',awaitCount);
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_include'].toLowerCase())
                             .then(function (resp) {
+                                awaitCount --;
+                    console.log('awaitCount',awaitCount);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.includeTerm = resp.data.entries[i].term;
@@ -2477,8 +2524,12 @@
                     }
 
                     if (app.character['method_exclude'] != null && app.character['method_exclude'] != '') {
-                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_exclude'])
+                        awaitCount ++;
+                    console.log('awaitCount',awaitCount);
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_exclude'].toLowerCase())
                             .then(function (resp) {
+                                awaitCount --;
+                    console.log('awaitCount',awaitCount);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.excludeTerm = resp.data.entries[i].term;
@@ -2511,8 +2562,12 @@
                     }
 
                     if (app.character['method_where'] != null && app.character['method_where'] != '') {
-                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_where'])
+                        awaitCount ++;
+                    console.log('awaitCount',awaitCount);
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_where'].toLowerCase())
                             .then(function (resp) {
+                                awaitCount --;
+                    console.log('awaitCount',awaitCount);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.whereTerm = resp.data.entries[i].term;
@@ -2543,6 +2598,7 @@
                                 }
                             });
                     }
+
 
                     if (tempFlag == false) {
 
@@ -2581,7 +2637,7 @@
                         } else if (app.character.name.toLowerCase().split(' ')[0] == 'width') {
                             jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-width"
                         }
-                        await axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
+                        axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                             .then(function (resp) {
                                 console.log('class resp', resp);
                                 axios.post('http://shark.sbs.arizona.edu:8080/save', {
@@ -2633,7 +2689,7 @@
                             jsonClass.superclassIRI = "http://biosemantics.arizona.edu/ontologies/carex#perceived-width"
                         }
 
-                        await axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
+                        axios.post('http://shark.sbs.arizona.edu:8080/class', jsonClass)
                             .then(function (resp) {
                                 console.log('class resp', resp);
                                 axios.post('http://shark.sbs.arizona.edu:8080/save', {
@@ -2651,28 +2707,13 @@
 //                        });
                 }
 
-                if (checkMethod == false) {
-                    console.log('checkMethod', checkMethod);
-                    if (app.metadataFlag != 'method') {
-                        console.log('not method field');
-                        app.parentData = [];
-                        app.parentData[0] = app.character.method_as;
-                        app.parentData[3] = app.user;
-                        app.parentData[4] = app.character.method_from;
-                        app.parentData[5] = app.character.method_to;
-                        app.parentData[6] = app.character.method_include;
-                        app.parentData[7] = app.character.method_exclude;
-                        app.parentData[8] = app.character.method_where;
-                        app.parentData[9] = app.methodFieldData;
-                        app.metadataFlag = 'method';
-                        app.currentMetadata = method;
-                    } else {
-                        console.log('method field');
-//                        app.parentData = app.character.standard_tag;
-//                        app.metadataFlag = 'tag';
-                        app.currentMetadata = null;
-
-                        setTimeout(function () {
+                const awaitTimerID = setInterval(function(){
+                    if (awaitCount)return;
+                    clearInterval(awaitTimerID);
+                    if (checkMethod == false) {
+                        console.log('checkMethod', checkMethod);
+                        if (app.metadataFlag != 'method') {
+                            console.log('not method field');
                             app.parentData = [];
                             app.parentData[0] = app.character.method_as;
                             app.parentData[3] = app.user;
@@ -2684,59 +2725,76 @@
                             app.parentData[9] = app.methodFieldData;
                             app.metadataFlag = 'method';
                             app.currentMetadata = method;
-                        }, 1);
-
-
-                    }
-
-                } else {
-                    var checkFields = true;
-
-                    if (app.character.summary == ''
-                        || app.character.summary == null
-                        || app.character.summary == undefined) {
-                        if (app.checkHaveUnit(app.character.name)) {
-                            app.character.summary = 'range-percentile';
                         } else {
-                            app.character.summary = '';
-                        }
-                    }
+                            console.log('method field');
+                            app.currentMetadata = null;
 
-                    if ((app.character['method_from'] == null || app.character['method_from'] == '') &&
-                        (app.character['method_to'] == null || app.character['method_to'] == '') &&
-                        (app.character['method_include'] == null || app.character['method_include'] == '') &&
-                        (app.character['method_exclude'] == null || app.character['method_exclude'] == '') &&
-                        (app.character['method_where'] == null || app.character['method_where'] == '')) {
-                        checkFields = false;
-                    }
-
-                    if (!app.character['unit']) {
-                        checkFields = false;
-                    }
-
-                    if (!app.checkHaveUnit(app.character.name)) {
-                        checkFields = true;
-                    }
+                            setTimeout(function () {
+                                app.parentData = [];
+                                app.parentData[0] = app.character.method_as;
+                                app.parentData[3] = app.user;
+                                app.parentData[4] = app.character.method_from;
+                                app.parentData[5] = app.character.method_to;
+                                app.parentData[6] = app.character.method_include;
+                                app.parentData[7] = app.character.method_exclude;
+                                app.parentData[8] = app.character.method_where;
+                                app.parentData[9] = app.methodFieldData;
+                                app.metadataFlag = 'method';
+                                app.currentMetadata = method;
+                            }, 10);
 
 
-                    if (checkFields) {
-                        if ((app.character.standard_tag == null
-                            || app.character.standard_tag == ''
-                            || app.character.standard_tag == undefined)) {
-                            app.showDetails('tag', app.metadataFlag);
-
-                        } else {
-                            if (app.checkHaveUnit(app.character.name)) {
-                                app.confirmMethod = true;
-                            } else {
-                                app.confirmTag = true;
-                            }
                         }
 
                     } else {
-                        app.showDetails('unit', app.metadataFlag);
+                        var checkFields = true;
+
+                        if (app.character.summary == ''
+                            || app.character.summary == null
+                            || app.character.summary == undefined) {
+                            if (app.checkHaveUnit(app.character.name)) {
+                                app.character.summary = 'range-percentile';
+                            } else {
+                                app.character.summary = '';
+                            }
+                        }
+
+                        if ((app.character['method_from'] == null || app.character['method_from'] == '') &&
+                            (app.character['method_to'] == null || app.character['method_to'] == '') &&
+                            (app.character['method_include'] == null || app.character['method_include'] == '') &&
+                            (app.character['method_exclude'] == null || app.character['method_exclude'] == '') &&
+                            (app.character['method_where'] == null || app.character['method_where'] == '')) {
+                            checkFields = false;
+                        }
+
+                        if (!app.character['unit']) {
+                            checkFields = false;
+                        }
+
+                        if (!app.checkHaveUnit(app.character.name)) {
+                            checkFields = true;
+                        }
+
+
+                        if (checkFields) {
+                            if ((app.character.standard_tag == null
+                                || app.character.standard_tag == ''
+                                || app.character.standard_tag == undefined)) {
+                                app.showDetails('tag', app.metadataFlag);
+
+                            } else {
+                                if (app.checkHaveUnit(app.character.name)) {
+                                    app.confirmMethod = true;
+                                } else {
+                                    app.confirmTag = true;
+                                }
+                            }
+
+                        } else {
+                            app.showDetails('unit', app.metadataFlag);
+                        }
                     }
-                }
+                }, 100)
 
 
             },
@@ -2820,6 +2878,7 @@
                 app.detailsFlag = false;
                 sessionStorage.setItem('viewFlag', false);
                 sessionStorage.setItem('edit_created_other', false);
+                sessionStorage.setItem('editFlag', false);
                 app.viewFlag = false;
                 app.enhanceFlag = true;
                 setTimeout(function () {
@@ -4142,29 +4201,31 @@
                 var comparedFlag = true;
                 app.saveColorButtonFlag = true;
                 console.log('currentColorValue', app.currentColorValue);
-                console.log('app.currentColorValue.colored', app.currentColorValue.colored);
+                console.log('app.currentColorValue', app.currentColorValue);
+                
+                app.originColorValue = app.currentColorValue;
 
-                if (app.currentColorValue['brightness'] && app.currentColorValue.confirmedFlag['brightness'] == false && !app.colorSynonyms['brightness']) {
+                if (app.currentColorValue['brightness'] && app.currentColorValue.confirmedFlag['brightness'] == false && !app.colorSynonyms['brightness'] && !app.searchTreeData(app.colTreeData['brightness'], app.currentColorValue['brightness'])) {
                     comparedFlag = false;
                     app.saveColorButtonFlag = false;
                     app.searchColorSelection(app.currentColorValue, 'brightness');
                 }
-                if (app.currentColorValue['saturation'] && app.currentColorValue.confirmedFlag['saturation'] == false && !app.colorSynonyms['saturation']) {
+                if (app.currentColorValue['saturation'] && app.currentColorValue.confirmedFlag['saturation'] == false && !app.colorSynonyms['saturation'] && !app.searchTreeData(app.colTreeData['saturation'], app.currentColorValue['saturation'])) {
                     comparedFlag = false;
                     app.saveColorButtonFlag = false;
                     app.searchColorSelection(app.currentColorValue, 'saturation');
                 }
-                if (app.currentColorValue['reflectance'] && app.currentColorValue.confirmedFlag['reflectance'] == false && !app.colorSynonyms['reflectance']) {
+                if (app.currentColorValue['reflectance'] && app.currentColorValue.confirmedFlag['reflectance'] == false && !app.colorSynonyms['reflectance'] && !app.searchTreeData(app.colTreeData['reflectance'], app.currentColorValue['reflectance'])) {
                     comparedFlag = false;
                     app.saveColorButtonFlag = false;
                     app.searchColorSelection(app.currentColorValue, 'reflectance');
                 }
-                if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored']) {
+                if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored'] && !app.searchTreeData(app.colTreeData['colored'], app.currentColorValue['colored'])) {
                     comparedFlag = false;
                     app.saveColorButtonFlag = false;
                     app.searchColorSelection(app.currentColorValue, 'colored');
                 }
-                if (app.currentColorValue['multi_colored'] && app.currentColorValue.confirmedFlag['multi_colored'] == false && !app.colorSynonyms['multi_colored']) {
+                if (app.currentColorValue['multi_colored'] && app.currentColorValue.confirmedFlag['multi_colored'] == false && !app.colorSynonyms['multi_colored'] && !app.searchTreeData(app.colTreeData['multi_colored'], app.currentColorValue['multi_colored'])) {
                     comparedFlag = false;
                     app.saveColorButtonFlag = false;
                     app.searchColorSelection(app.currentColorValue, 'multi_colored');
@@ -4180,6 +4241,9 @@
                         && (app.currentColorValue.post_constraint == undefined || app.currentColorValue.post_constraint == 'undefined' || app.currentColorValue.post_constraint == null || app.currentColorValue.post_constraint == '')
                         && (app.currentColorValue.pre_constraint == undefined || app.currentColorValue.pre_constraint == 'undefined' || app.currentColorValue.pre_constraint == null || app.currentColorValue.pre_constraint == '')
                         && (app.currentColorValue.reflectance == undefined || app.currentColorValue.reflectance == 'undefined' || app.currentColorValue.reflectance == null || app.currentColorValue.reflectance == '')
+                        && (app.currentColorValue.certainty_constraint == undefined || app.currentColorValue.certainty_constraint == 'undefined' || app.currentColorValue.certainty_constraint == null || app.currentColorValue.certainty_constraint == '')
+                        && (app.currentColorValue.brightness == undefined || app.currentColorValue.brightness == 'undefined' || app.currentColorValue.brightness == null || app.currentColorValue.brightness == '')
+                        && (app.currentColorValue.degree_constraint == undefined || app.currentColorValue.degree_constraint == 'undefined' || app.currentColorValue.degree_constraint == null || app.currentColorValue.degree_constraint == '')
                         && (app.currentColorValue.saturation == undefined || app.currentColorValue.saturation == 'undefined' || app.currentColorValue.saturation == null || app.currentColorValue.saturation == '')) {
                         axios.get('/chrecorder/public/api/v1/get-color-details/' + app.currentColorValue.value_id)
                             .then(function (resp) {
@@ -4203,62 +4267,75 @@
                         }
                         for (var i=0;i<app.colorFlags.length;i++){
                             const flag=app.colorFlags[i];
-                            if (app.currentColorValue[flag] == app.defaultColorValue[flag]){
-                                var date = new Date();
-                                requestBody = {
-                                    "user": app.sharedFlag ? '' : app.user.name,
-                                    "ontology": "carex",
-                                    "term": postValue['main_value'],
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+app.changeToSubClassName(flag),
-                                    "definition": app.userColorDefinition['main_value'],
-                                    "elucidation": "",
-                                    "createdBy": app.user.name,
-                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                    "definitionSrc": app.user.name,
-                                    "examples": app.colorSampleText['main_value'] + ", used in taxon " + app.colorTaxon['main_value'],
-                                    "logicDefinition": "",
-                                };
-                                console.log(requestBody);
-                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-                                    .then(function (resp) {
-                                        console.log('shark api class resp', resp);
-                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            user: app.sharedFlag ? '' : app.user.name,
-                                            ontology: 'carex'
-                                        })
-                                            .then(function (resp) {
-                                                console.log('save api resp', resp);
-                                            });
-                                    });
-                            }
-                            else if (app.colorSynonyms[flag]){
-                                var synonym=app.colorSynonyms[flag].find( eachSynonym => eachSynonym.term == app.currentColorValue[flag]);
-                                var date = new Date();
-                                requestBody = {
-                                    "user": app.sharedFlag ? '' : app.user.name,
-                                    "ontology": "carex",
-                                    "term": postValue['main_value'],
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+app.changeToSubClassName(flag),
-                                    "definition": synonym.definition,
-                                    "elucidation": "",
-                                    "createdBy": app.user.name,
-                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                    "definitionSrc": app.user.name,
-                                    "examples": app.colorSampleText['main_value'] + ", used in taxon " + app.colorTaxon['main_value'],
-                                    "logicDefinition": "",
-                                };
-                                console.log(requestBody);
-                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-                                    .then(function (resp) {
-                                        console.log('shark api class resp', resp);
-                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            user: app.sharedFlag ? '' : app.user.name,
-                                            ontology: 'carex'
-                                        })
-                                            .then(function (resp) {
-                                                console.log('save api resp', resp);
-                                            });
-                                    });
+                            if ( !app.colTreeData[flag] || !app.searchTreeData(app.colTreeData[flag],app.currentColorValue[flag]) ){
+                                if (app.currentColorValue[flag] == app.defaultColorValue[flag] && app.currentColorValue[flag] != '' && app.currentColorValue[flag] != undefined && app.currentColorValue[flag] != null){
+                                    if (!app.userColorDefinition[flag] || app.userColorDefinition[flag]==''){
+                                        alert('pease enter definition of '+flag);
+                                        app.saveColorButtonFlag = false;
+                                        return;
+                                    }
+                                    if ( app.colorSampleText[flag] =='' || !app.colorSampleText[flag] ){
+                                        alert('pease enter sample sentence of '+flag);
+                                        app.saveColorButtonFlag = false;
+                                        return;
+                                    }
+                                    var date = new Date();
+                                    console.log('flag',flag);
+                                    requestBody = {
+                                        "user": app.sharedFlag ? '' : app.user.name,
+                                        "ontology": "carex",
+                                        "term": postValue[flag],
+                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+app.changeToSubClassName(flag),
+                                        "definition": app.userColorDefinition[flag],
+                                        "elucidation": "",
+                                        "createdBy": app.user.name,
+                                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                        "definitionSrc": app.user.name,
+                                        "examples": app.colorSampleText[flag] + ", used in taxon " + app.colorTaxon[flag],
+                                        "logicDefinition": "",
+                                    };
+                                    console.log(requestBody);
+                                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                        .then(function (resp) {
+                                            console.log('shark api class resp', resp);
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                user: app.sharedFlag ? '' : app.user.name,
+                                                ontology: 'carex'
+                                            })
+                                                .then(function (resp) {
+                                                    console.log('save api resp', resp);
+                                                });
+                                        });
+                                }
+                                else if (app.colorSynonyms[flag]){
+                                    var synonym=app.colorSynonyms[flag].find( eachSynonym => eachSynonym.term == app.currentColorValue[flag]);
+                                    var date = new Date();
+                                    requestBody = {
+                                        "user": app.sharedFlag ? '' : app.user.name,
+                                        "ontology": "carex",
+                                        "term": postValue['main_value'],
+                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+app.changeToSubClassName(flag),
+                                        "definition": synonym.definition,
+                                        "elucidation": "",
+                                        "createdBy": app.user.name,
+                                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                        "definitionSrc": app.user.name,
+                                        "examples": app.colorSampleText['main_value'] + ", used in taxon " + app.colorTaxon['main_value'],
+                                        "logicDefinition": "",
+                                    };
+                                    console.log(requestBody);
+                                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                        .then(function (resp) {
+                                            console.log('shark api class resp', resp);
+                                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                                user: app.sharedFlag ? '' : app.user.name,
+                                                ontology: 'carex'
+                                            })
+                                                .then(function (resp) {
+                                                    console.log('save api resp', resp);
+                                                });
+                                        });
+                                }
                             }
                         }
                         console.log('postFlag', postFlag);
@@ -4274,6 +4351,7 @@
                                         app.colorDetailsFlag = false;
                                     } else {
                                         app.colorDetailsFlag = true;
+                                        app.colTreeData = [];
                                         app.currentColorValueExist = true;
                                         app.colorComment = {};
                                         app.colorTaxon = {
@@ -4344,7 +4422,7 @@
                 console.log('app.currentNonColorValue.confirmedFlag',app.currentNonColorValue.confirmedFlag);
                 console.log("app.currentNonColorValue['main_value']",app.currentNonColorValue['main_value']);
                 console.log("app.currentNonColorValue.confirmedFlag['main_value']",app.currentNonColorValue.confirmedFlag['main_value']);
-                if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false) {
+                if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false && !app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value)) {
                     app.saveNonColorButtonFlag = false;
                     app.searchNonColorSelection(app.currentNonColorValue, 'main_value');
                 } else {
@@ -4392,6 +4470,16 @@
     //                                } else if (postFlag == true) {
     //                                    postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
                                 
+                                if ( app.userNonColorDefinition['main_value']=='' || app.userNonColorDefinition['main_value'] == null || app.userNonColorDefinition['main_value'] == undefined){
+                                    alert('please enter definition');
+                                    app.saveNonColorButtonFlag = false;
+                                    return;
+                                }
+                                if ( app.nonColorSampleText['main_value']=='' || app.nonColorSampleText['main_value'] == null || app.nonColorSampleText['main_value'] == undefined){
+                                    alert('please enter sample sentence');
+                                    app.saveNonColorButtonFlag = false;
+                                    return;
+                                }
                                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'])
                                     .then(function (resp) {
                                         if (resp.data.entries.length == 0) {
@@ -4717,7 +4805,7 @@
                             app.postList = resp.data.postList;
                         });
                     if (currentCharacter.name.startsWith('Color')) {
-                        app.colorDetailsFlag = true;
+                        app.colTreeData = [];
                         
                         app.colorDetailsFlag = true;
                         app.currentColorValueExist = true;
@@ -4790,6 +4878,7 @@
                             });
                     } else {
                         app.nonColorDetailsFlag = true;
+                        app.textureTreeData = null;
                         
                         app.nonColorDetailsFlag = true;
                         app.currentNonColorValueExist = true;
@@ -4867,15 +4956,18 @@
                 app.colorSearchText = '';
                 app.nonColorSearchText = '';
 
-                console.log('event.target', event.target);
-                if (flag == 'negation') {
-                    event.target.placeholder = '';
-                } else if (app.checkHaveColorValueSet(flag)) {
-                    $(":input").css('background', '#ffffff');
-                    event.target.style.background = '#82c8fa';
-                }
+                //console.log('event.target', event.target);
+                // if (flag == 'negation') {
+                //     event.target.placeholder = '';
+                // } else if (app.checkHaveColorValueSet(flag)) {
+                //     $(":input").css('background', '#ffffff');
+                //     event.target.style.background = '#82c8fa';
+                // }
 //                color.detailFlag = null;
-                app.colorExistFlag = false;
+                // app.colorExistFlag = false;
+                if (!color.detailFlag){
+                    app.$store.state.colorTreeData = {};
+                }
                 color.detailFlag = flag;
                 app.currentColorValue.confirmedFlag[flag] = false;
                 app.colorSynonyms[flag] = undefined;
@@ -4891,40 +4983,83 @@
 
                 if (app.checkHaveColorValueSet(flag)) {
                     color.detailFlag = ' ';
+                    if (!app.colTreeData[flag]){
+                        app.colorExistFlag = false;
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
+                            .then(function (resp) {
+                                app.$store.state.colorTreeData = resp.data;
+                                app.colTreeData[flag] = resp.data;
 
-                    axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
-                        .then(function (resp) {
-                            app.$store.state.colorTreeData = resp.data;
+                                color.detailFlag = flag;
+                                app.colorExistFlag = true;
+                                
+                                app.filterFlag = false;
+                                const timerID=setTimeout(() => {
+                                    app.filterFlag = true;
+                                }, 50)
+                                if (app.colorDetailsFlag){
+                                    app.colorDetailsFlag = false;
+                                    app.colorDetailsFlag = true;
+                                }
+                                console.log('color', color);
+                                if (color.id) {
+                                    app.colorDetailId = color.id;
+    //                                color.detailFlag = flag;
+                                    app.colorDetails.find(eachColor => eachColor.id == app.colorDetailId).detailFlag = flag;
+                                    for (var i = 0; i < app.colorDetails.length; i++) {
+                                        if (app.colorDetails[i].id == color.id) {
+                                            app.colorDetails[i].detailFlag = flag;
+                                            app.colorDetails[i][flag] = app.colorDetails[i][flag] + ';';
+                                            app.colorDetails[i][flag] = app.colorDetails[i][flag].substring(0, app.colorDetails[i][flag].length - 1);
+                                            if (app.colorDetails[i][flag] == 'null' || app.colorDetails[i][flag] == null) {
+                                                app.colorDetails[i][flag] = '';
+                                            }
+                                        }
+                                    }
 
-                            color.detailFlag = flag;
+                                }
+                            });
+                    }
+                    else {
+                        console.log('flag',flag);
+                        color.detailFlag = flag;
+                        if (app.colTreeData[flag].text != app.$store.state.colorTreeData.text){
+                            app.colorExistFlag = false;
+                            const timerID = setTimeout(() => {
+                                app.$store.state.colorTreeData = app.colTreeData[flag];
+                                app.colorExistFlag =true;
+                                app.filterFlag = false;
+                                const timerID=setTimeout(() => {
+                                    app.filterFlag = true;
+                                }, 50)
+                                
+                                if (app.colorDetailsFlag){
+                                    app.colorDetailsFlag = false;
+                                    app.colorDetailsFlag = true;
+                                }
+                            }, 50)
+                        }
+                        else if (!app.colorExistFlag){
                             app.colorExistFlag = true;
-                            
                             app.filterFlag = false;
                             const timerID=setTimeout(() => {
                                 app.filterFlag = true;
-                            }, 100)
+                            }, 50)
                             if (app.colorDetailsFlag){
                                 app.colorDetailsFlag = false;
                                 app.colorDetailsFlag = true;
                             }
-                            console.log('color', color);
-                            if (color.id) {
-                                app.colorDetailId = color.id;
-//                                color.detailFlag = flag;
-                                app.colorDetails.find(eachColor => eachColor.id == app.colorDetailId).detailFlag = flag;
-                                for (var i = 0; i < app.colorDetails.length; i++) {
-                                    if (app.colorDetails[i].id == color.id) {
-                                        app.colorDetails[i].detailFlag = flag;
-                                        app.colorDetails[i][flag] = app.colorDetails[i][flag] + ';';
-                                        app.colorDetails[i][flag] = app.colorDetails[i][flag].substring(0, app.colorDetails[i][flag].length - 1);
-                                        if (app.colorDetails[i][flag] == 'null' || app.colorDetails[i][flag] == null) {
-                                            app.colorDetails[i][flag] = '';
-                                        }
-                                    }
-                                }
-
-                            }
-                        });
+                        }
+                        // setTimeout(() => {
+                        //     console.log("v-if", (app.currentColorValue.detailFlag == 'brightness'
+                        //     || app.currentColorValue.detailFlag == 'reflectance'
+                        //     || app.currentColorValue.detailFlag == 'saturation'
+                        //     || app.currentColorValue.detailFlag == 'colored'
+                        //     || app.currentColorValue.detailFlag == 'multi_colored') && app.colorExistFlag);
+                        //     console.log("app.colorExistFlag",app.colorExistFlag);
+                        //     console.log("app.currentColorValue.detailFlag",app.currentColorValue.detailFlag);
+                        // },300)
+                    }
                 } else {
                     color.detailFlag = flag;
                     if (color.id) {
@@ -4954,6 +5089,7 @@
                 var app = this;
                 app.nonColorSearchText = '';
 
+                let treeFlag = app.currentNonColorValue.detailsFlag == null && app.nonColorExistFlag && !(!app.textureTreeData);
                 app.currentNonColorValue.detailsFlag = flag;
 
                 var characterId = app.values.find(eachValue => eachValue.find(eachItem => eachItem.id == nonColor.value_id) != null)[0].character_id;
@@ -4977,35 +5113,60 @@
 
                 if (flag == 'main_value') {
                     app.currentNonColorValue.confirmedFlag['main_value'] = false;
-                    axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText)
-                        .then(function (resp) {
-                            app.textureTreeData = resp.data;
-                            app.currentNonColorValue.detailFlag = flag;
-                            if (app.nonColorDetailsFlag){
-                                app.nonColorDetailsFlag = false;
-                                app.nonColorDetailsFlag = true;
-                            }
+                    if (!app.textureTreeData){
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText)
+                            .then(function (resp) {
+                                app.textureTreeData = resp.data;
+                                app.currentNonColorValue.detailFlag = flag;
+                                if (app.nonColorDetailsFlag){
+                                    app.nonColorDetailsFlag = false;
+                                    app.nonColorDetailsFlag = true;
+                                }
 
-                            app.filterFlag = false;
-                            app.nonColorExistFlag = true;
-                            const timerID=setTimeout(() => {
-                                app.filterFlag = true;
-                            }, 100)
+                                app.filterFlag = false;
+                                app.nonColorExistFlag = true;
+                                const timerID=setTimeout(() => {
+                                    app.filterFlag = true;
+                                }, 50)
 
-                            if (nonColor.id) {
-                                app.nonColorDetailId = nonColor.id;
-                                for (var i = 0; i < app.nonColorDetails.length; i++) {
-                                    if (app.nonColorDetails[i].id == nonColor.id) {
-                                        app.nonColorDetails[i].detailFlag = flag;
-                                        app.nonColorDetails[i][flag] = app.nonColorDetails[i][flag] + ';';
-                                        app.nonColorDetails[i][flag] = app.nonColorDetails[i][flag].substring(0, app.nonColorDetails[i][flag].length - 1);
-                                        if (app.nonColorDetails[i][flag] == 'null' || app.nonColorDetails[i][flag] == null) {
-                                            app.nonColorDetails[i][flag] = '';
+                                if (nonColor.id) {
+                                    app.nonColorDetailId = nonColor.id;
+                                    for (var i = 0; i < app.nonColorDetails.length; i++) {
+                                        if (app.nonColorDetails[i].id == nonColor.id) {
+                                            app.nonColorDetails[i].detailFlag = flag;
+                                            app.nonColorDetails[i][flag] = app.nonColorDetails[i][flag] + ';';
+                                            app.nonColorDetails[i][flag] = app.nonColorDetails[i][flag].substring(0, app.nonColorDetails[i][flag].length - 1);
+                                            if (app.nonColorDetails[i][flag] == 'null' || app.nonColorDetails[i][flag] == null) {
+                                                app.nonColorDetails[i][flag] = '';
+                                            }
                                         }
                                     }
                                 }
-                            }
-                        });
+                                console.log('123');
+                            });
+                    }
+                    else if (treeFlag){
+                        app.currentNonColorValue.detailFlag = flag;
+                        if (app.nonColorDetailsFlag){
+                            app.nonColorDetailsFlag = false;
+                            app.nonColorDetailsFlag = true;
+                        }
+
+                        app.filterFlag = false;
+                        app.nonColorExistFlag = true;
+                        const timerID=setTimeout(() => {
+                            app.filterFlag = true;
+                        }, 50)
+                    }
+                    else {
+                        app.currentNonColorValue.detailFlag = flag;
+                        if (app.nonColorDetailsFlag){
+                            app.nonColorDetailsFlag = false;
+                            app.nonColorDetailsFlag = true;
+                        }
+
+                        app.nonColorExistFlag = true;
+                    }
                 } else {
                     if (nonColor.id) {
                         app.nonColorDetailId = nonColor.id;
@@ -5048,6 +5209,18 @@
 
                 return searchFlag;
             },
+            searchTreeData(tData, txt) {
+                var app = this;
+                if (tData.text == txt){
+                    return true;
+                }
+                for (let i = 0; tData.children && i < tData.children.length; i ++){
+                    if (app.searchTreeData(tData.children[i],txt)){
+                        return true;
+                    }
+                }
+                return false;
+            },
             async searchColorSelection(color, flag) {
                 var app = this;
                 app.defaultColorValue[flag] = color[flag];
@@ -5059,7 +5232,14 @@
                     'colored',
                     'multi_colored'
                 ];
+
+                if (app.searchTreeData(app.colTreeData[flag], color[flag])){
+                    app.currentColorValue.confirmedFlag[flag] = true;
+                    return;
+                }
+
                 app.colorSynonyms[flag]=[];
+
 //                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + color[flag])
                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag])
                     .then(async function (resp) {
@@ -5068,21 +5248,21 @@
                         app.searchColor = resp.data.entries;
                         if (app.searchColor.length == 0) {
                             app.searchColorFlag = 0;
-                            for (var i = 0; i < arrayFlag.length; i++) {
-                                if (arrayFlag[i] != flag) {
-                                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(arrayFlag[i]))
-                                        .then(function (resp) {
-                                            if (resp.data.entries.length != 0) {
-                                                var tempJson = {
-                                                    flag: arrayFlag[i],
-                                                    value: color[flag]
-                                                };
-                                                app.extraColors.push(tempJson);
-                                            }
-                                        });
+                            // for (var i = 0; i < arrayFlag.length; i++) {
+                            //     if (arrayFlag[i] != flag) {
+                            //         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(arrayFlag[i]))
+                            //             .then(function (resp) {
+                            //                 if (resp.data.entries.length != 0) {
+                            //                     var tempJson = {
+                            //                         flag: arrayFlag[i],
+                            //                         value: color[flag]
+                            //                     };
+                            //                     app.extraColors.push(tempJson);
+                            //                 }
+                            //             });
 
-                                }
-                            }
+                            //     }
+                            // }
                             app.currentColorValue.confirmedFlag[flag] = true;
                         } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('ynonym') && eachProperty.value == color[flag]) || eachColor.term == color[flag]))) {
                             app.searchColorFlag = 1;
@@ -5284,6 +5464,16 @@
                 };
                 app.extraColors = [];
                 app.currentColorValue.detailsFlag = null;
+                
+                // setTimeout(() => {
+                //     console.log("v-if", (app.currentColorValue.detailFlag == 'brightness'
+                //     || app.currentColorValue.detailFlag == 'reflectance'
+                //     || app.currentColorValue.detailFlag == 'saturation'
+                //     || app.currentColorValue.detailFlag == 'colored'
+                //     || app.currentColorValue.detailFlag == 'multi_colored') && app.colorExistFlag);
+                //     console.log("app.colorExistFlag",app.colorExistFlag);
+                //     console.log("app.currentColorValue.detailFlag",app.currentColorValue.detailFlag);
+                // },300)
             },
             removeEachColor(color) {
                 console.log('color', color);
@@ -5308,6 +5498,11 @@
 //                app.currentNonColorValue.confirmedFlag['main_value'] = false;
                 app.currentNonColorValue.placeholderName = tempPlaceholderName;
                 app.currentNonColorValue.detailsFlag = null;
+                // setTimeout(()=>{
+                //     console.log('v-if',(app.currentNonColorValue.detailFlag == 'main_value') && app.nonColorExistFlag);
+                //     console.log('app.currentNonColorValue.detailFlag',app.currentNonColorValue.detailFlag);
+                //     console.log('app.nonColorExistFlag',app.nonColorExistFlag);
+                // },300)
             },
             removeEachNonColor(value) {
                 var app = this;
@@ -5433,7 +5628,7 @@
             },
             calcSummary(row) {
                 var app = this;
-                console.log('row',row);
+                //console.log('row',row);
 
                 var characterName = row.find(each => each.header_id == 1).value;
                 if (app.checkNumericalCharacter(characterName)) {

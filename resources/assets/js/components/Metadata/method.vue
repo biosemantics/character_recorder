@@ -22,7 +22,7 @@
                      v-bind:id="'img-method-' + index" style="width: 100%;"
                      v-bind:src="'https://drive.google.com/uc?id=' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1)"/>
             </div>
-            <div v-if="!noneMethod && methodArray.length > 0 && !edit_created_other" class="col-md-12 text-right">
+            <div v-if="!noneMethod && methodArray.length > 0 && !edit_created_other && !editFlag" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
             </div>
             <div v-if="noneMethod == true || methodArray.length == 0 || methodFrom != null || methodTo != null || methodInclude != null || methodExclude != null || methodWhere != null">
@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
-                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
                            @keyup="saveMeasureItems" name="methodFrom"/>
                     <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
@@ -72,7 +72,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
-                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
                     <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
                     <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
                        v-on:mouseover="needMore('to')">Need info on new terms:</a>
@@ -105,7 +105,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
                     <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
                     <a v-if="includeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.include }" v-on:mouseover="needMore('include')">Need info on new
@@ -139,7 +139,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
                     <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
                     <a v-if="excludeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.exclude }" v-on:mouseover="needMore('exclude')">Need info on new
@@ -173,7 +173,7 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Where:</label>
-                    <input :disabled="viewFlag || edit_created_other" v-on:blur="userLog('Where')" class="col-md-8" v-model="methodWhere" @keyup="saveMeasureItems" name="methodWhere"/>
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Where')" class="col-md-8" v-model="methodWhere" @keyup="saveMeasureItems" name="methodWhere"/>
                     <p v-if="whereId != null || greenTick.where == true" style="color: green;">&#10004;</p>
                     <a v-if="whereNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.where }"
                        v-on:mouseover="needMore('where')">Need info on new terms:</a>
@@ -247,6 +247,7 @@
                 character_name: null,
                 viewFlag: false,
                 edit_created_other: true,
+                editFlag: false,
                 methodEntry: null,
                 noneMethod: false,
                 methodFrom: null,
@@ -371,20 +372,20 @@
                     logicDefinition: ''
                 };
 
+                app.greenTick[app.currentSetting] = true;
+                app.formViewFlag[app.currentSetting] = false;
+                app.needMoreGreen[app.currentSetting] = true;
+                app.newTermDefinition = null;
                 axios.post('http://shark.sbs.arizona.edu:8080/class', jsonRequest)
                     .then(function (resp) {
                         console.log('class resp', resp);
-                        app.greenTick[app.currentSetting] = true;
-                        app.formViewFlag[app.currentSetting] = false;
-                        app.needMoreGreen[app.currentSetting] = true;
-                        app.modalFlag = false;
-                        app.newTermDefinition = null;
                         axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.sharedFlag? '': app.childData[3].name, "ontology": 'carex'})
                             .then(function (resp) {
                                 console.log('save resp', resp);
                             });
 
                     });
+                app.modalFlag = false;
             },
             addSynonym: function (setting, value) {
                 var app = this;
@@ -869,6 +870,7 @@
             var app = this;
             this.character_name = sessionStorage.getItem("characterName");
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
+            this.editFlag = (sessionStorage.getItem('editFlag') == 'true');
             this.edit_created_other = (sessionStorage.getItem('edit_created_other')=='true');
             this.method_description = this.edit_created_other ? 'Method: The character is defined as' : 'Method: Please explain how you would measure a specimen for the character. e.g., from bottom to top.';
             console.log('edit created other -----------------', this.edit_created_other);

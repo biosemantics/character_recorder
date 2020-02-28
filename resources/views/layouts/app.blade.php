@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Character Recorder') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -138,8 +138,11 @@
                     </ul>
                 </div>
                 <div>
-                    <a id="top-user" href="{{ url('/leader-board') }}">
-                        {{ getTopUser() }}
+                    <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
+                        <div style="height: 34px;">
+                            <img src="{{ asset('images/crown.png') }}" style="display: inline"/>
+                            <div style="color: #FFBC00; font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
+                        </div>
                     </a>
                 </div>
             </div>
