@@ -202,7 +202,7 @@
                                     v-if="userCharacters.find(ch => ch.id == row[0].character_id).show_flag == true">
                                     <td v-if="value.header_id == 1"
                                         v-for="value in row"
-                                        style="cursor: pointer; display: flex; ">
+                                        style="cursor: pointer; display: flex; border-bottom:none">
                                         <div style="width: 30px;">
                                             <div style="height: 22px; line-height: 22px;">
                                                 <span v-on:click="upUserValue(value.character_id)"
@@ -213,7 +213,7 @@
                                                       class="glyphicon glyphicon-chevron-down"></span>
                                             </div>
                                         </div>
-                                        <div style="line-height: 44px;"
+                                        <div style="line-height: 30px;"
                                              v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip">
                                             {{ value.value }}
                                         </div>
@@ -266,14 +266,35 @@
                                     <td style="line-height: 43px; text-align: center;">
                                         <div style="line-height: 21px;" v-html="calcSummary(row)"></div>
                                     </td>
-                                    <td v-if="value.header_id != 1" v-for="value in row">
-                                        <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
-                                               v-on:blur="saveItem($event, value)"/>
-                                        <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
-                                            <img src="https://cdn0.iconfinder.com/data/icons/interaction-1-2-outlined/232/left-arrow-symbol-andright-arrow-symbol-forward-play-right-arrow-512.png"
-                                                 style="width: 25px;"/>
-                                        </a>
-                                    </td>
+                                    <template  v-for="value in row" v-if="value.header_id != 1">
+                                        <td :key="value.id" v-on:click.self="focusedValue(value)" style="padding-left: 5px">
+                                            <div v-if="checkHaveUnit(row.find(v => v.header_id == 1).value)" style="width: 80%; float:left">
+                                                <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
+                                                v-on:blur="saveItem($event, value)"/>
+                                            </div>
+                                            <div v-else style="width: 80%; float:left; text-align: center" v-on:click.self="focusedValue(value)">
+                                                <div v-for="cv in allColorValues" v-if="cv.value_id == value.id" style="text-align: left" :key="cv.id">
+                                                    {{colorValueText(cv)}}
+                                                    <a class="btn btn-add display-block" style="padding: 0px" v-on:click="removeEachColor(cv)">
+                                                        <span class="glyphicon glyphicon-remove">
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div v-for="ncv in allNonColorValues" v-if="ncv.value_id == value.id" style="text-align: left" :key="ncv.id">
+                                                    {{nonColorValueText(ncv)}}
+                                                    <a class="btn btn-add display-block" style="padding: 0px" v-on:click="removeEachNonColor(ncv)">
+                                                        <span class="glyphicon glyphicon-remove">
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                &nbsp;
+                                            </div>
+                                            <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
+                                                <img src="https://cdn0.iconfinder.com/data/icons/interaction-1-2-outlined/232/left-arrow-symbol-andright-arrow-symbol-forward-play-right-arrow-512.png"
+                                                    style="width: 25px;"/>
+                                            </a>
+                                        </td>
+                                    </template>
                                 </tr>
                                 </tbody>
                             </table>
@@ -336,7 +357,7 @@
                                                             <option value="Color">Color</option>
                                                             <option value="Shape">Shape</option>
                                                             <option value="Texture">Texture</option>
-                                                            <option value="Distance"></option>
+                                                            <option value="Growth Form">Growth Form</option>
                                                         </datalist>
                                                         <!--<select v-model="firstCharacter" style="height: 26px;">-->
                                                         <!--<option>Length</option>-->
@@ -354,6 +375,9 @@
                                                     </div>
                                                     <div class="col-md-5">
                                                         <input v-model="lastCharacter" v-on:focus="nounUndefined = false; lastCharacterDefinition = ''" placeholder="enter a singular noun">
+                                                        <br v-if="middleCharacter=='between'"/>
+                                                        <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and</div>
+                                                        <input v-if="middleCharacter=='between'" v-model="secondLastCharacter" v-on:focus="secondNounUndefined = false; lastCharacterDefinition = ''" placeholder="enter a singular noun">
                                                     </div>
 
                                                     <!--<input autofocus v-model="character.name" v-on:input="checkMsg"/>-->
@@ -364,10 +388,15 @@
                                                         What is {{lastCharacter}}? : <input v-model="lastCharacterDefinition" style="width:100%" :placeholder="'enter the definition of ' + lastCharacter">
                                                     </div>
                                                 </div>
+                                                <div class ="row" v-if="secondNounUndefined && middleCharacter == 'between'">
+                                                    <div class = "col-md-12">
+                                                        What is {{secondLastCharacter}}? : <input v-model="secondLastCharacterDefinition" style="width:100%" :placeholder="'enter the definition of ' + secondLastCharacter">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <a class="btn btn-primary ok-btn"
-                                                   v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter || nounUndefined && !lastCharacterDefinition}"
+                                                   v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter || nounUndefined && !lastCharacterDefinition || middleCharacter=='between' && (!secondLastCharacter || secondNounUndefined && !secondLastCharacterDefinition)}"
                                                    v-on:click="checkStoreCharacter()">
                                                     &nbsp; &nbsp; Next: Define Character &nbsp; &nbsp; </a>
                                                 <a v-on:click="cancelNewCharacter()" class="btn btn-danger">Cancel</a>
@@ -448,6 +477,7 @@
                                                     <div class="col-md-12 text-right" style="margin-top: 15px;">
                                                         <a v-if="viewFlag == false"
                                                            v-on:click="saveCharacter(metadataFlag)"
+                                                           v-bind:class="{disabled: saveCharacterButtonFlag}"
                                                            class="btn btn-primary">Save</a>
                                                         <a v-if="viewFlag == true" v-on:click="use(item)"
                                                            class="btn btn-primary">Use this</a>
@@ -472,11 +502,11 @@
                         </div>
                         <div v-if="confirmMethod" @close="confirmMethod = false">
                             <transition name="modal">
-                                <div class="modal-mask character-modal">
+                                <div class="modal-mask">
                                     <div class="modal-wrapper">
                                         <div class="modal-container">
                                             <div class="modal-header">
-                                                Confirm Method
+                                                <b>Review Your Decision</b>
                                             </div>
                                             <div class="modal-body">
                                                 <div v-if="!character.method_as">
@@ -533,11 +563,11 @@
                         </div>
                         <div v-if="confirmUnit" @close="confirmUnit = false">
                             <transition name="modal">
-                                <div class="modal-mask character-modal">
+                                <div class="modal-mask">
                                     <div class="modal-wrapper">
                                         <div class="modal-container">
                                             <div class="modal-header">
-                                                Confirm Unit
+                                                <b>Review Your Decision</b>
                                             </div>
                                             <div class="modal-body">
                                                 <div>
@@ -560,11 +590,11 @@
                     </div>
                     <div v-if="confirmTag" @close="confirmTag = false">
                         <transition name="modal">
-                            <div class="modal-mask character-modal">
+                            <div class="modal-mask">
                                 <div class="modal-wrapper">
                                     <div class="modal-container">
                                         <div class="modal-header">
-                                            Confirm Tag
+                                            <b>Review Your Decision</b>
                                         </div>
                                         <div class="modal-body">
                                             <div>
@@ -586,11 +616,11 @@
                 </div>
                 <div v-if="confirmSummary" @close="confirmSummary = false">
                     <transition name="modal">
-                        <div class="modal-mask character-modal">
+                        <div class="modal-mask">
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm Summary Function
+                                        <b>Review Your Decision</b>
                                     </div>
                                     <div class="modal-body">
                                         <div v-if="character.summary">
@@ -614,23 +644,23 @@
                 </div>
                 <div v-if="removeAllStandardFlag" @close="removeAllStandardFlag = false">
                     <transition name="modal">
-                        <div class="modal-mask character-modal">
+                        <div class="modal-mask">
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm to Remove Recommended Characters
+                                        <b>Confirmation</b>
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            Do you want to remove all recommended characters from your matrix?
+                                            <b>Do you want to remove all recommended characters from your matrix?</b>
                                         </div>
-                                        <div class="modal-footer">
-                                            <a class="btn btn-primary ok-btn"
-                                               v-on:click="removeAllStandardCharacters()">
-                                                &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
-                                            <a v-on:click="removeAllStandardFlag = false;"
-                                               class="btn btn-danger">Cancel</a>
-                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a class="btn btn-primary ok-btn"
+                                            v-on:click="removeAllStandardCharacters()">
+                                            &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
+                                        <a v-on:click="removeAllStandardFlag = false;"
+                                            class="btn btn-danger">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -644,7 +674,8 @@
                                 <div class="modal-container">
                                     <div style="max-height:80vh; overflow-y:scroll;">
                                         <div class="modal-header">
-                                            <b>{{ currentCharacter.name }}</b> <br/>
+                                            <b>Add a Value for <font style="color: #0070C0; font-style: italic">{{ currentCharacter.name }}:</font></b> {{ currentColorValue.value.slice(0, -2) }}
+                                            <br/>
                                             <hr>
                                             <div v-if="existColorDetails.length > 0"
                                                 style="border-radius: 5px; border: 1px solid; padding: 15px;">
@@ -661,168 +692,56 @@
 
                                                 <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
                                                     <div>
-                                                        <b>Values used before for this character and taxon</b>
+                                                        <b style="text-decoration: underline">Reuse a Value</b>
                                                     </div>
-                                                    <table class="table table-bordered"
-                                                        v-if="existColorDetailsFlag == true">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>
-                                                                negation
-                                                            </th>
-                                                            <th>
-                                                                pre constraint
-                                                            </th>
-                                                            <th>
-                                                                certainty constraint
-                                                            </th>
-                                                            <th>
-                                                                degree constraint
-                                                            </th>
-                                                            <th>
-                                                                brightness
-                                                            </th>
-                                                            <th>
-                                                                reflectance
-                                                            </th>
-                                                            <th>
-                                                                saturation
-                                                            </th>
-                                                            <th>
-                                                                color
-                                                            </th>
-                                                            <th>
-                                                                pattern
-                                                            </th>
-                                                            <th>
-                                                                post constraint
-                                                            </th>
-                                                            <th>
-                                                                count
-                                                            </th>
-                                                            <th>
-                                                                author
-                                                            </th>
-                                                            <th>
-
-                                                            </th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr v-for="eachDetails in existColorDetails">
-                                                            <td>
-                                                                {{ eachDetails.negation }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.pre_constraint }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.certainty_constraint }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.degree_constraint }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.brightness }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.reflectance }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.saturation }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.colored }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.multi_colored }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.post_constraint }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.count }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.username }}
-                                                            </td>
-                                                            <td>
+                                                    <div v-if="existColorDetailsFlag == true" style="margin-top: 10px;">
+                                                        <div v-for="(eachDetails,index) in existColorDetails" :key="eachDetails.id" style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                                            <hr v-if="index" style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
+                                                            <span style="margin-left: 20px; margin-right: 50px">
                                                                 <a class="btn btn-primary"
-                                                                v-on:click="selectExistDetails(eachDetails)">Use this</a>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-
-                                                </div>
-                                            </div>
-
-                                            <div v-if="colorDetails.length > 0"
-                                                style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
-                                                <div style="float: right;">
-                                                    <a class="btn btn-primary" v-if="currentColorValueExist == false"
-                                                    v-on:click="currentColorValueExist = true;">
-                                                        <span class="glyphicon glyphicon-chevron-down"></span>
-                                                    </a>
-                                                    <a class="btn btn-primary" v-if="currentColorValueExist == true"
-                                                    v-on:click="currentColorValueExist = false;">
-                                                        <span class="glyphicon glyphicon-chevron-up"></span>
-                                                    </a>
-                                                </div>
-                                                <div>
-                                                    <b>Current values</b>
-                                                </div>
-                                                <div v-for="(eachColor, index) in colorDetails"
-                                                    v-if="currentColorValueExist == true" style="margin-top: 5px;"
-                                                    class="row">
-                                                    <div class="col-md-6">
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.negation != null">
-                                                            {{ eachColor.negation }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.pre_constraint != null">
-                                                            {{ eachColor.pre_constraint }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.certainty_constraint != null">
-                                                            {{ eachColor.certainty_constraint }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.degree_constraint != null">
-                                                            {{ eachColor.degree_constraint }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.brightness != null">
-                                                            {{ eachColor.brightness }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.reflectance != null">
-                                                            {{ eachColor.reflectance }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.saturation != null">
-                                                            {{ eachColor.saturation }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.colored != null">
-                                                            {{ eachColor.colored }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.multi_colored != null">
-                                                            {{ eachColor.multi_colored }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachColor.post_constraint != null">
-                                                            {{ eachColor.post_constraint }}
+                                                                v-on:click="selectExistDetails(eachDetails)" style="padding-top: 3px; padding-bottom: 3px;">Use this</a>
+                                                            </span>
+                                                            <b>
+                                                                <span>
+                                                                    {{ eachDetails.negation }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.pre_constraint }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.certainty_constraint }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.degree_constraint }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.brightness }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.reflectance }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.saturation }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.colored }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.multi_colored }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.post_constraint }}
+                                                                </span>
+                                                            </b>
+                                                            <span>
+                                                                , usages = {{ eachDetails.count }}
+                                                            </span>
+                                                            <span>
+                                                                , creator = {{ eachDetails.username }}
+                                                            </span>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <a class="btn btn-primary" style="padding: 3px 6px;"
-                                                        v-on:click="editEachColor(eachColor)">Edit</a>
-                                                        <a class="btn btn-primary" style="padding: 3px 6px;"
-                                                        v-on:click="removeEachColor(eachColor)">Remove</a>
-                                                    </div>
+
                                                 </div>
                                             </div>
 
@@ -832,9 +751,7 @@
 
                                             <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                                                 <div>
-                                                    <b>Formulate a value:</b> type in a blank to select existing phrases or
-                                                    use your own terms(need
-                                                    definition)
+                                                    <b style="text-decoration: underline">Create/Edit Value</b>
                                                 </div>
                                                 <div>
                                                     <div style="display: inline-block;">
@@ -842,7 +759,7 @@
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
                                                             v-model="currentColorValue.negation" placeholder=""> -->
                                                         <select style="width: 90px; height: 26px;"
-                                                                v-model="currentNonColorValue.negation"
+                                                                v-model="currentColorValue.negation"
                                                                 v-on:change="changeColorSection(currentNonColorValue, 'negation', $event)">
                                                             <option value=""></option>
                                                             <option value="not">not</option>
@@ -1039,27 +956,24 @@
                                                     </div>
                                                     
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="row">
-                                            <div class="col-md-6" style="text-align: left;">
-                                                <a class="btn btn-primary ok-btn"
-                                                   v-on:click="removeColorValue()">
-                                                    Remove All Values </a>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <a class="btn btn-primary ok-btn"
-                                                   :disabled="saveColorButtonFlag"
-                                                   v-on:click="saveColorValue()">
-                                                    Save </a>
-                                                <!-- <a class="btn btn-primary ok-btn"
-                                                   :disabled="saveColorButtonFlag"
-                                                   v-on:click="saveColorValue(true)">
-                                                    Save & New </a> -->
-                                                <a v-on:click="colorDetailsFlag = false;"
-                                                   class="btn btn-danger">Cancel</a>
+                                                
+                                                <div class="row">
+                                                    <div style="float: right; margin-right: 20px">
+                                                        <a class="btn btn-primary ok-btn"
+                                                        :disabled="saveColorButtonFlag"
+                                                        v-on:click="saveColorValue()">
+                                                            Save </a>
+                                                        &nbsp;&nbsp;
+                                                        <!-- <a class="btn btn-primary ok-btn"
+                                                        :disabled="saveColorButtonFlag"
+                                                        v-on:click="saveColorValue(true)">
+                                                            Save & New </a> -->
+                                                        <a v-on:click="colorDetailsFlag = false;"
+                                                        class="btn btn-danger">Cancel</a>
+                                                        &nbsp;&nbsp;
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -1075,7 +989,8 @@
                                 <div class="modal-container">
                                     <div style="max-height:80vh; overflow-y:scroll;">
                                         <div class="modal-header">
-                                            <b>{{ currentCharacter.name }}</b> <br/>
+                                            <b>Add a Value for <font style="color: #0070C0; font-style: italic">{{ currentCharacter.name }}:</font></b> {{ currentNonColorValue.value.slice(0, -2) }}
+                                            <br/>
                                             <hr>
                                             <div v-if="existNonColorDetails.length > 0"
                                                 style="border-radius: 5px; border: 1px solid; padding: 15px;">
@@ -1092,78 +1007,47 @@
 
                                                 <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
                                                     <div>
-                                                        <b>Values used before for this character and taxon</b>
+                                                        <b style="text-decoration: underline">Reuse a Value</b>
                                                     </div>
-                                                    <table class="table table-bordered"
-                                                        v-if="existNonColorDetailsFlag == true">
-                                                        <thead>
-                                                        <tr>
-                                                            <th>
-                                                                negation
-                                                            </th>
-                                                            <th>
-                                                                pre constraint
-                                                            </th>
-                                                            <th>
-                                                                certainty constraint
-                                                            </th>
-                                                            <th>
-                                                                degree constraint
-                                                            </th>
-                                                            <th>
-                                                                {{ currentNonColorValue.placeholderName }}
-                                                            </th>
-                                                            <th>
-                                                                post constraint
-                                                            </th>
-                                                            <th>
-                                                                count
-                                                            </th>
-                                                            <th>
-                                                                author
-                                                            </th>
-                                                            <th>
-
-                                                            </th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr v-for="eachDetails in existNonColorDetails">
-                                                            <td>
-                                                                {{ eachDetails.negation }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.pre_constraint }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.certainty_constraint }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.degree_constraint }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.main_value }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.post_constraint }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.count }}
-                                                            </td>
-                                                            <td>
-                                                                {{ eachDetails.username }}
-                                                            </td>
-                                                            <td>
-                                                                <a class="btn btn-primary"
+                                                    <div v-if="existNonColorDetailsFlag == true" style="margin-top: 10px;">
+                                                        <div v-for="(eachDetails, index) in existNonColorDetails" :key="eachDetails.id" style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                                            <hr v-if="index" style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
+                                                            <span style="margin-left: 20px; margin-right: 50px">
+                                                                <a class="btn btn-primary" style="padding-top: 3px; padding-bottom: 3px;"
                                                                 v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
+                                                            </span>
+                                                            <b>
+                                                                <span>
+                                                                    {{ eachDetails.negation }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.pre_constraint }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.certainty_constraint }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.degree_constraint }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.main_value }}
+                                                                </span>
+                                                                <span>
+                                                                    {{ eachDetails.post_constraint }}
+                                                                </span>
+                                                            </b>
+                                                            <span>
+                                                                , usages = {{ eachDetails.count }}
+                                                            </span>
+                                                            <span>
+                                                                , creator = {{ eachDetails.username }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
 
                                                 </div>
                                             </div>
-                                            <div v-if="nonColorDetails.length > 0"
+                                            <!-- <div v-if="nonColorDetails.length > 0"
                                                 style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
                                                 <div style="float: right;">
                                                     <a class="btn btn-primary" v-if="currentNonColorValueExist == false"
@@ -1214,16 +1098,14 @@
                                                         v-on:click="removeEachNonColor(eachValue)">Remove</a>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
 
                                         </div>
                                         <div class="modal-body">
 
                                             <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                                                 <div>
-                                                    <b>Formulate a value:</b> select existing phrases or use your own
-                                                    terms(need
-                                                    definition)
+                                                    <b style="text-decoration: underline">Create/Edit Value</b>
                                                 </div>
                                                 <div>
                                                     <div style="display: inline-block;">
@@ -1379,27 +1261,21 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="row">
-                                            <div class="col-md-6" style="text-align: left;">
-                                                <a class="btn btn-primary ok-btn"
-                                                   v-on:click="removeNonColorValue()">
-                                                    Remove All Values </a>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <a class="btn btn-primary ok-btn"
-                                                   :disabled="saveNonColorButtonFlag"
-                                                   v-on:click="saveNonColorValue()">
-                                                    Save </a>
-                                                <a class="btn btn-primary ok-btn"
-                                                   :disabled="saveNonColorButtonFlag"
-                                                   v-on:click="saveNonColorValue(true)">
-                                                    Save & New </a>
-                                                <a v-on:click="nonColorDetailsFlag = false;currentNonColorValue.main_value='';currentNonColorValue.negation = null;currentNonColorValue.pre_constraint = null;currentNonColorValue.certainty_constraint = null;currentNonColorValue.degree_constraint = null;currentNonColorValue.post_constraint = null;currentNonColorValue.confirmedFlag['main_value'] = false;"
-                                                   class="btn btn-danger">Cancel</a>
+                                                
+                                                <div class="row">
+                                                    <div style="float: right; margin-right: 20px">
+                                                        <a class="btn btn-primary ok-btn"
+                                                        :disabled="saveNonColorButtonFlag"
+                                                        v-on:click="saveNonColorValue()">
+                                                            Save </a>
+                                                        <!-- <a class="btn btn-primary ok-btn"
+                                                        :disabled="saveNonColorButtonFlag"
+                                                        v-on:click="saveNonColorValue(true)">
+                                                            Save & New </a> -->
+                                                        <a v-on:click="nonColorDetailsFlag = false;currentNonColorValue.main_value='';currentNonColorValue.negation = null;currentNonColorValue.pre_constraint = null;currentNonColorValue.certainty_constraint = null;currentNonColorValue.degree_constraint = null;currentNonColorValue.post_constraint = null;currentNonColorValue.confirmedFlag['main_value'] = false;"
+                                                        class="btn btn-danger">Cancel</a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1414,12 +1290,12 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm to overwrite?
+                                        <b>Confirm to overwrite?</b>
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            There are values in the cells to be filled. Overwrite or keep the old
-                                            values?
+                                            <b>There are values in the cells to be filled. Overwrite or keep the old
+                                            values?</b>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -1444,11 +1320,11 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm to remove?
+                                        <b>Confirm to remove?</b>
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            Are you sure you want to remove {{ userCharacters.find(each => each.id == toRemoveCharacterId).name }}?
+                                            <b>Are you sure you want to remove {{ userCharacters.find(each => each.id == toRemoveCharacterId).name }}?</b>
                                         </div>
                                         <br/>
                                         <br/>
@@ -1482,11 +1358,11 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirm to remove?
+                                        <b>Confirm to remove?</b>
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            Are you sure you want to remove {{ headers.find(each => each.id == toRemoveHeaderId).header }}?
+                                            <b>Are you sure you want to remove {{ headers.find(each => each.id == toRemoveHeaderId).header }}?</b>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -1511,11 +1387,11 @@
                             <div class="modal-wrapper">
                                 <div class="modal-container">
                                     <div class="modal-header">
-                                        Confirmation
+                                        <b>Confirmation</b>
                                     </div>
                                     <div class="modal-body">
                                         <div>
-                                            Do you want a matrix with your selected characters be displayed?
+                                            <b>Do you want a matrix with your selected characters be displayed?</b>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -1561,6 +1437,107 @@
 
     import draggable from 'vuedraggable'
 
+    // import {runTest, Character, ColorQuality} from '../../LeafColors';
+
+    let Color = {
+        WHITE : "white",
+        BLACK : "black",
+        GREEN : "green",
+        YELLOW : "yellow",
+        BROWN : "brown",
+        GOLD : "gold",
+        RED : "red",
+        PURPLE : "purple",
+    }
+    
+    
+    function makeBaseAuth(user, pswd){ 
+        var token = user + ':' + pswd;
+        var hash = "";
+        if (btoa) {
+            hash = btoa(token);
+        }
+        return "Basic " + hash;
+    }
+    var inactivityTimeout = null;
+    resetTimeout()
+    function onUserInactivity() {
+        window.location.href = "logout";
+    }
+    function resetTimeout() {
+        if (inactivityTimeout)
+            clearTimeout(inactivityTimeout);
+        inactivityTimeout = setTimeout(onUserInactivity, 1000 * 3600);
+    }
+    window.onmousemove = resetTimeout;
+
+    let Colorsets = {
+        white: new Set([Color.WHITE, Color.BLACK, Color.GREEN, Color.YELLOW, Color.BROWN, Color.GOLD, Color.RED, Color.PURPLE]),
+        yellow: new Set([Color.BLACK, Color.GREEN, Color.YELLOW, Color.BROWN]),
+        green: new Set([Color.BLACK, Color.GREEN, Color.BROWN]), // Color.YELLOW
+        gold: new Set([Color.BLACK, Color.BROWN, Color.GOLD, Color.RED]),
+        brown: new Set([Color.BLACK, Color.BROWN]), // Color.GOLD, Color.PURPLE, Color.RED
+        red: new Set([Color.BLACK, Color.GREEN, Color.RED, Color.PURPLE, Color.BROWN]),
+        purple: new Set([Color.BLACK, Color.BROWN, Color.PURPLE]),
+        black: new Set([Color.BLACK])
+    }
+
+    let Shapesets = {
+        rounded: new Set(['obtuse']),
+        acute: new Set(['awned', 'acuminate']),
+        lanceolate: new Set(['elliptic-ovat']),
+        oblanceolate: new Set(['obovat']),
+        flat: new Set(['convex', 'concav']),
+        elliptic: new Set(['ovate', 'obovat']),
+        linear: new Set(['oblanceolate', 'lanceolat']),
+    }
+
+    let singularToPlural = {
+        plant: 'plants',
+        internode: 'internodes',
+        rhizome: 'rhizomes',
+        stem: 'stems',
+        leaf: 'leaves',
+        blade: 'blades',
+        margin: 'margins',
+        surface: 'surface',
+        sheath: 'sheaths',
+        ligule: 'ligules',
+        apex: 'apex',
+        scale: 'scales',
+        vein: 'veins',
+        stipe: 'stipe',
+        beak: 'beak',
+        tooth: 'teeth',
+        perigynium: 'perigynia',
+        stigma: 'stigmas',
+        achene: 'achenes',
+        anther: 'anthers',
+        shoot: 'shoots',
+        branch: 'branches',
+        root: 'roots',
+        culm: 'culms',
+        midrib: 'midrib',
+        band: 'bands',
+        inflorescence: 'inflorescences',
+        axis: 'axis',
+        node: 'nodes',
+        peduncle: 'peduncles',
+        bract: 'bracts',
+        rachis: 'rachis',
+        spike: 'spikes',
+        side: 'sides',
+        style: 'styles',
+        stamen: 'stamens',
+        filament: 'filaments',
+        cataphyll: 'cataphylls',
+        flower: 'flowers',
+        nerve: 'nerves',
+        unit: 'unit',
+        body: 'body',
+        orifice: 'orifice',
+    }
+
     Vue.use(LiquorTree);
     Vue.use({ModelSelect});
 
@@ -1591,6 +1568,8 @@
                 middleCharacter: null,
                 lastCharacter: null,
                 lastCharacterDefinition: null,
+                secondLastCharacter: null,
+                secondLastCharacterDefinition: null,
                 newCharacterFlag: false,
                 detailsFlag: false,
                 metadataFlag: null,
@@ -1613,6 +1592,7 @@
                 },
                 isLoading: false,
                 userTags: [],
+                nonColorType: '',
                 oldUserTags: [],
                 currentTab: '',
                 descriptionText: '',
@@ -1729,6 +1709,7 @@
                 },
                 checkMethodFlag: false,
                 colorationData: {},
+                nonColorationData: {},
                 extraColors: [],
                 existColorDetails: [],
                 existColorDetailsFlag: false,
@@ -1757,6 +1738,8 @@
                 saveNonColorButtonFlag: false,
                 filterFlag: true,
                 nounUndefined: false,
+                secondNounUndefined: false,
+                saveCharacterButtonFlag: false,
             }
         },
         components: {
@@ -1764,7 +1747,6 @@
             draggable,
             Loading
         },
-
         methods: {
             handleFcAfterDateBack (event) {
                 console.log('hadleFcAfterDateBack function inited');
@@ -1783,6 +1765,7 @@
                         app.character.method_include = event[6];
                         app.character.method_exclude = event[7];
                         app.character.method_where = event[8];
+                        app.character.method_greenTick = event[10];
                         app.parentData = event;
                         app.methodUpdateFlag = true;
                         console.log("method return", event);
@@ -1829,7 +1812,11 @@
                     app.firstCharacter = '';
                     app.middleCharacter = '';
                     app.lastCharacter = '';
+                    app.secondLastCharacter = '';
+                    app.lastCharacterDefinition = '';
+                    app.secondLastCharacterDefinition = '';
                     app.nounUndefined = false;
+                    app.secondNounUndefined = false;
 
                     app.newCharacterFlag = true;
                     app.viewFlag = false;
@@ -1841,9 +1828,9 @@
                     console.log('selectedCharacter.username', app.character.username.substr(app.character.username.length - app.user.name.length));
 
                     if (app.character.username.includes(app.user.name)) {
-//                        app.viewFlag = false;
-//                        sessionStorage.setItem('viewFlag', false);
-//                        sessionStorage.setItem('edit_created_other', false);
+                    //    app.viewFlag = false;
+                    //    sessionStorage.setItem('viewFlag', false);
+                    //    sessionStorage.setItem('edit_created_other', false);
                         app.editCharacter({character_id: app.character.id}, true);
                     } else {
                         app.viewFlag = true;
@@ -1864,10 +1851,10 @@
                     sessionStorage.setItem('edit_created_other', !editFlag);
                     sessionStorage.setItem('editFlag', editFlag);
                     app.character = app.userCharacters.find(ch => ch.id == character.character_id);
-//                    app.character.standard = 0;
+                //    app.character.standard = 0;
                 } else {
                     app.character = character;
-//                    app.character.standard = 0;
+                //    app.character.standard = 0;
                 }
 
                 console.log('app.character.username', app.character.username);
@@ -2037,9 +2024,74 @@
                                     console.log('save api resp', resp);
                                 });
                         });
+                    if (app.middleCharacter == 'between' && app.secondNounUndefined){
+                        var date = new Date();
+                        requestBody = {
+                            "user": app.sharedFlag ? '' : app.user.name,
+                            "ontology": "carex",
+                            "term": app.secondLastCharacter,
+                            "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                            "definition": app.secondLastCharacterDefinition,
+                            "elucidation": "",
+                            "createdBy": app.user.name,
+                            "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                            "definitionSrc": app.user.name,
+                        };
+                        console.log(requestBody);
+                        axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                            .then(function (resp) {
+                                console.log('shark api class resp', resp);
+                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                    user: app.sharedFlag ? '' : app.user.name,
+                                    ontology: 'carex'
+                                })
+                                    .then(function (resp) {
+                                        console.log('save api resp', resp);
+                                    });
+                            });
+                    }
                     app.storeCharacter();
                     return;
                 }
+                else if (app.middleCharacter == 'between' && app.secondNounUndefined) {
+                    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase())
+                        .then(function(resp){
+                            console.log('term?'+app.lastCharacter, resp.data);
+                            if (!resp.data.entries.length){
+                                app.nounUndefined = true;
+                                return
+                            }
+                            else {
+                                var date = new Date();
+                                requestBody = {
+                                    "user": app.sharedFlag ? '' : app.user.name,
+                                    "ontology": "carex",
+                                    "term": app.secondLastCharacter,
+                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                                    "definition": app.secondLastCharacterDefinition,
+                                    "elucidation": "",
+                                    "createdBy": app.user.name,
+                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                                    "definitionSrc": app.user.name,
+                                };
+                                console.log(requestBody);
+                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                                    .then(function (resp) {
+                                        console.log('shark api class resp', resp);
+                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                            user: app.sharedFlag ? '' : app.user.name,
+                                            ontology: 'carex'
+                                        })
+                                            .then(function (resp) {
+                                                console.log('save api resp', resp);
+                                            });
+                                    });
+                                app.storeCharacter();
+                            }
+                        });
+                        
+                }
+                var secondChecked = false;
                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase())
                     .then(function(resp){
                         console.log('term?'+app.lastCharacter, resp.data);
@@ -2047,15 +2099,111 @@
                             app.nounUndefined = true;
                         }
                         else {
-                            app.storeCharacter();
+                            if (app.middleCharacter != 'between' || secondChecked){
+                                app.storeCharacter();
+                            }
+                            else{
+                                secondChecked = true;
+                            }
                         }
                     });
+                    
+                if (app.middleCharacter == 'between'){
+                    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.secondLastCharacter.toLowerCase())
+                        .then(function(resp){
+                            console.log('term?'+app.secondLastCharacter, resp.data);
+                            if (!resp.data.entries.length){
+                                app.secondNounUndefined = true;
+                            }
+                            else {
+                                if (secondChecked){
+                                    app.storeCharacter();
+                                }
+                                else{
+                                    secondChecked = true;
+                                }
+                            }
+                        });
+                }
 
+            },
+            colorValueCell(colorDetails){
+                var app = this;
+                return colorDetails.map(cv=>app.colorValueText(cv)).join('&nbsp;&nbsp;') + '&nbsp;';
+            },
+            colorValueText(cv){
+                var txt = '';
+                if (cv.negation && cv.negation != ''){
+                    txt += cv.negation + ' ';
+                }
+                if (cv.pre_constraint && cv.pre_constraint != ''){
+                    txt += cv.pre_constraint + ' ';
+                }
+                if (cv.certainty_constraint && cv.certainty_constraint != ''){
+                    txt += cv.certainty_constraint + ' ';
+                }
+                if (cv.degree_constraint && cv.degree_constraint != ''){
+                    txt += cv.degree_constraint + ' ';
+                }
+                if (cv.brightness && cv.brightness != ''){
+                    txt += cv.brightness + ' ';
+                }
+                if (cv.reflectance && cv.reflectance != ''){
+                    txt += cv.reflectance + ' ';
+                }
+                if (cv.saturation && cv.saturation != ''){
+                    txt += cv.saturation + ' ';
+                }
+                if (cv.colored && cv.colored != ''){
+                    txt += cv.colored + ' ';
+                }
+                if (cv.multi_colored && cv.multi_colored != ''){
+                    txt += cv.multi_colored + ' ';
+                }
+                if (cv.post_constraint && cv.post_constraint != ''){
+                    txt += cv.post_constraint + ' ';
+                }
+                if (txt != ''){
+                    txt = txt.slice(0,-1);
+                }
+                return txt + '; ';
+            },
+            nonColorValueCell(nonColorDetails){
+                var app = this;
+                return nonColorDetails.map(ncv=>app.nonColorValueText(ncv)).join('&nbsp;&nbsp;') + '&nbsp;';
+            },
+            nonColorValueText(ncv){
+                var txt = '';
+                if (ncv.negation && ncv.negation != ''){
+                    txt += ncv.negation + ' ';
+                }
+                if (ncv.pre_constraint && ncv.pre_constraint != ''){
+                    txt += ncv.pre_constraint + ' ';
+                }
+                if (ncv.certainty_constraint && ncv.certainty_constraint != ''){
+                    txt += ncv.certainty_constraint + ' ';
+                }
+                if (ncv.degree_constraint && ncv.degree_constraint != ''){
+                    txt += ncv.degree_constraint + ' ';
+                }
+                if (ncv.main_value && ncv.main_value != ''){
+                    txt += ncv.main_value + ' ';
+                }
+                if (ncv.post_constraint && ncv.post_constraint != ''){
+                    txt += ncv.post_constraint + ' ';
+                }
+                if (txt != ''){
+                    txt = txt.slice(0,-1);
+                }
+                return txt + '; ';
             },
             storeCharacter() {
                 var app = this;
                 app.character = {};
                 app.character.name = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                if (app.middleCharacter == 'between'){
+                    app.character.name += ' and ' + app.secondLastCharacter;
+                }
                 app.character.username = app.user.name;
                 app.characterUsername = app.user.name;
                 app.character.standard = 0;
@@ -2227,7 +2375,7 @@
                 for (var i = 0; i < app.defaultCharacters.length; i++) {
                     var character = app.defaultCharacters[i];
                     if (!app.userCharacters.find(ch => ch.name == character.name) && character.standard == 1) {
-//                        character.username = app.user.name;
+                    //    character.username = app.user.name;
                         character.show_flag = false;
                         if (character.name.startsWith('Length of')
                             || character.name.startsWith('Width of')
@@ -2265,19 +2413,6 @@
                 console.log('characterId', characterId);
                 app.toRemoveCharacterId = characterId;
                 app.toRemoveStandardConfirmFlag = true;
-//                axios.post("/chrecorder/public/api/v1/character/delete/" + app.user.id + "/" + characterId)
-//                    .then(function (resp) {
-//                        app.toRemoveCharacterId = null;
-//                        app.userCharacters = resp.data.characters;
-//                        app.headers = resp.data.headers;
-//                        app.values = resp.data.values;
-//                        if (app.userCharacters.length == 0) {
-//                            app.matrixShowFlag = false;
-//                        }
-//                        app.refreshUserCharacters();
-//
-//                    });
-
             },
             confirmRemoveCharacter() {
                 var app = this;
@@ -2297,7 +2432,7 @@
                         app.refreshDefaultCharacters();
                         if (app.userTags.length!= resp.data.userTags.length && !resp.data.userTags.find(ch => ch == app.currentTab)){
                             app.userTags = resp.data.userTags;
-                            app.showTableForTab(app.userTags[0].tag_name);
+                            if (app.userTags[0])app.showTableForTab(app.userTags[0].tag_name);
                         }
                         else app.showTableForTab(app.currentTab);
                         
@@ -2357,7 +2492,7 @@
                 var app = this;
                 console.log('app.character = ', app.character);
                 console.log('metadataFlag', metadataFlag);
-
+                app.saveCharacterButtonFlag = true;
                 app.methodFieldData.fromTerm = null;
                 app.methodFieldData.fromId = null;
                 app.methodFieldData.toTerm = null;
@@ -2427,7 +2562,7 @@
                                     }
 
                                 }
-                                if (app.methodFieldData.fromId == null) {
+                                if (app.methodFieldData.fromId == null && (!app.character.method_greenTick || !app.character.method_greenTick.from)) {
                                     checkMethod = false;
                                     app.methodFieldData.fromNeedMore = true;
                                     app.methodFieldData.fromSynonyms = resp.data.entries;
@@ -2466,7 +2601,7 @@
                                     }
 
                                 }
-                                if (app.methodFieldData.toId == null) {
+                                if (app.methodFieldData.toId == null && (!app.character.method_greenTick || !app.character.method_greenTick.to)) {
                                     checkMethod = false;
                                     app.methodFieldData.toNeedMore = true;
                                     app.methodFieldData.toSynonyms = resp.data.entries;
@@ -2503,7 +2638,7 @@
                                     }
 
                                 }
-                                if (app.methodFieldData.includeId == null) {
+                                if (app.methodFieldData.includeId == null && (!app.character.method_greenTick || !app.character.method_greenTick.include)) {
                                     checkMethod = false;
                                     app.methodFieldData.includeNeedMore = true;
                                     app.methodFieldData.includeSynonyms = resp.data.entries;
@@ -2541,7 +2676,7 @@
                                     }
 
                                 }
-                                if (app.methodFieldData.excludeId == null) {
+                                if (app.methodFieldData.excludeId == null && (!app.character.method_greenTick || !app.character.method_greenTick.exclude)) {
                                     checkMethod = false;
                                     app.methodFieldData.excludeNeedMore = true;
                                     app.methodFieldData.excludeSynonyms = resp.data.entries;
@@ -2579,7 +2714,7 @@
                                     }
 
                                 }
-                                if (app.methodFieldData.whereId == null) {
+                                if (app.methodFieldData.whereId == null && (!app.character.method_greenTick || !app.character.method_greenTick.where)) {
                                     checkMethod = false;
                                     app.methodFieldData.whereNeedMore = true;
                                     app.methodFieldData.whereSynonyms = resp.data.entries;
@@ -2704,7 +2839,7 @@
                                 console.log('class error resp', resp);
                             });
                     }
-//                        });
+                    //    });
                 }
 
                 const awaitTimerID = setInterval(function(){
@@ -2794,9 +2929,8 @@
                             app.showDetails('unit', app.metadataFlag);
                         }
                     }
+                    app.saveCharacterButtonFlag = false;
                 }, 100)
-
-
             },
             use(characterId) {
                 var app = this;
@@ -2812,8 +2946,8 @@
                       && ch.method_where == app.character.method_where
                      )) {
                         console.log('app.character', app.character);
-//                app.character.show_flag = false;
-                        //app.character.standard = 1;
+            //    app.character.show_flag = false;
+            //             app.character.standard = 1;
                         app.characterUsername = app.character.username;
 
                         var checkFields = true;
@@ -2834,9 +2968,6 @@
                         }
 
                         if (checkFields) {
-//                    if (app.character['id']) {
-//                        delete app.character['id'];
-//                    }
                             if (app.checkHaveUnit(app.character.name)) {
                                 app.confirmMethod = true;
                             } else {
@@ -2865,14 +2996,14 @@
                     selectedCharacter = app.userCharacters.find(ch => ch.id == characterId);
                 }
                 console.log('selectedCharacter.username', selectedCharacter.username);
-//                selectedCharacter.username = selectedCharacter.username + ', ' + app.user.name;
-//                app.characterUsername = selectedCharacter.username + ', ' + app.user.name;
+            //    selectedCharacter.username = selectedCharacter.username + ', ' + app.user.name;
+            //    app.characterUsername = selectedCharacter.username + ', ' + app.user.name;
                 app.oldCharacter.method_from = selectedCharacter.method_from;
                 app.oldCharacter.method_to = selectedCharacter.method_to;
                 app.oldCharacter.method_include = selectedCharacter.method_include;
                 app.oldCharacter.method_exclude = selectedCharacter.method_exclude;
                 app.oldCharacter.method_where = selectedCharacter.method_where;
-//                app.editFlag = true;
+            //    app.editFlag = true;
                 selectedCharacter.creator = app.user.name + ' via CR';
                 selectedCharacter.standard = 0;
                 app.detailsFlag = false;
@@ -2928,8 +3059,8 @@
                     .then(function (resp) {
                         console.log('getCharacter', resp);
                         var currentCharacters = resp.data.characters;
-//                        app.character.standard = 0;
-//                        app.character.username = app.characterUsername;
+                    //    app.character.standard = 0;
+                    //    app.character.username = app.characterUsername;
                         if (currentCharacters.find(ch => ch.name == app.character.name
                             && ch.method_from == app.character.method_from
                             && ch.method_to == app.character.method_to
@@ -2958,7 +3089,7 @@
                                         app.character.username += ', ' + app.character.owner_name;
                                     }
                                 }
-
+        
                                 axios.post('/chrecorder/public/api/v1/character/update-character', app.character)
                                     .then(function (resp) {
                                         app.userTags = resp.data.userTags;
@@ -3254,18 +3385,6 @@
                 }
                 app.isLoading = false;
 
-//                 axios.post('/chrecorder/public/api/v1/show-tab-character/' + tagName)
-//                     .then(function (resp) {
-//                         app.isLoading = false;
-//                         app.userCharacters = resp.data.characters;
-//                         app.headers = resp.data.headers;
-//                         app.values = resp.data.values;
-//                         console.log('values', app.values);
-//                         console.log('headers', app.headers);
-// //                        var height = $('.cr-table').height();
-// //                        $('.table-responsive').css('height', height + 150 + 'px');
-//                         app.refreshUserCharacters();
-//                     });
             },
             hideAllCharacter() {
                 var app = this;
@@ -3279,19 +3398,6 @@
                 app.toRemoveCharacterId = characterId;
                 app.toRemoveStandardConfirmFlag = true;
 
-//                axios.post('/chrecorder/public/api/v1/character/delete/' + app.user.id + '/' + characterId)
-//                    .then(function (resp) {
-//                        app.userCharacters = resp.data.characters;
-//                        app.headers = resp.data.headers;
-//                        app.values = resp.data.values;
-//                        app.userTags = resp.data.userTags;
-//                        app.defaultCharacters = resp.data.defaultCharacters;
-//                        if (app.userCharacters.length == 0) {
-//                            app.matrixShowFlag = false;
-//                        }
-//                        app.refreshUserCharacters();
-//                        app.refreshDefaultCharacters();
-//                    });
             },
             changeUnit(characterId, unit) {
                 var app = this;
@@ -3329,58 +3435,38 @@
                 var app = this;
                 var showedCharacters = app.userCharacters.filter(ch => ch.show_flag == true);
                 var index = showedCharacters.indexOf(showedCharacters.find(ch => ch.id == valueId));
-                app.swap(showedCharacters[index].id, false, showedCharacters.length);
+                app.swap(index, false, showedCharacters);
             },
             downUserValue(valueId) {
                 var app = this;
                 var showedCharacters = app.userCharacters.filter(ch => ch.show_flag == true);
                 var index = showedCharacters.indexOf(showedCharacters.find(ch => ch.id == valueId));
-                app.swap(showedCharacters[index].id, true, showedCharacters.length);
+                app.swap(index, true, showedCharacters);
 
             },
-            swap(valueId, directionFlag = true, maxLength) {
+            swap(valueIndex, directionFlag = true, showedCharacters) {
                 var app = this;
-                var showedValues = app.values.filter(function (eachValue) {
-                    return app.userCharacters.find(ch => ch.id == eachValue[0].character_id).show_flag == true;
-                });
-                var valueIndex = showedValues.indexOf(app.values.find(value => value[0].character_id == valueId));
+                const maxLength = showedCharacters.length;
+                var secondIndex;
                 if ((directionFlag == true) && (valueIndex < maxLength - 1)) {
-                    var tmp = showedValues[valueIndex];
-                    // app.isLoading = true;
-                    console.log('tmp', tmp);
-//                    app.values.splice(valueIndex, 1);
-//                    app.values.splice(valueIndex + 1, 0, tmp);
-                    axios.post('/chrecorder/public/api/v1/character/change-order', {
-                        order: 'down',
-                        characterId: tmp[0].character_id,
-                    })
-                        .then(function (resp) {
-                            console.log('resp', resp);
-                            app.isLoading = false;
-                            app.values = resp.data.values;
-                            app.userCharacters = resp.data.characters;
-                            console.log('app.userCharacters', app.userCharacters);
-                            app.refreshUserCharacters();
-                            app.showTableForTab(app.currentTab);
-                        });
-                } else if ((directionFlag == false) && (valueIndex > 0)) {
-                    var tmp = showedValues[valueIndex];
-                    // app.isLoading = true;
-//                    app.values.splice(valueIndex, 1);
-//                    app.values.splice(valueIndex - 1, 0, tmp);
-                    axios.post('/chrecorder/public/api/v1/character/change-order', {
-                        order: 'up',
-                        characterId: tmp[0].character_id,
-                    })
-                        .then(function (resp) {
-                            // app.isLoading = false;
-                            app.values = resp.data.values;
-                            app.userCharacters = resp.data.characters;
-                            app.refreshUserCharacters();
-                            app.showTableForTab(app.currentTab);
-                        });
+                    secondIndex = valueIndex + 1;
                 }
-
+                else if ((directionFlag == false) && (valueIndex > 0)) {
+                    secondIndex = valueIndex - 1;
+                }
+                axios.post('/chrecorder/public/api/v1/character/change-order', {
+                    firstId: showedCharacters[valueIndex].id,
+                    secondId: showedCharacters[secondIndex].id,
+                })
+                    .then(function (resp) {
+                        console.log('resp', resp);
+                        app.isLoading = false;
+                        app.values = resp.data.values;
+                        app.userCharacters = resp.data.characters;
+                        console.log('app.userCharacters', app.userCharacters);
+                        app.refreshUserCharacters();
+                        app.showTableForTab(app.currentTab);
+                    });
             },
             refreshDefaultCharacters() {
                 var app = this;
@@ -3414,12 +3500,12 @@
                     app.standardCharacters.push(temp);
                 }
             },
-//            expandTable() {
-//                var app = this;
-//                if (app.descriptionFlag != -1) {
-//                    app.descriptionFlag--;
-//                }
-//            },
+            // expandTable() {
+            //     var app = this;
+            //     if (app.descriptionFlag != -1) {
+            //         app.descriptionFlag--;
+            //     }
+            // },
             expandDescription() {
                 var app = this;
                 app.descriptionFlag = !app.descriptionFlag;
@@ -3442,12 +3528,22 @@
                     return false;
                 }
             },
+            convertPluralWord(word){
+                if (singularToPlural[word]){
+                    return singularToPlural[word];
+                }
+                if (singularToPlural[word.toLowerCase()]) {
+                    return singularToPlural[word.toLowerCase()].charAt(0).toUpperCase() + singularToPlural[word.toLowerCase()].slice(1);
+                }
+                return word;
+            },
             updateDescription() {
                 var app = this;
 
                 app.descriptionText = '';
 
                 for (var i = 0; i < app.userTags.length; i++) {
+                    var char_names = [];
                     app.descriptionText += '<b>' + app.userTags[i].tag_name + ': ' + '</b>';
                     var filteredCharacters = app.userCharacters.filter(function (eachCharacter) {
                         return eachCharacter.standard_tag == app.userTags[i].tag_name;
@@ -3463,6 +3559,25 @@
                             }
                         }
                         if (app.checkValueArray(tempValueArray)) {
+                            
+                            var currentCharacter = app.userCharacters.find(ch => ch.id == filteredValues[0].character_id);
+                            if (!currentCharacter.name.split(' of ')[1]){
+                                currentCharacter.name = currentCharacter.name.replace(' between ', ' of ');
+                            }
+                            var char_name = currentCharacter.name.split(' of ')[1].toLowerCase().split(' in ')[0];
+                            const temp = char_name;
+                            char_name = char_name.charAt(0).toUpperCase() + char_name.slice(1);
+                            if (char_name.toLowerCase() != currentCharacter.standard_tag.toLowerCase() && !char_names.find(ch => ch == char_name.toLowerCase())) {
+                                char_names.filter(ch => char_name.toLowerCase().includes(ch)).map(ch => {
+                                    char_name = char_name.split(' ').filter(sp => !ch.includes(sp.toLowerCase())).join(' ');
+                                });
+                                char_names.push(temp);
+                                var words = char_name.split(' ');
+                                words[words.length - 1] = app.convertPluralWord(words[words.length - 1]);
+                                char_name = words.join(' ');
+                                app.descriptionText += char_name + ' ';
+                            }
+                            
                             if (app.checkHaveUnit(filteredCharacters[j].name)) {
                                 switch (filteredCharacters[j].summary) {
                                     case "range-percentile":
@@ -3475,28 +3590,43 @@
                                                 tempRpArray.push(tempValueArray[l]);
                                             }
                                         }
-
+                                        
                                         tempRpArray.sort((a, b) => a - b);
                                         var minValue = tempRpArray[0];
                                         var maxValue = tempRpArray[tempRpArray.length - 1];
-                                        var minPercentileValue = 0;
-                                        var maxPercentileValue = 0;
-                                        if (tempRpArray.length % 2 == 0) {
-                                            minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1];
-                                            maxPercentileValue = tempRpArray[tempRpArray.length / 2];
-                                        } else {
-                                            if (tempRpArray.length == 1) {
-                                                minPercentileValue = tempRpArray[0];
-                                                maxPercentileValue = tempRpArray[0];
-                                            } else {
-                                                minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1.5];
-                                                maxPercentileValue = tempRpArray[tempRpArray.length / 2 + 0.5];
-                                            }
+                                        var range;
+                                        if (tempRpArray.length >= 5){
+                                            range = '(' + minValue + '-)' + tempRpArray[Math.floor((tempRpArray.length - 1) / 4)] + '-' + tempRpArray[Math.ceil((tempRpArray.length - 1) * 3 / 4)] + '(-' + maxValue + ')';
                                         }
-                                        if (minValue == maxValue) {
-                                            app.descriptionText += minValue;
-                                        } else {
-                                            app.descriptionText += '(' + minValue + '-)' + minPercentileValue + '-' + maxPercentileValue + '(-' + maxValue + ') ';
+                                        else if (tempRpArray.length == 1 || minValue == maxValue){
+                                            range = minValue;
+                                        }
+                                        else {
+                                            range = minValue + '-' + maxValue;
+                                        }
+                                        // if (tempRpArray.length % 2 == 0) {
+                                        //     minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1];
+                                        //     maxPercentileValue = tempRpArray[tempRpArray.length / 2];
+                                        // } else {
+                                        //     if (tempRpArray.length == 1) {
+                                        //         minPercentileValue = tempRpArray[0];
+                                        //         maxPercentileValue = tempRpArray[0];
+                                        //     } else {
+                                        //         minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1.5];
+                                        //         maxPercentileValue = tempRpArray[tempRpArray.length / 2 + 0.5];
+                                        //     }
+                                        // }
+                                        // if (minValue == maxValue) {
+                                        //     app.descriptionText += minValue;
+                                        // } else {
+                                        //     app.descriptionText += '(' + minValue + '-)' + minPercentileValue + '-' + maxPercentileValue + '(-' + maxValue + ') ';
+                                        //     // app.descriptionText += minPercentileValue + '-' + maxPercentileValue;
+                                        // }
+
+                                        app.descriptionText += range;
+
+                                        if (filteredCharacters[j].unit) {
+                                            app.descriptionText += ' ' + filteredCharacters[j].unit
                                         }
 
                                         break;
@@ -3530,7 +3660,7 @@
                                         var avg = parseFloat(sum / arrayLength).toFixed(1);
                                         app.descriptionText += avg;
                                         if (filteredCharacters[j].unit) {
-                                            app.descriptionText += filteredCharacters[j].unit
+                                            app.descriptionText += ' ' + filteredCharacters[j].unit
                                         }
                                         break;
                                     default:
@@ -3538,38 +3668,46 @@
                                 }
                                 if (filteredCharacters[j].name.startsWith('Length')) {
                                     app.descriptionText += ' long; ';
-                                } else if (filteredCharacters[j].name.startsWith('Width')) {
+                                }
+                                else if (filteredCharacters[j].name.startsWith('Width')) {
                                     app.descriptionText += ' wide; ';
-
-                                } else if (filteredCharacters[j].name.startsWith('Height')) {
+                                }
+                                else if (filteredCharacters[j].name.startsWith('Height')) {
                                     app.descriptionText += ' tall; ';
-
-                                } else if (filteredCharacters[j].name.startsWith('Diameter')) {
-                                    app.descriptionText += ' diameter; ';
-                                } else {
+                                }
+                                else if (filteredCharacters[j].name.startsWith('Diameter')) {
+                                    app.descriptionText += ' in diameter; ';
+                                }
+                                else if (filteredCharacters[j].name.startsWith('Depth')) {
+                                    app.descriptionText += ' in depth; ';
+                                }
+                                else {
                                     app.descriptionText += ' ; ';
                                 }
                             } else {
-                                var currentCharacter = app.userCharacters.find(ch => ch.id == filteredValues[0].character_id);
-                                if (currentCharacter.name.split(' of ')[1].toLowerCase() != currentCharacter.standard_tag.toLowerCase) {
-                                    app.descriptionText += currentCharacter.name.split(' of ')[1].charAt(0).toUpperCase() + currentCharacter.name.split(' of ')[1].slice(1) + ' ';
-                                }
                                 if (currentCharacter.name.split(' of ')[0] == 'Color') {
                                     var checkValueIdArray = [];
+                                    var isInvariant = true;
+                                    var cTmp = '';
+                                    
+                                    for (var k = 0; k < filteredValues.length; k++) {
+                                        if (filteredValues[k].header_id != 1 && filteredValues[k].value != '') {
+                                            cTmp = filteredValues[k].value;
+                                        }
+                                    }
                                     for (var k = 0; k < filteredValues.length; k++) {
                                         if (filteredValues[k].header_id != 1) {
                                             checkValueIdArray.push(filteredValues[k].id);
+                                            if (filteredValues[k].value != '' && filteredValues[k].value != cTmp){
+                                                isInvariant = false;
+                                            }
                                         }
                                     }
 
-//                                    console.log('get-color-values', resp.data);
                                     var colorValues = app.allColorValues.filter(eachValue => checkValueIdArray.includes(eachValue.value_id));
                                     var objColorValues = {
                                         'empty': []
                                     };
-//                                    var cloneObjColor = {
-//                                        'empty': []
-//                                    };
                                     var arraySortedColor = [];
                                     var cloneSortedColor = [];
                                     for (var l = 0; l < colorValues.length; l++) {
@@ -3586,25 +3724,40 @@
                                                 multi_colored: colorValues[l].multi_colored
                                             };
                                             if (colorValues[l].negation != null && colorValues[l].negation != '') {
-                                                jsonColorValue.value = colorValues[l].negation + '-';
+                                                jsonColorValue.value = colorValues[l].negation + ' ';
                                             }
                                             if (colorValues[l].pre_constraint != null && colorValues[l].pre_constraint != '') {
-                                                jsonColorValue.value += colorValues[l].pre_constraint + '-';
+                                                jsonColorValue.value += colorValues[l].pre_constraint + ' ';
                                             }
                                             if (colorValues[l].brightness != null && colorValues[l].brightness != '') {
-                                                jsonColorValue.value += colorValues[l].brightness + '-';
+                                                if (colorValues[l].brightness.endsWith(')')){
+                                                    colorValues[l].brightness = colorValues[l].brightness.slice(0, colorValues[l].brightness.indexOf('('));
+                                                }
+                                                jsonColorValue.value += colorValues[l].brightness + ' ';
                                             }
                                             if (colorValues[l].reflectance != null && colorValues[l].reflectance != '') {
-                                                jsonColorValue.value += colorValues[l].reflectance + '-';
+                                                if (colorValues[l].reflectance.endsWith(')')){
+                                                    colorValues[l].reflectance = colorValues[l].reflectance.slice(0, colorValues[l].reflectance.indexOf('('));
+                                                }
+                                                jsonColorValue.value += colorValues[l].reflectance + ' ';
                                             }
                                             if (colorValues[l].saturation != null && colorValues[l].saturation != '') {
-                                                jsonColorValue.value += colorValues[l].saturation + '-';
+                                                if (colorValues[l].saturation.endsWith(')')){
+                                                    colorValues[l].saturation = colorValues[l].saturation.slice(0, colorValues[l].saturation.indexOf('('));
+                                                }
+                                                jsonColorValue.value += colorValues[l].saturation + ' ';
                                             }
                                             if (colorValues[l].colored != null && colorValues[l].colored != '') {
+                                                if (colorValues[l].colored.endsWith(')')){
+                                                    colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                                                }
                                                 jsonColorValue.value += colorValues[l].colored;
                                             }
                                             if (colorValues[l].multi_colored != null && colorValues[l].multi_colored != '') {
-                                                jsonColorValue.value += '-' + colorValues[l].multi_colored;
+                                                if (colorValues[l].multi_colored.endsWith(')')){
+                                                    colorValues[l].multi_colored = colorValues[l].multi_colored.slice(0, colorValues[l].multi_colored.indexOf('('));
+                                                }
+                                                jsonColorValue.value += ' ' + colorValues[l].multi_colored;
                                             }
 
                                             objColorValues[colorValues[l].post_constraint].push(jsonColorValue);
@@ -3618,25 +3771,40 @@
                                                 multi_colored: colorValues[l].multi_colored
                                             };
                                             if (colorValues[l].negation != null && colorValues[l].negation != '') {
-                                                jsonColorValue.value = colorValues[l].negation + '-';
+                                                jsonColorValue.value = colorValues[l].negation + ' ';
                                             }
                                             if (colorValues[l].pre_constraint != null && colorValues[l].pre_constraint != '') {
-                                                jsonColorValue.value += colorValues[l].pre_constraint + '-';
+                                                jsonColorValue.value += colorValues[l].pre_constraint + ' ';
                                             }
                                             if (colorValues[l].brightness != null && colorValues[l].brightness != '') {
-                                                jsonColorValue.value += colorValues[l].brightness + '-';
+                                                if (colorValues[l].brightness.endsWith(')')){
+                                                    colorValues[l].brightness = colorValues[l].brightness.slice(0, colorValues[l].brightness.indexOf('('));
+                                                }
+                                                jsonColorValue.value += colorValues[l].brightness + ' ';
                                             }
                                             if (colorValues[l].reflectance != null && colorValues[l].reflectance != '') {
-                                                jsonColorValue.value += colorValues[l].reflectance + '-';
+                                                if (colorValues[l].reflectance.endsWith(')')){
+                                                    colorValues[l].reflectance = colorValues[l].reflectance.slice(0, colorValues[l].reflectance.indexOf('('));
+                                                }
+                                                jsonColorValue.value += colorValues[l].reflectance + ' ';
                                             }
                                             if (colorValues[l].saturation != null && colorValues[l].saturation != '') {
-                                                jsonColorValue.value += colorValues[l].saturation + '-';
+                                                if (colorValues[l].saturation.endsWith(')')){
+                                                    colorValues[l].saturation = colorValues[l].saturation.slice(0, colorValues[l].saturation.indexOf('('));
+                                                }
+                                                jsonColorValue.value += colorValues[l].saturation + ' ';
                                             }
                                             if (colorValues[l].colored != null && colorValues[l].colored != '') {
+                                                if (colorValues[l].colored.endsWith(')')){
+                                                    colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                                                }
                                                 jsonColorValue.value += colorValues[l].colored;
                                             }
                                             if (colorValues[l].multi_colored != null && colorValues[l].multi_colored != '') {
-                                                jsonColorValue.value += '-' + colorValues[l].multi_colored;
+                                                if (colorValues[l].multi_colored.endsWith(')')){
+                                                    colorValues[l].multi_colored = colorValues[l].multi_colored.slice(0, colorValues[l].multi_colored.indexOf('('));
+                                                }
+                                                jsonColorValue.value += ' ' + colorValues[l].multi_colored;
                                             }
 
                                             objColorValues['empty'].push(jsonColorValue);
@@ -3658,28 +3826,7 @@
                                             }).length;
                                         }
                                         objColorValues[objKey] = app.sortColorValue(objColorValues[objKey]);
-//                                        cloneObjColor[objKey] = app.sortColorValue(objColorValues[objKey]);
-//                                        for (var l = 0; l < objColorValues[objKey].length; l++) {
-//                                            if (objColorValues[objKey][l].count > 1) {
-//                                                var tempArray = objColorValues[objKey].filter(function(each) {
-//                                                    if (objColorValues[objKey][l].multi_colored != null && objColorValues[objKey][l].multi_colored != '') {
-//                                                        return (each.value.endsWith(objColorValues[objKey][l].value)) && (each.value != objColorValues[objKey][l].value);
-//                                                    } else {
-//                                                        if (each.multi_colored != null && each.multi_colored != '') {
-//                                                            return each.value.substring(0, each.value.length - (each.multi_colored.length + 1)).endsWith(objColorValues[objKey][l].value)  && each.value != objColorValues[objKey][l].value;
-//                                                        } else {
-//                                                            return (each.value.endsWith(objColorValues[objKey][l].value)) && (each.value != objColorValues[objKey][l].value);
-//                                                        }
-//                                                    }
-//                                                });
-//                                                cloneObjColor[objKey] = cloneObjColor[objKey].filter( function( el ) {
-//                                                    return !tempArray.includes( el );
-//                                                } );
-//
-//                                            }
-//                                        }
-//                                        console.log('objColorValues', objColorValues);
-//                                        console.log('cloneObjColor', cloneObjColor);
+
                                         while (objColorValues[objKey].length > 0) {
                                             arraySortedColor.push([]);
                                             objColorValues[objKey][0].objKey = objKey;
@@ -3720,22 +3867,7 @@
                                         }
                                         console.log('cloneSortedColor', cloneSortedColor);
 
-//                                        while (cloneObjColor[objKey].length > 0) {
-//                                            cloneSortedColor.push([]);
-//                                            cloneObjColor[objKey][0].objKey = objKey;
-//                                            cloneSortedColor[cloneSortedColor.length - 1].push(cloneObjColor[objKey][0]);
-//                                            var matchColor = cloneObjColor[objKey][0];
-//                                            cloneObjColor[objKey].shift();
-//                                            var index = 0;
-//                                            for (var m = 0; m < (cloneObjColor[objKey].length + index); m++) {
-//                                                if (app.checkAllowRange(matchColor, cloneObjColor[objKey][m - index])) {
-//                                                    cloneObjColor[objKey][m - index].objKey = objKey;
-//                                                    cloneSortedColor[cloneSortedColor.length - 1].push(cloneObjColor[objKey][m - index]);
-//                                                    cloneObjColor[objKey].splice(m - index, 1);
-//                                                    index++;
-//                                                }
-//                                            }
-//                                        }
+
                                     }
                                     var tempIndex = 0;
                                     console.log('arraySortedColor', arraySortedColor);
@@ -3760,24 +3892,7 @@
                                         var objByPercentage = {};
 
                                         for (var l = 0; l < tempArraySorted.length; l++) {
-//                                            var sortedArrayToRemove = [];
-//                                            for (var m = 0; m < tempArraySorted[l].length; m++) {
-//                                                if (tempArraySorted[l][m].value.split('-').length > 1) {
-//                                                    if (tempArraySorted[l].filter(function(each) {
-//                                                            return (tempArraySorted[l][m].brightness != null && tempArraySorted[l][m].brightness != '' && tempArraySorted[l][m].brightness == each.brightness)
-//                                                                || (tempArraySorted[l][m].saturation != null && tempArraySorted[l][m].saturation != '' && tempArraySorted[l][m].saturation == each.saturation)
-//                                                                || (tempArraySorted[l][m].multi_colored != null && tempArraySorted[l][m].multi_colored != '' && tempArraySorted[l][m].multi_colored == each.multi_colored);
-//                                                        }).length < 2) {
-//                                                        sortedArrayToRemove.push(tempArraySorted[l][m]);
-//                                                    }
-//                                                }
-//                                            }
-//                                            tempArraySorted[l] = tempArraySorted[l].filter(function(each) {
-//                                                return !sortedArrayToRemove.includes(each);
-//                                            });
-//                                            if (l > 0 || tempIndex > 0) {
-//                                                app.descriptionText += ', ';
-//                                            }
+
                                             var tempProperty = app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount);
                                             console.log('tempProperty', tempProperty);
 
@@ -3789,25 +3904,16 @@
                                                 objByPercentage[tempProperty].push(tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value);
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
-                                                        objByPercentage[tempProperty][objByPercentage[tempProperty].length - 1] += ' or to ' + tempArraySorted[l][m].value;
+                                                        objByPercentage[tempProperty][objByPercentage[tempProperty].length - 1] += ' to ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
-
-
-//                                                app.descriptionText += app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
-//                                                if (tempArraySorted[l].length > 2) {
-//                                                    for (var m = 2; m < tempArraySorted[l].length; m++) {
-//                                                        app.descriptionText += ' or to ' + tempArraySorted[l][m].value;
-//                                                    }
-//                                                }
-                                            } else {
+                                            }
+                                            else if (tempArraySorted[l].length == 1) {
                                                 if (!objByPercentage[tempProperty]) {
                                                     objByPercentage[tempProperty] = [];
                                                 }
                                                 objByPercentage[tempProperty].push(tempArraySorted[l][0].value);
-//                                                app.descriptionText += app.getPercentageForDescription(colorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
                                             }
-
                                         }
                                         console.log('objByPercentage', objByPercentage);
 
@@ -3815,11 +3921,11 @@
                                             if (objIndex > 0) {
                                                 app.descriptionText += ', ';
                                             }
-
-                                            app.descriptionText += key;
+                                            if (!isInvariant)
+                                                app.descriptionText += key;
                                             for (var percentageIndex = 0; percentageIndex < objByPercentage[key].length; percentageIndex++) {
                                                 if (percentageIndex > 0) {
-                                                    app.descriptionText += ',';
+                                                    app.descriptionText += ' or';
                                                 }
                                                 app.descriptionText += ' ' + objByPercentage[key][percentageIndex];
                                             }
@@ -3833,11 +3939,24 @@
                                     }
 
                                     app.descriptionText += '; ';
-                                } else {
+                                }
+                                else {
+                                    app.nonColorType = currentCharacter.name.split(' of ')[0].toLowerCase();
                                     var checkValueIdArray = [];
+                                    var isInvariant = true;
+                                    var cTmp = '';
+                                    
+                                    for (var k = 0; k < filteredValues.length; k++) {
+                                        if (filteredValues[k].header_id != 1 && filteredValues[k].value != '') {
+                                            cTmp = filteredValues[k].value;
+                                        }
+                                    }
                                     for (var k = 0; k < filteredValues.length; k++) {
                                         if (filteredValues[k].header_id != 1) {
                                             checkValueIdArray.push(filteredValues[k].id);
+                                            if (filteredValues[k].value != '' && filteredValues[k].value != cTmp){
+                                                isInvariant = false;
+                                            }
                                         }
                                     }
 
@@ -3858,14 +3977,20 @@
                                                 value: '',
                                             };
                                             if (nonColorValues[l].negation != null && nonColorValues[l].negation != '') {
-                                                jsonNonColorValue.value = nonColorValues[l].negation + '-';
+                                                jsonNonColorValue.value = nonColorValues[l].negation + ' ';
                                             }
                                             if (nonColorValues[l].pre_constraint != null && nonColorValues[l].pre_constraint != '') {
-                                                jsonNonColorValue.value += nonColorValues[l].pre_constraint + '-';
+                                                jsonNonColorValue.value += nonColorValues[l].pre_constraint + ' ';
+                                            }
+                                            if (nonColorValues[l].degree_constraint != null && nonColorValues[l].degree_constraint != '') {
+                                                jsonNonColorValue.value += nonColorValues[l].degree_constraint + ' ';
                                             }
 
                                             if (nonColorValues[l].main_value != null && nonColorValues[l].main_value != '') {
-                                                jsonNonColorValue.value += nonColorValues[l].main_value;
+                                                if (nonColorValues[l].main_value.endsWith(')')){
+                                                    nonColorValues[l].main_value = nonColorValues[l].main_value.slice(0, nonColorValues[l].main_value.indexOf('('));
+                                                }
+                                                jsonNonColorValue.value += nonColorValues[l].main_value + ' ';
                                             }
 
                                             objNonColorValues[nonColorValues[l].post_constraint].push(jsonNonColorValue);
@@ -3876,14 +4001,20 @@
                                                 value: '',
                                             };
                                             if (nonColorValues[l].negation != null && nonColorValues[l].negation != '') {
-                                                jsonNonColorValue.value = nonColorValues[l].negation + '-';
+                                                jsonNonColorValue.value = nonColorValues[l].negation + ' ';
                                             }
                                             if (nonColorValues[l].pre_constraint != null && nonColorValues[l].pre_constraint != '') {
-                                                jsonNonColorValue.value += nonColorValues[l].pre_constraint + '-';
+                                                jsonNonColorValue.value += nonColorValues[l].pre_constraint + ' ';
+                                            }
+                                            if (nonColorValues[l].degree_constraint != null && nonColorValues[l].degree_constraint != '') {
+                                                jsonNonColorValue.value += nonColorValues[l].degree_constraint + ' ';
                                             }
 
                                             if (nonColorValues[l].main_value != null && nonColorValues[l].main_value != '') {
-                                                jsonNonColorValue.value += nonColorValues[l].main_value;
+                                                if (nonColorValues[l].main_value.endsWith(')')){
+                                                    nonColorValues[l].main_value = nonColorValues[l].main_value.slice(0, nonColorValues[l].main_value.indexOf('('));
+                                                }
+                                                jsonNonColorValue.value += nonColorValues[l].main_value + ' ';
                                             }
 
                                             objNonColorValues['empty'].push(jsonNonColorValue);
@@ -3895,6 +4026,7 @@
                                                 return each.value.endsWith(objNonColorValues[objKey][l].value);
                                             }).length;
                                         }
+                                        console.log('objNonColorValues ',objNonColorValues[objKey]);
                                         for (var l = 0; l < objNonColorValues[objKey].length; l++) {
                                             if (objNonColorValues[objKey][l].count > 1) {
                                                 var tempArray = objNonColorValues[objKey].filter(function (each) {
@@ -3914,7 +4046,7 @@
                                             objNonColorValues[objKey].shift();
                                             var index = 0;
                                             for (var m = 0; m < (objNonColorValues[objKey].length + index); m++) {
-                                                if (matchValue.main_value == objNonColorValues[objKey][m - index].main_value) {
+                                                if (app.checkNonColorAllowRange(matchValue, objNonColorValues[objKey][m - index])) {
                                                     objNonColorValues[objKey][m - index].objKey = objKey;
                                                     arraySortedNonColor[arraySortedNonColor.length - 1].push(objNonColorValues[objKey][m - index]);
                                                     objNonColorValues[objKey].splice(m - index, 1);
@@ -3959,9 +4091,7 @@
 
                                         for (var l = 0; l < tempArraySorted.length; l++) {
 
-//                                            if (l > 0 || tempIndex > 0) {
-//                                                app.descriptionText += ', ';
-//                                            }
+
                                             var tempProperty = app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount);
                                             if (!objByPercentage[tempProperty]) {
                                                 objByPercentage[tempProperty] = [];
@@ -3972,19 +4102,13 @@
                                                 objByPercentage[tempProperty].push(tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value);
                                                 if (tempArraySorted[l].length > 2) {
                                                     for (var m = 2; m < tempArraySorted[l].length; m++) {
-                                                        objByPercentage[tempProperty][objByPercentage[tempProperty].length - 1] += ' or to ' + tempArraySorted[l][m].value;
+                                                        objByPercentage[tempProperty][objByPercentage[tempProperty].length - 1] += ' to ' + tempArraySorted[l][m].value;
                                                     }
                                                 }
 
-//                                                app.descriptionText += app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value + ' to ' + tempArraySorted[l][1].value;
-//                                                if (tempArraySorted[l].length > 2) {
-//                                                    for (var m = 2; m < tempArraySorted[l].length; m++) {
-//                                                        app.descriptionText += ' to or ' + tempArraySorted[l][m].value;
-//                                                    }
-//                                                }
+
                                             } else {
                                                 objByPercentage[tempProperty].push(tempArraySorted[l][0].value);
-//                                                app.descriptionText += app.getPercentageForDescription(nonColorValues.length, tempArraySorted[l].eachCount) + ' ' + tempArraySorted[l][0].value;
                                             }
                                         }
 
@@ -3993,10 +4117,11 @@
                                                 app.descriptionText += ', ';
                                             }
 
-                                            app.descriptionText += key;
+                                            if (!isInvariant)
+                                                app.descriptionText += key;
                                             for (var percentageIndex = 0; percentageIndex < objByPercentage[key].length; percentageIndex++) {
                                                 if (percentageIndex > 0) {
-                                                    app.descriptionText += ',';
+                                                    app.descriptionText += ' or';
                                                 }
                                                 app.descriptionText += ' ' + objByPercentage[key][percentageIndex];
                                             }
@@ -4023,17 +4148,23 @@
                 }
 
             },
+            //get any percentile from an array
+            getPercentile(data, percentile) {
+                var index = (percentile/100) * data.length;
+                var result;
+                if (Math.floor(index) == index) {
+                    result = (data[(index-1)] + data[index])/2;
+                }
+                else {
+                    result = data[Math.floor(index)];
+                }
+                return result;
+            },
             sortColorValue(arrayColorValues) {
                 var app = this;
 
                 arrayColorValues.sort((a, b) => (!app.checkAllowRange(a, b) && a.colored > b.colored) ? 1 : -1);
-                arrayColorValues.sort((a, b) => (a.brightness == 'dark') ? 1 : -1);
-                arrayColorValues.sort((a, b) => (a.brightness == 'medium') ? -1 : 1);
-                arrayColorValues.sort((a, b) => (a.brightness == 'light') ? -1 : 1);
-                arrayColorValues.sort((a, b) => (a.brightness == 'bright') ? -1 : 1);
-                arrayColorValues.sort((a, b) => (a.saturation != '' && a.saturation != null) ? -1 : 1);
-//                arrayColorValues.sort((a, b) => (a.colored.split(' ').length > b.colored.split(' ').length) ? -1 : 1);
-
+                
                 arrayColorValues.sort(function (x, y) {
                     return x.colored == 'white' ? -1 : y.colored == 'white' ? 1 : 0;
                 });
@@ -4052,7 +4183,9 @@
                 return returnArray;
             },
             sortNonColorValue(arrayNonColorValue) {
-                arrayNonColorValue.sort((a, b) => (a.value > b.value) ? 1 : -1)
+                var app = this;
+
+                arrayNonColorValue.sort((a, b) => (!app.checkNonColorAllowRange(a, b) && a.value > b.value) ? 1 : -1)
                 var obj = {};
 
                 for (var i = 0; i < arrayNonColorValue.length; i++)
@@ -4069,61 +4202,59 @@
                     return '';
                 } else {
                     var percentage = eachCount / totalCount * 100;
-                    if (percentage <= 5) {
+                    if (percentage < 25) {
                         return 'rarely';
-                    } else if (percentage > 5 && percentage <= 25) {
-                        return 'occasionally';
-                    } else if (percentage > 25 && percentage <= 50) {
+                    } else if (percentage >= 25 && percentage < 50) {
                         return 'sometimes';
-                    } else if (percentage > 50 && percentage <= 75) {
+                    } else if (percentage >= 50 && percentage < 75) {
                         return 'usually';
-                    } else if (percentage > 75 && percentage <= 100) {
+                    } else if (percentage >= 75 && percentage < 100) {
                         return 'frequently';
                     }
+                    else {
+                        return '';
+                    }
                 }
+            },
+            checkNonColorAllowRange(firstValue, secondValue) {
+                var app = this;
+                var returnFlag = false;
+
+                var firstMatchValues = app.getNonPrimaryColor(firstValue.main_value, app.nonColorType);
+                var secondMatchValues = app.getNonPrimaryColor(secondValue.main_value, app.nonColorType);
+
+                for (let i = 0 ; i < firstMatchValues.length ; i ++){
+                    for (let j = 0 ; j < secondMatchValues.length ; j ++){
+                        if (app.nonColorType == 'shape'){
+                            if (Shapesets[firstMatchValues[i]] && Shapesets[firstMatchValues[i]].has(secondMatchValues[j])){
+                                return true;
+                            }
+                        }
+                        else if (firstMatchValues[i] == secondMatchValues[j]){
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+
             },
             checkAllowRange(firstColor, secondColor) {
                 var app = this;
                 var returnFlag = false;
 
-                var firstMatchColor = app.getPrimaryColor(firstColor.colored);
-                var secondMatchColor = app.getPrimaryColor(secondColor.colored);
+                var firstMatchColors = app.getPrimaryColor(firstColor.colored);
+                var secondMatchColors = app.getPrimaryColor(secondColor.colored);
 
-                if (firstMatchColor == 'white' || secondMatchColor == 'black') {
-                    returnFlag = true;
-                } else if (firstMatchColor == secondMatchColor) {
-                    returnFlag = true;
-                } else if (firstMatchColor == 'yellow') {
-                    if (secondMatchColor == 'green'
-                        || secondMatchColor == 'brown') {
-                        returnFlag = true;
-                    }
-                } else if (firstMatchColor == 'green') {
-                    if (secondMatchColor == 'brown') {
-                        returnFlag = true;
-                    }
-                } else if (firstMatchColor == 'gold') {
-                    if (secondMatchColor == 'brown'
-                        || secondMatchColor == 'red'
-                        || secondMatchColor == 'purple') {
-                        returnFlag = true;
-                    }
-                } else if (firstMatchColor == 'red') {
-                    if (secondMatchColor == 'purple'
-                        || secondMatchColor == 'brown') {
-                        returnFlag = true;
-                    }
-                } else if (firstMatchColor == 'purple') {
-                    if (secondMatchColor == 'brown') {
-                        returnFlag = true;
-                    }
-                } else if (firstMatchColor == 'blue') {
-                    if (secondMatchColor == 'purple') {
-                        returnFlag = true;
+                for (let i = 0 ; i < firstMatchColors.length ; i ++){
+                    for (let j = 0 ; j < secondMatchColors.length ; j ++){
+                        if (Colorsets[firstMatchColors[i]] && Colorsets[firstMatchColors[i]].has(secondMatchColors[j])){
+                            return true;
+                        }
                     }
                 }
 
-                return returnFlag;
+                return false;
 
             },
             async exportDescription() {
@@ -4136,27 +4267,34 @@
                         } else {
                             alert('Error occurred while exporting data!');
                         }
-
                     });
-                setTimeout(function() {
-                    console.log('app.userTags', app.userTags);
-                    axios.post('/chrecorder/public/api/v1/export-description-csv',
-                        {
-                            userCharacters: app.userCharacters,
-                            values: app.values,
-                            userTags: app.userTags,
-                            headers: app.headers,
-                            taxon: app.taxonName
-                        })
-                        .then(function(resp) {
-                            if (resp.data.is_success == 1) {
-                                window.location.href = resp.data.doc_url;
-                            } else {
-                                alert('Error occurred while exporting csv file!');
-                            }
-                        });
-                }, 2000);
-
+                axios.post('/chrecorder/public/api/v1/export-description-csv',
+                    {
+                        userCharacters: app.userCharacters,
+                        values: app.values,
+                        userTags: app.userTags,
+                        headers: app.headers,
+                        taxon: app.taxonName
+                    })
+                    .then(function(resp) {
+                        if (resp.data.is_success == 1) {
+                            window.location.href = resp.data.doc_url;
+                        } else {
+                            alert('Error occurred while exporting csv file!');
+                        }
+                });
+                axios.post('/chrecorder/public/api/v1/export-description-trig')
+                .then(function(resp) {
+                    console.log(resp.data);
+                    if (resp.data.is_success == 1) {
+                        let a = document.createElement('a');
+                        a.href = resp.data.doc_url;
+                        a.download = resp.data.doc_url.split('/')[resp.data.doc_url.split('/').length - 1];
+                        a.click();
+                    } else {
+                        alert('Error occurred while exporting trig file!');
+                    }
+                });
             },
             checkValueArray(tempArray) {
                 var app = this;
@@ -4188,6 +4326,8 @@
                 axios.post('/chrecorder/public/api/v1/update-header', header)
                     .then(function (resp) {
                         app.headers = resp.data.headers;
+                        app.values = resp.data.values;
+                        showTableForTab(app.currentTab);
                     });
             },
             async saveColorValue(newFlag = false) {
@@ -4269,15 +4409,17 @@
                             const flag=app.colorFlags[i];
                             if ( !app.colTreeData[flag] || !app.searchTreeData(app.colTreeData[flag],app.currentColorValue[flag]) ){
                                 if (app.currentColorValue[flag] == app.defaultColorValue[flag] && app.currentColorValue[flag] != '' && app.currentColorValue[flag] != undefined && app.currentColorValue[flag] != null){
-                                    if (!app.userColorDefinition[flag] || app.userColorDefinition[flag]==''){
-                                        alert('pease enter definition of '+flag);
-                                        app.saveColorButtonFlag = false;
-                                        return;
-                                    }
-                                    if ( app.colorSampleText[flag] =='' || !app.colorSampleText[flag] ){
-                                        alert('pease enter sample sentence of '+flag);
-                                        app.saveColorButtonFlag = false;
-                                        return;
+                                    if (app.colorSynonyms[flag]){
+                                        if (!app.userColorDefinition[flag] || app.userColorDefinition[flag]==''){
+                                            alert('pease enter definition of '+flag);
+                                            app.saveColorButtonFlag = false;
+                                            return;
+                                        }
+                                        if ( app.colorSampleText[flag] =='' || !app.colorSampleText[flag] ){
+                                            alert('pease enter sample sentence of '+flag);
+                                            app.saveColorButtonFlag = false;
+                                            return;
+                                        }
                                     }
                                     var date = new Date();
                                     console.log('flag',flag);
@@ -4339,7 +4481,7 @@
                             }
                         }
                         console.log('postFlag', postFlag);
-//                }
+            //    }
                         if (postFlag == true) {
                             axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
                                 .then(function (resp) {
@@ -4380,8 +4522,8 @@
                 }
 
 
-//                for (var i = 0; i < app.colorDetails.length; i++) {
-//                  }
+            //    for (var i = 0; i < app.colorDetails.length; i++) {
+            //      }
 
             },
             removeColorValue() {
@@ -4439,7 +4581,7 @@
                             });
                     } else {
                         console.log('postFlag', postFlag);
-    //                for (var i = 0; i < app.nonColorDetails.length; i++) {
+                //    for (var i = 0; i < app.nonColorDetails.length; i++) {
                         var postValue = {};
                         postValue['value_id'] = app.currentNonColorValue['value_id'];
                         if (app.currentNonColorValue.id) {
@@ -4453,33 +4595,24 @@
                         postValue['main_value'] = app.currentNonColorValue.main_value;
                         var requestBody = {};
                         if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '') {
-    //                            if (app.currentNonColorValue['main_value'].endsWith('(user defined)') && postFlag == true) {
                             console.log('a1');
                             if ((app.searchNonColorFlag == 0 || app.searchNonColorFlag ==1 && app.currentNonColorValue['main_value'] == app.defaultNonColorValue) && postFlag == true) {
+
                                 console.log('a2');
-    //                                if (app.userNonColorDefinition['main_value'] == ''
-    //                                    || app.userNonColorDefinition['main_value'] == null
-    //                                    || app.userNonColorDefinition['main_value'] == undefined
-    //                                    || app.nonColorSampleText['main_value'] == ''
-    //                                    || app.nonColorSampleText['main_value'] == null
-    //                                    || app.nonColorSampleText['main_value'] == undefined
-    //                                    || app.nonColorTaxon['main_value'] == ''
-    //                                    || app.nonColorTaxon['main_value'] == null
-    //                                    || app.nonColorTaxon['main_value'] == undefined) {
-    //                                    postFlag = false;
-    //                                } else if (postFlag == true) {
-    //                                    postValue['main_value'] = app.currentNonColorValue['main_value'].substr(0, app.currentNonColorValue['main_value'].length - 14);
                                 
-                                if ( app.userNonColorDefinition['main_value']=='' || app.userNonColorDefinition['main_value'] == null || app.userNonColorDefinition['main_value'] == undefined){
-                                    alert('please enter definition');
-                                    app.saveNonColorButtonFlag = false;
-                                    return;
+                                if ( !app.nonColorExistFlag ){
+                                    if ( app.userNonColorDefinition['main_value']=='' || app.userNonColorDefinition['main_value'] == null || app.userNonColorDefinition['main_value'] == undefined){
+                                        alert('please enter definition');
+                                        app.saveNonColorButtonFlag = false;
+                                        return;
+                                    }
+                                    if ( app.nonColorSampleText['main_value']=='' || app.nonColorSampleText['main_value'] == null || app.nonColorSampleText['main_value'] == undefined){
+                                        alert('please enter sample sentence');
+                                        app.saveNonColorButtonFlag = false;
+                                        return;
+                                    }
                                 }
-                                if ( app.nonColorSampleText['main_value']=='' || app.nonColorSampleText['main_value'] == null || app.nonColorSampleText['main_value'] == undefined){
-                                    alert('please enter sample sentence');
-                                    app.saveNonColorButtonFlag = false;
-                                    return;
-                                }
+                                
                                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'])
                                     .then(function (resp) {
                                         if (resp.data.entries.length == 0) {
@@ -4512,7 +4645,7 @@
                                         }
                                     });
 
-    //                                }
+                                //    }
 
                             } else if (app.searchNonColorFlag == 1 && postFlag == true) {
                                 console.log('a3');
@@ -4563,32 +4696,7 @@
                                 //             });
                                 //     });
                             }
-                            // else if (app.nonColorComment['main_value'] && postFlag == true) {
-                            //     console.log('a4');
-                            //     requestBody = {
-                            //         "user": app.sharedFlag ? '' : app.user.name,
-                            //         "ontology": "carex",
-                            //         "comment": app.nonColorComment['main_value'],
-                            //         "providedBy": app.user.name,
-                            //         "exampleSentence": "",
-                            //         "classIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + postValue['main_value']
-                            //     };
-                            //     axios.post('http://shark.sbs.arizona.edu:8080/comment', requestBody)
-                            //         .then(function (resp) {
-                            //             console.log('shark api comment resp', resp);
-                            //             axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                            //                 user: app.sharedFlag ? '' : app.user.name,
-                            //                 ontology: 'carex'
-                            //             })
-                            //                 .then(function (resp) {
-                            //                     console.log('save api resp', resp);
-                            //                 });
-                            //         });
-
-                            // }
                         }
-
-    //                }
 
                         if (postFlag == true) {
                             console.log('a6');
@@ -4600,14 +4708,8 @@
                                     app.postList = resp.data.postList;
                                     app.nonColorDetails = resp.data.nonColorDetails;
                                     app.allNonColorValues = resp.data.allNonColorValues;
-    //                                    app.currentNonColorValue = {
-    //                                        detailsFlag: null,
-    //                                        value_id: app.currentNonColorValue.value_id,
-    //                                        placeholderName: app.currentNonColorValue.placeholderName
-    //                                    };
                                     app.currentNonColorValue.detailsFlag = null;
-    //                                app.currentNonColorValue.value_id = app.currentNonColorValue.value_id;
-    //                                app.currentNonColorValue.placeholderName = app.currentNonColorValue.placeholderName;
+
                                     if (newFlag == false) {
                                         app.nonColorDetailsFlag = false;
                                     } else {
@@ -4774,18 +4876,31 @@
                         multi_colored: false,
                     }
                 };
+                app.currentNonColorValue = {
+                    confirmedFlag: {
+                        main_value: false,
+                    }
+                };
                 app.currentNonColorValue.detailFlag =null;
                 app.currentColorValue.detailsFlag = null;
                 app.currentColorValue.value_id = value.id;
                 app.currentNonColorValue.confirmedFlag = {
                     main_value: false,
                 };
+                app.currentColorValue.value = value.value;
+                app.currentNonColorValue.value = value.value;
                 app.existColorDetails = [];
                 app.existNonColorDetails = [];
                 app.colorDetails = [];
                 app.nonColorDetails = [];
                 app.extraColors = [];
                 app.currentNonColorValue.detailsFlag = null;
+                // app.currentNonColorValue.main_value = '';
+                // app.currentNonColorValue.negation = '';
+                // app.currentNonColorValue.pre_constraint = '';
+                // app.currentNonColorValue.post_constraint = '';
+                // app.currentNonColorValue.degree_constraint = '';
+                // app.currentNonColorValue.certainty_constraint = '';
                 app.currentNonColorValue.value_id = value.id;
                 app.existColorDetailsFlag = true;
                 app.existNonColorDetailsFlag = true;
@@ -4837,22 +4952,9 @@
 
                                 console.log('resp.data.existColorDetails', resp.data.existColorDetails);
                                 app.existColorDetails = app.removeArrayDuplicates(app.existColorDetails);
-//                                console.log('app.existColorDetails', app.existColorDetails);
 
                                 if (app.colorDetails.length == 0) {
                                     app.currentColorValueExist = false;
-//                                    app.colorComment = {};
-//                                    app.colorTaxon = {
-//                                        'brightness': app.taxonName,
-//                                        'reflectance': app.taxonName,
-//                                        'saturation': app.taxonName,
-//                                        'colored': app.taxonName,
-//                                        'multi_colored': app.taxonName,
-//                                    };
-//                                    app.colorSampleText = {};
-//                                    app.colorDefinition = {};
-//                                    app.userColorDefinition = {};
-//                                    app.colorDetails.push({value_id: value.id, detailFlag: null});
                                 } else {
                                     console.log('currentColorValue', app.currentColorValue);
                                     app.currentColorValueExist = true;
@@ -4956,30 +5058,12 @@
                 app.colorSearchText = '';
                 app.nonColorSearchText = '';
 
-                //console.log('event.target', event.target);
-                // if (flag == 'negation') {
-                //     event.target.placeholder = '';
-                // } else if (app.checkHaveColorValueSet(flag)) {
-                //     $(":input").css('background', '#ffffff');
-                //     event.target.style.background = '#82c8fa';
-                // }
-//                color.detailFlag = null;
-                // app.colorExistFlag = false;
                 if (!color.detailFlag){
                     app.$store.state.colorTreeData = {};
                 }
                 color.detailFlag = flag;
                 app.currentColorValue.confirmedFlag[flag] = false;
                 app.colorSynonyms[flag] = undefined;
-//                if (!color.id) {
-//                    app.colorDetails[app.colorDetails.length - 1][flag] = '';
-//                } else {
-//                    for (var i = 0; i < app.colorDetails.length; i++) {
-//                        if (app.colorDetails[i].id == color.id) {
-//                            app.colorDetails[i][flag] = '';
-//                        }
-//                    }
-//                }
 
                 if (app.checkHaveColorValueSet(flag)) {
                     color.detailFlag = ' ';
@@ -5004,7 +5088,7 @@
                                 console.log('color', color);
                                 if (color.id) {
                                     app.colorDetailId = color.id;
-    //                                color.detailFlag = flag;
+                                //    color.detailFlag = flag;
                                     app.colorDetails.find(eachColor => eachColor.id == app.colorDetailId).detailFlag = flag;
                                     for (var i = 0; i < app.colorDetails.length; i++) {
                                         if (app.colorDetails[i].id == color.id) {
@@ -5103,15 +5187,24 @@
                 }
                 searchText = searchText.replace(' ', '-');
 
+                // if (searchText == 'relationship'){
+                //     searchText = 'relational quality';
+                // }
                 console.log('searchText', searchText);
                 if (flag == 'negation') {
                     event.target.placeholder = '';
                 }
-//                } else if (flag == 'main_value') {
-//                    event.target.placeholder = searchText[0];
-//                }
+            //    } else if (flag == 'main_value') {
+            //        event.target.placeholder = searchText[0];
+            //    }
 
                 if (flag == 'main_value') {
+                    
+                    if (app.userNonColorDefinition['main_value']==' ')
+                        app.userNonColorDefinition['main_value']='';
+                    if (app.nonColorSampleText['main_value']==' ')
+                        app.nonColorSampleText['main_value']='';
+                        
                     app.currentNonColorValue.confirmedFlag['main_value'] = false;
                     if (!app.textureTreeData){
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText)
@@ -5211,6 +5304,7 @@
             },
             searchTreeData(tData, txt) {
                 var app = this;
+                if (!tData)return true;
                 if (tData.text == txt){
                     return true;
                 }
@@ -5240,7 +5334,7 @@
 
                 app.colorSynonyms[flag]=[];
 
-//                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + color[flag])
+            //    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + color[flag])
                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag])
                     .then(async function (resp) {
                         console.log(color[flag]);
@@ -5304,7 +5398,7 @@
                 app.nonColorSynonyms = [];
                 app.colorExistFlag = false;
 
-//                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + nonColor[flag])
+            //    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + nonColor[flag])
                 console.log(nonColor[flag]);
                 axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + nonColor[flag])
                     .then(function (resp) {
@@ -5382,7 +5476,6 @@
                 app.currentNonColorValue['main_value'] = node.data.text;
                 app.defaultNonColorValue = node.data.text;
                 app.searchNonColorFlag = 0;
-
             },
             checkHaveColorValueSet(text) {
                 if (text == 'brightness'
@@ -5495,7 +5588,7 @@
                 app.currentNonColorValue.confirmedFlag = {
                     'main_value': false
                 };
-//                app.currentNonColorValue.confirmedFlag['main_value'] = false;
+                // app.currentNonColorValue.confirmedFlag['main_value'] = false;
                 app.currentNonColorValue.placeholderName = tempPlaceholderName;
                 app.currentNonColorValue.detailsFlag = null;
                 // setTimeout(()=>{
@@ -5522,12 +5615,23 @@
             },
             getPrimaryColor(detailColor) {
                 var app = this;
+                var primaryColors = [];
                 for (var key in app.colorationData) {
                     if (app.colorationData[key].includes(detailColor)) {
-                        return key;
+                        primaryColors.push(key);
                     }
                 }
-                return false;
+                return primaryColors;
+            },
+            getNonPrimaryColor(detailNonColor, nonColorType) {
+                var app = this;
+                var primaryNonColors = [];
+                for (var key in app.nonColorationData[nonColorType]) {
+                    if (app.nonColorationData[nonColorType][key].includes(detailNonColor)) {
+                        primaryNonColors.push(key);
+                    }
+                }
+                return primaryNonColors;
             },
             selectedSynonymForColor(detailFlag) {
                 var app = this;
@@ -5538,7 +5642,7 @@
                 var app = this;
 
                 app.currentColorValue[flag] = value;
-//                app.currentColorValue[currentFlag] = value;
+            //    app.currentColorValue[currentFlag] = value;
             },
             selectExistDetails(colorDetails) {
                 var app = this;
@@ -5568,6 +5672,8 @@
                 app.currentNonColorValue.main_value = nonColorDetails.main_value;
                 app.currentNonColorValue.post_constraint = nonColorDetails.post_constraint;
                 app.currentNonColorValue.confirmedFlag['main_value'] = true;
+                app.nonColorSampleText['main_value'] = ' ';
+                app.userNonColorDefinition['main_value'] = ' ';
                 app.nonColorDetailsFlag = true;
             },
             copyValuesToOther(value) {
@@ -5634,46 +5740,29 @@
                 if (app.checkNumericalCharacter(characterName)) {
                     if (row.find(each => (each.header_id != 1 && each.value != null && each.value != ''))) {
                         var sum = 0;
-                        var arrayLength = 0;
-                        for (var i = 0; i < row.length; i++) {
-                            if (row[i].header_id != 1 && row[i].value != null && row[i].value != '' && row[i].value != undefined) {
-                                sum += parseFloat(row[i].value, 10); //don't forget to add the base
-                                arrayLength++;
-                            }
-                        }
-
-                        var mean = parseFloat(sum / arrayLength).toFixed(1);
-
-
                         var tempRpArray = [];
                         for (var i = 0; i < row.length; i++) {
                             if (row[i].header_id != 1 && row[i].value != null && row[i].value != '' && row[i].value != undefined) {
+                                sum += parseFloat(row[i].value, 10); //don't forget to add the base
                                 tempRpArray.push(row[i].value);
                             }
                         }
 
+                        var mean = parseFloat(sum / tempRpArray.length).toFixed(1);
+
                         tempRpArray.sort((a, b) => a - b);
                         var minValue = tempRpArray[0];
                         var maxValue = tempRpArray[tempRpArray.length - 1];
-                        var minPercentileValue = 0;
-                        var maxPercentileValue = 0;
-                        if (tempRpArray.length % 2 == 0) {
-                            minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1];
-                            maxPercentileValue = tempRpArray[tempRpArray.length / 2];
-                        } else {
-                            if (tempRpArray.length == 1) {
-                                minPercentileValue = tempRpArray[0];
-                                maxPercentileValue = tempRpArray[0];
-                            } else {
-                                minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1.5];
-                                maxPercentileValue = tempRpArray[tempRpArray.length / 2 + 0.5];
-                            }
-                        }
+
                         var range;
-                        if (minValue == maxValue) {
+                        if (tempRpArray.length >= 5){
+                            range = '(' + minValue + '-)' + app.getPercentile(tempRpArray, 25) + '-' + app.getPercentile(tempRpArray, 75) + '(-' + maxValue + ')';
+                        }
+                        else if (tempRpArray.length == 1 || minValue==maxValue){
                             range = minValue;
-                        } else {
-                            range = '(' + minValue + '-)' + minPercentileValue + '-' + maxPercentileValue + '(-' + maxValue + ')';
+                        }
+                        else {
+                            range = minValue + '-' + maxValue;
                         }
                         return "mean=" + mean + "<br/>" + "range=" + range;
                     }
@@ -5693,25 +5782,10 @@
             },
 
         },
-        created() {
+        async created() {
             var app = this;
-            axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=coloration')
-                .then(function (resp) {
-                    console.log('colorationData', resp.data);
-                    var colorData = resp.data.children[0].children;
-                    for (var i = 0; i < colorData.length; i++) {
-                        app.colorationData[colorData[i]['text']] = [];
-                        app.colorationData[colorData[i]['text']].push(colorData[i]['text']);
-                        if ('children' in colorData[i]) {
-                            for (var j = 0; j < colorData[i].children.length; j++) {
-                                app.colorationData[colorData[i]['text']].push(colorData[i].children[j].text);
-                            }
-                        }
-                    }
-                    console.log('app.colorationData', app.colorationData);
-                });
             console.log('standard_characters');
-            axios.get('/chrecorder/public/api/v1/standard_characters')
+            await axios.get('/chrecorder/public/api/v1/standard_characters')
                 .then(function (resp) {
                     console.log('standardCharacters', resp);
                     app.defaultCharacters = resp.data;
@@ -5772,11 +5846,53 @@
                         });
                 });
 
+            axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=quality')
+                .then(function (resp) {
+                    console.log('colorationData', resp.data);
+                    var colorData = resp.data.children.find(ch=>ch.text=="coloration").children[0].children;
+                    for (var i = 0; i < colorData.length; i++) {
+                        app.colorationData[colorData[i]['text']] = [];
+                        app.colorationData[colorData[i]['text']].push(colorData[i]['text']);
+                        if ('children' in colorData[i]) {
+                            for (var j = 0; j < colorData[i].children.length; j++) {
+                                app.colorationData[colorData[i]['text']].push(colorData[i].children[j].text);
+                            }
+                        }
+                    }
+                    
+                    var qualityData = resp.data.children;
+                    for (var i = 0; i < qualityData.length; i++) {
+                        if (qualityData[i].text=='coloration') {
+                            continue;
+                        }
+                        app.nonColorationData[qualityData[i]['text']] = {};
+                        if ('children' in qualityData[i]) {
+                            for (var j = 0; j < qualityData[i].children.length; j++) {
+                                app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text]=[];
+                                app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text].push(qualityData[i].children[j].text);
+                                
+                                if ('children' in qualityData[i].children[j]) {
+                                    for (var k = 0; k < qualityData[i].children[j].children.length; k++) {
+                                        app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text].push(qualityData[i].children[j].children[k].text);
+
+                                        if ('children' in qualityData[i].children[j].children[k]) {
+                                            for (var l = 0; l < qualityData[i].children[j].children[k].children.length; l++) {
+                                                app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text].push(qualityData[i].children[j].children[k].children[l].text);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    console.log('app.nonColorationData', app.nonColorationData);
+                    //app.updateDescription();
+                });
             axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id)
                 .then(function (resp) {
                     resp.data.sort((a,b) => app.tagOrder(a)-app.tagOrder(b));
                     app.userTags = resp.data;
-                    app.showTableForTab(app.userTags[0].tag_name);
+                    if (app.userTags[0])app.showTableForTab(app.userTags[0].tag_name);
                     console.log('userTags', app.userTags);
                 });
         },
@@ -5787,6 +5903,5 @@
             sessionStorage.setItem('userId', app.user.id);
         },
     }
-
 
 </script>

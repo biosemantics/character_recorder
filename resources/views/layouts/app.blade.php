@@ -76,6 +76,17 @@
         .m-b-md {
             margin-bottom: 30px;
         }
+
+        .explore {
+            color: #216a94;
+            font-family: Arial;
+            display: inline;
+            vertical-align: bottom;
+        }
+
+        .explore:hover{
+            color: #23527c;
+        }
     </style>
 </head>
 <body>
@@ -137,13 +148,27 @@
                         @endguest
                     </ul>
                 </div>
-                <div>
-                    <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
-                        <div style="height: 34px;">
-                            <img src="{{ asset('images/crown.png') }}" style="display: inline"/>
-                            <div style="color: #FFBC00; font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
+                            <div style="height: 34px;">
+                                <img src="{{ asset('images/crown.png') }}" style="display: inline"/>
+                                <div style="color: gold; font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                    </div>
+                    <div class="col-md-3">
+                        <div style="float: right">
+                            <a id="explore-character" href="{{ url('/explore-character') }}" style="text-decoration: none;">
+                                <div style="height: 34px; padding-top: 8px">
+                                    <span class="glyphicon glyphicon-list" style="font-size: 20px"></span>
+                                    <div class="explore">Explore Character Data</div>
+                                </div>
+                            </a>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>
         </nav>

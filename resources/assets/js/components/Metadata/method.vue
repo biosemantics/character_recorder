@@ -4,12 +4,10 @@
             <b>1. {{method_description}}</b>
             <br/>
         </div>
-        <div class="col-md-12" v-if="methodEntry == null">
-            The images will be displayed soon.
-            Please wait until the images are displayed.
-            It will take more than few seconds...
+        <div class="col-md-12" v-if="!methodEntry">
+            Loading...
         </div>
-        <div v-if="methodEntry != null">
+        <div v-if="methodEntry">
             <!--<div class="col-md-12" v-if="noneMethod == false && methodArray.length > 0">
                 Please select one illustration that matching your measurement methods.
             </div> -->
@@ -22,10 +20,10 @@
                      v-bind:id="'img-method-' + index" style="width: 100%;"
                      v-bind:src="'https://drive.google.com/uc?id=' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1)"/>
             </div>
-            <div v-if="!noneMethod && methodArray.length > 0 && !edit_created_other && !editFlag" class="col-md-12 text-right">
+            <div v-if="!noneMethod && methodEntry.resultAnnotations && methodEntry.resultAnnotations.length > 0 && !edit_created_other && !editFlag" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
             </div>
-            <div v-if="noneMethod == true || methodArray.length == 0 || methodFrom != null || methodTo != null || methodInclude != null || methodExclude != null || methodWhere != null">
+            <div v-if="noneMethod == true || !methodEntry.resultAnnotations || methodEntry.resultAnnotations.length == 0 || methodFrom != null || methodTo != null || methodInclude != null || methodExclude != null || methodWhere != null">
                 <!--<div class="col-md-12 text-right">-->
                     <!--<a v-if="methodArray.length > 0" class="btn btn-primary" v-on:click="displayImageSection()"-->
                        <!--style="padding: 3px 8px;">-->
@@ -373,11 +371,16 @@
                 };
 
                 app.greenTick[app.currentSetting] = true;
+                if (!app.childData[10]){
+                    app.childData[10] = {};
+                }
+                app.childData[10][app.currentSetting] = true;
+                app.handleDataFc();
                 app.formViewFlag[app.currentSetting] = false;
                 app.needMoreGreen[app.currentSetting] = true;
                 app.newTermDefinition = null;
                 axios.post('http://shark.sbs.arizona.edu:8080/class', jsonRequest)
-                    .then(function (resp) {
+                    .then(async function (resp) {
                         console.log('class resp', resp);
                         axios.post('http://shark.sbs.arizona.edu:8080/save', {"user": app.sharedFlag? '': app.childData[3].name, "ontology": 'carex'})
                             .then(function (resp) {
@@ -493,6 +496,10 @@
             },
             noneOfAbove() {
                 var app = this;
+                console.log(app.noneMethod);
+                console.log(app.methodArray);
+                console.log(app.edit_created_other);
+                console.log(app.editFlag);
                 app.noneMethod = true;
             },
             displayImageSection() {

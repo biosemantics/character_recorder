@@ -15,6 +15,16 @@ use App\Value;
 use App\ColorDetails;
 use App\NonColorDetails;
 use DB;
+use GuzzleHttp\Client;
+use GuzzleHttp\Promise;
+
+use pietercolpaert\hardf\TriGWriter;
+
+function startsWith ($string, $startString) 
+{ 
+    $len = strlen($startString); 
+    return (substr($string, 0, $len) === $startString); 
+}
 
 class HomeController extends Controller
 {
@@ -49,10 +59,10 @@ class HomeController extends Controller
     public function getHeaders() {
         return Header::where('user_id', Auth::id())
             ->orWhere('user_id', NULL)
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('header', 'desc')->get();
     }
 
-    public function getAllColorValues() {
+    public function getAllDetails() {
 
         $colorValues = ColorDetails::all();
         $nonColorValues = NonColorDetails::all();
@@ -147,74 +157,6 @@ class HomeController extends Controller
             }
         }
 
-        // foreach ($allCharacters as $eachCharacter) {
-        //     $value_array = [];
-        //     foreach ($headers as $header) {
-        //         $flag = false;
-        //         foreach ($values as $val){
-        //             if ($val->character_id == $eachCharacter->id && $val->header_id == $header->id){
-        //                 $value = $val;
-        //                 $flag = true;
-        //                 break;
-        //             }
-        //         }
-        //         if ($flag) {
-        //             $currentCharacterName = $eachCharacter->name;
-        //             if (substr($currentCharacterName, 0, 5) == 'Color' && $value->header_id != 1) {
-        //                 foreach($colorDetails as $col){
-        //                     if ($col->value_id == $value->id){
-        //                         $value->value = $value->value . ($eachColor->negation ? ($eachColor->negation . ' ') : '') .
-        //                             ($eachColor->pre_constraint ? ($eachColor->pre_constraint . ' ') : '') .
-        //                             ($eachColor->certainty_constraint ? ($eachColor->certainty_constraint . ' ') : '') .
-        //                             ($eachColor->degree_constraint ? ($eachColor->degree_constraint . ' ') : '') .
-        //                             ($eachColor->brightness ? ($eachColor->brightness . ' ') : '') .
-        //                             ($eachColor->reflectance ? ($eachColor->reflectance . ' ') : '') .
-        //                             ($eachColor->saturation ? ($eachColor->saturation . ' ') : '') .
-        //                             ($eachColor->colored ? ($eachColor->colored . ' ') : '') .
-        //                             ($eachColor->multi_colored ? ($eachColor->multi_colored . ' ') : '') .
-        //                             ($eachColor->post_constraint ? ($eachColor->post_constraint . ' ') : '') ;
-        //                         if ($value->value != '') {
-        //                             $value->value = substr($value->value, 0, -1);
-        //                             $value->value = $value->value . '; ';
-        //                         }
-        //                     }
-        //                 }
-        //                 if ($value->value != '') {
-        //                     $value->value = substr($value->value, 0, -1);
-        //                 }
-
-        //             } else if (!$this->checkNumericalCharacter($currentCharacterName) && $value->header_id != 1) {
-        //                 foreach($nonColorDetails as $nonCol){
-        //                     if ($nonCol->value_id == $value->id){
-        //                         $value->value = $value->value . ($eachValue->negation ? ($eachValue->negation . ' ') : '') .
-        //                             ($eachValue->pre_constraint ? ($eachValue->pre_constraint . ' ') : '') .
-        //                             ($eachValue->certainty_constraint ? ($eachValue->certainty_constraint . ' ') : '') .
-        //                             ($eachValue->degree_constraint ? ($eachValue->degree_constraint . ' ') : '') .
-        //                             ($eachValue->main_value ? ($eachValue->main_value . ' ') : '') .
-        //                             ($eachValue->post_constraint ? ($eachValue->post_constraint . ' ') : '');
-        //                         if ($value->value != '') {
-        //                             $value->value = substr($value->value, 0, -1);
-        //                             $value->value = $value->value . '; ';
-        //                         }
-        //                     }
-        //                 }
-                        
-        //                 if ($value->value != '') {
-        //                     $value->value = substr($value->value, 0, -1);
-        //                 }
-        //             }
-
-        //             // $value->username = $eachCharacter->username;
-        //             // $value->unit = $eachCharacter->unit;
-        //             // $value->summary = $eachCharacter->summary;
-        //             // $value->standard = $eachCharacter->standard;
-        //             array_push($value_array, $value);
-        //         }
-
-        //     }
-        //     array_push($characters, $value_array);
-        // }
-
         // event(new MyEvent());
 
         return $characters;
@@ -255,6 +197,7 @@ class HomeController extends Controller
     }
 
     public function getDefaultCharacters() {
+
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
@@ -344,7 +287,7 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -398,7 +341,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnDefaultCharacters = $this->getDefaultCharacters();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -426,7 +369,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnTaxon = $user->taxon;
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
 
         $data = [
             'headers' => $returnHeaders,
@@ -479,7 +422,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -520,6 +463,7 @@ class HomeController extends Controller
                     'user_id' => $request->input('user_id'),
                     'header' => 'Sample' . ($sampleNum),
                 ]);
+                $sampleNum = $sampleNum + 1;
             }
         }
 
@@ -570,7 +514,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnTaxon = $user->taxon;
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -612,7 +556,7 @@ class HomeController extends Controller
         $returnCharacters = $this->getArrayCharacters();
         $returnTaxon = $user->taxon;
 
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -676,7 +620,7 @@ class HomeController extends Controller
 
         $returnTaxon = $user->taxon;
 
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -724,7 +668,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnDefaultCharacters = $this->getDefaultCharacters();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'error_input' => 0,
             'headers' => $returnHeaders,
@@ -843,7 +787,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -878,7 +822,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
 
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -912,7 +856,7 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -1019,7 +963,7 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -1032,7 +976,6 @@ class HomeController extends Controller
     }
 
     public function exportDescription(Request $request) {
-
 
         $fileName = $request->input('taxon');
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
@@ -1055,6 +998,8 @@ class HomeController extends Controller
         }
         $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
         $objWriter->save($fileName . '.docx');
+
+
 
         return array(
             'is_success'    =>  1,
@@ -1124,6 +1069,7 @@ class HomeController extends Controller
         );
     }
 
+
     public function calcSummary($arrayRow) {
         $returnValue = '';
         $sum = 0;
@@ -1185,7 +1131,7 @@ class HomeController extends Controller
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -1243,7 +1189,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnDefaultCharacters = $this->getDefaultCharacters();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -1258,27 +1204,22 @@ class HomeController extends Controller
     }
 
     public function changeOrder(Request $request) {
-        $characterId = $request->input('characterId');
-        $order = $request->input('order');
-        if ($order == 'up') {
-            $character = Character::where('id', '=', $characterId)->first();
-            $beforeCharacter = Character::where('order', '=', ($character->order - 1))->first();
-            $character->order = $character->order - 1;
-            $character->save();
-            $beforeCharacter->order = $beforeCharacter->order + 1;
-            $beforeCharacter->save();
-        } else if ($order == 'down') {
-            $character = Character::where('id', '=', $characterId)->first();
-            $afterCharacter = Character::where('order', '=', ($character->order + 1))->first();
-            $character->order = $character->order + 1;
-            $character->save();
-            $afterCharacter->order = $afterCharacter->order - 1;
-            $afterCharacter->save();
-        }
+        $firstId = $request->input('firstId');
+        $secondId = $request->input('secondId');
+
+        $firstCharacter = Character::where('id', '=', $firstId)->first();
+        $secondCharacter = Character::where('id', '=', $secondId)->first();
+
+        $tmp = $firstCharacter->order;
+        $firstCharacter->order = $secondCharacter->order;
+        $secondCharacter->order = $tmp;
+
+        $firstCharacter->save();
+        $secondCharacter->save();
 
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'characters' => $returnCharacters,
             'values' => $returnValues,
@@ -1294,9 +1235,11 @@ class HomeController extends Controller
         $header->header = $request->input('header');
         $header->save();
         $returnHeaders = $this->getHeaders();
+        $returnValues = $this->getValuesByCharacter();
 
         $data = [
             'headers' => $returnHeaders,
+            'values' => $returnValues,
         ];
 
         return $data;
@@ -1400,7 +1343,7 @@ class HomeController extends Controller
         $constraints = $this->getDefaultConstraint($characterName);
 
         $returnValues = $this->getValuesByCharacter();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
@@ -1450,7 +1393,7 @@ class HomeController extends Controller
             }
         }
 
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
@@ -1518,17 +1461,19 @@ class HomeController extends Controller
 
             $nonColorDetails->save();
         } else {
-            $nonColorDetails = new NonColorDetails([
-                'value_id' => $request->input('value_id'),
-                'negation' =>  $request->input('negation') ?  $request->input('negation') : null,
-                'pre_constraint' =>  $request->input('pre_constraint') ?  $request->input('pre_constraint') : null,
-                'certainty_constraint' =>  $request->input('certainty_constraint') ?  $request->input('certainty_constraint') : null,
-                'degree_constraint' =>  $request->input('degree_constraint') ?  $request->input('degree_constraint') : null,
-                'main_value' =>  $request->input('main_value') ?  $request->input('main_value') : null,
-                'post_constraint' =>  $request->input('post_constraint') ?  $request->input('post_constraint') : null,
-            ]);
+            if (Value::where('id', '=', $request->input('value_id'))->first()->header_id != 1){
+                $nonColorDetails = new NonColorDetails([
+                    'value_id' => $request->input('value_id'),
+                    'negation' =>  $request->input('negation') ?  $request->input('negation') : null,
+                    'pre_constraint' =>  $request->input('pre_constraint') ?  $request->input('pre_constraint') : null,
+                    'certainty_constraint' =>  $request->input('certainty_constraint') ?  $request->input('certainty_constraint') : null,
+                    'degree_constraint' =>  $request->input('degree_constraint') ?  $request->input('degree_constraint') : null,
+                    'main_value' =>  $request->input('main_value') ?  $request->input('main_value') : null,
+                    'post_constraint' =>  $request->input('post_constraint') ?  $request->input('post_constraint') : null,
+                ]);
 
-            $nonColorDetails->save();
+                $nonColorDetails->save();
+            }
         }
 
         $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
@@ -1539,7 +1484,7 @@ class HomeController extends Controller
         $constraints = $this->getDefaultConstraint($characterName);
 
         $returnValues = $this->getValuesByCharacter();
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $returnNonColorDetails = NonColorDetails::where('value_id', '=', $request->input('value_id'))->get();
 
         $data = [
@@ -1555,7 +1500,52 @@ class HomeController extends Controller
     }
 
     public function getDefaultConstraint($characterName) {
-        $characters = Character::where('name', '=', $characterName)->get();
+        $characters = Character::where('name', 'like', $characterName)->get();
+
+        $preList = ['longitudinally'];
+        $postList = ['when young'];
+        foreach ($characters as $eachCharacter) {
+            $values = Value::where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
+            foreach($values as $eachValue) {
+                $details = ColorDetails::where('value_id', '=', $eachValue->id)->get();
+                foreach ($details as $each) {
+                    if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
+                        if (!in_array($each->pre_constraint, $preList)) {
+                            array_push($preList, $each->pre_constraint);
+                        }
+                    }
+                    if ($each->post_constraint != null && $each->post_constraint != '' && $each->post_constraint != 'undefined' && $each->post_constraint != 'null') {
+                        if (!in_array($each->post_constraint, $postList)) {
+                            array_push($postList, $each->post_constraint);
+                        }
+                    }
+                }
+                $details = NonColorDetails::where('value_id', '=', $eachValue->id)->get();
+                foreach ($details as $each) {
+                    if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
+                        if (!in_array($each->pre_constraint, $preList)) {
+                            array_push($preList, $each->pre_constraint);
+                        }
+                    }
+                    if ($each->post_constraint != null && $each->post_constraint != '' && $each->post_constraint != 'undefined' && $each->post_constraint != 'null') {
+                        if (!in_array($each->post_constraint, $postList)) {
+                            array_push($postList, $each->post_constraint);
+                        }
+                    }
+                }
+            }
+        }
+
+        $data = [
+            'preList' => $preList,
+            'postList' => $postList,
+        ];
+
+        return $data;
+    }
+
+    public function getDefaultConstraint1() {
+        $characters = Character::all();
 
         $preList = ['longitudinally'];
         $postList = ['when young'];
@@ -1610,7 +1600,7 @@ class HomeController extends Controller
 
         $constraints = $this->getDefaultConstraint($characterName);
 
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
@@ -1633,7 +1623,7 @@ class HomeController extends Controller
 
         $constraints = $this->getDefaultConstraint($characterName);
 
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
 
         $data = [
             'colorDetails' => $returnColorDetails,
@@ -1660,7 +1650,7 @@ class HomeController extends Controller
 
         $constraints = $this->getDefaultConstraint($characterName);
 
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
 
         $data = [
             'nonColorDetails' => $returnNonColorDetails,
@@ -1685,7 +1675,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
 
         $constraints = $this->getDefaultConstraint($characterName);
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
@@ -1729,13 +1719,15 @@ class HomeController extends Controller
             $colorDetails = ColorDetails::where('value_id', '=', $selectedValue->id)->get();
             if ($colorDetails) {
                 foreach ($values as $eachValue) {
-                    if ($eachValue->id != $value['id']) {
+                    if ($eachValue->id != $value['id'] && $eachValue->header_id != 1) {
                         ColorDetails::where('value_id', '=', $eachValue->id)->delete();
                         foreach ($colorDetails as $eachColorDetails) {
                             $otherColorDetail = new ColorDetails([
                                 'value_id' => $eachValue->id,
                                 'negation' => $eachColorDetails->negation,
                                 'pre_constraint' => $eachColorDetails->pre_constraint,
+                                'certainty_constraint' => $eachColorDetails->certainty_constraint,
+                                'degree_constraint' => $eachColorDetails->degree_constraint,
                                 'brightness' => $eachColorDetails->brightness,
                                 'reflectance' => $eachColorDetails->reflectance,
                                 'saturation' => $eachColorDetails->saturation,
@@ -1753,13 +1745,15 @@ class HomeController extends Controller
             $nonColorDetails = NonColorDetails::where('value_id', '=', $selectedValue->id)->get();
             if ($nonColorDetails) {
                 foreach ($values as $eachValue) {
-                    if ($eachValue->id != $value['id']) {
+                    if ($eachValue->id != $value['id'] && $eachValue->header_id != 1) {
                         NonColorDetails::where('value_id', '=', $eachValue->id)->delete();
                         foreach ($nonColorDetails as $eachNonColorDetails) {
                             $otherNonColorDetail = new NonColorDetails([
                                 'value_id' => $eachValue->id,
                                 'negation' => $eachNonColorDetails->negation,
                                 'pre_constraint' => $eachNonColorDetails->pre_constraint,
+                                'certainty_constraint' => $eachNonColorDetails->certainty_constraint,
+                                'degree_constraint' => $eachNonColorDetails->degree_constraint,
                                 'main_value' => $eachNonColorDetails->main_value,
                                 'post_constraint' => $eachNonColorDetails->post_constraint,
                             ]);
@@ -1775,7 +1769,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
 
         $constraints = $this->getDefaultConstraint($characterName);
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
@@ -1809,7 +1803,7 @@ class HomeController extends Controller
             $colorDetails = ColorDetails::where('value_id', '=', $selectedValue->id)->get();
             if ($colorDetails) {
                 foreach ($values as $eachValue) {
-                    if ($eachValue->id != $value['id']) {
+                    if ($eachValue->id != $value['id'] && $eachValue->header_id != 1) {
                         $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->first();
                         if (!$existColorDetails) {
                             foreach ($colorDetails as $eachColorDetails) {
@@ -1817,6 +1811,8 @@ class HomeController extends Controller
                                     'value_id' => $eachValue->id,
                                     'negation' => $eachColorDetails->negation,
                                     'pre_constraint' => $eachColorDetails->pre_constraint,
+                                    'degree_constraint' => $eachColorDetails->degree_constraint,
+                                    'brightness' => $eachColorDetails->brightness,
                                     'brightness' => $eachColorDetails->brightness,
                                     'reflectance' => $eachColorDetails->reflectance,
                                     'saturation' => $eachColorDetails->saturation,
@@ -1836,7 +1832,7 @@ class HomeController extends Controller
             $nonColorDetails = NonColorDetails::where('value_id', '=', $selectedValue->id)->get();
             if ($nonColorDetails) {
                 foreach ($values as $eachValue) {
-                    if ($eachValue->id != $value['id']) {
+                    if ($eachValue->id != $value['id'] && $eachValue->header_id != 1) {
                         $existNonColorDetails = NonColorDetails::where('value_id', '=', $eachValue->id)->first();
                         if (!$existNonColorDetails) {
                             foreach ($nonColorDetails as $eachNonColorDetails) {
@@ -1844,6 +1840,8 @@ class HomeController extends Controller
                                     'value_id' => $eachValue->id,
                                     'negation' => $eachNonColorDetails->negation,
                                     'pre_constraint' => $eachNonColorDetails->pre_constraint,
+                                    'pre_constraint' => $eachNonColorDetails->pre_constraint,
+                                    'certainty_constraint' => $eachNonColorDetails->certainty_constraint,
                                     'main_value' => $eachNonColorDetails->main_value,
                                     'post_constraint' => $eachNonColorDetails->post_constraint,
                                 ]);
@@ -1861,7 +1859,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
 
         $constraints = $this->getDefaultConstraint($characterName);
-        $returnAllDetailValues = $this->getAllColorValues();
+        $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
@@ -1871,6 +1869,507 @@ class HomeController extends Controller
         ];
 
         return $data;
+
+    }
+
+    public function getCharacterNameById($userID) {
+        $user = User::where('id', '=', $userID)->first();
+        $username = explode('@', $user->email)[0];
+
+        $characters = Character::where('owner_name', '=', $username)->get();
+
+        $returenCharacters = [];
+        
+        foreach($characters as $char){
+            $returenCharacters[$char->id] = $char->name;
+        }
+
+        return $returenCharacters;
+    }
+
+    public function getColorDetailsById($userID) {
+        $valueIds = Value::join('headers', 'headers.id', '=', 'values.header_id')->where('headers.user_id', '=', $userID)->select('values.id')->get();
+        $ids = [];
+        $returnDetails = [];
+        foreach($valueIds as $value){
+            array_push($ids, $value->id);
+            $returnDetails[$value->id] = [];
+        }
+        $colDetails = ColorDetails::whereIn('value_id', $ids)->get();
+        foreach($colDetails as $col){
+            array_push($returnDetails[$col->value_id], $col);
+        }
+        return $returnDetails;
+    }
+
+    public function getNonColorDetailsById($userID) {
+        $valueIds = Value::join('headers', 'headers.id', '=', 'values.header_id')->where('headers.user_id', '=', $userID)->select('values.id')->get();
+        $ids = [];
+        $returnDetails = [];
+        foreach($valueIds as $value){
+            array_push($ids, $value->id);
+            $returnDetails[$value->id] = [];
+        }
+        $nonColDetails = NonColorDetails::whereIn('value_id', $ids)->get();
+        foreach($nonColDetails as $nonCol){
+            array_push($returnDetails[$nonCol->value_id], $nonCol);
+        }
+        return $returnDetails;
+    }
+
+    public function getColorDetailText($col) {
+        $text = ($col->pre_constraint ? ($col->pre_constraint . ' ') : '') .
+            ($col->certainty_constraint ? ($col->certainty_constraint . ' ') : '') .
+            ($col->degree_constraint ? ($col->degree_constraint . ' ') : '') .
+            ($col->brightness ? ($col->brightness . ' ') : '') .
+            ($col->reflectance ? ($col->reflectance . ' ') : '') .
+            ($col->saturation ? ($col->saturation . ' ') : '') .
+            ($col->colored ? ($col->colored . ' ') : '') .
+            ($col->multi_colored ? ($col->multi_colored . ' ') : '') .
+            ($col->post_constraint ? ($col->post_constraint . ' ') : '');
+
+        $text = substr($text, 0, strlen($text) - 1);
+
+        return $text;
+    }
+
+    public function getNonColorDetailText($nonCol) {
+        $text = ($nonCol->pre_constraint ? ($nonCol->pre_constraint . ' ') : '') .
+            ($nonCol->certainty_constraint ? ($nonCol->certainty_constraint . ' ') : '') .
+            ($nonCol->degree_constraint ? ($nonCol->degree_constraint . ' ') : '') .
+            ($nonCol->main_value ? ($nonCol->main_value . ' ') : '') .
+            ($nonCol->post_constraint ? ($nonCol->post_constraint . ' ') : '');
+
+        $text = substr($text, 0, strlen($text) - 1);
+
+        return $text;
+    }
+
+    public function writeColorDetail($writer, $subject, $col, $graph){
+        if ($col->colored) {
+            $writer->addTriple($subject, ":has_hue_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->colored)))), $graph);
+        }
+        if ($col->certainty_constraint) {
+            $writer->addTriple($subject, ":has_certainty_value_modifier", "mo:".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->certainty_constraint)))), $graph);
+        }
+        if ($col->degree_constraint) {
+            $writer->addTriple($subject, ":has_degree_value_modifier", "mo:".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->degree_constraint)))), $graph);
+        }
+        if ($col->brightness) {
+            $writer->addTriple($subject, ":has_brightness_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->brightness)))), $graph);
+        }
+        if ($col->reflectance) {
+            $writer->addTriple($subject, ":has_reflectance_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->reflectance)))), $graph);
+        }
+        if ($col->saturation) {
+            $writer->addTriple($subject, ":has_saturation_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->saturation)))), $graph);
+        }
+        if ($col->multi_colored) {
+            $writer->addTriple($subject, ":has_pattern_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->multi_colored)))), $graph);
+        }
+        if ($col->pre_constraint || $col->post_constraint){
+            $writer->addTriple($subject, ":has_value", "\"".$this->getColorDetailText($col)."\"", $graph);
+        }
+    }
+
+    public function writeNonColorDetail($writer, $subject, $nonCol, $graph){
+        if ($nonCol->main_value) {
+            $writer->addTriple($subject, ":has_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$nonCol->main_value)))), $graph);
+        }
+        if ($nonCol->certainty_constraint) {
+            $writer->addTriple($subject, ":has_certainty_value_modifier", "mo:".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$nonCol->certainty_constraint)))), $graph);
+        }
+        if ($nonCol->degree_constraint) {
+            $writer->addTriple($subject, ":has_degree_value_modifier", "mo:".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$nonCol->degree_constraint)))), $graph);
+        }
+        if ($nonCol->pre_constraint || $nonCol->post_constraint){
+            $writer->addTriple($subject, ":has_value", "\"".$this->getNonColorDetailText($nonCol)."\"", $graph);
+        }
+    }
+
+    public function pluralToSingle($word){
+        $plurals = [
+            'plants' => 'plant',
+            'internodes' => 'internode',
+            'rhizomes' => 'rhizome',
+            'stems' => 'stem',
+            'leaves' => 'leaf',
+            'blades' => 'blade',
+            'margins' => 'margin',
+            'surface' => 'surface',
+            'sheaths' => 'sheath',
+            'ligules' => 'ligule',
+            'apex' => 'apex',
+            'scales' => 'scale',
+            'veins' => 'vein',
+            'stipe' => 'stipe',
+            'beak' => 'beak',
+            'teeth' => 'tooth',
+            'perigynia' => 'perigynium',
+            'stigmas' => 'stigma',
+            'achenes' => 'achene',
+            'anthers' => 'anther',
+            'shoots' => 'shoot',
+            'branches' => 'branch',
+            'roots' => 'root',
+            'culms' => 'culm',
+            'midrib' => 'midrib',
+            'bands' => 'band',
+            'inflorescences' => 'inflorescence',
+            'axis' => 'axis',
+            'nodes' => 'node',
+            'peduncles' => 'peduncle',
+            'bracts' => 'bract',
+            'rachis' => 'rachis',
+            'spikes' => 'spike',
+            'sides' => 'side',
+            'styles' => 'style',
+            'stamens' => 'stamen',
+            'filaments' => 'filament',
+            'cataphylls' => 'cataphyll',
+            'flowers' => 'flower',
+            'nerves' => 'nerve',
+            'unit' => 'unit',
+            'body' => 'body',
+            'orifice' => 'orifice',
+        ];
+        if (array_key_exists($word,$plurals)){
+            return $plurals[$word];
+        }
+        if (substr($word, strlen($word) - 1) == "s"){
+            return substr($word, 0, strlen($word) - 1);
+        }
+        return $word;
+    }
+
+    public function partNameConverter($partName){
+        $word = explode('_of_', explode('_in_', $partName)[0])[0];
+        return $this->pluralToSingle($word) . substr($partName, strlen($word));
+    }
+
+    public function registerType($writer, &$types, $type, $sampleName, $graph, $ccs){
+        $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+        $i = 2;
+        if (!array_search($type, $types)){
+            array_push($types, $type);
+            $newType = explode('_of_',explode('_in_', $type)[0])[0];
+            $writer->addTriple($ccs.$type, $a, ":".$this->partNameConverter($newType), $graph);
+            while (strlen($newType) != strlen($type)){
+                $partOf = $this->partNameConverter(substr($type, strlen($newType) + 4));
+                $writer->addTriple($ccs.$type, ":part_of", $ccs.$partOf, $graph);
+                $type = $partOf;
+                $newType = explode('_of_',explode('_in_', $type)[0])[0];
+                $writer->addTriple($ccs.$type, $a, ":".$this->partNameConverter($newType), $graph);
+                $i --;
+                if (!$i)return;
+            }
+        }
+    }
+
+    public function registerPartName($writer, &$partNames, &$types, $charName, $qualityName, $sampleName, $graph, $ccs) {
+        $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+        if (strstr($charName,'plant')){
+            $writer->addTriple($sampleName, ':has_quality', $ccs.$charName, $graph);
+        }
+        else {
+            $partName = explode('_of_', $charName)[1];
+            $partName = $this->partNameConverter($partName);
+            if (!array_search($partName, $partNames)){
+                array_push($partNames, $partName);
+                $writer->addTriple($sampleName, ':has_part', $ccs.$partName, $graph);
+                $this->registerType($writer, $types, $partName, $sampleName, $graph, $ccs);
+            }
+            $writer->addTriple($ccs.$partName, ':has_quality', $ccs.$qualityName, $graph);
+        }
+        $writer->addTriple($ccs.$qualityName, $a, ":$charName", $graph);
+    }
+
+    public function checkHavingUnit($charName) {
+        return startsWith($charName, 'length_of_')
+        || startsWith($charName, 'width_of_')
+        || startsWith($charName, 'number_of_')
+        || startsWith($charName, 'depth_of_')
+        || startsWith($charName, 'diameter_of_')
+        || startsWith($charName, 'distance_between_')
+        || startsWith($charName, 'count_of_')
+        || startsWith($charName, 'ratio_of_');
+    }
+
+    public function getSpecimenName($taxon) {
+        $words = explode(' ', strtolower($taxon));
+        $str = '';
+        foreach($words as $word){
+            $str .= substr($word, 0, 1);
+        }
+        
+        return $str.'s';
+    }
+
+    public function getTrigDescription($userID, $taxons) {
+        $user = User::where('id', '=', $userID)->first();
+        // $txid = $request->input('id');
+        $txid = '';
+        if (array_key_exists( $user->taxon, $taxons) ){
+            $txid = $taxons[$user->taxon];
+        }
+        else {
+            $txid = $this->getTaxonID($userID);
+            $taxons[$user->taxon] = $txid;
+        }
+
+        $specimenName = $this->getSpecimenName($user->taxon);
+
+        $writer = new TriGWriter([
+            "prefixes" => [
+                "xsd"   =>   "http://www.w3.org/2001/XMLSchema#",
+                "rdfs"  =>   "http://www.w3.org/2000/01/rdf-schema#",
+                "rdf"   =>   "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+                "owl"   =>   "http://www.w3.org/2002/07/owl#",
+                "iao"   =>   "http://purl.obolibrary.org/obo/iao.owl#",
+                "dc"    =>   "http://purl.org/dc/terms/",
+
+                #utility namespaces
+                "obi"   =>  "http://purl.obolibrary.org/obo/obi.owl#",
+                "uo"    =>  "http://purl.obolibrary.org/obo/uo.owl#",
+                "ncbi"  =>  "https://www.ncbi.nlm.nih.gov/Taxonomy#",
+                "mo"    =>  "http://biosemantics.arizona.edu/ontologies/modifierlist#",
+
+                #domain namespaces
+                ""      =>  "http://biosemantics.arizona.edu/ontologies/carex#",
+                "kb"    =>  "http://biosemantics.arizona.edu/kb/carex#",
+                "data"  =>  "http://biosemantics.arizona.edu/kb/data#",
+                "app"   =>  "http://shark.sbs.arizona.edu/chrecorder#",
+                ],
+            "format" => "trig" //Other possible values: n-quads, trig or turtle
+        ]);
+        
+        $headers = $this->getHeaders();
+        $values = $this->getValuesByCharacter();
+        $colDetails = $this->getColorDetailsById($userID);
+        $nonColDetails = $this->getNonColorDetailsById($userID);
+        $characterName = $this->getCharacterNameById($userID);
+
+
+        $index = 1;
+        for ($i = $headers->count() - 1 ; $i >= 0 ; $i--) {
+            $header = $headers[$i];
+            if ($header->id != 1){
+                $writer->addPrefix($specimenName . $index ++, "http://biosemantics.arizona.edu/kb/".str_replace(' ','/',strtolower($user->taxon))."/" . $header->header. "#");
+            }
+        }
+
+        $graph = 'data:graph_'.str_replace(' ','_',strtolower($user->taxon)).'_'.explode('@', $user->email)[0];
+
+        $index = 0;
+        $partNames = [];
+        for ($i = $headers->count() - 1 ; $i >= 0 ; $i--) {
+            $types = [];
+            $header = $headers[$i];
+            if ($header->id == 1){
+                continue;
+            }
+
+            $index ++;
+
+            $sampleName = "kb:" . str_replace(' ', '', ucwords(strtolower($user->taxon))) . $header->header;
+            $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+            $writer->addTriple($sampleName, "rdf:label",        "\"". $header->header . " for ". $user->taxon . "\"",   $graph);
+            $writer->addTriple($sampleName, "rdf:id",           "\"some_Unique_ID_4_This_Sample\"", $graph);
+            $writer->addTriple($sampleName, "iao:is_about",     "ncbi:txid$txid",                  $graph);
+            $writer->addTriple($sampleName, $a,                 "obi:specimen",                     $graph);
+
+            foreach( $values as $character){
+                foreach( $character as $sample) {
+                    if ($sample->value != '' && $sample->value != null && $sample->header_id == $header->id){
+                        $charName = str_replace('-','_',str_replace(' ','_',strtolower($characterName[$sample->character_id])));
+                        if (strpos($charName, '_between_') !== false){
+                            $charName = str_replace('_between_', '_of_', $charName);
+                        };
+                        if ($charName == 'shape_of_stem_in_cross_section'){
+                            $charName = 'shape_of_stem_in_transverse_section';
+                        }
+                        if ($this->checkHavingUnit($charName)){
+                            $this->registerPartName($writer, $partNames, $types, $charName, $charName, $sampleName, $graph, $specimenName.$index.":");
+
+                            $sample->value = $sample->value + 0.0;
+                            $writer->addTriple($specimenName."$index:$charName", ":has_value", "\"$sample->value\"^^xsd:float", $graph);
+                            if (!startsWith($charName, 'number_of_')
+                                &&!startsWith($charName, 'count_of_')
+                                &&!startsWith($charName, 'ratio_of_')
+                            ){
+                                $writer->addTriple($specimenName."$index:$charName", ":has_unit", "uo:$sample->unit", $graph);
+                            }
+                        }
+                        else {
+                            if ($colDetails[$sample->id] || $nonColDetails[$sample->id]) {
+                                $cols = startsWith($charName,'color_of_') ? $colDetails[$sample->id] : $nonColDetails[$sample->id];
+                                for ($j = 0 ; $j < count($cols) ; $j ++ ) {
+                                    if ($cols[$j]->negation){
+                                        $partName = explode('_of_', $charName)[1];
+                                        $partName = $this->partNameConverter($partName);
+                                        if (startsWith($charName,'color_of_')){
+                                            $this->writeColorDetail($writer, $specimenName."$index:".str_replace(' ','_',$this->getColorDetailText($cols[$j])), $cols[$j], $graph);
+                                        }
+                                        else {
+                                            $this->writeNonColorDetail($writer, $specimenName."$index:".str_replace(' ','_',$this->getNonColorDetailText($cols[$j])), $cols[$j], $graph);
+                                        }
+                                        $writer->addTriple("[]", "rdf:type", "owl:NegativePropertyAssertion", $graph);
+                                        $writer->addTriple("", "owl:sourceIndividual", $specimenName."$index:".$partName, $graph);
+                                        $writer->addTriple("", "owl:sourceIndividual", $specimenName."$index:".$partName, $graph);
+                                        $writer->addTriple("", "owl:assertionProperty", ":has_quality", $graph);
+                                        
+                                        if (startsWith($charName,'color_of_')){
+                                            $writer->addTriple("", "owl:targetIndividual", "$specimenName"."$index:".str_replace(' ','_',$this->getColorDetailText($cols[$j])), $graph);
+                                        }
+                                        else {
+                                            $writer->addTriple("", "owl:targetIndividual", "$specimenName"."$index:".str_replace(' ','_',$this->getNonColorDetailText($cols[$j])), $graph);
+                                        }
+                                        continue;
+                                    }
+                                    $qualityName = $charName."_".($j + 1);
+                                    if (count($cols) == 1){
+                                        $qualityName = $charName;
+                                    }
+                                    $this->registerPartName($writer, $partNames, $types, $charName, $qualityName, $sampleName, $graph, $specimenName."$index:");
+                                    if (startsWith($charName,'color_of_')){
+                                        $this->writeColorDetail($writer, $specimenName."$index:".$qualityName, $cols[$j], $graph);
+                                    }
+                                    else {
+                                        $this->writeNonColorDetail($writer, $specimenName."$index:".$qualityName, $cols[$j], $graph);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $txt = $graph . " dc:creator app:". explode('@', $user->email)[0] . ";\n";
+        $txt .= "\t:export_date \"".date("Y-m-d")."T".date("h:i:s")."\"^^xsd:dateTime.";
+
+        return [
+            'description' => $writer->end() . $txt,
+            'taxons' => $taxons,
+        ];
+    }
+
+    public function exportDescriptionTrig(Request $request) {
+
+        $user = User::where('id', '=', Auth::id())->first();
+
+        $fileName = $user->taxon;
+        $file = fopen($fileName.".trig", "w") or die("Unable to open file!");
+
+        $taxons=[];
+        $result = $this->getTrigDescription(Auth::id(), $taxons)['description'];
+
+        fwrite($file, $result);
+
+        // fwrite($file, $writer->end());
+        // fwrite($file, $txt);
+
+
+        fclose($file);
+        
+        return array(
+            'is_success'    =>  1,
+            'doc_url'       =>  '/chrecorder/public/' . $fileName .'.trig',
+        );
+    }
+
+    public function getTaxonID($userId) {
+        
+        $fetchdata = [];
+        $user = User::where('id', '=', $userId)->first();
+
+        $client = new Client(['base_uri' => 'https://eutils.ncbi.nlm.nih.gov']);
+
+        // $response = $client->request('GET', 'http://github.com');
+        // echo $response->getStatusCode();
+        // Initiate each request but do not block
+        $promises = [
+            'taxonId' => $client->getAsync('/entrez/eutils/esearch.fcgi',['query' => ['db' => 'taxonomy', 'term' => $user->taxon]]),
+        ];
+        
+        // Wait for the requests to complete; throws a ConnectException
+        // if any of the requests fail
+        $responses = Promise\unwrap($promises);
+        
+        // Wait for the requests to complete, even if some of them fail
+        $responses = Promise\settle($promises)->wait();
+        
+        // You can access each response using the key of the promise
+        $xml = $responses['taxonId']['value']->getBody()->getContents();
+
+        $xmlObject = simplexml_load_string($xml);
+
+        //Encode the SimpleXMLElement object into a JSON string.
+        $jsonString = json_encode($xmlObject);
+
+        //Convert it back into an associative array for
+        //the purposes of testing.
+        $jsonArray = json_decode($jsonString, true);
+
+        if (count($jsonArray['IdList'])){
+            return $jsonArray['IdList']['Id'];
+        }
+        else {
+            return "unkown";
+        }
+    }
+    public function test() {
+
+        $users = User::all();
+        {
+            $client = new Client(['base_uri' => 'https://shark.sbs.arizona.edu:8443/blazegraph/namespace/kb/']);
+
+            $promises = [
+                'taxonId' => $client->postAsync('sparql',['form_params' => ['update' => 'DELETE { ?book ?p ?v } WHERE { ?book ?p ?v .}']]),
+            ];
+            
+            $responses = Promise\unwrap($promises);
+            
+            // Wait for the requests to complete, even if some of them fail
+            $responses = Promise\settle($promises)->wait();
+        }
+        $taxons=[];
+        foreach($users as $user) {
+            $client = new Client(['base_uri' => 'https://shark.sbs.arizona.edu:8443/blazegraph/namespace/kb/']);
+
+            $result = $this->getTrigDescription($user->id, $taxons);
+            $taxons = $result['taxons'];
+            $query = 'insert data{' . $result['description'] . '}';
+            $promises = [
+                'taxonId' => $client->postAsync('sparql',['form_params' => ['update' => $query]]),
+            ];
+            
+            $responses = Promise\unwrap($promises);
+            
+            // Wait for the requests to complete, even if some of them fail
+            $responses = Promise\settle($promises)->wait();
+        }
+
+        
+        $fileName = 'ontology/carex.ttl';
+
+        $read = file_get_contents($fileName);
+
+        {
+            $client = new Client(['base_uri' => 'https://shark.sbs.arizona.edu:8443/blazegraph/namespace/kb/']);
+
+            $result = $this->getTrigDescription($user->id, $taxons);
+            $taxons = $result['taxons'];
+            $query = 'insert data{' . $read . '}';
+            $promises = [
+                'taxonId' => $client->postAsync('sparql',['form_params' => ['update' => $query]]),
+            ];
+            
+            $responses = Promise\unwrap($promises);
+            
+            // Wait for the requests to complete, even if some of them fail
+            $responses = Promise\settle($promises)->wait();
+        }
 
     }
 }
