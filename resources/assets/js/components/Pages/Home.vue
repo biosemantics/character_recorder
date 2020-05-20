@@ -153,6 +153,10 @@
                                     <a class="btn btn-primary" v-on:click="collapsedFlag = false;" style="width: 40px;"><span
                                             class="glyphicon glyphicon-chevron-down"></span></a>
                                 </div>
+                                <div class="col-md-1">
+                                    <a class="btn btn-primary" v-on:click="getIRI()" style="width: 40px;display:none;"><span
+                                            class="glyphicon glyphicon-chevron-right"></span></a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -345,9 +349,14 @@
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <input style="height: 26px; width: 100%;" type="text"
-                                                               list="first_characters" placeholder="select or type"
-                                                               v-model="firstCharacter"/>
+                                                        <input 
+                                                            style="height: 26px; width: 100%;" 
+                                                            type="text" 
+                                                            v-on:focus="nounUndefined = false; lastCharacterDefinition = '';firstCharacterUndefined = false; firstCharacterDefinition = ''; wholeCharacterUndefined=false;wholeCharacterDefinition='';"
+                                                            list="first_characters" 
+                                                            placeholder="select or type"
+                                                            v-model="firstCharacter"
+                                                        />
                                                         <datalist id="first_characters">
                                                             <option value="Length">Length</option>
                                                             <option value="Width">Width</option>
@@ -374,7 +383,7 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input v-model="lastCharacter" v-on:focus="nounUndefined = false; lastCharacterDefinition = ''" placeholder="enter a singular noun">
+                                                        <input v-model="lastCharacter" v-on:focus="nounUndefined = false; lastCharacterDefinition = '';firstCharacterUndefined = false; firstCharacterDefinition = ''; wholeCharacterUndefined=false;wholeCharacterDefinition='';" placeholder="enter a singular noun">
                                                         <br v-if="middleCharacter=='between'"/>
                                                         <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and</div>
                                                         <input v-if="middleCharacter=='between'" v-model="secondLastCharacter" v-on:focus="secondNounUndefined = false; lastCharacterDefinition = ''" placeholder="enter a singular noun">
@@ -383,6 +392,11 @@
                                                     <!--<input autofocus v-model="character.name" v-on:input="checkMsg"/>-->
                                                 </div>
                                                 <br>
+                                                <div class ="row" v-if="firstCharacterUndefined">
+                                                    <div class = "col-md-12">
+                                                        What is {{firstCharacter}}? : <input v-model="firstCharacterDefinition" style="width:100%" :placeholder="'enter the definition of ' + firstCharacter">
+                                                    </div>
+                                                </div>
                                                 <div class ="row" v-if="nounUndefined">
                                                     <div class = "col-md-12">
                                                         What is {{lastCharacter}}? : <input v-model="lastCharacterDefinition" style="width:100%" :placeholder="'enter the definition of ' + lastCharacter">
@@ -393,11 +407,16 @@
                                                         What is {{secondLastCharacter}}? : <input v-model="secondLastCharacterDefinition" style="width:100%" :placeholder="'enter the definition of ' + secondLastCharacter">
                                                     </div>
                                                 </div>
+                                                <div class ="row" v-if="wholeCharacterUndefined">
+                                                    <div class = "col-md-12">
+                                                        What is {{firstCharacter + ' ' + middleCharacter + ' ' +  lastCharacter + (middleCharacter == 'between' ? (' and' + secondLastCharacter) : ' ')}}? : <input v-model="wholeCharacterDefinition" style="width:100%" :placeholder="'enter the definition of ' + firstCharacter + ' ' + middleCharacter + ' ' +  lastCharacter + (middleCharacter == 'between' ? (' and' + secondLastCharacter) : ' ')">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="modal-footer">
                                                 <a class="btn btn-primary ok-btn"
-                                                   v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter || nounUndefined && !lastCharacterDefinition || middleCharacter=='between' && (!secondLastCharacter || secondNounUndefined && !secondLastCharacterDefinition)}"
-                                                   v-on:click="checkStoreCharacter()">
+                                                   v-bind:class="{ disabled: !firstCharacter || !middleCharacter || !lastCharacter || nounUndefined && !lastCharacterDefinition || firstCharacterUndefined && !firstCharacterDefinition || wholeCharacterUndefined && !wholeCharacterDefinition || middleCharacter=='between' && (!secondLastCharacter || secondNounUndefined && !secondLastCharacterDefinition)}"
+                                                   v-on:click="checkBracketConfirm()">
                                                     &nbsp; &nbsp; Next: Define Character &nbsp; &nbsp; </a>
                                                 <a v-on:click="cancelNewCharacter()" class="btn btn-danger">Cancel</a>
                                             </div>
@@ -899,7 +918,9 @@
                                                             @node:selected="onTreeNodeSelected"
                                                             style="max-height: 300px;">
                                                         <div slot-scope="{ node }" class="node-container">
-                                                            <div class="node-text" v-tooltip="node.text">{{ node.text }}
+                                                            <div class="node-text" v-tooltip="node.text">
+                                                                {{ node.text }}
+                                                                <span v-if="node.data.images && node.data.images.length != 0" class="glyphicon glyphicon-picture" @click="showViewer(node)"></span>
                                                             </div>
                                                         </div>
                                                     </tree>
@@ -973,6 +994,7 @@
                                                         &nbsp;&nbsp;
                                                     </div>
                                                 </div>
+
 
                                             </div>
                                         </div>
@@ -1209,7 +1231,9 @@
                                                             @node:selected="onTextureTreeNodeSelected"
                                                             style="max-height: 300px;">
                                                         <div slot-scope="{ node }" class="node-container">
-                                                            <div class="node-text" v-tooltip="node.text">{{ node.text }}
+                                                            <div class="node-text" v-tooltip="node.text">
+                                                                {{ node.text }}
+                                                                <span v-if="node.data.images && node.data.images.length != 0" class="glyphicon glyphicon-picture" @click="showViewer(node)"></span>
                                                             </div>
                                                         </div>
                                                     </tree>
@@ -1410,8 +1434,42 @@
                         </div>
                     </transition>
                 </div>
+                <div v-if="toRemoveBracketConfirmFlag" @close="toRemoveBracketConfirmFlag = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container">
+                                    <div class="modal-header">
+                                        <b>Confirmation</b>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <b>Please remove punctuation marks, such as (), from input terms: </b>
+                                            {{ currentTermForBracket }}
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-on:click="toRemoveBracketConfirmFlag=false">
+                                                    OK </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
             </form>
         </div>
+        <viewer :images="images"           
+                class="viewer" ref="viewer"
+                @inited="inited"
+        >
+        <img v-for="src in images" :src="src" :key="src" style="display: none;">
+        </viewer>
     </div>
 
 </template>
@@ -1436,6 +1494,9 @@
     import LiquorTree from 'liquor-tree';
 
     import draggable from 'vuedraggable'
+
+    import 'viewerjs/dist/viewer.css';
+    import Viewer from 'v-viewer';
 
     // import {runTest, Character, ColorQuality} from '../../LeafColors';
 
@@ -1540,6 +1601,11 @@
 
     Vue.use(LiquorTree);
     Vue.use({ModelSelect});
+    Vue.use(Viewer, {
+        defaultOptions: {
+            zIndex: 9999
+        }
+    });
 
 
     export default {
@@ -1557,14 +1623,20 @@
             return {
                 //previousCharacter:"",
                 //previousUserCharacter:"",
+                images: [
+                    'https://drive.google.com/uc?id=15MsN-q-e9PPK7YXaYX1gQZiLNERCgl5r',
+                    'https://drive.google.com/uc?id=1wwG6N8X6Mlq5KZHVjtDTQnVOKKZ6wVUw'
+                ],
                 character: {},
                 userCharacters: [],
                 defaultCharacters: [],
+                defaultCharactersToolTip: [],
                 standardCharacters: [],
                 item: null,
                 searchText: null,
                 standardShowFlag: false,
                 firstCharacter: null,
+                firstCharacterDefinition: null,
                 middleCharacter: null,
                 lastCharacter: null,
                 lastCharacterDefinition: null,
@@ -1722,6 +1794,7 @@
                 toRemoveHeaderId: null,
                 toRemoveHeaderConfirmFlag: false,
                 toCollapseConfirmFlag: false,
+                toRemoveBracketConfirmFlag: false,
                 standardCharactersTags: [
                     'Habit',
                     'Stems',
@@ -1740,6 +1813,10 @@
                 nounUndefined: false,
                 secondNounUndefined: false,
                 saveCharacterButtonFlag: false,
+                firstCharacterUndefined: false,
+                wholeCharacterUndefined: false,
+                wholeCharacterDefinition: null,
+                currentTermForBracket: null
             }
         },
         components: {
@@ -1748,6 +1825,14 @@
             Loading
         },
         methods: {
+            showViewer (node) {
+                var app = this;
+                // app.images = node.data.images;
+                this.$viewer.show();
+            },
+            inited (viewer) {
+                this.$viewer = viewer;
+            },
             handleFcAfterDateBack (event) {
                 console.log('hadleFcAfterDateBack function inited');
                 var app = this;
@@ -1797,6 +1882,59 @@
                 var app = this;
                 app.searchText = searchText;
             },
+            async getTooltipImage(name, index) {
+                var methodEntry = null;
+                var src = '';
+                var app = this;
+                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
+                    .then(function (resp) {
+                        if (resp.data.entries.length > 0) {
+                            methodEntry = resp.data.entries.filter(function(each) {
+                                return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
+                            })[0];
+                            if (methodEntry) {
+                                for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
+                                    if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                                        console.log(methodEntry.resultAnnotations[i].value);
+                                        src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                    }
+                                }
+                                if (src != '') {
+                                    app.standardCharacters[index].tooltip = src + app.standardCharacters[index].tooltip;
+                                }
+                            }
+                        }
+                    })
+                    .catch(function (resp) {
+                        console.log('exp search resp error', resp);
+                    });
+            },
+            async getTooltipImageUserChracter(name, index) {
+                var methodEntry = null;
+                var src = '';
+                var app = this;
+                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
+                    .then(function (resp) {
+                        if (resp.data.entries.length > 0) {
+                            methodEntry = resp.data.entries.filter(function(each) {
+                                return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
+                            })[0];
+                            if (methodEntry) {
+                                for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
+                                    if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                                        src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                    }
+                                }
+                                if (src != '') {
+                                    app.userCharacters[index].tooltip = src + app.userCharacters[index].tooltip;
+                                }
+                            }
+                        }
+                    })
+                    .catch(function (resp) {
+                        console.log('exp search resp error', resp);
+                    });
+            },
             onSelect(selectedItem) {
                 var app = this;
                 var selectedCharacter = app.defaultCharacters.find(ch => ch.id == selectedItem)
@@ -1817,6 +1955,10 @@
                     app.secondLastCharacterDefinition = '';
                     app.nounUndefined = false;
                     app.secondNounUndefined = false;
+                    app.firstCharacterUndefined = false;
+                    app.wholeCharacterUndefined = false;
+                    app.firstCharacterDefinition = '';
+                    app.wholeCharacterDefinition = '';
 
                     app.newCharacterFlag = true;
                     app.viewFlag = false;
@@ -1996,24 +2138,51 @@
                 }
                 app.detailsFlag = true;
             },
-            checkStoreCharacter() {
+            checkBracketConfirm() {
+                var app = this;
+                console.log("check bracket");
+                app.currentTermForBracket = '';
+                if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1 || app.lastCharacter.indexOf('(') > -1 || app.lastCharacter.indexOf(')') > -1 || app.secondLastCharacter.indexOf('(') > -1 || app.secondLastCharacter.indexOf(')') > -1 ) {
+                    if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1) {
+                        app.currentTermForBracket += app.firstCharacter;
+                    }
+                    if (app.lastCharacter.indexOf('(') > -1 || app.lastCharacter.indexOf(')') > -1) {
+                        if (app.currentTermForBracket != '') {
+                            app.currentTermForBracket += ', ';
+                        }
+                        app.currentTermForBracket += app.lastCharacter;
+                    }
+                    if (app.secondLastCharacter.indexOf('(') > -1 || app.secondLastCharacter.indexOf(')') > -1) {
+                        if (app.currentTermForBracket != '') {
+                            app.currentTermForBracket += ', ';
+                        }
+                        app.currentTermForBracket += app.secondLastCharacter;
+                    }
+                    app.toRemoveBracketConfirmFlag = true;
+                }
+                else {
+                    app.checkStoreCharacter();
+                }
+            },
+            async checkStoreCharacter() {
                 var app = this;
                 var requestBody = {};
-                if (app.nounUndefined){
+                
+                if (app.firstCharacterUndefined){
                     var date = new Date();
                     requestBody = {
                         "user": app.sharedFlag ? '' : app.user.name,
                         "ontology": "carex",
-                        "term": app.lastCharacter,
+                        "term": app.firstCharacter.toLowerCase().replace(' ', '_').replace('-', '_'),
                         "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
-                        "definition": app.lastCharacterDefinition,
+                        "definition": app.firstCharacterDefinition,
                         "elucidation": "",
                         "createdBy": app.user.name,
                         "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
                         "definitionSrc": app.user.name,
                     };
                     console.log(requestBody);
-                    axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                    await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
                         .then(function (resp) {
                             console.log('shark api class resp', resp);
                             axios.post('http://shark.sbs.arizona.edu:8080/save', {
@@ -2022,109 +2191,265 @@
                             })
                                 .then(function (resp) {
                                     console.log('save api resp', resp);
+                                    app.firstCharacterUndefined = false;
                                 });
                         });
-                    if (app.middleCharacter == 'between' && app.secondNounUndefined){
-                        var date = new Date();
-                        requestBody = {
-                            "user": app.sharedFlag ? '' : app.user.name,
-                            "ontology": "carex",
-                            "term": app.secondLastCharacter,
-                            "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
-                            "definition": app.secondLastCharacterDefinition,
-                            "elucidation": "",
-                            "createdBy": app.user.name,
-                            "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                            "definitionSrc": app.user.name,
-                        };
-                        console.log(requestBody);
-                        axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-                            .then(function (resp) {
-                                console.log('shark api class resp', resp);
-                                axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                    user: app.sharedFlag ? '' : app.user.name,
-                                    ontology: 'carex'
-                                })
-                                    .then(function (resp) {
-                                        console.log('save api resp', resp);
-                                    });
-                            });
-                    }
-                    app.storeCharacter();
-                    return;
                 }
-                else if (app.middleCharacter == 'between' && app.secondNounUndefined) {
-                    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase())
-                        .then(function(resp){
-                            console.log('term?'+app.lastCharacter, resp.data);
-                            if (!resp.data.entries.length){
-                                app.nounUndefined = true;
-                                return
-                            }
-                            else {
-                                var date = new Date();
-                                requestBody = {
-                                    "user": app.sharedFlag ? '' : app.user.name,
-                                    "ontology": "carex",
-                                    "term": app.secondLastCharacter,
-                                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
-                                    "definition": app.secondLastCharacterDefinition,
-                                    "elucidation": "",
-                                    "createdBy": app.user.name,
-                                    "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                                    "definitionSrc": app.user.name,
-                                };
-                                console.log(requestBody);
-                                axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-                                    .then(function (resp) {
-                                        console.log('shark api class resp', resp);
-                                        axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                                            user: app.sharedFlag ? '' : app.user.name,
-                                            ontology: 'carex'
-                                        })
-                                            .then(function (resp) {
-                                                console.log('save api resp', resp);
-                                            });
-                                    });
-                                app.storeCharacter();
-                            }
+
+                if (app.nounUndefined){
+                    var date = new Date();
+                    requestBody = {
+                        "user": app.sharedFlag ? '' : app.user.name,
+                        "ontology": "carex",
+                        "term": app.lastCharacter.toLowerCase().replace(' ', '_').replace('-', '_'),
+                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                        "definition": app.lastCharacterDefinition,
+                        "elucidation": "",
+                        "createdBy": app.user.name,
+                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                        "definitionSrc": app.user.name,
+                    };
+                    console.log(requestBody);
+                    await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                        .then(function (resp) {
+                            console.log('shark api class resp', resp);
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                user: app.sharedFlag ? '' : app.user.name,
+                                ontology: 'carex'
+                            })
+                                .then(function (resp) {
+                                    console.log('save api resp', resp);
+                                    app.nounUndefined = false;
+                                });
                         });
-                        
                 }
-                var secondChecked = false;
-                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase())
+
+                if (app.middleCharacter == 'between' && app.secondNounUndefined){
+                    var date = new Date();
+                    requestBody = {
+                        "user": app.sharedFlag ? '' : app.user.name,
+                        "ontology": "carex",
+                        "term": app.secondLastCharacter.toLowerCase().replace(' ', '_').replace('-', '_'),
+                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                        "definition": app.secondLastCharacterDefinition,
+                        "elucidation": "",
+                        "createdBy": app.user.name,
+                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                        "definitionSrc": app.user.name,
+                    };
+                    console.log(requestBody);
+                    await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                        .then(function (resp) {
+                            console.log('shark api class resp', resp);
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                user: app.sharedFlag ? '' : app.user.name,
+                                ontology: 'carex'
+                            })
+                                .then(function (resp) {
+                                    console.log('save api resp', resp);
+                                    app.secondNounUndefined = false;
+                                });
+                        });
+                }
+
+                let wholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                
+                if (app.middleCharacter == 'between'){
+                    wholeCharacter += ' and ' + app.secondLastCharacter;
+                }
+                if (app.wholeCharacterUndefined){
+                    var date = new Date();
+                    requestBody = {
+                        "user": app.sharedFlag ? '' : app.user.name,
+                        "ontology": "carex",
+                        "term": wholeCharacter,
+                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                        "definition": app.wholeCharacterDefinition,
+                        "elucidation": "",
+                        "createdBy": app.user.name,
+                        "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                        "definitionSrc": app.user.name,
+                    };
+                    console.log(requestBody);
+                    await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                        .then(function (resp) {
+                            console.log('shark api class resp', resp);
+                            axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                                user: app.sharedFlag ? '' : app.user.name,
+                                ontology: 'carex'
+                            })
+                                .then(function (resp) {
+                                    console.log('save api resp', resp);
+                                    app.wholeCharacterUndefined = false;
+                                });
+                        });
+                }
+
+                // if (app.nounUndefined){
+                //     var date = new Date();
+                //     requestBody = {
+                //         "user": app.sharedFlag ? '' : app.user.name,
+                //         "ontology": "carex",
+                //         "term": app.lastCharacter,
+                //         "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                //         "definition": app.lastCharacterDefinition,
+                //         "elucidation": "",
+                //         "createdBy": app.user.name,
+                //         "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                //         "definitionSrc": app.user.name,
+                //     };
+                //     console.log(requestBody);
+                //     axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                //         .then(function (resp) {
+                //             console.log('shark api class resp', resp);
+                //             axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                //                 user: app.sharedFlag ? '' : app.user.name,
+                //                 ontology: 'carex'
+                //             })
+                //                 .then(function (resp) {
+                //                     console.log('save api resp', resp);
+                //                 });
+                //         });
+                //     if (app.middleCharacter == 'between' && app.secondNounUndefined){
+                //         var date = new Date();
+                //         requestBody = {
+                //             "user": app.sharedFlag ? '' : app.user.name,
+                //             "ontology": "carex",
+                //             "term": app.secondLastCharacter,
+                //             "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                //             "definition": app.secondLastCharacterDefinition,
+                //             "elucidation": "",
+                //             "createdBy": app.user.name,
+                //             "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                //             "definitionSrc": app.user.name,
+                //         };
+                //         console.log(requestBody);
+                //         axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                //             .then(function (resp) {
+                //                 console.log('shark api class resp', resp);
+                //                 axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                //                     user: app.sharedFlag ? '' : app.user.name,
+                //                     ontology: 'carex'
+                //                 })
+                //                     .then(function (resp) {
+                //                         console.log('save api resp', resp);
+                //                     });
+                //             });
+                //     }
+                //     app.storeCharacter();
+                //     return;
+                // }
+                // else if (app.middleCharacter == 'between' && app.secondNounUndefined) {
+                //     axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase())
+                //         .then(function(resp){
+                //             console.log('term?'+app.lastCharacter, resp.data);
+                //             if (!resp.data.entries.length){
+                //                 app.nounUndefined = true;
+                //                 return
+                //             }
+                //             else {
+                //                 var date = new Date();
+                //                 requestBody = {
+                //                     "user": app.sharedFlag ? '' : app.user.name,
+                //                     "ontology": "carex",
+                //                     "term": app.secondLastCharacter,
+                //                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                //                     "definition": app.secondLastCharacterDefinition,
+                //                     "elucidation": "",
+                //                     "createdBy": app.user.name,
+                //                     "creationDate": ("0" + date.getMonth()).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                //                     "definitionSrc": app.user.name,
+                //                 };
+                //                 console.log(requestBody);
+                //                 axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                //                     .then(function (resp) {
+                //                         console.log('shark api class resp', resp);
+                //                         axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                //                             user: app.sharedFlag ? '' : app.user.name,
+                //                             ontology: 'carex'
+                //                         })
+                //                             .then(function (resp) {
+                //                                 console.log('save api resp', resp);
+                //                             });
+                //                     });
+                //                 app.storeCharacter();
+                //             }
+                //         });
+                        
+                // }
+
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.firstCharacter.toLowerCase().replace(' ', '_').replace('-', '_'))
+                    .then(function(resp){
+                        console.log('term?'+app.firstCharacter, resp.data);
+                        if (!resp.data.entries.length){
+                            app.firstCharacterUndefined = true;
+                        }
+                    });
+
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase().replace(' ', '_').replace('-', '_'))
                     .then(function(resp){
                         console.log('term?'+app.lastCharacter, resp.data);
                         if (!resp.data.entries.length){
                             app.nounUndefined = true;
                         }
-                        else {
-                            if (app.middleCharacter != 'between' || secondChecked){
-                                app.storeCharacter();
-                            }
-                            else{
-                                secondChecked = true;
-                            }
+                    });
+
+                if (app.middleCharacter == 'between') {
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.secondLastCharacter.toLowerCase().replace(' ', '_').replace('-', '_'))
+                    .then(function(resp){
+                        console.log('term?'+app.secondLastCharacter, resp.data);
+                        if (!resp.data.entries.length){
+                            app.secondNounUndefined = true;
                         }
                     });
-                    
-                if (app.middleCharacter == 'between'){
-                    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.secondLastCharacter.toLowerCase())
-                        .then(function(resp){
-                            console.log('term?'+app.secondLastCharacter, resp.data);
-                            if (!resp.data.entries.length){
-                                app.secondNounUndefined = true;
-                            }
-                            else {
-                                if (secondChecked){
-                                    app.storeCharacter();
-                                }
-                                else{
-                                    secondChecked = true;
-                                }
-                            }
-                        });
+                } 
+
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase())
+                    .then(function(resp){
+                        console.log('term?'+wholeCharacter, resp.data);
+                        if (!resp.data.entries.length){
+                            app.wholeCharacterUndefined = true;
+                        }
+                    });
+                
+                if (!app.firstCharacterUndefined && !app.nounUndefined && (app.middleCharacter != 'between' || !app.secondNounUndefined) && !app.wholeCharacterUndefined) {
+                    app.storeCharacter();
                 }
+
+                // var secondChecked = false;
+                // axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase())
+                //     .then(function(resp){
+                //         console.log('term?'+app.lastCharacter, resp.data);
+                //         if (!resp.data.entries.length){
+                //             app.nounUndefined = true;
+                //         }
+                //         else {
+                //             if (app.middleCharacter != 'between' || secondChecked){
+                //                 app.storeCharacter();
+                //             }
+                //             else{
+                //                 secondChecked = true;
+                //             }
+                //         }
+                //     });
+                    
+                // if (app.middleCharacter == 'between'){
+                //     axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.secondLastCharacter.toLowerCase())
+                //         .then(function(resp){
+                //             console.log('term?'+app.secondLastCharacter, resp.data);
+                //             if (!resp.data.entries.length){
+                //                 app.secondNounUndefined = true;
+                //             }
+                //             else {
+                //                 if (secondChecked){
+                //                     app.storeCharacter();
+                //                 }
+                //                 else{
+                //                     secondChecked = true;
+                //                 }
+                //             }
+                //         });
+                // }
 
             },
             colorValueCell(colorDetails){
@@ -2197,13 +2522,30 @@
                 }
                 return txt + '; ';
             },
-            storeCharacter() {
+            async storeCharacter() {
                 var app = this;
                 app.character = {};
                 app.character.name = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                
                 if (app.middleCharacter == 'between'){
                     app.character.name += ' and ' + app.secondLastCharacter;
                 }
+                console.log("StoreCharacter!!!");
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.character.name.toLowerCase()).then(resp=>{
+                    if (resp.data.entries.length > 0) {
+                        let methodEntry = resp.data.entries.filter(function(each) {
+                            return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                        })[0];
+                        if (methodEntry) {
+                            console.log(methodEntry);
+                            for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                    app.character.IRI = methodEntry.resultAnnotations[j].value;
+                                }
+                            }
+                        }
+                    }
+                });
                 app.character.username = app.user.name;
                 app.characterUsername = app.user.name;
                 app.character.standard = 0;
@@ -3355,6 +3697,7 @@
                     if (app.userCharacters[i].method_where != null && app.userCharacters[i].method_where != '') {
                         app.userCharacters[i].tooltip += 'Where: ' + app.userCharacters[i].method_where;
                     }
+                    app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
                 }
                 app.characterUsername = app.user.name;
             },
@@ -3480,7 +3823,7 @@
                         console.log('temp.text', temp.text);
                     }
                     temp.value = app.defaultCharacters[i].id;
-                    temp.tooltip = '';
+                    temp.tooltip = '<div>';
 
                     if (app.defaultCharacters[i].method_from != null && app.defaultCharacters[i].method_from != '') {
                         temp.tooltip = temp.tooltip + 'From: ' + app.defaultCharacters[i].method_from + ', ';
@@ -3497,7 +3840,12 @@
                     if (app.defaultCharacters[i].method_where != null && app.defaultCharacters[i].method_where != '') {
                         temp.tooltip = temp.tooltip + 'Where: ' + app.defaultCharacters[i].method_where;
                     }
+                    temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
                     app.standardCharacters.push(temp);
+                }
+
+                for (var i = 0; i < app.standardCharacters.length; i ++) {
+                    app.getTooltipImage(app.standardCharacters[i].name, i);
                 }
             },
             // expandTable() {
@@ -4336,6 +4684,39 @@
                     return;
                 }
 
+                app.currentTermForBracket = '';
+                if (app.currentColorValue['brightness'] != undefined && (app.currentColorValue['brightness'].indexOf('(') > -1 || app.currentColorValue['brightness'].indexOf(')') > -1)) {
+                    app.currentTermForBracket = app.currentColorValue['brightness'];
+                }
+                if (app.currentColorValue['saturation'] != undefined && (app.currentColorValue['saturation'].indexOf('(') > -1 || app.currentColorValue['saturation'].indexOf(')') > -1)) {
+                    if (app.currentTermForBracket != '') {
+                        app.currentTermForBracket +=', ';
+                    }
+                    app.currentTermForBracket += app.currentColorValue['saturation'];
+                }
+                if (app.currentColorValue['reflectance'] != undefined && (app.currentColorValue['reflectance'].indexOf('(') > -1 || app.currentColorValue['reflectance'].indexOf(')') > -1)) {
+                    if (app.currentTermForBracket != '') {
+                        app.currentTermForBracket +=', ';
+                    }
+                    app.currentTermForBracket += app.currentColorValue['reflectance'];
+                }
+                if (app.currentColorValue['colored'] != undefined && (app.currentColorValue['colored'].indexOf('(') > -1 || app.currentColorValue['colored'].indexOf(')') > -1)) {
+                    if (app.currentTermForBracket != '') {
+                        app.currentTermForBracket +=', ';
+                    }
+                    app.currentTermForBracket += app.currentColorValue['colored'];
+                }
+                if (app.currentColorValue['multi_colored'] != undefined && (app.currentColorValue['multi_colored'].indexOf('(') > -1 || app.currentColorValue['multi_colored'].indexOf(')') > -1)) {
+                    if (app.currentTermForBracket != '') {
+                        app.currentTermForBracket +=', ';
+                    }
+                    app.currentTermForBracket += app.currentColorValue['multi_colored'];
+                }
+                console.log(app.currentTermForBracket);
+                if (app.currentTermForBracket != '') {
+                    app.toRemoveBracketConfirmFlag = true;
+                    return;
+                }
 
                 var postFlag = true;
                 var comparedFlag = true;
@@ -4427,7 +4808,7 @@
                                         "user": app.sharedFlag ? '' : app.user.name,
                                         "ontology": "carex",
                                         "term": postValue[flag],
-                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+app.changeToSubClassName(flag),
+                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                                         "definition": app.userColorDefinition[flag],
                                         "elucidation": "",
                                         "createdBy": app.user.name,
@@ -4456,7 +4837,7 @@
                                         "user": app.sharedFlag ? '' : app.user.name,
                                         "ontology": "carex",
                                         "term": postValue['main_value'],
-                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+app.changeToSubClassName(flag),
+                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                                         "definition": synonym.definition,
                                         "elucidation": "",
                                         "createdBy": app.user.name,
@@ -4515,7 +4896,7 @@
                                     app.currentColorValue['value_id'] = app.currentColorValue.value_id;
                                 });
                         } else {
-                            appsaveColorButtonFlag = false;
+                            app.saveColorButtonFlag = false;
                             $('.color-definition-input').css('border', '1px solid red');
                         }
                     }
@@ -4543,6 +4924,15 @@
             saveNonColorValue(newFlag = false) {
                 var app = this;
                 if (app.saveNonColorButtonFlag){
+                    return;
+                }
+
+                app.currentTermForBracket = '';
+                if (app.currentNonColorValue['main_value'].indexOf('(') > -1 || app.currentNonColorValue['main_value'].indexOf(')') > -1) {
+                    app.currentTermForBracket = app.currentNonColorValue['main_value'];
+                }
+                if (app.currentTermForBracket != '') {
+                    app.toRemoveBracketConfirmFlag = true;
                     return;
                 }
                 
@@ -4622,7 +5012,7 @@
                                                 "user": app.sharedFlag ? '' : app.user.name,
                                                 "ontology": "carex",
                                                 "term": postValue['main_value'],
-                                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+searchText,
+                                                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                                                 "definition": app.userNonColorDefinition['main_value'],
                                                 "elucidation": "",
                                                 "createdBy": app.user.name,
@@ -4656,7 +5046,7 @@
                                         "user": app.sharedFlag ? '' : app.user.name,
                                         "ontology": "carex",
                                         "term": postValue['main_value'],
-                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#"+searchText,
+                                        "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                                         "definition": synonym.definition,
                                         "elucidation": "",
                                         "createdBy": app.user.name,
@@ -4731,8 +5121,6 @@
                         }
                     }
                 }
-
-
             },
             removeNonColorValue() {
                 var app = this;
@@ -5070,9 +5458,10 @@
                     if (!app.colTreeData[flag]){
                         app.colorExistFlag = false;
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
-                            .then(function (resp) {
+                            .then(async function (resp) {
                                 app.$store.state.colorTreeData = resp.data;
                                 app.colTreeData[flag] = resp.data;
+                                app.getImageFromColorTreeData(app.$store.state.colorTreeData);
 
                                 color.detailFlag = flag;
                                 app.colorExistFlag = true;
@@ -5169,6 +5558,36 @@
                 }
                 console.log('flag', flag);
             },
+            getImageFromColorTreeData(tData) {
+                var app = this;
+                var methodEntry = null;
+                if (!tData) return ;
+                tData.data["images"] = [];
+                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
+                    .then(function (resp) {
+                        if (resp.data.entries.length > 0) {
+                            methodEntry = resp.data.entries.filter(function(each) {
+                                return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
+                            })[0];
+                            if (methodEntry) {
+                                for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
+                                    if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                                        console.log(tData.text);
+                                        console.log(('https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1)));
+                                        tData.data["images"].push('https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1));
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch(function (resp) {
+                        console.log('exp search resp error', resp);
+                    });
+                for (let i = 0; tData.children && i < tData.children.length; i ++){
+                    app.getImageFromColorTreeData(tData.children[i]);
+                }
+                return ;
+            },
             changeNonColorSection(nonColor, flag, event) {
                 var app = this;
                 app.nonColorSearchText = '';
@@ -5207,9 +5626,11 @@
                         
                     app.currentNonColorValue.confirmedFlag['main_value'] = false;
                     if (!app.textureTreeData){
-                        axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText)
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText.replace('-', '_'))
                             .then(function (resp) {
                                 app.textureTreeData = resp.data;
+                                app.getImageFromColorTreeData(app.textureTreeData);
+
                                 app.currentNonColorValue.detailFlag = flag;
                                 if (app.nonColorDetailsFlag){
                                     app.nonColorDetailsFlag = false;
@@ -5235,7 +5656,6 @@
                                         }
                                     }
                                 }
-                                console.log('123');
                             });
                     }
                     else if (treeFlag){
@@ -5282,19 +5702,19 @@
                 var searchFlag = flag;
                 switch (flag) {
                     case 'brightness':
-                        searchFlag = 'color brightness';
+                        searchFlag = 'color_brightness';
                         break;
                     case 'reflectance':
                         searchFlag = 'reflectance';
                         break;
                     case 'saturation':
-                        searchFlag = 'color saturation';
+                        searchFlag = 'color_saturation';
                         break;
                     case 'colored':
                         searchFlag = 'colored';
                         break;
                     case 'multi_colored':
-                        searchFlag = 'multi-colored';
+                        searchFlag = 'multi_colored';
                         break;
                     default:
                         break;
@@ -5770,6 +6190,44 @@
                 }
                 return ''
             },
+            getIRI() {
+                var app = this;
+                for (let i = 0 ; i < app.defaultCharacters.length; i ++) {
+                    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.defaultCharacters[i].name.toLowerCase().replace(' ', '_').replace('-', '_')).then(resp=>{
+                        if (resp.data.entries.length > 0) {
+                            let methodEntry = resp.data.entries.filter(function(each) {
+                                return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                            })[0];
+                            if (methodEntry) {
+                                for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                    if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                         $.get("/chrecorder/public/api/v1/character/setIRI", {IRI: methodEntry.resultAnnotations[j].value, id: app.defaultCharacters[i].id});
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+                axios.get('/chrecorder/public/api/v1/character/getCharacterNames').then(result=>{
+                    
+                    for (let i = 0 ; i < result.data.length; i ++) {
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+result.data[i].name.toLowerCase().replace(' ', '_').replace('-', '_')).then(resp=>{
+                            if (resp.data.entries.length > 0) {
+                                let methodEntry = resp.data.entries.filter(function(each) {
+                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                })[0];
+                                if (methodEntry) {
+                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                            $.get("/chrecorder/public/api/v1/character/setCharacterIRI", {IRI: methodEntry.resultAnnotations[j].value, name: result.data[i].name});
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                })
+            }
         },
         watch: {
             colorTreeData(newData) {
@@ -5786,7 +6244,7 @@
             var app = this;
             console.log('standard_characters');
             await axios.get('/chrecorder/public/api/v1/standard_characters')
-                .then(function (resp) {
+                .then(async function (resp) {
                     console.log('standardCharacters', resp);
                     app.defaultCharacters = resp.data;
                     for (var i = 0; i < resp.data.length; i++) {
@@ -5844,6 +6302,14 @@
                             if (app.currentTab!='')
                                 app.showTableForTab(app.currentTab);
                         });
+                }).then(function () {
+                    for (var i = 0; i < app.standardCharacters.length; i ++) {
+                        app.getTooltipImage(app.standardCharacters[i].name, i);
+                    }
+                    // console.log(app.userCharacters.length);
+                    // for (var i = 0; i < app.userCharacters.length; i ++) {
+                    //     app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
+                    // }
                 });
 
             axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=quality')
@@ -5901,7 +6367,7 @@
             app.user.name = app.user.email.split('@')[0];
             app.characterUsername = app.user.name;
             sessionStorage.setItem('userId', app.user.id);
-        },
+        }
     }
 
 </script>

@@ -52,6 +52,9 @@ Route::group([
         Route::post('add-standard',                     ['as' => 'add_standard_character',      'uses' => 'HomeController@addStandardCharacter']);
         Route::get('remove-all-standard',               ['as' => 'remove_all_standard',         'uses' => 'HomeController@removeAllStandard']);
         Route::post('remove-all',                       ['as' => 'remove_all',                  'uses' => 'HomeController@removeAll']);
+        Route::get('setIRI',                            ['as' => 'set_iri',                     'uses' => 'HomeController@setIRI']);
+        Route::get('setCharacterIRI',                   ['as' => 'set_character_iri',           'uses' => 'HomeController@setCharacterIRI']);
+        Route::get('getCharacterNames',                 ['as' => 'get_character_names',         'uses' => 'HomeController@getCharacterNames']);
         
         Route::get('usage/{characterId}',               ['as' => 'usage',                       'uses' => 'HomeController@usage']);
         Route::post('delete-header/{headerId}',         ['as' => 'delete-header',               'uses' => 'HomeController@deleteHeader']);

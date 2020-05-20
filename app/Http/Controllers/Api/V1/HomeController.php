@@ -62,6 +62,12 @@ class HomeController extends Controller
             ->orderBy('header', 'desc')->get();
     }
 
+    public function getHeaders1($userID) {
+        return Header::where('user_id', $userID)
+            ->orWhere('user_id', NULL)
+            ->orderBy('header', 'desc')->get();
+    }
+
     public function getAllDetails() {
 
         $colorValues = ColorDetails::all();
@@ -75,13 +81,13 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function getValuesByCharacter()
+    public function getValuesByCharacter1( $userID )
     {
-        $user = User::where('id', '=', Auth::id())->first();
+        $user = User::where('id', '=', $userID)->first();
         $username = explode('@', $user['email'])[0];
 
         $allCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
-        $headers = $this->getHeaders();
+        $headers = $this->getHeaders1($userID);
         $values = Value::join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->select('values.id as id','values.character_id as character_id', 'values.header_id as header_id','values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
         $colorDetails = ColorDetails::join('values','values.id','=','color_details.value_id')->join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->get();
         $nonColorDetails = NonColorDetails::join('values','values.id','=','non_color_details.value_id')->join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->get();
@@ -160,6 +166,10 @@ class HomeController extends Controller
         // event(new MyEvent());
 
         return $characters;
+    }
+
+    public function getValuesByCharacter() {
+        return $this->getValuesByCharacter1(Auth::id());
     }
 
     public function checkNumericalCharacter($str) {
@@ -316,6 +326,7 @@ class HomeController extends Controller
 
         $character = new Character([
             'name' => $request->input('name'),
+            'IRI' => $request->input('IRI'),
             'method_from' => $request->input('method_from'),
             'method_to' => $request->input('method_to'),
             'method_include' => $request->input('method_include'),
@@ -575,6 +586,7 @@ class HomeController extends Controller
 
         $character = new Character([
             'name' => $request->input('name'),
+            'IRI' => $request->input('IRI'),
             'method_from' => $request->input('method_from'),
             'method_to' => $request->input('method_to'),
             'method_include' => $request->input('method_include'),
@@ -2143,8 +2155,8 @@ class HomeController extends Controller
             "format" => "trig" //Other possible values: n-quads, trig or turtle
         ]);
         
-        $headers = $this->getHeaders();
-        $values = $this->getValuesByCharacter();
+        $headers = $this->getHeaders1($userID);
+        $values = $this->getValuesByCharacter1($userID);
         $colDetails = $this->getColorDetailsById($userID);
         $nonColDetails = $this->getNonColorDetailsById($userID);
         $characterName = $this->getCharacterNameById($userID);
@@ -2338,6 +2350,7 @@ class HomeController extends Controller
             $client = new Client(['base_uri' => 'https://shark.sbs.arizona.edu:8443/blazegraph/namespace/kb/']);
 
             $result = $this->getTrigDescription($user->id, $taxons);
+            echo $user->id . '<br/>';
             $taxons = $result['taxons'];
             $query = 'insert data{' . $result['description'] . '}';
             $promises = [
@@ -2371,5 +2384,18 @@ class HomeController extends Controller
             $responses = Promise\settle($promises)->wait();
         }
 
+    }
+    public function setIRI(Request $request) {
+        $standardCharacter = StandardCharacter::find($request->input('id'));
+        if ($standardCharacter) {
+            $standardCharacter->IRI = $request->input('IRI');
+            $standardCharacter->save();
+        }
+    }
+    public function setCharacterIRI(Request $request) {
+        Character::where('name', '=', $request->input('name'))->update(['IRI' => $request->input('IRI')]);
+    }
+    public function getCharacterNames(Request $request) {
+        return Character::select('name')->distinct('name')->get();
     }
 }

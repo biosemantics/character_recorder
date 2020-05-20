@@ -793,3 +793,7 @@ body {
 
     font: 24px Arial, sans-serif;
 }
+::placeholder {
+    color: lightgrey;
+    opacity: 1; /* Firefox */
+}

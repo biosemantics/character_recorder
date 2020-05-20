@@ -8,6 +8,7 @@ class StandardCharacter extends Model
 {
     protected $fillable = [
         'name',
+        'IRI',
         'method_from',
         'method_to',
         'method_include',

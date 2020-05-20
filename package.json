@@ -31,6 +31,7 @@
         "liquor-tree": "^0.2.59",
         "pusher-js": "^5.0.2",
         "v-tooltip": "^2.0.2",
+        "v-viewer": "^1.5.1",
         "vue-loading-overlay": "^3.2.0",
         "vue-router": "^3.0.1",
         "vue-tabs-component": "^1.4.0",

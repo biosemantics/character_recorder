@@ -1121,7 +1121,7 @@
                 console.log(app.preList);
                 console.log(app.postList);
             });
-            axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=anatomical%20structure').then(function(resp){
+            axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=anatomical_structure').then(function(resp){
                 console.log(resp.data);
                 app.structureTreeData = resp.data;
                 app.treeFlag = true;
