@@ -13,5 +13,6 @@ class NonColorDetails extends Model
         'certainty_constraint',
         'degree_constraint',
         'main_value',
+        'main_value_IRI',
         'post_constraint'];
 }

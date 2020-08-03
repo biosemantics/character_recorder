@@ -42,7 +42,7 @@
              @click.stop="selectItem(null)"
              @mousedown="mousedownItem"
              >
-          Nothing found, create new character
+          Nothing found
         </div>
       </template>
     </div>
@@ -132,42 +132,65 @@
     },
     methods: {
       deleteTextOrItem () {
+        console.log("deleteTextOrItem");
         if (!this.searchText && this.selectedOption) {
           this.selectItem({})
           this.openOptions()
         }
       },
       openOptions () {
+        console.log("openOptions");
         common.openOptions(this)
       },
       blurInput () {
-        common.blurInput(this)
+        console.log("blur");
+        if (this.filteredOptions.length == 0) {
+          this.selectItem(null);
+        } else {
+          if (this.selectedOption) {
+            this.selectItem(this.selectedOption);
+          } else {
+            this.selectItem(this.option);
+          }
+        }
+        common.blurInputName(this)
       },
       closeOptions () {
+        console.log("close");
         common.closeOptions(this)
       },
       prevItem () {
+        console.log("prevItem");
         common.prevItem(this)
       },
       nextItem () {
+        console.log("nextItem");
         common.nextItem(this)
       },
       enterItem () {
+        console.log("enterItem");
         common.enterItem(this)
       },
       pointerSet (index) {
+        console.log("pointerSet");
         common.pointerSet(this, index)
       },
       pointerAdjust () {
+        console.log("pointerAdjust");
         common.pointerAdjust(this)
       },
       mousedownItem () {
+        console.log("mousedownItem");
         common.mousedownItem(this)
       },
       selectItem (option) {
-        this.searchText = '' // reset text when select item
+        console.log("selectItem", option);
+        console.log("selectItem", this.selectedOption);
+        if (option) {
+          // this.searchText = '' // reset text when select item
+        }
         this.closeOptions()
-        this.$emit('select', option)
+        this.$emit('select', option, this.searchText)
       }
     }
   }

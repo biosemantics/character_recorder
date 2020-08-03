@@ -2,8 +2,7 @@
     <div slot="section" class="vld-parent">
         <loading :active.sync="isLoading"
                  :is-full-page="true"
-                 :width="255"
-                 :height="255"
+                 loader="dots"
         ></loading>
         <div class="tab-pane" id="">
             <form autocomplete="off">
@@ -42,17 +41,16 @@
                                                       placeholder="Search/create character here"
                                                       @searchchange="printSearchText"
                                                       @select="onSelect"
+                                                      @resolve="onResolve"
                                         />
 
                                     </div>
                                 </div>
                                 <hr style="border-top: 2px solid; margin-top: 20px;">
                                 <div class="margin-top-10 text-right">
-                                    <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Generate
-                                        Matrix</a>
-                                    <a class="btn btn-primary" v-on:click="importMatrix()"
-                                       style="width: 200px; background-color: grey; border-color: grey;">Import (CR)
-                                        Matrix</a>
+                                    <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Go To Matrix</a>
+                                    <a class="btn btn-primary" v-on:click="loadMatrixDialog = true;"
+                                       style="width: 200px; ">Load Matrix Version</a>
                                     <a class="btn btn-primary" v-on:click="confirmCollapse();collapsedFlag = true;"
                                        style="width: 40px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
                                 </div>
@@ -66,16 +64,23 @@
                                     <div v-for="eachCharacter in userCharacters"
                                          v-if="eachCharacter.standard == 0"
                                          v-tooltip="eachCharacter.tooltip"
-                                         style="display: table; font-weight: bold; cursor: pointer;">
+                                         style="display: table; cursor: pointer;">
                                         <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag">
                                             {{ eachCharacter.standard_tag }} </b>
-
-                                        <div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <a class="btn btn-add display-block"
-                                               v-on:click="removeStandardCharacter(eachCharacter.id)"
-                                               :set="previousUserCharacter=eachCharacter"
-                                            ><span
-                                                    class="glyphicon glyphicon-remove"></span></a></i></div>
+                                        <div style="margin-left: 50px;">
+                                            <i v-bind:style="{'font-weight':eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}" style="color: #636b6f;">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <a style="margin-left: 45px;" v-on:click="onResolveUserCharacter(eachCharacter)">
+                                                    <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench" ></span>
+                                                </a>
+                                                <a  v-on:click="removeStandardCharacter(eachCharacter.id)"
+                                                    :set="previousUserCharacter=eachCharacter"
+                                                    style="margin-left: 5px;"
+                                                >
+                                                    <span class="glyphicon glyphicon-remove">
+                                                    </span>
+                                                </a>
+                                            </i>
+                                        </div>
                                         <!--{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeUserCharacter(eachCharacter.id)"><span
@@ -93,12 +98,15 @@
                                         <b>{{ eachTag }}</b>
                                         <div v-for="eachCharacter in userCharacters"
                                             v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)"
-                                            v-tooltip="eachCharacter.tooltip" style="text-indent: 50px;">
-                                            <i v-bind:style="{color:userCharacters.filter(ch => ch.name == eachCharacter.name).length>1?'#dd6b20':'#636b6f'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                                <a class="btn btn-add display-block"
-                                                   v-on:click="removeStandardCharacter(eachCharacter.id)"
-                                                ><span
-                                                        class="glyphicon glyphicon-remove"></span></a></i>
+                                            v-tooltip="eachCharacter.tooltip" style="margin-left: 50px;">
+                                            <i v-bind:style="{color:userCharacters.filter(ch => ch.name == eachCharacter.name).length > 1 ? '#636b6f' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                <a style="margin-left: 35px;" v-on:click="onResolveUserCharacter(eachCharacter)">
+                                                    <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench" ></span>
+                                                </a>
+                                                <a style="margin-left: 5px;" v-on:click="removeStandardCharacter(eachCharacter.id)">
+                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                </a>
+                                            </i>
                                         </div>
                                     </div>
                                     <!--<div v-for="eachCharacter in userCharacters"-->
@@ -119,11 +127,9 @@
                                 </div>
                                 <!-- repeat the buttoms here -->
                                 <div v-if="userCharacters.length!=0" class="margin-top-10 text-right">
-                                    <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Generate
-                                        Matrix</a>
-                                    <a class="btn btn-primary" v-on:click="importMatrix()"
-                                       style="width: 200px; background-color: grey; border-color: grey;">Import (CR)
-                                        Matrix</a>
+                                    <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Go To Matrix</a>
+                                    <a class="btn btn-primary" v-on:click="loadMatrixDialog = true;"
+                                       style="width: 200px; ">Load Matrix Version</a>
                                     <a class="btn btn-primary" v-on:click="confirmCollapse();collapsedFlag = true;"
                                        style="width: 40px;"><span class="glyphicon glyphicon-chevron-up"></span></a>
                                 </div>
@@ -147,11 +153,16 @@
                                                   placeholder="Search/create character here"
                                                   @searchchange="printSearchText"
                                                   @select="onSelect"
+                                                  @resolve="onResolve"
                                     />
                                 </div>
                                 <div class="col-md-1">
                                     <a class="btn btn-primary" v-on:click="collapsedFlag = false;" style="width: 40px;"><span
                                             class="glyphicon glyphicon-chevron-down"></span></a>
+                                </div>
+                                <div class="col-md-1">
+                                    <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;"
+                                       style=" ">Name this matrix version</a>
                                 </div>
                                 <div class="col-md-1">
                                     <a class="btn btn-primary" v-on:click="getIRI()" style="width: 40px;display:none;"><span
@@ -163,10 +174,14 @@
                 </div>
                 <!--<hr v-if="matrixShowFlag == true" style="margin-top: 40px; margin-bottom: 40px; border-top: 2px solid;">-->
                 <div v-if="matrixShowFlag == true"
-                     style="border-bottom: 2px solid; width: 100%; margin-top: 40px;"></div>
-
+                     style="border-bottom: 2px solid; width: 100%; margin-top: 40px;text-align:center;">
+                </div>
+                <div v-if="matrixShowFlag == true" style="text-align: center;font-weight:bold;">
+                     matrix last loaded: {{ lastLoadMatrixName }}
+                </div>
                 <div style="padding-left: 15px; padding-right: 15px; display: inline-flex; width: 100%;"
                      v-if="matrixShowFlag == true">
+                     <!-- <a v-on:click="getIRIOfValues()"><span>Get IRI of values</span></a> -->
                     <div v-bind:class="{'width-95per': descriptionFlag == false}" style="min-width: 70%;">
                         <!--<ul class="nav nav-tabs">-->
                         <draggable
@@ -177,6 +192,7 @@
                                 <a data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">
                                     {{ eachTag.tag_name}}
                                 </a>
+                                <div v-if="tagDeprecated[eachTag.tag_name] == 1" style="position: absolute;top: 0px;right: 2px;background: #3097D1;padding:4px;box-sizing: border-box;border-radius: 100%;"></div>
                             </li>
                             <!--<li v-for="eachTag in userTags" v-bind:class="{ active: currentTab == eachTag.tag_name }"><a-->
                             <!--data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">{{ eachTag.tag_name-->
@@ -218,8 +234,16 @@
                                             </div>
                                         </div>
                                         <div style="line-height: 30px;"
-                                             v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip">
+                                             v-tooltip="userCharacters.find(ch => ch.id == value.character_id).tooltip"
+                                             v-bind:style="{'font-weight': userCharacters.find(ch => ch.id == value.character_id).deprecated >= 0 ? 'bold' : 'linear'}">
                                             {{ value.value }}
+                                        </div>
+                                        <div v-if="userCharacters.find(ch => ch.id == value.character_id).deprecated >= 0">
+                                            <a  class="btn btn-add" 
+                                                style="line-height: 30px; margin-left: 5px;"
+                                                v-on:click="onResolveUserCharacter(userCharacters.find(ch => ch.id == value.character_id))">
+                                                <span class="glyphicon glyphicon-wrench"></span>
+                                            </a>
                                         </div>
                                         <div>
                                             <a class="btn btn-add"
@@ -278,14 +302,95 @@
                                             </div>
                                             <div v-else style="width: 80%; float:left; text-align: center" v-on:click.self="focusedValue(value)">
                                                 <div v-for="cv in allColorValues" v-if="cv.value_id == value.id" style="text-align: left" :key="cv.id">
-                                                    {{colorValueText(cv)}}
+                                                    <!-- {{colorValueText(cv)}} -->
+                                                    <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{cv.negation}} </span>
+                                                    <span style="color:#636b6f;" v-if="cv.pre_constraint && cv.pre_constraint != ''">{{cv.pre_constraint}} </span>
+                                                    <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{cv.negation}} </span>
+                                                    <span style="color:#636b6f;" v-if="cv.certainty_constraint && cv.certainty_constraint != ''">{{cv.certainty_constraint}} </span>
+                                                    <span style="color:#636b6f;" v-if="cv.degree_constraint && cv.degree_constraint != ''">{{cv.degree_constraint}} </span>
+                                                    <span 
+                                                        v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI) >= 0 ? 'bold' : 'linear'}"
+                                                        style="color:#636b6f;" 
+                                                        v-if="cv.brightness && cv.brightness != ''">
+                                                        {{cv.brightness}} 
+                                                        <a 
+                                                            class="btn btn-add display-block" 
+                                                            style="padding: 0px" 
+                                                            v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI), 'colorBrightness')"
+                                                            v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI) >= 0">
+                                                            <span class="glyphicon glyphicon-wrench">
+                                                            </span>
+                                                        </a>
+                                                    </span>
+                                                    
+                                                    <span 
+                                                        v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI) >= 0 ? 'bold' : 'linear'}"
+                                                        style="color:#636b6f;" 
+                                                        v-if="cv.reflectance && cv.reflectance != ''">
+                                                        {{cv.reflectance}} 
+                                                        <a 
+                                                            class="btn btn-add display-block" 
+                                                            style="padding: 0px" 
+                                                            v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI), 'colorReflectance')"
+                                                            v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI) >= 0">
+                                                            <span class="glyphicon glyphicon-wrench">
+                                                            </span>
+                                                        </a>
+                                                    </span>
+                                                    <span 
+                                                        v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI) >= 0 ? 'bold' : 'linear'}"
+                                                        style="color:#636b6f;" 
+                                                        v-if="cv.saturation && cv.saturation != ''">
+                                                        {{cv.saturation}} 
+                                                        <a 
+                                                            class="btn btn-add display-block" 
+                                                            style="padding: 0px" 
+                                                            v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI), 'colorSaturation')"
+                                                            v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI) >= 0">
+                                                            <span class="glyphicon glyphicon-wrench">
+                                                            </span>
+                                                        </a>
+                                                    </span>
+                                                    <span 
+                                                        v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI) >= 0 ? 'bold' : 'linear'}"
+                                                        style="color:#636b6f;" 
+                                                        v-if="cv.colored && cv.colored != ''">
+                                                        {{cv.colored}} 
+                                                        <a 
+                                                            class="btn btn-add display-block" 
+                                                            style="padding: 0px" 
+                                                            v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI), 'colorColored')"
+                                                            v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI) >= 0">
+                                                            <span class="glyphicon glyphicon-wrench">
+                                                            </span>
+                                                        </a>
+                                                    </span>
+                                                    <span 
+                                                        v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI) >= 0 ? 'bold' : 'linear'}"
+                                                        style="color:#636b6f;" 
+                                                        v-if="cv.multi_colored && cv.multi_colored != ''">
+                                                        {{cv.multi_colored}} 
+                                                        <a 
+                                                            class="btn btn-add display-block" 
+                                                            style="padding: 0px" 
+                                                            v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI), 'colorMultiColored')"
+                                                            v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI) >= 0">
+                                                            <span class="glyphicon glyphicon-wrench">
+                                                            </span>
+                                                        </a>
+                                                    </span>
                                                     <a class="btn btn-add display-block" style="padding: 0px" v-on:click="removeEachColor(cv)">
                                                         <span class="glyphicon glyphicon-remove">
                                                         </span>
                                                     </a>
                                                 </div>
-                                                <div v-for="ncv in allNonColorValues" v-if="ncv.value_id == value.id" style="text-align: left" :key="ncv.id">
+                                                <div v-for="ncv in allNonColorValues" v-if="ncv.value_id == value.id" style="text-align: left" :key="ncv.id" 
+                                                    v-bind:style="{'font-weight': isNonColorDeprecated(ncv) >= 0 ? 'bold' : 'linear'}">
                                                     {{nonColorValueText(ncv)}}
+                                                    <a class="btn btn-add display-block" style="padding: 0px" v-on:click="onResolveNonColorValue(ncv)" v-if="isNonColorDeprecated(ncv) >= 0">
+                                                        <span class="glyphicon glyphicon-wrench">
+                                                        </span>
+                                                    </a>
                                                     <a class="btn btn-add display-block" style="padding: 0px" v-on:click="removeEachNonColor(ncv)">
                                                         <span class="glyphicon glyphicon-remove">
                                                         </span>
@@ -995,7 +1100,6 @@
                                                     </div>
                                                 </div>
 
-
                                             </div>
                                         </div>
                                     </div>
@@ -1462,6 +1566,216 @@
                         </div>
                     </transition>
                 </div>
+                <div v-if="resolveItemFlag" @close="resolveItemFlag = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container" style="width: 800px;">
+                                    <div class="modal-header">
+                                        <b>Resolve <font style="color: orange; font-style: italic">{{currentResolveItem['deprecate term']}}</font></b>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
+                                            <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
+                                                <div style="margin-top: 0px;">
+                                                    <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                                        <span style="width: 20%;">Deprecated Term:</span>
+                                                        <b><span>{{currentResolveItem['deprecate term']}}</span></b>
+                                                    </div>
+                                                    <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
+                                                        <span style="width: 20%;">Deprecated Reason:</span>
+                                                        <b><span>{{currentResolveItem['deprecated reason']}}</span></b>
+                                                    </div>
+                                                    <div v-if="currentResolveItem['replacement term'] && currentResolveItem['replacement term'] != ''" style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
+                                                        <span style="width: 20%;">Replacement Term:</span>
+                                                        <b><span>{{currentResolveItem['replacement term']}}</span></b>
+                                                    </div>
+                                                    <div v-else>
+                                                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
+                                                        No replacement term was provided.<br/>
+                                                        Please use a different term, or <a v-on:click="handleDisputeTerm()">dispute the deprecation.</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <a class="btn btn-primary ok-btn"
+                                                   v-bind:class="{disabled: currentResolveItem['replacement IRI'] == null || currentResolveItem['replacement IRI'] == ''}"
+                                                   v-on:click="onAcceptResolveItem">
+                                                    Accept Replacement Term</a>
+                                                <a v-on:click="resolveItemFlag=false"
+                                                   class="btn btn-danger">Close</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+                <div v-if="messageDialogFlag" @close="messageDialogFlag = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container">
+                                    <div style="max-height:80vh; overflow-y: auto;">
+                                        <div class="modal-header">
+                                            <b style="text-align: left">Dispute <font style="color: orange; font-style: italic">{{disputedTerm}}</font> in Carex Ontology</b>
+                                            <br/>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div style="margin-top: 0px;">
+                                                <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                                    <span style="width: 20%;">Deprecated Reason:</span>
+                                                    <b><span>{{currentResolveItem['deprecated reason']}}</span></b>
+                                                </div>
+                                                <textarea placeholder="To dispute the deprecation decision on the term, please provide your reason(s) as detailed as possible" style="margin-top:10px; border-radius: 5px; border: 1px solid; padding: 15px; width: 100%;" rows="8" v-model="disputeMessage"></textarea>                                </div>
+                                            </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <a class="btn btn-primary ok-btn"
+                                                        v-bind:class="{disabled: disputeMessage == ''}"
+                                                        v-on:click="onDisputeTerm">
+                                                        Dispute </a>
+                                                    <a v-on:click="messageDialogFlag=false"
+                                                        class="btn btn-danger">Close</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+                <div v-if="nameMatrixDialog" @close="nameMatrixDialog = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container" style="width: 600px;">
+                                    <div style="max-height:80vh; overflow-y: auto;">
+                                        <div class="modal-header">
+                                            <b style="text-align: left">Name this matrix version</b>
+                                            <br/>
+                                        </div>
+                                        <div class="modal-body" style="min-height: 25vh;">
+                                            <div style="margin-top: 0px;">
+                                                <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                                    <!-- <v-autocomplete placeholder="name the version" :items="showNamesList" :min-len="1" @update-items="updateItems" @item-selected="itemSelected"></v-autocomplete> -->
+                                                    <list-select
+                                                        :list="namesList"
+                                                        optionValue="matrix_name"
+                                                        optionText="matrix_name"
+                                                        :selectedItem="currentVersion"
+                                                        @select="onSelectNameVersion"
+                                                    >
+                                                    </list-select>
+                                                    <div style="margin-left: 12px;margin-top: 4px;font-style: italic;"> Using an existing name will overwrite the current matrix</div>
+                                                </div>
+                                                <!-- <div style="border-bottom: gray; padding 2px; font-size: 11pt; margin-top:16px;">
+                                                    <div style="margin-left: 12px;margin-bottom: 4px;font-style: italic;"> Name as new version </div>
+                                                    <input v-model="currentName" placeholder="name this version" v-on:keyup="onChangeCurrentName" style="width: 100%;height: 37px;padding: 16px;"/>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <a class="btn btn-primary ok-btn"
+                                                        v-bind:class="{disabled: ((currentVersion == null || currentVersion.matrix_name == '') )}"
+                                                        v-on:click="nameMatrix">
+                                                        Save </a>
+                                                    <a v-on:click="nameMatrixDialog=false"
+                                                        class="btn btn-danger">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+                <div v-if="loadMatrixDialog" @close="loadMatrixDialog = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container" style="width: 600px;">
+                                    <div style="max-height:80vh; overflow-y: auto;">
+                                        <div class="modal-header">
+                                            <b style="text-align: left">Load matrix version</b>
+                                            <br/>
+                                        </div>
+                                        <div class="modal-body" style="min-height: 25vh;">
+                                            <div style="margin-top: 0px;">
+                                                <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                                    <list-select
+                                                        :list="namesList"
+                                                        optionValue="matrix_name"
+                                                        optionText="matrix_name"
+                                                        :selectedItem="loadVersion"
+                                                        placeholder="select version name"
+                                                        @select="onSelectLoadVersion"
+                                                    >
+                                                    </list-select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <a class="btn btn-primary ok-btn"
+                                                        v-bind:class="{disabled: ( loadVersion == null || loadVersion.matrix_name == '')}"
+                                                        v-on:click="loadMatrixConfirmDialog=true">
+                                                        Load </a>
+                                                    <a v-on:click="loadMatrixDialog=false"
+                                                        class="btn btn-danger">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
+                <div v-if="loadMatrixConfirmDialog" @close="loadMatrixConfirmDialog = false">
+                    <transition name="modal">
+                        <div class="modal-mask">
+                            <div class="modal-wrapper">
+                                <div class="modal-container" style="width: 500px;">
+                                    <div style="max-height:80vh; overflow-y: auto;">
+                                        <div class="modal-header">
+                                            <b style="text-align: left">Confirmation</b>
+                                            <br/>
+                                        </div>
+                                        <div class="modal-body">
+                                            <b>Load this version will overwrite the current matrix. To access the current matrix later, make sure it's saved with a name. <a v-on:click="loadMatrixDialog=false;loadMatrixConfirmDialog=false;nameMatrixDialog=true;">Name this matrix version</a></b>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <a class="btn btn-primary ok-btn"
+                                                        v-bind:class="{disabled: ( loadVersion == null || loadVersion.matrix_name == '')}"
+                                                        v-on:click="importMatrix">
+                                                        Load </a>
+                                                    <a v-on:click="loadMatrixConfirmDialog=false"
+                                                        class="btn btn-danger">Cancel</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </transition>
+                </div>
             </form>
         </div>
         <viewer :images="images"           
@@ -1486,7 +1800,7 @@
     import history from '../Metadata/history.vue';
     import {mapState, mapGetters, mapMutations} from 'vuex';
 
-    import {ModelSelect} from '../../libs/vue-search-select-lib'
+    import {ModelSelect, ListSelect} from '../../libs/vue-search-select-lib'
 
     import Loading from 'vue-loading-overlay';
     import 'vue-loading-overlay/dist/vue-loading.css';
@@ -1497,6 +1811,8 @@
 
     import 'viewerjs/dist/viewer.css';
     import Viewer from 'v-viewer';
+    import Autocomplete from 'v-autocomplete';
+    import './autocomplete.css';
 
     // import {runTest, Character, ColorQuality} from '../../LeafColors';
 
@@ -1601,11 +1917,13 @@
 
     Vue.use(LiquorTree);
     Vue.use({ModelSelect});
+    Vue.use({ListSelect});
     Vue.use(Viewer, {
         defaultOptions: {
             zIndex: 9999
         }
     });
+    Vue.use(Autocomplete);
 
 
     export default {
@@ -1618,6 +1936,7 @@
                 'nonColorTreeData',
             ]),
             ...mapGetters([]),
+
         },
         data: function () {
             return {
@@ -1816,18 +2135,37 @@
                 firstCharacterUndefined: false,
                 wholeCharacterUndefined: false,
                 wholeCharacterDefinition: null,
-                currentTermForBracket: null
+                currentTermForBracket: null,
+                deprecatedTerms: [],
+                resolveItemFlag: false,
+                currentResolveItem: {},
+                currentResolveType: "",
+                deprecatedTagName: "",
+                messageDialogFlag: false,
+                disputedTerm: '',
+                disputeMessage: '',
+                nameMatrixDialog: false,
+                loadMatrixDialog: false,
+                namesList: [],
+                showNamesList: [],
+                currentName: "",
+                loadVersion: null,
+                currentVersion: null,
+                tagDeprecated: [],
+                loadMatrixConfirmDialog: false,
+                lastLoadMatrixName: ''
             }
         },
         components: {
             ModelSelect,
+            ListSelect,
             draggable,
-            Loading
+            Loading,
         },
         methods: {
             showViewer (node) {
                 var app = this;
-                // app.images = node.data.images;
+                app.images = node.data.images;
                 this.$viewer.show();
             },
             inited (viewer) {
@@ -1982,6 +2320,112 @@
                     }
                 }
                 console.log('selectedCharacter', selectedCharacter);
+            },
+            onResolve(resolveItem) {
+                var app = this;
+                var selectedCharacter = app.defaultCharacters.find(ch => ch.id == resolveItem.value)
+                console.log(selectedCharacter);
+                console.log('resolveCharacter', resolveItem);
+                app.resolveItemFlag = true;
+                app.currentResolveItem = app.deprecatedTerms[resolveItem.deprecated];
+                app.currentResolveType = "character";
+            },
+            onResolveUserCharacter(resolveCharacter) {
+                var app = this;
+                app.resolveItemFlag = true;
+                app.currentResolveItem = app.deprecatedTerms[resolveCharacter.deprecated];
+                app.currentResolveType = "character";
+            },
+            onResolveColor(index, resolveType) {
+                var app = this;
+                app.resolveItemFlag = true;
+                app.currentResolveItem = app.deprecatedTerms[index];
+                app.currentResolveType = resolveType;
+            },
+            onResolveNonColorValue(ncv) {
+                var app = this;
+                console.log(ncv);
+                var index = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == ncv.main_value_IRI);
+                app.currentResolveItem = app.deprecatedTerms[index];
+                app.resolveItemFlag = true;
+                app.currentResolveType = "nonColor";
+            },
+            onAcceptResolveItem() {
+                var app = this;
+                console.log(app.currentResolveType);
+                console.log(app.currentResolveItem);
+                var postValue = {};
+                postValue['deprecatedIRI'] = app.currentResolveItem['deprecated IRI'];
+                postValue['replacementTerm'] = app.currentResolveItem['replacement term'];
+                postValue['replacementIRI'] = app.currentResolveItem['replacement IRI'];
+                if (app.currentResolveType == "character") {
+                    axios.post('/chrecorder/public/api/v1/resolveCharacter', postValue)
+                        .then(function (resp) {
+                            app.userCharacters = resp.data.characters;
+                            app.headers = resp.data.headers;
+                            app.values = resp.data.values;
+                            app.taxonName = resp.data.taxon;
+                            app.defaultCharacters = resp.data.defaultCharacters;
+                            app.refreshDefaultCharacters();
+                            app.refreshUserCharacters();
+                            app.showTableForTab(app.currentTab);
+                            app.resolveItemFlag = false;
+                        })
+                } else if (app.currentResolveType == "nonColor") {
+                    axios.post('/chrecorder/public/api/v1/resolveNonColorValue', postValue)
+                        .then(function (resp) {
+                            app.values = resp.data.values;
+                            app.nonColorDetails = resp.data.nonColorDetails;
+                            app.allNonColorValues = resp.data.allNonColorValues;
+                            app.getDeprecatedValue();
+                            app.resolveItemFlag = false;
+                        })
+                } else if (app.currentResolveType == "colorBrightness") {
+                    axios.post('/chrecorder/public/api/v1/resolveColorBrightness', postValue)
+                        .then(function (resp) {
+                            app.values = resp.data.values;
+                            app.allColorValues = resp.data.allColorValues;
+                            app.allNonColorValues = resp.data.allNonColorValues;
+                            app.getDeprecatedValue();
+                            app.resolveItemFlag = false;
+                        })
+                } else if (app.currentResolveType == "colorReflectance") {
+                    axios.post('/chrecorder/public/api/v1/resolveColorReflectance', postValue)
+                        .then(function (resp) {
+                            app.values = resp.data.values;
+                            app.allColorValues = resp.data.allColorValues;
+                            app.allNonColorValues = resp.data.allNonColorValues;
+                            app.getDeprecatedValue();
+                            app.resolveItemFlag = false;
+                        })
+                } else if (app.currentResolveType == "colorSaturation") {
+                    axios.post('/chrecorder/public/api/v1/resolveColorSaturation', postValue)
+                        .then(function (resp) {
+                            app.values = resp.data.values;
+                            app.allColorValues = resp.data.allColorValues;
+                            app.allNonColorValues = resp.data.allNonColorValues;
+                            app.getDeprecatedValue();
+                            app.resolveItemFlag = false;
+                        })
+                } else if (app.currentResolveType == "colorColored") {
+                    axios.post('/chrecorder/public/api/v1/resolveColorColored', postValue)
+                        .then(function (resp) {
+                            app.values = resp.data.values;
+                            app.allColorValues = resp.data.allColorValues;
+                            app.allNonColorValues = resp.data.allNonColorValues;
+                            app.getDeprecatedValue();
+                            app.resolveItemFlag = false;
+                        })
+                } else if (app.currentResolveType == "colorMultiColored") {
+                    axios.post('/chrecorder/public/api/v1/resolveColorMultiColored', postValue)
+                        .then(function (resp) {
+                            app.values = resp.data.values;
+                            app.allColorValues = resp.data.allColorValues;
+                            app.allNonColorValues = resp.data.allNonColorValues;
+                            app.getDeprecatedValue();
+                            app.resolveItemFlag = false;
+                        })
+                }
             },
             editCharacter(character, editFlag = false, standardFlag = false, enhanceFlag = false) {
                 var app = this;
@@ -2522,6 +2966,14 @@
                 }
                 return txt + '; ';
             },
+            isColorDepreacted(ncv) {
+
+            },
+            isNonColorDeprecated(ncv) {
+                var app = this;
+                var index = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == ncv.main_value_IRI);
+                return index;
+            },
             async storeCharacter() {
                 var app = this;
                 app.character = {};
@@ -2541,6 +2993,7 @@
                             for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
                                 if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
                                     app.character.IRI = methodEntry.resultAnnotations[j].value;
+                                    break;
                                 }
                             }
                         }
@@ -3678,6 +4131,13 @@
                         app.showTableForTab(app.currentTab);
                     });
             },
+            getDeprecatedValue () {
+                var app = this;
+                for (var i = 0; i < app.userTags.length; i ++) {
+                    console.log(app.userTags[i].tag_name);
+                    app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
+                }
+            },
             refreshUserCharacters (showTabFlag = false) {
                 var app = this;
                 for (var i = 0; i < app.userCharacters.length; i++) {
@@ -3697,7 +4157,12 @@
                     if (app.userCharacters[i].method_where != null && app.userCharacters[i].method_where != '') {
                         app.userCharacters[i].tooltip += 'Where: ' + app.userCharacters[i].method_where;
                     }
+                    app.userCharacters[i].deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.userCharacters[i].IRI);
                     app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
+                }
+                for (var i = 0; i < app.userTags.length; i ++) {
+                    console.log(app.userTags[i].tag_name);
+                    app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
                 }
                 app.characterUsername = app.user.name;
             },
@@ -3728,6 +4193,55 @@
                 }
                 app.isLoading = false;
 
+            },
+            isDeprecatedExistOnTab(tagName) {
+                var app = this;
+                var isDeprecated = 0;
+                console.log("isDeprecatedExist");
+                for (var i = 0; i < app.userCharacters.length; i ++) {
+                    if (app.userCharacters[i].standard_tag == tagName) {
+                        if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.userCharacters[i].IRI) >= 0) {
+                            return 1;
+                        }
+                        var rows = app.values.find(value => value[0].character_id == app.userCharacters[i].id);
+                        if (!app.checkHaveUnit(rows.find(v => v.header_id == 1).value)) {
+                            for (var j = 0; j < rows.length; j ++) {
+                                if (rows[j].header_id != 1) {
+                                    for (var ind = 0; ind < app.allColorValues.length; ind ++) {
+                                        if (app.allColorValues[ind].value_id == rows[j].id) {
+                                            var colorValue = app.allColorValues[ind];
+                                            if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == colorValue.brightness_IRI) >= 0) {
+                                                return 1;
+                                            }
+                                            if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == colorValue.reflectance_IRI) >= 0) {
+                                                return 1;
+                                            }
+                                            if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == colorValue.saturation_IRI) >= 0) {
+                                                return 1;
+                                            }
+                                            if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == colorValue.colored_IRI) >= 0) {
+                                                return 1;
+                                            }
+                                            if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == colorValue.multi_colored_IRI) >= 0) {
+                                                return 1;
+                                            }
+                                        }
+                                    }
+                                    for (var ind = 0; ind < app.allNonColorValues.length; ind ++) {
+                                        if (app.allNonColorValues[ind].value_id == rows[j].id) {                              
+                                            var nonColorValue = app.allNonColorValues[ind];
+                                            if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == nonColorValue.main_value_IRI) >= 0) {
+                                                return 1;
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }                        
+                    }
+                }
+                return 0;
             },
             hideAllCharacter() {
                 var app = this;
@@ -3775,6 +4289,7 @@
                     });
             },
             upUserValue(valueId) {
+                console.log(valueId);
                 var app = this;
                 var showedCharacters = app.userCharacters.filter(ch => ch.show_flag == true);
                 var index = showedCharacters.indexOf(showedCharacters.find(ch => ch.id == valueId));
@@ -3840,6 +4355,7 @@
                     if (app.defaultCharacters[i].method_where != null && app.defaultCharacters[i].method_where != '') {
                         temp.tooltip = temp.tooltip + 'Where: ' + app.defaultCharacters[i].method_where;
                     }
+                    temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.defaultCharacters[i].IRI);
                     temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
                     app.standardCharacters.push(temp);
                 }
@@ -4675,6 +5191,7 @@
                     .then(function (resp) {
                         app.headers = resp.data.headers;
                         app.values = resp.data.values;
+                        app.getDeprecatedValue();
                         showTableForTab(app.currentTab);
                     });
             },
@@ -4770,6 +5287,7 @@
                             .then(function (resp) {
                                 app.colorDetails = resp.data.colorDetails;
                                 app.values = resp.data.values;
+                                app.getDeprecatedValue();
                                 app.colorDetailsFlag = false;
                                 app.saveColorButtonFlag = false;
 
@@ -4865,7 +5383,92 @@
             //    }
                         if (postFlag == true) {
                             axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
-                                .then(function (resp) {
+                                .then(async function (resp) {
+                                    if (postValue['brightness'] && postValue['brightness'] != '') {
+                                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+postValue['brightness'].toLowerCase().replace('-', ' ')).then(resultsp=>{
+                                            if (resultsp.data.entries.length > 0) {
+                                                let methodEntry = resultsp.data.entries.filter(function(each) {
+                                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                                })[0];
+                                                if (methodEntry) {
+                                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                                            axios.post("/chrecorder/public/api/v1/setColorBrightnessIRI", {id: resp.data.id, IRI: methodEntry.resultAnnotations[j].value});
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                    if (postValue['reflectance'] && postValue['reflectance'] != '') {
+                                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+postValue['reflectance'].toLowerCase().replace('-', ' ')).then(resultsp=>{
+                                            if (resultsp.data.entries.length > 0) {
+                                                let methodEntry = resultsp.data.entries.filter(function(each) {
+                                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                                })[0];
+                                                if (methodEntry) {
+                                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                                            axios.post("/chrecorder/public/api/v1/setColorReflectanceIRI", {id: resp.data.id, IRI: methodEntry.resultAnnotations[j].value});
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                    if (postValue['saturation'] && postValue['saturation'] != '') {
+                                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+postValue['saturation'].toLowerCase().replace('-', ' ')).then(resultsp=>{
+                                            if (resultsp.data.entries.length > 0) {
+                                                let methodEntry = resultsp.data.entries.filter(function(each) {
+                                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                                })[0];
+                                                if (methodEntry) {
+                                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                                            axios.post("/chrecorder/public/api/v1/setColorSaturationIRI", {id: resp.data.id, IRI: methodEntry.resultAnnotations[j].value});
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                    if (postValue['colored'] && postValue['colored'] != '') {
+                                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+postValue['colored'].toLowerCase().replace('-', ' ')).then(resultsp=>{
+                                            if (resultsp.data.entries.length > 0) {
+                                                let methodEntry = resultsp.data.entries.filter(function(each) {
+                                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                                })[0];
+                                                if (methodEntry) {
+                                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                                            axios.post("/chrecorder/public/api/v1/setColorColoredIRI", {id: resp.data.id, IRI: methodEntry.resultAnnotations[j].value});
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                    if (postValue['multi_colored'] && postValue['multi_colored'] != '') {
+                                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+postValue['multi_colored'].toLowerCase().replace('-', ' ')).then(resultsp=>{
+                                            if (resultsp.data.entries.length > 0) {
+                                                let methodEntry = resultsp.data.entries.filter(function(each) {
+                                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                                })[0];
+                                                if (methodEntry) {
+                                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                                            axios.post("/chrecorder/public/api/v1/setColorMultiColoredIRI", {id: resp.data.id, IRI: methodEntry.resultAnnotations[j].value});
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
                                     app.saveColorButtonFlag = false;
                                     app.values = resp.data.values;
                                     app.preList = resp.data.preList;
@@ -4894,6 +5497,13 @@
                                     app.allColorValues = resp.data.allColorValues;
                                     app.allNonColorValues = resp.data.allNonColorValues;
                                     app.currentColorValue['value_id'] = app.currentColorValue.value_id;
+                                    app.getDeprecatedValue();
+                                }).then(() => {
+                                    axios.post('/chrecorder/public/api/v1/getAllDetails')
+                                        .then(function (respColor) {
+                                            app.allColorValues = respColor.data.colorValues;
+                                            app.getDeprecatedValue();
+                                        })
                                 });
                         } else {
                             app.saveColorButtonFlag = false;
@@ -4918,6 +5528,7 @@
                         app.postList = resp.data.postList;
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
+                        app.getDeprecatedValue();
                         app.colorDetailsFlag = false;
                     });
             },
@@ -4966,6 +5577,7 @@
                             .then(function (resp) {
                                 app.nonColorDetails = resp.data.nonColorDetails;
                                 app.values = resp.data.values;
+                                app.getDeprecatedValue();
                                 app.nonColorDetailsFlag = false;
 
                             });
@@ -5032,7 +5644,7 @@
                                                             console.log('save api resp', resp);
                                                         });
                                                 });
-                                        }
+                                        } 
                                     });
 
                                 //    }
@@ -5090,31 +5702,75 @@
 
                         if (postFlag == true) {
                             console.log('a6');
-                            axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
-                                .then(function (resp) {
-                                    app.saveNonColorButtonFlag = false;
-                                    app.values = resp.data.values;
-                                    app.preList = resp.data.preList;
-                                    app.postList = resp.data.postList;
-                                    app.nonColorDetails = resp.data.nonColorDetails;
-                                    app.allNonColorValues = resp.data.allNonColorValues;
-                                    app.currentNonColorValue.detailsFlag = null;
-
-                                    if (newFlag == false) {
-                                        app.nonColorDetailsFlag = false;
-                                    } else {
-                                        app.nonColorDetailsFlag = true;
-                                        app.currentNonColorValueExist = true;
-                                        app.nonColorComment = {};
-                                        app.nonColorTaxon = {
-                                            'main_value': app.taxonName,
-                                        };
-                                        app.nonColorSampleText = {};
-                                        app.nonColorDefinition = {};
-                                        app.userNonColorDefinition = {};
-                                        app.currentNonColorValue.taxon = app.taxonName;
-                                    }
-                                });
+                            if (postValue['main_value'] != '') {
+                                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'])
+                                    .then(function (resp) {
+                                        if (resp.data.entries.length > 0) {
+                                            let methodEntry = resp.data.entries.filter(function(each) {
+                                                return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                            })[0];
+                                            if (methodEntry) {
+                                                for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                                    if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                                        postValue['main_value_IRI'] = methodEntry.resultAnnotations[j].value;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
+                                                .then(function (resp) {
+                                                    app.saveNonColorButtonFlag = false;
+                                                    app.values = resp.data.values;
+                                                    app.preList = resp.data.preList;
+                                                    app.postList = resp.data.postList;
+                                                    app.nonColorDetails = resp.data.nonColorDetails;
+                                                    app.allNonColorValues = resp.data.allNonColorValues;
+                                                    app.currentNonColorValue.detailsFlag = null;
+                                                    app.getDeprecatedValue();
+                                                    if (newFlag == false) {
+                                                        app.nonColorDetailsFlag = false;
+                                                    } else {
+                                                        app.nonColorDetailsFlag = true;
+                                                        app.currentNonColorValueExist = true;
+                                                        app.nonColorComment = {};
+                                                        app.nonColorTaxon = {
+                                                            'main_value': app.taxonName,
+                                                        };
+                                                        app.nonColorSampleText = {};
+                                                        app.nonColorDefinition = {};
+                                                        app.userNonColorDefinition = {};
+                                                        app.currentNonColorValue.taxon = app.taxonName;
+                                                    }
+                                                });
+                                        }
+                                    });
+                            } else {
+                                axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
+                                    .then(function (resp) {
+                                        app.saveNonColorButtonFlag = false;
+                                        app.values = resp.data.values;
+                                        app.preList = resp.data.preList;
+                                        app.postList = resp.data.postList;
+                                        app.nonColorDetails = resp.data.nonColorDetails;
+                                        app.allNonColorValues = resp.data.allNonColorValues;
+                                        app.currentNonColorValue.detailsFlag = null;
+                                        app.getDeprecatedValue();
+                                        if (newFlag == false) {
+                                            app.nonColorDetailsFlag = false;
+                                        } else {
+                                            app.nonColorDetailsFlag = true;
+                                            app.currentNonColorValueExist = true;
+                                            app.nonColorComment = {};
+                                            app.nonColorTaxon = {
+                                                'main_value': app.taxonName,
+                                            };
+                                            app.nonColorSampleText = {};
+                                            app.nonColorDefinition = {};
+                                            app.userNonColorDefinition = {};
+                                            app.currentNonColorValue.taxon = app.taxonName;
+                                        }
+                                    });
+                            }
                         } else {
                             app.saveNonColorButtonFlag = false;
                             $('.non-color-input-definition').css('border', '1px solid red');
@@ -5130,6 +5786,7 @@
                         app.values = resp.data.values;
                         app.preList = resp.data.preList;
                         app.postList = resp.data.postList;
+                        app.getDeprecatedValue();
                         app.nonColorDetailsFlag = false;
                     });
             },
@@ -5961,8 +6618,102 @@
 
                 }
             },
+            onSelectNameVersion(item) {
+                var app = this;
+                app.currentVersion = item;
+                console.log(item);
+                app.currentName = "";
+            },
+            onChangeCurrentName(text) {
+                var app = this;
+                console.log("onChange current name", text);
+                app.currentVersion = null;
+            },
+            onSelectLoadVersion(item) {
+                var app = this;
+                app.loadVersion = item;
+            },
             importMatrix() {
-
+                var app = this;
+                app.isLoading = true;
+                console.log(app.loadVersion);
+                var postValue = {};
+                postValue['matrixname'] = app.loadVersion.matrix_name;
+                app.loadMatrixDialog = false;
+                app.loadMatrixConfirmDialog = false;
+                axios.post('/chrecorder/public/api/v1/importMatrix', postValue)
+                    .then((res) => {
+                        console.log(res);
+                        app.userCharacters = res.data.characters;
+                        app.headers = res.data.headers;
+                        app.values = res.data.values;
+                        app.userTags = res.data.tags;
+                        app.allColorValues = res.data.allColorValues;
+                        app.allNonColorValues = res.data.allNonColorValues;
+                        app.refreshUserCharacters();
+                        app.showTableForTab(app.currentTab);
+                        app.lastLoadMatrixName = app.loadVersion.matrix_name;
+                        sessionStorage.setItem('lastMatrixName', app.loadVersion.matrix_name);
+                        app.isLoading = false;
+                        app.collapsedFlag = true;
+                        app.loadVersion = null;
+                    })
+                
+            },
+            nameMatrix() {
+                var app = this;
+                app.isLoading = true;
+                var selectedMatrixName = app.currentVersion ? app.currentVersion.matrix_name : app.currentName;
+                console.log("name", selectedMatrixName);
+                console.log("user", app.user);
+                var postValue = {};
+                postValue['matrixname'] = selectedMatrixName;
+                app.nameMatrixDialog = false;
+                var overwriteFlg = false;
+                app.namesList.forEach((eachName) => {
+                    if (eachName.matrix_name == selectedMatrixName) {
+                        overwriteFlg = true;
+                    }
+                });
+                if (overwriteFlg == false) {
+                    axios.post('/chrecorder/public/api/v1/nameMatrix', postValue)
+                        .then((res) => {
+                            console.log(res);
+                            app.isLoading = false;
+                            app.currentVersion = null;
+                            app.currentName = '';
+                            app.showNamesList = [];
+                            app.namesList = res.data.matrixNames;
+                        })
+                } else {
+                    console.log('overwrite to ', selectedMatrixName);
+                    axios.post('/chrecorder/public/api/v1/overwriteMatrix', postValue)
+                        .then((res) => {
+                            console.log(res);
+                            app.isLoading = false;
+                            app.currentVersion = null;
+                            app.currentName = '';
+                            app.showNamesList = [];
+                        })
+                }
+            },
+            updateItems(text) {
+                var app = this;
+                if (text == '') {
+                    app.showNamesList = [];
+                } else {
+                    app.showNamesList = [];
+                    app.namesList.forEach((eachName) => {
+                        if (eachName.matrix_name.indexOf(text) >= 0) {
+                            app.showNamesList.push(eachName.matrix_name);
+                        }
+                    });
+                    app.currentName = text;
+                }
+            },
+            itemSelected(text) {
+                var app = this;
+                app.currentName = text;
             },
             editEachColor(color) {
                 console.log('color', color);
@@ -5999,6 +6750,7 @@
                         app.postList = resp.data.postList;
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
+                        app.getDeprecatedValue();
                     });
             },
             editEachNonColor(value) {
@@ -6019,6 +6771,7 @@
             },
             removeEachNonColor(value) {
                 var app = this;
+                console.log("non_color", value);
                 axios.post('/chrecorder/public/api/v1/remove-each-non-color-details', value)
                     .then(function (resp) {
                         app.nonColorDetails = resp.data.nonColorDetails;
@@ -6027,6 +6780,7 @@
                         app.postList = resp.data.postList;
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
+                        app.getDeprecatedValue();
                     });
             },
             getUserTag: async() => {
@@ -6136,6 +6890,7 @@
                         app.postList = resp.data.postList;
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
+                        app.getDeprecatedValue();
                     });
 
             },
@@ -6150,6 +6905,7 @@
                         app.postList = resp.data.postList;
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
+                        app.getDeprecatedValue();
                     });
             },
             calcSummary(row) {
@@ -6202,6 +6958,7 @@
                                 for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
                                     if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
                                          $.get("/chrecorder/public/api/v1/character/setIRI", {IRI: methodEntry.resultAnnotations[j].value, id: app.defaultCharacters[i].id});
+                                         break;
                                     }
                                 }
                             }
@@ -6220,6 +6977,7 @@
                                     for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
                                         if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
                                             $.get("/chrecorder/public/api/v1/character/setCharacterIRI", {IRI: methodEntry.resultAnnotations[j].value, name: result.data[i].name});
+                                            break;
                                         }
                                     }
                                 }
@@ -6227,6 +6985,142 @@
                         });
                     }
                 })
+            },
+            getIRIOfValues() {
+                var app = this;
+                console.log("get IRI of Values");
+                for (let i = 0 ; i < app.allNonColorValues.length; i ++) {
+                    if (app.allNonColorValues[i].main_value && app.allNonColorValues[i].main_value != "") {
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.allNonColorValues[i].main_value.toLowerCase().replace('-', ' ')).then(resp=>{
+                            if (resp.data.entries.length > 0) {
+                                let methodEntry = resp.data.entries.filter(function(each) {
+                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                })[0];
+                                if (methodEntry) {
+                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                            console.log(app.allNonColorValues[i].id, app.allNonColorValues[i].main_value, methodEntry.resultAnnotations[j].value);
+                                            axios.post("/chrecorder/public/api/v1/setNonColorValueIRI", {id: app.allNonColorValues[i].id, main_value_IRI: methodEntry.resultAnnotations[j].value});
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+                for (let i = 0 ; i < app.allColorValues.length; i ++) {
+                    if (app.allColorValues[i].brightness && app.allColorValues[i].brightness != "") {
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.allColorValues[i].brightness.toLowerCase().replace('-', ' ')).then(resp=>{
+                            if (resp.data.entries.length > 0) {
+                                let methodEntry = resp.data.entries.filter(function(each) {
+                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                })[0];
+                                if (methodEntry) {
+                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                            console.log(app.allColorValues[i].id, app.allColorValues[i].brightness, methodEntry.resultAnnotations[j].value);
+                                            axios.post("/chrecorder/public/api/v1/setColorBrightnessIRI", {id: app.allColorValues[i].id, IRI: methodEntry.resultAnnotations[j].value});
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    if (app.allColorValues[i].reflectance && app.allColorValues[i].reflectance != "") {
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.allColorValues[i].reflectance.toLowerCase().replace('-', ' ')).then(resp=>{
+                            if (resp.data.entries.length > 0) {
+                                let methodEntry = resp.data.entries.filter(function(each) {
+                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                })[0];
+                                if (methodEntry) {
+                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                            console.log(app.allColorValues[i].id, app.allColorValues[i].reflectance, methodEntry.resultAnnotations[j].value);
+                                            axios.post("/chrecorder/public/api/v1/setColorReflectanceIRI", {id: app.allColorValues[i].id, IRI: methodEntry.resultAnnotations[j].value});
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    if (app.allColorValues[i].saturation && app.allColorValues[i].saturation != "") {
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.allColorValues[i].saturation.toLowerCase().replace('-', ' ')).then(resp=>{
+                            if (resp.data.entries.length > 0) {
+                                let methodEntry = resp.data.entries.filter(function(each) {
+                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                })[0];
+                                if (methodEntry) {
+                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                            console.log(app.allColorValues[i].id, app.allColorValues[i].saturation, methodEntry.resultAnnotations[j].value);
+                                            axios.post("/chrecorder/public/api/v1/setColorSaturationIRI", {id: app.allColorValues[i].id, IRI: methodEntry.resultAnnotations[j].value});
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    if (app.allColorValues[i].colored && app.allColorValues[i].colored != "") {
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.allColorValues[i].colored.toLowerCase().replace('-', ' ')).then(resp=>{
+                            if (resp.data.entries.length > 0) {
+                                let methodEntry = resp.data.entries.filter(function(each) {
+                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                })[0];
+                                if (methodEntry) {
+                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                            console.log(app.allColorValues[i].id, app.allColorValues[i].colored, methodEntry.resultAnnotations[j].value);
+                                            axios.post("/chrecorder/public/api/v1/setColorColoredIRI", {id: app.allColorValues[i].id, IRI: methodEntry.resultAnnotations[j].value});
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    if (app.allColorValues[i].multi_colored && app.allColorValues[i].multi_colored != "") {
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.allColorValues[i].multi_colored.toLowerCase().replace('-', ' ')).then(resp=>{
+                            if (resp.data.entries.length > 0) {
+                                let methodEntry = resp.data.entries.filter(function(each) {
+                                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                                })[0];
+                                if (methodEntry) {
+                                    for (var j = 0; j < methodEntry.resultAnnotations.length; j ++) {
+                                        if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                                            console.log(app.allColorValues[i].id, app.allColorValues[i].multi_colored, methodEntry.resultAnnotations[j].value);
+                                            axios.post("/chrecorder/public/api/v1/setColorMultiColoredIRI", {id: app.allColorValues[i].id, IRI: methodEntry.resultAnnotations[j].value});
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            },
+            handleDisputeTerm() {
+                var app = this;
+                app.messageDialogFlag = true;
+                app.disputedTerm = app.currentResolveItem['deprecate term']
+                app.disputeMessage = "";
+                app.resolveItemFlag = false;
+            },
+            onDisputeTerm() {
+                var app = this;
+                var postValue = {
+                    'name': app.user.name,
+                    'email': app.user.email,
+                    'subject': 'Dispute ' + app.disputedTerm + ' in Carex Ontology',
+                    'message': app.disputeMessage
+                };
+                console.log(postValue);
+                axios.post('/chrecorder/public/send-mail', postValue);
+                app.messageDialogFlag = false;
+                app.disputeMessage = "";
             }
         },
         watch: {
@@ -6242,6 +7136,12 @@
         },
         async created() {
             var app = this;
+            // app.isLoading = true;
+            await axios.get("http://shark.sbs.arizona.edu:8080/carex/getDeprecatedClasses")
+                .then(function (resp) {
+                    app.deprecatedTerms = resp.data['deprecated classes'];
+                    console.log('app.deprecatedTerms', app.deprecatedTerms);
+                });
             console.log('standard_characters');
             await axios.get('/chrecorder/public/api/v1/standard_characters')
                 .then(async function (resp) {
@@ -6272,6 +7172,7 @@
                         if (resp.data[i].method_where != null && resp.data[i].method_where != '') {
                             temp.tooltip = temp.tooltip + 'Where: ' + resp.data[i].method_where;
                         }
+                        temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == resp.data[i].IRI);
                         app.standardCharacters.push(temp);
                     }
                     console.log('v1/character');
@@ -6281,6 +7182,8 @@
                             app.userCharacters = resp.data.characters;
                             app.headers = resp.data.headers;
                             app.values = resp.data.values;
+                            console.log('headers', app.headers);
+                            console.log('values', app.values);
                             app.allColorValues = resp.data.allColorValues;
                             app.allNonColorValues = resp.data.allNonColorValues;
                             if (resp.data.taxon != null) {
@@ -6299,13 +7202,26 @@
                             }
 
                             app.refreshUserCharacters();
-                            if (app.currentTab!='')
-                                app.showTableForTab(app.currentTab);
+                            if (app.deprecatedTagName && app.deprecatedTagName != '') {
+                                app.showTableForTab(app.deprecatedTagName);
+                            } else {
+                                if (app.userTags[0]) {
+                                    app.showTableForTab(app.userTags[0].tag_name);
+                                }                            
+                            }
+                            // if (app.deprecatedTagName && app.deprecatedTagName != '') {
+                            //     app.showTableForTab(app.deprecatedTagName);
+                            // } else {
+                            //     if (app.currentTab!='') {
+                            //         app.showTableForTab(app.currentTab);
+                            //     }
+                            // }
                         });
                 }).then(function () {
                     for (var i = 0; i < app.standardCharacters.length; i ++) {
                         app.getTooltipImage(app.standardCharacters[i].name, i);
                     }
+                    app.isLoading = false;
                     // console.log(app.userCharacters.length);
                     // for (var i = 0; i < app.userCharacters.length; i ++) {
                     //     app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
@@ -6358,15 +7274,37 @@
                 .then(function (resp) {
                     resp.data.sort((a,b) => app.tagOrder(a)-app.tagOrder(b));
                     app.userTags = resp.data;
-                    if (app.userTags[0])app.showTableForTab(app.userTags[0].tag_name);
+                    
+                    for (var i = 0; i < app.userTags.length; i ++) {
+                        console.log(app.userTags[i].tag_name);
+                        app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
+                    }
+
+                    if (app.deprecatedTagName && app.deprecatedTagName != '') {
+                        app.showTableForTab(app.deprecatedTagName);
+                    } else {
+                        if (app.userTags[0]) {
+                            app.showTableForTab(app.userTags[0].tag_name);
+                        }                            
+                    }
                     console.log('userTags', app.userTags);
                 });
+            axios.get("/chrecorder/public/api/v1/getMatrixNames")
+                .then((resp) => {
+                    console.log('matrixNames', resp);
+                    app.namesList = resp.data;
+                })
         },
         mounted() {
             var app = this;
             app.user.name = app.user.email.split('@')[0];
             app.characterUsername = app.user.name;
             sessionStorage.setItem('userId', app.user.id);
+            app.deprecatedTagName = sessionStorage.getItem('depreCatedTagName');
+            app.lastLoadMatrixName = sessionStorage.getItem('lastMatrixName');
+            console.log("Mounted");
+            console.log("app.deprecatedTagName", app.deprecatedTagName);
+            sessionStorage.removeItem('depreCatedTagName');
         }
     }
 

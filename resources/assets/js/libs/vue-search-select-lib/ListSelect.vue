@@ -64,9 +64,10 @@
           return ''
         }
       },
-      onSelect (option) {
+      onSelect (option, searchText) {
           if (option == null) {
-              this.$emit('select', null);
+            console.log("here");
+            this.$emit('select', {matrix_name: searchText});
           }
           else if (Object.keys(option).length === 0 && option.constructor === Object) {
             this.$emit('select', option)

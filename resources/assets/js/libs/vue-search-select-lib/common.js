@@ -11,6 +11,12 @@ export default {
       self.closeOptions()
     }
   },
+  blurInputName (self) {
+    if (!self.mousedownState) {
+      // self.searchText = ''
+      self.closeOptions()
+    }
+  },
   closeOptions (self) {
     self.showMenu = false
   },

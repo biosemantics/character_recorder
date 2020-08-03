@@ -37,6 +37,25 @@ Route::group([
     Route::post('keep-exist-value',                     ['as' => 'keepExistValue',              'uses' => 'HomeController@keepExistValue']);
     Route::post('get-default-constraint',               ['as' => 'getDefaultConstraint',        'uses' => 'HomeController@getDefaultConstraint1']);
     Route::get('graphTest',                             ['as' => 'graphTest',                   'uses' => 'HomeController@test']);
+    Route::post('setNonColorValueIRI',                  ['as' => 'setNonColorValueIRI',         'uses' => 'HomeController@setNonColorValueIRI']);
+    Route::post('setColorBrightnessIRI',                ['as' => 'setColorBrightnessIRI',       'uses' => 'HomeController@setColorBrightnessIRI']);
+    Route::post('setColorReflectanceIRI',               ['as' => 'setColorReflectanceIRI',      'uses' => 'HomeController@setColorReflectanceIRI']);
+    Route::post('setColorSaturationIRI',                ['as' => 'setColorSaturationIRI',       'uses' => 'HomeController@setColorSaturationIRI']);
+    Route::post('setColorColoredIRI',                   ['as' => 'setColorColoredIRI',          'uses' => 'HomeController@setColorColoredIRI']);
+    Route::post('setColorMultiColoredIRI',              ['as' => 'setColorMultiColoredIRI',     'uses' => 'HomeController@setColorMultiColoredIRI']);
+    Route::post('resolveCharacter',                     ['as' => 'resolveCharacter',            'uses' => 'HomeController@resolveCharacter']);
+    Route::post('resolveNonColorValue',                 ['as' => 'resolveNonColorValue',        'uses' => 'HomeController@resolveNonColorValue']);
+    Route::post('resolveColorBrightness',               ['as' => 'resolveColorBrightness',      'uses' => 'HomeController@resolveColorBrightness']);
+    Route::post('resolveColorReflectance',              ['as' => 'resolveColorReflectance',     'uses' => 'HomeController@resolveColorReflectance']);
+    Route::post('resolveColorSaturation',               ['as' => 'resolveColorSaturation',      'uses' => 'HomeController@resolveColorSaturation']);
+    Route::post('resolveColorColored',                  ['as' => 'resolveColorColored',         'uses' => 'HomeController@resolveColorColored']);
+    Route::post('resolveColorMultiColored',             ['as' => 'resolveColorMultiColored',    'uses' => 'HomeController@resolveColorMultiColored']);
+    Route::post('getAllDetails',                        ['as' => 'getAllDetails',               'uses' => 'HomeController@getAllDetails']);
+    Route::post('nameMatrix',                           ['as' => 'nameMatrix',                  'uses' => 'HomeController@nameMatrix']);
+    Route::post('importMatrix',                         ['as' => 'importMatrix',                'uses' => 'HomeController@importMatrix']);
+    Route::post('overwriteMatrix',                      ['as' => 'overwriteMatrix',             'uses' => 'HomeController@overwriteMatrix']);
+    Route::get('getMatrixNames',                        ['as' => 'getMatrixNames',              'uses' => 'HomeController@getMatrixNames']);
+    Route::get('getTaxons',                             ['as' => 'getTaxons',                   'uses' => 'HomeController@getTaxons']);
 
     Route::group([
         'prefix' => '/character',

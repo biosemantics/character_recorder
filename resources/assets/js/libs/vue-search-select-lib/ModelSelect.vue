@@ -39,11 +39,12 @@
                 <div class="item"
                      :class="{ 'selected': option.selected, 'current': pointer === idx }"
                      :data-vss-custom-attr="customAttrs[idx] ? customAttrs[idx] : ''"
-                     @click.stop="selectItem(option)"
                      @mousedown="mousedownItem"
                      @mouseenter="pointerSet(idx)"
-                     v-tooltip.top-center="option.tooltip">
-                    {{option.text}}
+                     v-tooltip.top-center="option.tooltip"
+                     >
+                    <label :style="{ 'font-weight': option.deprecated >= 0 ? '700' : '300' }" @click="selectItem(option)">{{option.text}}</label>
+                    <a style="margin-left: 5px;" @click="resolveItem(option)"><span v-if="option.deprecated >= 0" class="glyphicon glyphicon-wrench"></span></a>
                 </div>
             </template>
             <template v-if="filteredOptions.length == 0">
@@ -218,6 +219,9 @@
             },
             overItem(option) {
                 this.$emit('over', option)
+            },
+            resolveItem(option) {
+                this.$emit('resolve', option)
             }
         }
     }

@@ -153,11 +153,11 @@
                         <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
                             <div style="height: 34px;">
                                 <img src="{{ asset('images/crown.png') }}" style="display: inline"/>
-                                <div style="color: gold; font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
+                                <div class="explore" style="font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
                             </div>
                         </a>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-2">
                     </div>
                     <div class="col-md-3">
                         <div style="float: right">
@@ -165,6 +165,18 @@
                                 <div style="height: 34px; padding-top: 8px">
                                     <span class="glyphicon glyphicon-list" style="font-size: 20px"></span>
                                     <div class="explore">Explore Character Data</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3">
+                        <div style="float: right">
+                            <a id="ontology-update" href="{{ url('/ontology-update') }}" style="text-decoration: none;">
+                                <div style="height: 34px; padding-top: 8px">
+                                    <span class="glyphicon glyphicon-stats" style="font-size: 20px"></span>
+                                    <div class="explore">Ontology Update</div>
                                 </div>
                             </a>
                         </div>

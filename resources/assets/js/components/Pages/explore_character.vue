@@ -20,8 +20,9 @@
                         </div>
                         <a v-on:click="handleAboutTaxon()" class="btn btn-primary" style="width: 100%; margin: 10px" :class="{disabled: searchType == 1}">Find characters about taxon ...</a><br>
                         <div v-if="searchType == 1" style="margin-left: 10px; width: 100%;">
-                            <input :disabled="bSearching" class="" v-model="taxonName" style="width: 100%;" placeholder="Please enter a taxon" v-on:keyup.enter="$event.target.blur(); exploreCharacter()"/>
-                            <br>
+                            <select :disabled="bSearching" style="height: 26px; width: 100%;" v-model="taxonName">
+                                <option v-for="taxon in taxonData" :value="taxon">{{taxon}}</option>
+                            </select><br>
                             <a :disabled="bSearching" v-on:click="exploreCharacter()" class="btn btn-primary" style="width: 60%; margin: 10px" :class="{disabled: taxonName == ''}">Go</a><br>
                         </div>
                         <a v-on:click="handleOfStructure()" class="btn btn-primary" style="width: 100%; margin: 10px" :class="{disabled: searchType == 2}">Find characters of structure ...</a><br>
@@ -138,7 +139,7 @@
                         <div v-if="characterData[searchType]" class="table-responsive" style="max-height: calc(100vh - 200px);">
                             <table class="table table-bordered cr-table">
                                 <thead>
-                                    <th v-for="(header,index) in characterData[searchType].names" :key="'header'+index" style="min-width: 100px; height: 43px; line-height: 43px; text-align: center;">{{header}}</th>
+                                    <th v-for="(header,index) in characterData[searchType].names" :key="'header'+index" style="min-width: 100px; height: 43px; line-height: 43px; text-align: center;">{{header == 'icharacter' ? 'character': header}}</th>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(row,index) in characterData[searchType].values" :key="'row'+index">
@@ -541,6 +542,7 @@
                 treeData: null,
                 allTreeData: {},
                 findCharacterByStructure: true,
+                taxonData: []
             }
         },
         components: {
@@ -785,6 +787,9 @@
 
                 $.ajax(url, settings);
             },
+            ucWords(str) {
+                return str.split(' ').map(val => val.slice(0,1).toUpperCase()+val.slice(1,val.length)).join('_');
+            },
             exploreCharacter() {
                 var app = this;
                 app.bSearching = true;
@@ -817,56 +822,80 @@
                             console.log(data);
                             app.bSearching = false;
                             let tmp = {};
-                            tmp.names = data.head.vars;
-                            tmp.values = data.results.bindings;
+                            tmp.names = [];
+                            data.head.vars.forEach((val) => {
+                                if (val != 'graph') {
+                                    tmp.names.push(val);
+                                }
+                            })
+                            tmp.values = [];
+                            data.results.bindings.forEach((val) =>{
+                                let subVal = {};
+                                Object.keys(val).forEach((item) => {
+                                    if (item != 'graph') {
+                                        subVal[item] = val[item];
+                                        if (item == 'character') {
+                                            subVal[item].value = subVal[item].value.slice(35, subVal[item].value.length);
+                                        }
+                                    }
+                                })
+                                tmp.values.push(subVal);
+                            })
                             app.characterData[app.searchType] = tmp;
                         })
                         break;
                     case 1:
-                        $.get('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&term='+app.taxonName.toLowerCase().replace(' ','%20'),{},function(resp){
-                            let idNode = resp.getElementsByTagName("Id")[0];
-                            let id = idNode ? idNode.childNodes[0].nodeValue : "unknown";
+                        query=`PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+                            PREFIX iao: <http://purl.obolibrary.org/obo/iao.owl#>
+                            PREFIX dc: <http://purl.org/dc/terms/>
+                            PREFIX obi:<http://purl.obolibrary.org/obo/obi.owl#>
+                            PREFIX uo: <http://purl.obolibrary.org/obo/uo.owl#>
+                            PREFIX ncbi: <https://www.ncbi.nlm.nih.gov/Taxonomy#>
+                            PREFIX mo:<http://biosemantics.arizona.edu/ontologies/modifierlist#>
+                            PREFIX :<http://biosemantics.arizona.edu/ontologies/carex#>
+                            PREFIX kb:<http://biosemantics.arizona.edu/kb/carex#>
+                            PREFIX data:<http://biosemantics.arizona.edu/kb/data#>
+                            PREFIX app:<http://shark.sbs.arizona.edu/chrecorder#>
 
-                            if (id == "unknown") {
-                                alert('Invalid taxon');
-                                app.bSearching = false;
-                                return;
-                            }
-                            query=`PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
-                                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-                                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-                                PREFIX owl: <http://www.w3.org/2002/07/owl#>
-                                PREFIX iao: <http://purl.obolibrary.org/obo/iao.owl#>
-                                PREFIX dc: <http://purl.org/dc/terms/>
-                                PREFIX obi:<http://purl.obolibrary.org/obo/obi.owl#>
-                                PREFIX uo: <http://purl.obolibrary.org/obo/uo.owl#>
-                                PREFIX ncbi: <https://www.ncbi.nlm.nih.gov/Taxonomy#>
-                                PREFIX mo:<http://biosemantics.arizona.edu/ontologies/modifierlist#>
-                                PREFIX :<http://biosemantics.arizona.edu/ontologies/carex#>
-                                PREFIX kb:<http://biosemantics.arizona.edu/kb/carex#>
-                                PREFIX data:<http://biosemantics.arizona.edu/kb/data#>
-                                PREFIX app:<http://shark.sbs.arizona.edu/chrecorder#>
-
-                                # View triples
-                                SELECT distinct ?graph ?character
-                                where {
-                                    GRAPH ?graph {
-                                        ?sample iao:is_about ncbi:txid${id}.
-                                        ?sample :has_part ?part.
-                                        ?part :has_quality ?iCharacter.
-                                        ?iCharacter a ?character.
-                                    }
-                            }`;
+                            # View triples
+                            SELECT distinct ?graph ?character
+                            where {
+                                GRAPH ?graph {
+                                    ?sample :specimen_of :${app.ucWords(app.taxonName)}.
+                                    ?sample :has_part ?part.
+                                    ?part :has_quality ?iCharacter.
+                                    ?iCharacter a ?character.
+                                }
+                        }`;
                             
-                            app.api(query, data => {
-                                console.log(data);
-                                app.bSearching = false;
-                                let tmp = {};
-                                tmp.names = data.head.vars;
-                                tmp.values = data.results.bindings;
-                                app.characterData[app.searchType] = tmp;
+                        app.api(query, data => {
+                            console.log(data);
+                            app.bSearching = false;
+                            let tmp = {};
+                            tmp.names = [];
+                            data.head.vars.forEach((val) => {
+                                if (val != 'graph') {
+                                    tmp.names.push(val);
+                                }
                             })
-                        });
+                            tmp.values = [];
+                            data.results.bindings.forEach((val) =>{
+                                let subVal = {};
+                                Object.keys(val).forEach((item) => {
+                                    if (item != 'graph') {
+                                        subVal[item] = val[item];
+                                        if (item == 'character') {
+                                            subVal[item].value = subVal[item].value.slice(43, subVal[item].value.length);
+                                        }
+                                    }
+                                })
+                                tmp.values.push(subVal);
+                            })
+                            app.characterData[app.searchType] = tmp;
+                        })
                         break;
                     case 2:
                         query=`BASE <http://biosemantics.arizona.edu/ontologies/carex#>
@@ -896,8 +925,26 @@
                             console.log(data);
                             app.bSearching = false;
                             let tmp = {};
-                            tmp.names = data.head.vars;
-                            tmp.values = data.results.bindings;
+                            tmp.names = [];
+                            data.head.vars.forEach((val) => {
+                                if (val != 'graph') {
+                                    tmp.names.push(val);
+                                }
+                            })
+                            tmp.names.sort().reverse();
+                            tmp.values = [];
+                            data.results.bindings.forEach((val) =>{
+                                let subVal = {};
+                                Object.keys(val).forEach((item) => {
+                                    if (item != 'graph') {
+                                        subVal[item] = val[item];
+                                        if ((item == 'icharacter') || (item == 'structure')) {
+                                            subVal[item].value = subVal[item].value.slice(35, subVal[item].value.length);
+                                        }
+                                    }
+                                })
+                                tmp.values.push(subVal);
+                            })
                             app.characterData[app.searchType] = tmp;
                         })
                         break;
@@ -922,13 +969,13 @@
                                     PREFIX data:<http://biosemantics.arizona.edu/kb/data#>
                                     PREFIX app:<http://shark.sbs.arizona.edu/chrecorder#>
 
-                                    select distinct ?graph ?character ?value ${app.characterType!='Number' && '?unit'}
+                                    select distinct ?graph ?character ?value ${app.characterType!='Number' ? '?unit' : ''}
                                     where {
                                         ?structure :has_quality ?character.
                                         ?character a ?str.
-                                        ?str rdfs:subClassOf :perceived_${app.characterType.toLowerCase().replace(' ', '_')}.
+                                        ?str rdfs:subClassOf :perceived_${ app.characterType!='Number' ? app.characterType.toLowerCase().replace(' ', '_') : 'quantity'}.
                                         ?character :has_value ?value.
-                                        ?character :has_unit ?unit.
+                                        ${app.characterType!='Number' ? '?character :has_unit ?unit.' : ''}
                                         GRAPH ?graph {
                                             ?structure :has_quality ?character.
                                         }
@@ -950,7 +997,27 @@
                                         i --;
                                     }
                                 }
-                                app.characterData[app.searchType] = {names: resp.head.vars, values: resp.results.bindings};
+                                let tmp = {};
+                                tmp.names = [];
+                                resp.head.vars.forEach((val) => {
+                                    if (val != 'graph') {
+                                        tmp.names.push(val);
+                                    }
+                                })
+                                tmp.values = [];
+                                resp.results.bindings.forEach((val) =>{
+                                    let subVal = {};
+                                    Object.keys(val).forEach((item) => {
+                                        if (item != 'graph') {
+                                            subVal[item] = val[item];
+                                            if ((item == 'character') || (item == 'structure')) {
+                                                subVal[item].value = subVal[item].value.slice(35, subVal[item].value.length);
+                                            }
+                                        }
+                                    })
+                                    tmp.values.push(subVal);
+                                })
+                                app.characterData[app.searchType] = tmp;
                                 app.bSearching = false;
                             })
                         }
@@ -1094,7 +1161,28 @@
                             }
                             app.api(query, (resp) => {
                                 console.log(resp);
-                                app.characterData[app.searchType] = {names: resp.head.vars, values: resp.results.bindings};
+                                let tmp = {};
+                                tmp.names = [];
+                                resp.head.vars.forEach((val) => {
+                                    if (val != 'graph') {
+                                        tmp.names.push(val);
+                                    }
+                                })
+                                tmp.names.sort().reverse();
+                                tmp.values = [];
+                                resp.results.bindings.forEach((val) =>{
+                                    let subVal = {};
+                                    Object.keys(val).forEach((item) => {
+                                        if (item != 'graph') {
+                                            subVal[item] = val[item];
+                                            if ((item == 'character') || (item == 'structure')) {
+                                                subVal[item].value = subVal[item].value.slice(35, subVal[item].value.length);
+                                            }
+                                        }
+                                    })
+                                    tmp.values.push(subVal);
+                                })
+                                app.characterData[app.searchType] = tmp;
                                 app.bSearching = false;
                             })
                         }
@@ -1121,6 +1209,31 @@
                 console.log(app.preList);
                 console.log(app.postList);
             });
+            // axios.get('/chrecorder/public/api/v1/getTaxons').then(function(resp){
+            //     console.log(resp);
+            //     app.taxonData = resp.data.taxons;
+            // });
+
+            var query=` PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                    PREFIX iao: <http://purl.obolibrary.org/obo/iao.owl#>
+                    PREFIX obi:<http://purl.obolibrary.org/obo/obi.owl#>
+                    PREFIX :<http://biosemantics.arizona.edu/ontologies/carex#>
+
+                    select distinct ?taxon
+                    where {
+                        ?sample
+                        iao:is_about ?taxonid;
+                        rdf:type obi:specimen;
+                        :specimen_of ?taxon.
+                    }`;
+            app.api(query, data => {
+                console.log(data);
+                data.results.bindings.forEach((val) => {
+                    var taxonValue = val.taxon.value.split('#', 2);
+                    app.taxonData.push(taxonValue[1]);
+                })
+            });
+
             axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=anatomical_structure').then(function(resp){
                 console.log(resp.data);
                 app.structureTreeData = resp.data;

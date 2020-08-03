@@ -14,6 +14,7 @@ use App\Header;
 use App\Value;
 use App\ColorDetails;
 use App\NonColorDetails;
+use App\Matrix;
 use DB;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
@@ -53,6 +54,24 @@ class HomeController extends Controller
             'removeAll',
             'removeAllStandard',
             'updateCharacter',
+            'setNonColorValueIRI',
+            'setColorBrightnessIRI',
+            'setColorReflectanceIRI',
+            'setColorSaturationIRI',
+            'setColorColoredIRI',
+            'setColorMultiColoredIRI',
+            'resolveCharacter',
+            'resolveNonColorValue',
+            'resolveColorBrightness',
+            'resolveColorReflectance',
+            'resolveColorSaturation',
+            'resolveColorColored',
+            'resolveColorMultiColored',
+            'nameMatrix',
+            'getMatrixNames',
+            'importMatrix',
+            'overwriteMatrix',
+            'getTaxons'
         ]);
     }
 
@@ -125,21 +144,25 @@ class HomeController extends Controller
             if ($value_id[$col->value_id]){
                 if ($value_id[$col->value_id] == 1){
                     $value_id[$col->value_id] = 2;
-                    $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = '';
+                    if ($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->header_id != 1) {
+                        $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = '';
+                    }
                 }
-                $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value . ($col->negation ? ($col->negation . ' ') : '') .
-                    ($col->pre_constraint ? ($col->pre_constraint . ' ') : '') .
-                    ($col->certainty_constraint ? ($col->certainty_constraint . ' ') : '') .
-                    ($col->degree_constraint ? ($col->degree_constraint . ' ') : '') .
-                    ($col->brightness ? ($col->brightness . ' ') : '') .
-                    ($col->reflectance ? ($col->reflectance . ' ') : '') .
-                    ($col->saturation ? ($col->saturation . ' ') : '') .
-                    ($col->colored ? ($col->colored . ' ') : '') .
-                    ($col->multi_colored ? ($col->multi_colored . ' ') : '') .
-                    ($col->post_constraint ? ($col->post_constraint . ' ') : '') ;
-                if ($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value != '') {
-                    $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = substr($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value, 0, -1);
-                    $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value . '; ';
+                if ($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->header_id != 1) {
+                    $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value . ($col->negation ? ($col->negation . ' ') : '') .
+                        ($col->pre_constraint ? ($col->pre_constraint . ' ') : '') .
+                        ($col->certainty_constraint ? ($col->certainty_constraint . ' ') : '') .
+                        ($col->degree_constraint ? ($col->degree_constraint . ' ') : '') .
+                        ($col->brightness ? ($col->brightness . ' ') : '') .
+                        ($col->reflectance ? ($col->reflectance . ' ') : '') .
+                        ($col->saturation ? ($col->saturation . ' ') : '') .
+                        ($col->colored ? ($col->colored . ' ') : '') .
+                        ($col->multi_colored ? ($col->multi_colored . ' ') : '') .
+                        ($col->post_constraint ? ($col->post_constraint . ' ') : '') ;
+                    if ($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value != '') {
+                        $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = substr($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value, 0, -1);
+                        $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value . '; ';
+                    }
                 }
             }
         }
@@ -148,17 +171,21 @@ class HomeController extends Controller
             if ($value_id[$nonCol->value_id]){
                 if ($value_id[$nonCol->value_id] == 1){
                     $value_id[$nonCol->value_id] = 2;
-                    $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = '';
+                    if ($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->header_id != 1) {
+                        $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = '';
+                    }
                 }
-                $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . ($nonCol->negation ? ($nonCol->negation . ' ') : '') .
-                    ($nonCol->pre_constraint ? ($nonCol->pre_constraint . ' ') : '') .
-                    ($nonCol->certainty_constraint ? ($nonCol->certainty_constraint . ' ') : '') .
-                    ($nonCol->degree_constraint ? ($nonCol->degree_constraint . ' ') : '') .
-                    ($nonCol->main_value ? ($nonCol->main_value . ' ') : '') .
-                    ($nonCol->post_constraint ? ($nonCol->post_constraint . ' ') : '');
-                if ($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value != '') {
-                    $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = substr($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value, 0, -1);
-                    $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . '; ';
+                if ($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->header_id != 1) {
+                    $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . ($nonCol->negation ? ($nonCol->negation . ' ') : '') .
+                        ($nonCol->pre_constraint ? ($nonCol->pre_constraint . ' ') : '') .
+                        ($nonCol->certainty_constraint ? ($nonCol->certainty_constraint . ' ') : '') .
+                        ($nonCol->degree_constraint ? ($nonCol->degree_constraint . ' ') : '') .
+                        ($nonCol->main_value ? ($nonCol->main_value . ' ') : '') .
+                        ($nonCol->post_constraint ? ($nonCol->post_constraint . ' ') : '');
+                    if ($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value != '') {
+                        $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = substr($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value, 0, -1);
+                        $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value . '; ';
+                    }
                 }
             }
         }
@@ -1312,6 +1339,7 @@ class HomeController extends Controller
 
     public function saveColorValue(Request $request) {
         $colorValues = $request->all();
+        $id = 0;
 
         $colorDetails = ColorDetails::where('id', '=', $request->input('id'))->first();
         if ($request->input('id') && $colorDetails) {
@@ -1329,6 +1357,7 @@ class HomeController extends Controller
             $colorDetails->post_constraint = $request->input('post_constraint');
 
             $colorDetails->save();
+            $id = $request->input('id');
         } else {
             $color = new ColorDetails([
                 'value_id' => $request->input('value_id'),
@@ -1345,6 +1374,7 @@ class HomeController extends Controller
             ]);
 
             $color->save();
+            $id = $color->id;
         }
 
         $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
@@ -1357,6 +1387,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnAllDetailValues = $this->getAllDetails();
         $data = [
+            'id'=>$id,
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
@@ -1469,6 +1500,7 @@ class HomeController extends Controller
             $nonColorDetails->certainty_constraint = $request->input('certainty_constraint');
             $nonColorDetails->degree_constraint = $request->input('degree_constraint');
             $nonColorDetails->main_value = $request->input('main_value');
+            $nonColorDetails->main_value_IRI = $request->input('main_value_IRI');
             $nonColorDetails->post_constraint = $request->input('post_constraint');
 
             $nonColorDetails->save();
@@ -1481,6 +1513,7 @@ class HomeController extends Controller
                     'certainty_constraint' =>  $request->input('certainty_constraint') ?  $request->input('certainty_constraint') : null,
                     'degree_constraint' =>  $request->input('degree_constraint') ?  $request->input('degree_constraint') : null,
                     'main_value' =>  $request->input('main_value') ?  $request->input('main_value') : null,
+                    'main_value_IRI' =>  $request->input('main_value_IRI') ?  $request->input('main_value_IRI') : null,
                     'post_constraint' =>  $request->input('post_constraint') ?  $request->input('post_constraint') : null,
                 ]);
 
@@ -1741,10 +1774,15 @@ class HomeController extends Controller
                                 'certainty_constraint' => $eachColorDetails->certainty_constraint,
                                 'degree_constraint' => $eachColorDetails->degree_constraint,
                                 'brightness' => $eachColorDetails->brightness,
+                                'birghtness_IRI' => $eachColorDetails->brightness_IRI,
                                 'reflectance' => $eachColorDetails->reflectance,
+                                'reflectance_IRI' => $eachColorDetails->reflectance_IRI,
                                 'saturation' => $eachColorDetails->saturation,
+                                'saturation_IRI' => $eachColorDetails->saturation_IRI,
                                 'colored' => $eachColorDetails->colored,
+                                'colored_IRI' => $eachColorDetails->colored_IRI,
                                 'multi_colored' => $eachColorDetails->multi_colored,
+                                'multi_colored_IRI' => $eachColorDetails->multi_colored_IRI,
                                 'post_constraint' => $eachColorDetails->post_constraint,
                             ]);
 
@@ -1767,6 +1805,7 @@ class HomeController extends Controller
                                 'certainty_constraint' => $eachNonColorDetails->certainty_constraint,
                                 'degree_constraint' => $eachNonColorDetails->degree_constraint,
                                 'main_value' => $eachNonColorDetails->main_value,
+                                'main_value_IRI' => $eachNonColorDetails->main_value_IRI,
                                 'post_constraint' => $eachNonColorDetails->post_constraint,
                             ]);
 
@@ -2188,6 +2227,7 @@ class HomeController extends Controller
             $writer->addTriple($sampleName, "rdf:label",        "\"". $header->header . " for ". $user->taxon . "\"",   $graph);
             $writer->addTriple($sampleName, "rdf:id",           "\"some_Unique_ID_4_This_Sample\"", $graph);
             $writer->addTriple($sampleName, "iao:is_about",     "ncbi:txid$txid",                  $graph);
+            $writer->addTriple($sampleName, ":specimen_of",     ":".str_replace(' ', '_', ucwords(strtolower($user->taxon))),                  $graph);
             $writer->addTriple($sampleName, $a,                 "obi:specimen",                     $graph);
 
             foreach( $values as $character){
@@ -2332,7 +2372,7 @@ class HomeController extends Controller
     }
     public function test() {
 
-        $users = User::all();
+        $users = User::where('password', '!=', '')->get();
         {
             $client = new Client(['base_uri' => 'https://shark.sbs.arizona.edu:8443/blazegraph/namespace/kb/']);
 
@@ -2351,6 +2391,8 @@ class HomeController extends Controller
 
             $result = $this->getTrigDescription($user->id, $taxons);
             echo $user->id . '<br/>';
+            echo $result['description'] .'<br/>';
+            echo implode("<br/>" ,$result['taxons']) .'<br/>';
             $taxons = $result['taxons'];
             $query = 'insert data{' . $result['description'] . '}';
             $promises = [
@@ -2397,5 +2439,560 @@ class HomeController extends Controller
     }
     public function getCharacterNames(Request $request) {
         return Character::select('name')->distinct('name')->get();
+    }
+    public function setNonColorValueIRI(Request $request) {
+        $id = $request->input('id');
+        $main_value_IRI = $request->input('main_value_IRI');
+        NonColorDetails::where('id', '=', $id)->update(['main_value_IRI' => $main_value_IRI]);
+    }
+    public function setColorBrightnessIRI(Request $request) {
+        $id = $request->input('id');
+        $main_value_IRI = $request->input('IRI');
+        ColorDetails::where('id', '=', $id)->update(['brightness_IRI' => $main_value_IRI]);
+    }
+    public function setColorReflectanceIRI(Request $request) {
+        $id = $request->input('id');
+        $main_value_IRI = $request->input('IRI');
+        ColorDetails::where('id', '=', $id)->update(['reflectance_IRI' => $main_value_IRI]);
+    }
+    public function setColorSaturationIRI(Request $request) {
+        $id = $request->input('id');
+        $main_value_IRI = $request->input('IRI');
+        ColorDetails::where('id', '=', $id)->update(['saturation_IRI' => $main_value_IRI]);
+    }
+    public function setColorColoredIRI(Request $request) {
+        $id = $request->input('id');
+        $main_value_IRI = $request->input('IRI');
+        ColorDetails::where('id', '=', $id)->update(['colored_IRI' => $main_value_IRI]);
+    }
+    public function setColorMultiColoredIRI(Request $request) {
+        $id = $request->input('id');
+        $main_value_IRI = $request->input('IRI');
+        ColorDetails::where('id', '=', $id)->update(['multi_colored_IRI' => $main_value_IRI]);
+    }
+    public function resolveCharacter(Request $request) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $username = explode('@', $user['email'])[0];
+        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $replacementTerm = $request->input('replacementTerm');
+        $replacementIRI  = $request->input('replacementIRI');
+        $characterResult = Character::where([['IRI', '=', $deprecatedIRI], ['owner_name', '=', $username]])->get();
+        foreach ($characterResult as $eachCharacter) {
+            $eachCharacter->IRI = $replacementIRI;
+            $eachCharacter->name = $replacementTerm;
+            $eachCharacter->save();
+            $valuesResult = Value::where('character_id', '=', $eachCharacter->id)->get();
+            foreach ($valuesResult as $indValue) {
+                if ($indValue->header_id == 1) {
+                    $indValue->value = $replacementTerm;
+                    $indValue->save();
+                }
+            }
+        }
+        $standardCharacterResult = StandardCharacter::where('IRI', '=', $deprecatedIRI)->get();
+        foreach ($standardCharacterResult as $eachCharacter) {
+            $eachCharacter->IRI = $replacementIRI;
+            $eachCharacter->name = $replacementTerm;
+            $eachCharacter->save();
+            $valuesResult = Value::where('character_id', '=', $eachCharacter->id)->get();
+            foreach ($valuesResult as $indValue) {
+                if ($indValue->header_id == 1) {
+                    $indValue->value = $replacementTerm;
+                    $indValue->save();
+                }
+            }
+        }
+
+        $returnHeaders = $this->getHeaders();
+        $returnValues = $this->getValuesByCharacter();
+        $returnCharacters = $this->getArrayCharacters();
+        $returnDefaultCharacters = $this->getDefaultCharacters();
+        $returnTaxon = $user->taxon;
+
+        $returnAllDetailValues = $this->getAllDetails();
+        $data = [
+            'headers' => $returnHeaders,
+            'characters' => $returnCharacters,
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'taxon' => $returnTaxon,
+            'defaultCharacters' => $returnDefaultCharacters,
+        ];
+
+        return $data;
+    }
+    public function resolveNonColorValue(Request $request) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $replacementTerm = $request->input('replacementTerm');
+        $replacementIRI  = $request->input('replacementIRI');
+        $nonColorsResult = NonColorDetails::where('main_value_IRI', '=', $deprecatedIRI)->get();
+        foreach ($nonColorsResult as $eachValue) {
+            $value = Value::where('id', '=', $eachValue->value_id)->first();
+            if ($value) {
+                $header = Header::where('id', '=', $value->header_id)->first();
+                if ($header->user_id == Auth::id()) {
+                    $eachValue->main_value_IRI = $replacementIRI;
+                    $eachValue->main_value = $replacementTerm;
+                    $eachValue->save();
+                }
+            }
+        }
+
+        $returnValues = $this->getValuesByCharacter();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+        ];
+
+        return $data;
+    }
+    public function resolveColorBrightness(Request $request) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $replacementTerm = $request->input('replacementTerm');
+        $replacementIRI  = $request->input('replacementIRI');
+        $colorsResult = ColorDetails::where('brightness_IRI', '=', $deprecatedIRI)->get();
+        foreach ($colorsResult as $eachValue) {
+            $value = Value::where('id', '=', $eachValue->value_id)->first();
+            if ($value) {
+                $header = Header::where('id', '=', $value->header_id)->first();
+                if ($header->user_id == Auth::id()) {
+                    $eachValue->brightness_IRI = $replacementIRI;
+                    $eachValue->brightness = $replacementTerm;
+                    $eachValue->save();
+                }
+            }
+        }
+
+        $returnValues = $this->getValuesByCharacter();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+        ];
+
+        return $data;
+    }
+    public function resolveColorReflectance(Request $request) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $replacementTerm = $request->input('replacementTerm');
+        $replacementIRI  = $request->input('replacementIRI');
+        $colorsResult = ColorDetails::where('reflectance_IRI', '=', $deprecatedIRI)->get();
+        foreach ($colorsResult as $eachValue) {
+            $value = Value::where('id', '=', $eachValue->value_id)->first();
+            if ($value) {
+                $header = Header::where('id', '=', $value->header_id)->first();
+                if ($header->user_id == Auth::id()) {
+                    $eachValue->reflectance_IRI = $replacementIRI;
+                    $eachValue->reflectance = $replacementTerm;
+                    $eachValue->save();
+                }
+            }
+        }
+
+        $returnValues = $this->getValuesByCharacter();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+        ];
+
+        return $data;
+    }
+    public function resolveColorSaturation(Request $request) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $replacementTerm = $request->input('replacementTerm');
+        $replacementIRI  = $request->input('replacementIRI');
+        $colorsResult = ColorDetails::where('saturation_IRI', '=', $deprecatedIRI)->get();
+        foreach ($colorsResult as $eachValue) {
+            $value = Value::where('id', '=', $eachValue->value_id)->first();
+            if ($value) {
+                $header = Header::where('id', '=', $value->header_id)->first();
+                if ($header->user_id == Auth::id()) {
+                    $eachValue->saturation_IRI = $replacementIRI;
+                    $eachValue->saturation = $replacementTerm;
+                    $eachValue->save();
+                }
+            }
+        }
+
+        $returnValues = $this->getValuesByCharacter();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+        ];
+
+        return $data;
+    }
+    public function resolveColorColored(Request $request) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $replacementTerm = $request->input('replacementTerm');
+        $replacementIRI  = $request->input('replacementIRI');
+        $colorsResult = ColorDetails::where('colored_IRI', '=', $deprecatedIRI)->get();
+        foreach ($colorsResult as $eachValue) {
+            $value = Value::where('id', '=', $eachValue->value_id)->first();
+            if ($value) {
+                $header = Header::where('id', '=', $value->header_id)->first();
+                if ($header->user_id == Auth::id()) {
+                    $eachValue->colored_IRI = $replacementIRI;
+                    $eachValue->colored = $replacementTerm;
+                    $eachValue->save();
+                }
+            }
+        }
+
+        $returnValues = $this->getValuesByCharacter();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+        ];
+
+        return $data;
+    }
+    public function resolveColorMultiColored(Request $request) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $replacementTerm = $request->input('replacementTerm');
+        $replacementIRI  = $request->input('replacementIRI');
+        $colorsResult = ColorDetails::where('multi_colored_IRI', '=', $deprecatedIRI)->get();
+        foreach ($colorsResult as $eachValue) {
+            $value = Value::where('id', '=', $eachValue->value_id)->first();
+            if ($value) {
+                $header = Header::where('id', '=', $value->header_id)->first();
+                if ($header->user_id == Auth::id()) {
+                    $eachValue->multi_colored_IRI = $replacementIRI;
+                    $eachValue->multi_colored = $replacementTerm;
+                    $eachValue->save();
+                }
+            }
+        }
+
+        $returnValues = $this->getValuesByCharacter();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+        ];
+
+        return $data;
+    }
+    public function getMatrixNames(Request $request) {
+        $names = Matrix::where('user_id', '=', Auth::id())->select('matrix_name')->get();
+        return $names;
+    }
+
+    public function nameMatrixFunc($matrixName) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $username = explode('@', $user['email'])[0];
+        $fakeUser = User::create([
+            'email' => $username . '_ver_' . $matrixName . '@email.com',
+            'password' => '',
+            'remember_token' => '',
+            'taxon' => $user['taxon']
+        ]);
+
+        $matrix = Matrix::create([
+            'user_id' => $user['id'],
+            'matrix_name' => $matrixName,
+            'named_user_id' => $fakeUser['id']
+        ]);
+
+        $usertags = UserTag::where('user_id', '=', Auth::id())->select('user_id','tag_name')->get();
+        $newUserTags = [];
+        foreach ($usertags as $usertag) {
+            array_push($newUserTags, [
+                'user_id' => $fakeUser['id'],
+                'tag_name' => $usertag['tag_name'],
+                'created_at' => date("Y-m-d")." ".date("H:i:s"),
+                'updated_at' => date("Y-m-d")." ".date("H:i:s")
+            ]);
+        }
+        UserTag::insert($newUserTags);
+
+        $characters = Character::where('owner_name', '=', $username)->get();
+        $newCharacters = [];
+        foreach ($characters as $eachCharacter) {
+            array_push($newCharacters, [
+                'name'           => $eachCharacter['name'],
+                'IRI'            => $eachCharacter['IRI'],
+                'method_from'    => $eachCharacter['method_from'],
+                'method_to'      => $eachCharacter['method_to'],
+                'method_include' => $eachCharacter['method_include'],
+                'method_exclude' => $eachCharacter['method_exclude'],
+                'method_where'   => $eachCharacter['method_where'],
+                'method_as'      => $eachCharacter['method_as'],
+                'creator'        => $eachCharacter['creator'],
+                'unit'           => $eachCharacter['unit'],
+                'standard'       => $eachCharacter['standard'],
+                'username'       => $eachCharacter['username'],
+                'owner_name'     => $username . '_ver_' . $matrixName,
+                'standard_tag'   => $eachCharacter['standard_tag'],
+                'summary'        => $eachCharacter['summary'],
+                'usage_count'    => $eachCharacter['usage_count'],
+                'order'          => $eachCharacter['order'],
+                'show_flag'      => $eachCharacter['show_flag'],
+                'created_at'     => date("Y-m-d")." ".date("H:i:s"),
+                'updated_at'     => date("Y-m-d")." ".date("H:i:s")
+            ]);
+        }
+        Character::insert($newCharacters);
+
+        $newCharacters = Character::where('owner_name', '=', $username . '_ver_' . $matrixName)->get();
+        $characterIds = [];
+        foreach ($characters as $eachCharacter) {
+            foreach ($newCharacters as $eachNewCharacter) {
+                if ($eachCharacter['name'] == $eachNewCharacter['name'] &&
+                    $eachCharacter['IRI'] == $eachNewCharacter['IRI'] &&
+                    $eachCharacter['method_from'] == $eachNewCharacter['method_from'] &&
+                    $eachCharacter['method_to'] == $eachNewCharacter['method_to'] &&
+                    $eachCharacter['method_include'] == $eachNewCharacter['method_include'] &&
+                    $eachCharacter['method_exclude'] == $eachNewCharacter['method_exclude'] &&
+                    $eachCharacter['method_where'] == $eachNewCharacter['method_where'] &&
+                    $eachCharacter['method_as'] == $eachNewCharacter['method_as'] &&
+                    $eachCharacter['creator'] == $eachNewCharacter['creator'] &&
+                    $eachCharacter['unit'] == $eachNewCharacter['unit'] &&
+                    $eachCharacter['standard'] == $eachNewCharacter['standard'] &&
+                    $eachCharacter['username'] == $eachNewCharacter['username'] &&
+                    $eachCharacter['standard_tag'] == $eachNewCharacter['standard_tag'] &&
+                    $eachCharacter['summary'] == $eachNewCharacter['summary'] &&
+                    $eachCharacter['usage_count'] == $eachNewCharacter['usage_count'] &&
+                    $eachCharacter['order'] == $eachNewCharacter['order'] &&
+                    $eachCharacter['show_flag'] == $eachNewCharacter['show_flag']) {
+                        $characterIds[$eachCharacter['id']] = $eachNewCharacter['id'];
+                        break;
+                    }
+            }
+        }
+
+        $headers = Header::where('user_id', '=', Auth::id())->get();
+        $newHeaders = [];
+        foreach ($headers as $eachHeader) {
+            array_push($newHeaders, [
+                'header'        => $eachHeader['header'],
+                'user_id'       => $fakeUser['id'],                
+                'created_at'    => date("Y-m-d")." ".date("H:i:s"),
+                'updated_at'    => date("Y-m-d")." ".date("H:i:s")
+            ]);
+        }
+        Header::insert($newHeaders);
+
+        $newHeaders = Header::where('user_id', '=', $fakeUser['id'])->get();
+        $headerIds = [];
+        foreach ($headers as $eachHeader) {
+            foreach ($newHeaders as $eachNewHeader) {
+                if ($eachHeader['header'] == $eachNewHeader['header']) {
+                    $headerIds[$eachHeader['id']] = $eachNewHeader['id'];
+                    break;
+                }
+            }
+        }
+
+        $values = Value::join('characters', 'characters.id', '=', 'values.character_id')
+                        ->where('characters.owner_name', '=', $username)
+                        ->select('values.id as id',
+                                 'values.character_id as character_id', 
+                                 'values.header_id as header_id',
+                                 'values.value as value')
+                        ->get();
+        $newValues = [];
+        foreach ($values as $eachValue) {
+            array_push($newValues, [
+                'character_id'   => $characterIds[$eachValue['character_id']],
+                'header_id'      => $eachValue['header_id'] == 1 ? 1 : $headerIds[$eachValue['header_id']],
+                'value'          => $eachValue['value'],
+                'created_at'     => date("Y-m-d")." ".date("H:i:s"),
+                'updated_at'     => date("Y-m-d")." ".date("H:i:s")
+            ]);
+        }
+        Value::insert($newValues);
+
+        $newValues = Value::join('characters', 'characters.id', '=', 'values.character_id')
+                        ->where('characters.owner_name', '=', $username . '_ver_' . $matrixName)
+                        ->select('values.id as id',
+                                 'values.character_id as character_id', 
+                                 'values.header_id as header_id',
+                                 'values.value as value')
+                        ->get();
+        $valueIds = [];
+        foreach ($values as $eachValue) {
+            foreach ($newValues as $eachNewValue) {
+                if ($eachNewValue['character_id'] == $characterIds[$eachValue['character_id']] && 
+                    ($eachValue['header_id'] == 1 || $eachNewValue['header_id'] == $headerIds[$eachValue['header_id']])) {
+                        $valueIds[$eachValue['id']] = $eachNewValue['id'];
+                        break;
+                    }
+            }
+        }
+
+        $valueIdsResults = Value::join('headers', 'headers.id', '=', 'values.header_id')->where('headers.user_id', '=', $user['id'])->select('values.id')->get();
+        $ids = [];
+        foreach($valueIdsResults as $value){
+            array_push($ids, $value->id);
+        }
+        $colorDetails = ColorDetails::whereIn('value_id', $ids)->get();
+        $newColorDetails = [];
+        foreach ($colorDetails as $eachColorDetail) {
+            array_push($newColorDetails, [
+                'value_id'              => $valueIds[$eachColorDetail['value_id']],
+                'negation'              => $eachColorDetail['negation'],
+                'pre_constraint'        => $eachColorDetail['pre_constraint'],
+                'certainty_constraint'  => $eachColorDetail['certainty_constraint'],
+                'degree_constraint'     => $eachColorDetail['degree_constraint'],
+                'brightness'            => $eachColorDetail['brightness'],
+                'brightness_IRI'        => $eachColorDetail['brightness_IRI'],
+                'reflectance'           => $eachColorDetail['reflectance'],
+                'reflectance_IRI'       => $eachColorDetail['reflectance_IRI'],
+                'saturation'            => $eachColorDetail['saturation'],
+                'saturation_IRI'        => $eachColorDetail['saturation_IRI'],
+                'colored'               => $eachColorDetail['colored'],
+                'colored_IRI'           => $eachColorDetail['colored_IRI'],
+                'multi_colored'         => $eachColorDetail['multi_colored'],
+                'multi_colored_IRI'     => $eachColorDetail['multi_colored_IRI'],
+                'post_constraint'       => $eachColorDetail['post_constraint'],
+                'created_at'            => date("Y-m-d")." ".date("H:i:s"),
+                'updated_at'            => date("Y-m-d")." ".date("H:i:s")
+            ]);
+        }
+        ColorDetails::insert($newColorDetails);
+
+        $nonColorDetails = NonColorDetails::whereIn('value_id', $ids)->get();
+        $newNonColorDetails = [];
+        foreach ($nonColorDetails as $eachNonColorDetail) {
+            array_push($newNonColorDetails, [
+                'value_id'              => $valueIds[$eachNonColorDetail['value_id']],
+                'negation'              => $eachNonColorDetail['negation'],
+                'pre_constraint'        => $eachNonColorDetail['pre_constraint'],
+                'certainty_constraint'  => $eachNonColorDetail['certainty_constraint'],
+                'degree_constraint'     => $eachNonColorDetail['degree_constraint'],
+                'main_value'            => $eachNonColorDetail['main_value'],
+                'main_value_IRI'        => $eachNonColorDetail['main_value_IRI'],
+                'post_constraint'       => $eachNonColorDetail['post_constraint'],
+                'created_at'            => date("Y-m-d")." ".date("H:i:s"),
+                'updated_at'            => date("Y-m-d")." ".date("H:i:s")
+            ]);
+        }
+        NonColorDetails::insert($newNonColorDetails);
+
+        $matrixNames = Matrix::where('user_id', '=', Auth::id())->select('matrix_name')->get();
+
+        $data = [
+            'fakeUser' => $fakeUser,
+            'matrix' => $matrix,
+            'usertags' => $newUserTags,
+            'headers' => $newHeaders,
+            'characterids' => $characterIds,
+            'headerIds' => $headerIds,
+            'values' => $values,
+            'valueIds' => $valueIds,
+            'colorDetails' => $colorDetails,
+            'nonColorDetails' => $nonColorDetails,
+            'matrixNames' => $matrixNames
+        ];
+        
+        return $data;
+    }
+
+    public function nameMatrix(Request $request) {
+        $matrixName = $request->input('matrixname');
+        $data = $this->nameMatrixFunc($matrixName);
+        return $data;
+    }
+    public function importMatrix(Request $request) {
+        $matrixName = $request->input('matrixname');
+        $user = User::where('id', '=', Auth::id())->first();
+        $username = explode('@', $user['email'])[0];
+        $versionUser = User::where('email', '=',  $username . '_ver_' . $matrixName . '@email.com')->first();
+
+        Matrix::where('user_id', '=', $user['id'])->update(['user_id' => $versionUser['id']]);
+        User::where('id', '=', $user['id'])->delete();
+        Character::where('owner_name', '=', $username)->delete();
+
+        Matrix::where([['user_id', '=', $versionUser['id']], ['matrix_name', '=', $matrixName]])->delete();
+        
+        User::where('id', '=', $versionUser['id'])->update([
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'password' => $user['password'],
+            'remember_token' => $user['remember_token'],
+            'taxon' => $user['taxon']
+            ]);
+        Character::where('owner_name', '=', $username . '_ver_' . $matrixName)->update(['owner_name' => $username]);
+
+        $this->nameMatrixFunc($matrixName);
+
+        $returnHeaders = $this->getHeaders();
+        $returnValues = $this->getValuesByCharacter();
+        $returnCharacters = $this->getArrayCharacters();
+        $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'headers' => $returnHeaders,
+            'characters' => $returnCharacters,
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'tags' => $returnUserTags,
+        ];
+
+        return $data;
+    }
+    public function overwriteMatrix(Request $request) {
+        $matrixName = $request->input('matrixname');
+        $user = User::where('id', '=', Auth::id())->first();
+        $username = explode('@', $user['email'])[0];
+        $versionUser = User::where('email', '=',  $username . '_ver_' . $matrixName . '@email.com')->first();
+
+        Matrix::where([['user_id', '=', $user['id']], ['matrix_name', '=', $matrixName]])->delete();
+        User::where('id', '=', $versionUser['id'])->delete();
+        Character::where('owner_name', '=', $username . '_ver_' . $matrixName)->delete();
+
+        $this->nameMatrixFunc($matrixName);
+
+        $returnHeaders = $this->getHeaders();
+        $returnValues = $this->getValuesByCharacter();
+        $returnCharacters = $this->getArrayCharacters();
+        $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'headers' => $returnHeaders,
+            'characters' => $returnCharacters,
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'tags' => $returnUserTags,
+        ];
+
+        return $data;
+    }
+    public function getTaxons(Request $request) {
+        $taxons = User::distinct()->get(['taxon']);
+
+        $data = [
+            'taxons' => $taxons
+        ];
+
+        return $data;
     }
 }
