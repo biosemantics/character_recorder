@@ -167,7 +167,7 @@
                                 <div class="col-md-1">
                                     <a class="btn btn-primary" v-on:click="getIRI()" style="width: 40px;display:none;"><span
                                             class="glyphicon glyphicon-chevron-right"></span></a>
-                                    <a class="btn btn-primary" v-on:click="resetSystem()" v-if="user.email != 'hong@test.com'">Reset System</a>
+                                    <a class="btn btn-primary" v-on:click="resetSystem()" v-if="user.email == 'hong@test.com'">Reset System</a>
                                 </div>
                             </div>
                         </div>
