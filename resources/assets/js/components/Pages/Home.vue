@@ -137,7 +137,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="collapsedFlag == true">
+                        <div v-if="collapsedFlag == true" class="row">
                             <div style="max-width: 1000px; margin-right: auto; margin-left: auto;">
                                 <div class="col-md-2">
                                     <input v-model="taxonName" v-on:blur="changeTaxonName()"
@@ -159,16 +159,13 @@
                                     />
                                 </div>
                                 <div class="col-md-1">
-                                    <a class="btn btn-primary" v-on:click="collapsedFlag = false;" style="width: 40px;"><span
-                                            class="glyphicon glyphicon-chevron-down"></span></a>
-                                </div>
-                                <div class="col-md-1">
-                                </div>
-                                <div class="col-md-1">
                                     <a class="btn btn-primary" v-on:click="getIRI()" style="width: 40px;display:none;"><span
                                             class="glyphicon glyphicon-chevron-right"></span></a>
-                                    <a class="btn btn-primary" v-on:click="resetSystem()" v-if="user.email == 'hong@test.com'">Reset System</a>
                                 </div>
+                            </div>
+                            <div style="position: absolute; right: 150px;">
+                                <a class="btn btn-primary" v-on:click="collapsedFlag = false;" style="width: 40px;"><span
+                                        class="glyphicon glyphicon-chevron-down"></span></a>
                             </div>
                         </div>
                     </div>
@@ -180,6 +177,7 @@
                 <div v-if="matrixShowFlag == true" style="text-align: center;font-weight:bold;">
                     <div class="row">
                         <div class="col-md-3">
+                            <a class="btn btn-primary" v-on:click="resetSystem()" style="height: 27px; font-size: 12px; margin-top: 3px;" v-if="user.email != 'hong@test.com'">Reset System</a>
                         </div>
                         <div class="col-md-6">
                             <h4 style="margin-top:3px;">matrix last loaded: {{ lastLoadMatrixName }}</h4>
@@ -7234,10 +7232,13 @@
                 }
             },
             resetSystem() {
+                // window.location.reload();
                 var app = this;
                 axios.get("/chrecorder/public/api/v1/resetSystem")
                 .then((resp) => {
                     // console.log(resp);
+                    alert("System reset, Reloading...");
+                    window.location.reload()
                 });
             }
         },

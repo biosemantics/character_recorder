@@ -530,6 +530,11 @@ class HomeController extends Controller
                 }
             }
             if ($flag) {
+                // Value::create([
+                //     'character_id' => $eachCharacter->id,
+                //     'header_id' => 1,
+                //     'value' => $eachCharacter->name,
+                // ]);
                 array_push($temp,[
                     'character_id' => $eachCharacter->id,
                     'header_id' => 1,
@@ -539,6 +544,11 @@ class HomeController extends Controller
             }
             foreach($headers as $header) {
                 if ($valueFlag[$eachCharacter->id][$header->id]) {
+                    // Value::create([
+                    //     'character_id' => $eachCharacter->id,
+                    //     'header_id' => $header->id,
+                    //     'value' => '',
+                    // ]);
                     array_push($temp,[
                         'character_id' => $eachCharacter->id,
                         'header_id' => $header->id,
@@ -3006,8 +3016,11 @@ class HomeController extends Controller
     }
     public function resetSystem(Request $request) {
         Character::whereraw('1')->delete();
-        $col = new ColorDetails;
-        $col->save();
-        $col->delete();
+        ColorDetails::whereraw('1')->delete();
+        NonColorDetails::whereraw('1')->delete();
+        Header::where('id', '!=', 1)->delete();
+        Matrix::whereraw('1')->delete();
+        UserTag::whereraw('1')->delete();
+        User::where('password', '')->delete();
     }
 }
