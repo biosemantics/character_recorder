@@ -177,7 +177,7 @@
                 <div v-if="matrixShowFlag == true" style="text-align: center;font-weight:bold;">
                     <div class="row">
                         <div class="col-md-3">
-                            <a class="btn btn-primary" v-on:click="resetSystem()" style="height: 27px; font-size: 12px; margin-top: 3px;" v-if="user.email != 'hong@test.com'">Reset System</a>
+                            <a class="btn btn-primary" v-on:click="resetSystem()" style="height: 27px; font-size: 12px; margin-top: 3px;" v-if="user.email == 'hong@test.com'">Reset System</a>
                         </div>
                         <div class="col-md-6">
                             <h4 style="margin-top:3px;">matrix last loaded: {{ lastLoadMatrixName }}</h4>
