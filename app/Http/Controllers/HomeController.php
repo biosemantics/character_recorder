@@ -117,6 +117,11 @@ class HomeController extends Controller
         return view('ontologyupdate');
     }
 
+    public function sharedCharacter()
+    {
+        return view('sharedcharacter');
+    }
+
     public function sendMail(Request $request) {
         $details = [
             'title' => $request->input('subject'),

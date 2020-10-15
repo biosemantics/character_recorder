@@ -56,6 +56,7 @@ Route::group([
     Route::post('overwriteMatrix',                      ['as' => 'overwriteMatrix',             'uses' => 'HomeController@overwriteMatrix']);
     Route::get('getMatrixNames',                        ['as' => 'getMatrixNames',              'uses' => 'HomeController@getMatrixNames']);
     Route::get('getTaxons',                             ['as' => 'getTaxons',                   'uses' => 'HomeController@getTaxons']);
+    Route::get('resetSystem',                           ['as' => 'resetSystem',                 'uses' => 'HomeController@resetSystem']);
 
     Route::group([
         'prefix' => '/character',

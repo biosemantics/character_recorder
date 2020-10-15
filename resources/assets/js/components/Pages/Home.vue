@@ -11,7 +11,9 @@
                         <div class="col-md-12">
                             <div v-if="matrixShowFlag == false"
                                  style="max-width: 1000px; margin-left: auto; margin-right: auto;">
-                                <h3><b>Set up your matrix</b></h3>
+                                <h3><b>Set up your matrix: </b>
+                                <span style="font-size: 20px;">select/create the characters you'd like to record in the matrix, then click on 'Go To Matrix'. You can add or remove characters after matrix is generated.</span>
+                                </h3>
                             </div>
                         </div>
                         <div class="col-md-12" v-if="collapsedFlag == false">
@@ -68,7 +70,7 @@
                                         <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag">
                                             {{ eachCharacter.standard_tag }} </b>
                                         <div style="margin-left: 50px;">
-                                            <i v-bind:style="{'font-weight':eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}" style="color: #636b6f;">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <i v-bind:style="{color:userCharacters.filter(ch => ch.name == eachCharacter.name).length > 1 ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <a style="margin-left: 45px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                                                     <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench" ></span>
                                                 </a>
@@ -99,7 +101,7 @@
                                         <div v-for="eachCharacter in userCharacters"
                                             v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)"
                                             v-tooltip="eachCharacter.tooltip" style="margin-left: 50px;">
-                                            <i v-bind:style="{color:userCharacters.filter(ch => ch.name == eachCharacter.name).length > 1 ? '#636b6f' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <i v-bind:style="{color:userCharacters.filter(ch => ch.name == eachCharacter.name).length > 1 ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <a style="margin-left: 35px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                                                     <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench" ></span>
                                                 </a>
@@ -161,12 +163,11 @@
                                             class="glyphicon glyphicon-chevron-down"></span></a>
                                 </div>
                                 <div class="col-md-1">
-                                    <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;"
-                                       style=" ">Name this matrix version</a>
                                 </div>
                                 <div class="col-md-1">
                                     <a class="btn btn-primary" v-on:click="getIRI()" style="width: 40px;display:none;"><span
                                             class="glyphicon glyphicon-chevron-right"></span></a>
+                                    <a class="btn btn-primary" v-on:click="resetSystem()" v-if="user.email != 'hong@test.com'">Reset System</a>
                                 </div>
                             </div>
                         </div>
@@ -177,7 +178,16 @@
                      style="border-bottom: 2px solid; width: 100%; margin-top: 40px;text-align:center;">
                 </div>
                 <div v-if="matrixShowFlag == true" style="text-align: center;font-weight:bold;">
-                     matrix last loaded: {{ lastLoadMatrixName }}
+                    <div class="row">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-6">
+                            <h4 style="margin-top:3px;">matrix last loaded: {{ lastLoadMatrixName }}</h4>
+                        </div>
+                        <div class="col-md-3">
+                            <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;" style="height: 27px; font-size: 12px; margin-top: 3px;">Name this matrix version</a>
+                        </div>
+                    </div>
                 </div>
                 <div style="padding-left: 15px; padding-right: 15px; display: inline-flex; width: 100%;"
                      v-if="matrixShowFlag == true">
@@ -419,8 +429,11 @@
                             <!--</div>-->
                             <!--<a class="btn btn-default" style="border: none;" v-on:click="expandDescription()"><span
                                     class="glyphicon glyphicon-option-vertical" style="color: #1f648b;"></span></a>-->
-                            <a class="btn btn-default" style="border: none;" v-on:click="expandDescription()"><span
-                                    style="color: #1f648b; font-weigth: bold; writing-mode: vertical-rl; text-orientation: upright; ">Generate Description</span></a>
+                            <a class="btn btn-default" style="border: none;" v-tooltip="{ content:generateDescriptionTooltip, classes: 'standard-tooltip'}" v-on:click="expandDescription()">
+                                <span
+                                    style="color: #1f648b; font-weigth: bold; writing-mode: vertical-rl; text-orientation: upright; "
+                                    >Generate Description</span>
+                            </a>
                         </div>
                     </div>
                     <div v-if="descriptionFlag == true"
@@ -471,7 +484,7 @@
                                                             <option value="Color">Color</option>
                                                             <option value="Shape">Shape</option>
                                                             <option value="Texture">Texture</option>
-                                                            <option value="Growth Form">Growth Form</option>
+                                                            <option value="Growth form">Growth form</option>
                                                         </datalist>
                                                         <!--<select v-model="firstCharacter" style="height: 26px;">-->
                                                         <!--<option>Length</option>-->
@@ -568,7 +581,10 @@
                                                                 Tag<br><span
                                                                         class="glyphicon glyphicon-edit"></span></a>
                                                             </li>
-                                                            <li class="summary"><a
+                                                            <li class="summary"
+                                                                v-bind:class="{'back-grey': !checkHaveUnit(character.name)}">
+                                                                <a
+                                                                    :disabled="!checkHaveUnit(character.name)"
                                                                     v-on:click="showDetails('summary', metadataFlag)">4.
                                                                 Summary<br>Function<br><span
                                                                         class="glyphicon glyphicon-edit"></span></a>
@@ -752,7 +768,7 @@
                                             character.name }}</i>.
                                         </div>
                                         <div v-if="!character.summary">
-                                            Summary function not selected. Categorical characters do not need a summary function.
+                                            Confirm "{{ character.name }} is a categorical character. <br/>If it is a numerical character, click on Cancel, and select a summary function for it.
                                         </div>
                                         <div class="modal-footer">
                                             <a class="btn btn-primary ok-btn"
@@ -1968,6 +1984,7 @@
                 parentData: null,
                 viewFlag: false,
                 standardCharactersTooltip: '',
+                generateDescriptionTooltip: '',
                 confirmMethod: false,
                 confirmUnit: false,
                 confirmTag: false,
@@ -2153,7 +2170,9 @@
                 currentVersion: null,
                 tagDeprecated: [],
                 loadMatrixConfirmDialog: false,
-                lastLoadMatrixName: ''
+                lastLoadMatrixName: '',
+                treeResult: [],
+                definitionData: []
             }
         },
         components: {
@@ -2234,7 +2253,12 @@
                                 for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
                                     if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
                                         console.log(methodEntry.resultAnnotations[i].value);
-                                        src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                        if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
+                                            var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                        } else {
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                        }
                                     }
                                 }
                                 if (src != '') {
@@ -2246,6 +2270,36 @@
                     .catch(function (resp) {
                         console.log('exp search resp error', resp);
                     });
+            },
+            async getTooltipImageString(name) {
+                var methodEntry = null;
+                var src = '';
+                var app = this;
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
+                    .then(function (resp) {
+                        if (resp.data.entries.length > 0) {
+                            methodEntry = resp.data.entries.filter(function(each) {
+                                return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
+                            })[0];
+                            if (methodEntry) {
+                                for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
+                                    if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                                        console.log(methodEntry.resultAnnotations[i].value);
+                                        if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
+                                            var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                        } else {
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch(function (resp) {
+                        console.log('exp search resp error', resp);
+                    });
+                return src;
             },
             async getTooltipImageUserChracter(name, index) {
                 var methodEntry = null;
@@ -2260,7 +2314,12 @@
                             if (methodEntry) {
                                 for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
                                     if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
-                                        src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                        if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
+                                            var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                        } else {
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                        }
                                     }
                                 }
                                 if (src != '') {
@@ -2582,6 +2641,20 @@
                 }
                 app.detailsFlag = true;
             },
+            trimInputString(inputString) {
+                var index = 0;
+                while (inputString[index] == ' ') { 
+                    index ++;
+                }
+                inputString = inputString.slice(index, inputString.length);
+                index = inputString.length - 1;
+                while (inputString[index] == ' ') {
+                    index --;
+                }
+                inputString = inputString.slice(0, index + 1);
+                inputString = inputString.replaceAll('      ', ' ').replaceAll('     ', ' ').replaceAll('    ', ' ').replaceAll('   ', ' ').replaceAll('  ', ' ');
+                return inputString;
+            },
             checkBracketConfirm() {
                 var app = this;
                 console.log("check bracket");
@@ -2605,6 +2678,9 @@
                     app.toRemoveBracketConfirmFlag = true;
                 }
                 else {
+                    app.firstCharacter = app.trimInputString(app.firstCharacter);
+                    app.lastCharacter = app.trimInputString(app.lastCharacter);
+                    app.secondLastCharacter = app.trimInputString(app.secondLastCharacter);
                     app.checkStoreCharacter();
                 }
             },
@@ -2645,7 +2721,7 @@
                     requestBody = {
                         "user": app.sharedFlag ? '' : app.user.name,
                         "ontology": "carex",
-                        "term": app.lastCharacter.toLowerCase().replace(' ', '_').replace('-', '_'),
+                        "term": app.lastCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
                         "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                         "definition": app.lastCharacterDefinition,
                         "elucidation": "",
@@ -2673,7 +2749,7 @@
                     requestBody = {
                         "user": app.sharedFlag ? '' : app.user.name,
                         "ontology": "carex",
-                        "term": app.secondLastCharacter.toLowerCase().replace(' ', '_').replace('-', '_'),
+                        "term": app.secondLastCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
                         "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                         "definition": app.secondLastCharacterDefinition,
                         "elucidation": "",
@@ -2706,7 +2782,7 @@
                     requestBody = {
                         "user": app.sharedFlag ? '' : app.user.name,
                         "ontology": "carex",
-                        "term": wholeCharacter,
+                        "term": wholeCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
                         "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                         "definition": app.wholeCharacterDefinition,
                         "elucidation": "",
@@ -2822,7 +2898,7 @@
                         
                 // }
 
-                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.firstCharacter.toLowerCase().replace(' ', '_').replace('-', '_'))
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.firstCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
                     .then(function(resp){
                         console.log('term?'+app.firstCharacter, resp.data);
                         if (!resp.data.entries.length){
@@ -2830,7 +2906,7 @@
                         }
                     });
 
-                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase().replace(' ', '_').replace('-', '_'))
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
                     .then(function(resp){
                         console.log('term?'+app.lastCharacter, resp.data);
                         if (!resp.data.entries.length){
@@ -2839,7 +2915,7 @@
                     });
 
                 if (app.middleCharacter == 'between') {
-                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.secondLastCharacter.toLowerCase().replace(' ', '_').replace('-', '_'))
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.secondLastCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
                     .then(function(resp){
                         console.log('term?'+app.secondLastCharacter, resp.data);
                         if (!resp.data.entries.length){
@@ -2848,13 +2924,17 @@
                     });
                 } 
 
-                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase())
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase().replaceAll(' ', '_'))
                     .then(function(resp){
                         console.log('term?'+wholeCharacter, resp.data);
                         if (!resp.data.entries.length){
                             app.wholeCharacterUndefined = true;
                         }
                     });
+                
+                console.log(app.firstCharacterUndefined);
+                console.log(app.nounUndefined);
+                console.log(app.wholeCharacterUndefined);
                 
                 if (!app.firstCharacterUndefined && !app.nounUndefined && (app.middleCharacter != 'between' || !app.secondNounUndefined) && !app.wholeCharacterUndefined) {
                     app.storeCharacter();
@@ -3065,7 +3145,7 @@
 
                 console.log('metadata', metadata);
                 console.log("app.character=", app.character);
-                if (( app.checkHaveUnit(app.character.name)) || ( metadata != 'method' && metadata != 'unit' )) {
+                if (( app.checkHaveUnit(app.character.name)) || ( metadata != 'method' && metadata != 'unit' && metadata != 'summary' )) {
                     app.metadataFlag = metadata;
                     switch (metadata) {
                         case 'method':
@@ -3164,8 +3244,8 @@
                 var app = this;
                 // app.isLoading = true;
                 app.standardShowFlag = !app.standardShowFlag;
-                console.log('test', app.userCharacters);
-                console.log('test1', app.defaultCharacters);
+                console.log('userCharacters', app.userCharacters);
+                console.log('defaultCharacters', app.defaultCharacters);
                 var postCharacters = [];
                 for (var i = 0; i < app.defaultCharacters.length; i++) {
                     var character = app.defaultCharacters[i];
@@ -4138,7 +4218,7 @@
                     app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
                 }
             },
-            refreshUserCharacters (showTabFlag = false) {
+            async refreshUserCharacters (showTabFlag = false) {
                 var app = this;
                 for (var i = 0; i < app.userCharacters.length; i++) {
                     app.userCharacters[i].tooltip = '';
@@ -4156,6 +4236,14 @@
                     }
                     if (app.userCharacters[i].method_where != null && app.userCharacters[i].method_where != '') {
                         app.userCharacters[i].tooltip += 'Where: ' + app.userCharacters[i].method_where;
+                    }
+                    var definitionKey = app.userCharacters[i].name.slice(0, app.userCharacters[i].name.indexOf(' '));
+                    var definitionVar = app.definitionData.find(eachDefinition => eachDefinition.IRI == ('http://biosemantics.arizona.edu/ontologies/carex#' + (definitionKey == 'Color' ? 'coloration' : definitionKey.toLowerCase())));
+                    if (definitionVar) {
+                        if (app.userCharacters[i].tooltip != '') {
+                            app.userCharacters[i].tooltip += '<br/>';
+                        }
+                        app.userCharacters[i].tooltip += definitionKey + ' is defined as ' + definitionVar.definition;
                     }
                     app.userCharacters[i].deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.userCharacters[i].IRI);
                     app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
@@ -4204,7 +4292,7 @@
                             return 1;
                         }
                         var rows = app.values.find(value => value[0].character_id == app.userCharacters[i].id);
-                        if (!app.checkHaveUnit(rows.find(v => v.header_id == 1).value)) {
+                        if (rows && !app.checkHaveUnit(rows.find(v => v.header_id == 1).value)) {
                             for (var j = 0; j < rows.length; j ++) {
                                 if (rows[j].header_id != 1) {
                                     for (var ind = 0; ind < app.allColorValues.length; ind ++) {
@@ -4326,7 +4414,7 @@
                         app.showTableForTab(app.currentTab);
                     });
             },
-            refreshDefaultCharacters() {
+            async refreshDefaultCharacters() {
                 var app = this;
                 app.standardCharacters = [];
                 console.log("temp.text");
@@ -4334,11 +4422,8 @@
                     var temp = {};
                     temp.name = app.defaultCharacters[i].name;
                     temp.text = app.defaultCharacters[i].name + ' by ' + app.defaultCharacters[i].username + ' (' + app.defaultCharacters[i].usage_count + ')';
-                    if (app.defaultCharacters[i].name == 'Growth form of plant') {
-                        console.log('temp.text', temp.text);
-                    }
                     temp.value = app.defaultCharacters[i].id;
-                    temp.tooltip = '<div>';
+                    temp.tooltip = '';
 
                     if (app.defaultCharacters[i].method_from != null && app.defaultCharacters[i].method_from != '') {
                         temp.tooltip = temp.tooltip + 'From: ' + app.defaultCharacters[i].method_from + ', ';
@@ -4356,13 +4441,15 @@
                         temp.tooltip = temp.tooltip + 'Where: ' + app.defaultCharacters[i].method_where;
                     }
                     temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.defaultCharacters[i].IRI);
-                    temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
+                    // temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
+                    var imageSrc = await app.getTooltipImageString(temp.name);
+                    temp.tooltip = imageSrc + temp.tooltip;
                     app.standardCharacters.push(temp);
                 }
 
-                for (var i = 0; i < app.standardCharacters.length; i ++) {
-                    app.getTooltipImage(app.standardCharacters[i].name, i);
-                }
+                // for (var index = 0; index < app.standardCharacters.length; index ++) {
+                //     app.getTooltipImage(app.standardCharacters[index].name, index);
+                // }
             },
             // expandTable() {
             //     var app = this;
@@ -6229,9 +6316,15 @@
                             if (methodEntry) {
                                 for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
                                     if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                                        var id = '';
+                                        if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
+                                            id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                                        } else {
+                                            id = methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1);
+                                        }
                                         console.log(tData.text);
-                                        console.log(('https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1)));
-                                        tData.data["images"].push('https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1));
+                                        console.log(('https://drive.google.com/uc?id=' + id));
+                                        tData.data["images"].push('https://drive.google.com/uc?id=' + id);
                                     }
                                 }
                             }
@@ -7121,6 +7214,31 @@
                 axios.post('/chrecorder/public/send-mail', postValue);
                 app.messageDialogFlag = false;
                 app.disputeMessage = "";
+            },
+            getDefinition(data) {
+                var app = this;
+                if (data.data.details) {
+                    for (var i = 0; i < data.data.details.length; i ++) {
+                        if (data.data.details[i].IRI && data.data.details[i].definition) {
+                            app.definitionData.push({
+                                'IRI': data.data.details[i].IRI,
+                                'definition': data.data.details[i].definition
+                            });
+                        }
+                    }
+                }
+                if (data.children) {
+                    for (var i = 0; i < data.children.length; i ++) {
+                        app.getDefinition(data.children[i]);
+                    }
+                }
+            },
+            resetSystem() {
+                var app = this;
+                axios.get("/chrecorder/public/api/v1/resetSystem")
+                .then((resp) => {
+                    console.log(resp);
+                });
             }
         },
         watch: {
@@ -7136,7 +7254,15 @@
         },
         async created() {
             var app = this;
+            app.generateDescriptionTooltip = '<div>Click this button to generate a textual description of the taxon based on the matrix. Use up/down arrow in the matrix to adjust the order of the characters shown in the text</div>';
             // app.isLoading = true;
+            await axios.get("http://shark.sbs.arizona.edu:8080/carex/getTree")
+            .then(function (resp) {
+                app.treeResult = resp.data;
+                console.log("treeResult", app.treeResult);
+                app.getDefinition(app.treeResult);
+            });
+            console.log("definitnionData", app.definitionData);
             await axios.get("http://shark.sbs.arizona.edu:8080/carex/getDeprecatedClasses")
                 .then(function (resp) {
                     app.deprecatedTerms = resp.data['deprecated classes'];
@@ -7147,11 +7273,21 @@
                 .then(async function (resp) {
                     console.log('standardCharacters', resp);
                     app.defaultCharacters = resp.data;
+                    var toolTopIndex = 0;
                     for (var i = 0; i < resp.data.length; i++) {
                         var temp = {};
                         temp.name = resp.data[i].name;
                         if (resp.data[i].standard == 1) {
-                            app.standardCharactersTooltip = app.standardCharactersTooltip + resp.data[i].name + '; ';
+                            if (toolTopIndex % 4 == 0) {
+                                app.standardCharactersTooltip += '<div class="row">';
+                            }
+                            app.standardCharactersTooltip += '<div class="col-md-3">';
+                            app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6>' + resp.data[i].name + '</h6>';
+                            app.standardCharactersTooltip += '</div>';
+                            if (toolTopIndex % 4 == 3) {
+                                app.standardCharactersTooltip += '</div>';
+                            }
+                            toolTopIndex ++;
                         }
                         temp.text = resp.data[i].name + ' by ' + resp.data[i].username + ' (' + resp.data[i].usage_count + ')';
                         temp.value = resp.data[i].id;
@@ -7172,6 +7308,11 @@
                         if (resp.data[i].method_where != null && resp.data[i].method_where != '') {
                             temp.tooltip = temp.tooltip + 'Where: ' + resp.data[i].method_where;
                         }
+                        // var definitionKey = temp.name.slice(0, temp.name.indexOf(' '));
+                        // var definitionVar = app.definitionData.find(eachDefinition => eachDefinition.IRI == ('http://biosemantics.arizona.edu/ontologies/carex#' + (definitionKey == 'Color' ? 'coloration' : definitionKey.toLowerCase)));
+                        // if (definitionVar) {
+                        //     temp.tooltip += definitionKey + ' is defined as ' + definitionVar.definition;
+                        // }
                         temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == resp.data[i].IRI);
                         app.standardCharacters.push(temp);
                     }

@@ -144,7 +144,7 @@ if (!function_exists('getTopUser')) {
             }
         }
 
-        $result = $maxKey . ' recorded ' . $maxValue . ' characters';
+        $result = 'User "' . $maxKey . '" recorded ' . $maxValue . ' characters';
         if ($lastWeekFlag == false) {
             $result = $result . ' last week';
         }

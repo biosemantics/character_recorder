@@ -71,7 +71,8 @@ class HomeController extends Controller
             'getMatrixNames',
             'importMatrix',
             'overwriteMatrix',
-            'getTaxons'
+            'getTaxons',
+            'resetSystem'
         ]);
     }
 
@@ -727,7 +728,7 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $order = Character::max('order') + 1;
-        $characters = Character::where('owner_name', '=', $username)->select('name','method_from','method_to','method_include','method_exclude','method_where','owner_name')->get();
+        $characters = Character::where('owner_name', '=', $username)->select('name','IRI','method_from','method_to','method_include','method_exclude','method_where','owner_name')->get();
         $userTags = UserTag::where('user_id', '=', Auth::id())->get();
         $newCharacters = [];
         $newUserTags = [];
@@ -735,6 +736,7 @@ class HomeController extends Controller
             $flag = true;
             foreach ($characters as $ch){
                 if ($eachCharacter['name'] == $ch['name']
+                  && $eachCharacter['IRI'] == $ch['IRI']
                   && $eachCharacter['method_from'] == $ch['method_from']
                   && $eachCharacter['method_to'] == $ch['method_to']
                   && $eachCharacter['method_include'] == $ch['method_include']
@@ -747,6 +749,7 @@ class HomeController extends Controller
             if ($flag) {
                 array_push($newCharacters,[
                     'name' => $eachCharacter['name'],
+                    'IRI' => $eachCharacter['IRI'],
                     'method_from' => $eachCharacter['method_from'],
                     'method_to' => $eachCharacter['method_to'],
                     'method_include' => $eachCharacter['method_include'],
@@ -1862,13 +1865,18 @@ class HomeController extends Controller
                                     'value_id' => $eachValue->id,
                                     'negation' => $eachColorDetails->negation,
                                     'pre_constraint' => $eachColorDetails->pre_constraint,
+                                    'certainty_constraint' => $eachColorDetails->certainty_constraint,
                                     'degree_constraint' => $eachColorDetails->degree_constraint,
                                     'brightness' => $eachColorDetails->brightness,
-                                    'brightness' => $eachColorDetails->brightness,
+                                    'birghtness_IRI' => $eachColorDetails->brightness_IRI,
                                     'reflectance' => $eachColorDetails->reflectance,
+                                    'reflectance_IRI' => $eachColorDetails->reflectance_IRI,
                                     'saturation' => $eachColorDetails->saturation,
+                                    'saturation_IRI' => $eachColorDetails->saturation_IRI,
                                     'colored' => $eachColorDetails->colored,
+                                    'colored_IRI' => $eachColorDetails->colored_IRI,
                                     'multi_colored' => $eachColorDetails->multi_colored,
+                                    'multi_colored_IRI' => $eachColorDetails->multi_colored_IRI,
                                     'post_constraint' => $eachColorDetails->post_constraint,
                                 ]);
 
@@ -1891,9 +1899,10 @@ class HomeController extends Controller
                                     'value_id' => $eachValue->id,
                                     'negation' => $eachNonColorDetails->negation,
                                     'pre_constraint' => $eachNonColorDetails->pre_constraint,
-                                    'pre_constraint' => $eachNonColorDetails->pre_constraint,
                                     'certainty_constraint' => $eachNonColorDetails->certainty_constraint,
+                                    'degree_constraint' => $eachNonColorDetails->degree_constraint,
                                     'main_value' => $eachNonColorDetails->main_value,
+                                    'main_value_IRI' => $eachNonColorDetails->main_value_IRI,
                                     'post_constraint' => $eachNonColorDetails->post_constraint,
                                 ]);
 
@@ -2994,5 +3003,11 @@ class HomeController extends Controller
         ];
 
         return $data;
+    }
+    public function resetSystem(Request $request) {
+        Character::whereraw('1')->delete();
+        $col = new ColorDetails;
+        $col->save();
+        $col->delete();
     }
 }

@@ -149,36 +149,72 @@
                     </ul>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
-                            <div style="height: 34px;">
+                            <div style="height: 34px;padding-top: 10px;">
                                 <img src="{{ asset('images/crown.png') }}" style="display: inline"/>
                                 <div class="explore" style="font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
                             </div>
                         </a>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                     </div>
                     <div class="col-md-3">
-                        <div style="float: right">
+                        <!-- <div style="float: right">
                             <a id="explore-character" href="{{ url('/explore-character') }}" style="text-decoration: none;">
                                 <div style="height: 34px; padding-top: 8px">
                                     <span class="glyphicon glyphicon-list" style="font-size: 20px"></span>
                                     <div class="explore">Explore Character Data</div>
                                 </div>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-md-1">
                     </div>
                     <div class="col-md-3">
-                        <div style="float: right">
+                        <!-- <div style="float: right">
                             <a id="ontology-update" href="{{ url('/ontology-update') }}" style="text-decoration: none;">
                                 <div style="height: 34px; padding-top: 8px">
                                     <span class="glyphicon glyphicon-stats" style="font-size: 20px"></span>
                                     <div class="explore">Ontology Update</div>
                                 </div>
                             </a>
+                        </div> -->
+                        <div class="collapse navbar-collapse" id="app-subnav-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        <span class="glyphicon glyphicon-option-horizontal" style="font-size: 20px;color: #216a94;"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a id="explore-character" href="{{ url('/explore-character') }}" style="text-decoration: none;">
+                                                <div style="height: 30px; padding-top: 8px">
+                                                    <span class="glyphicon glyphicon-list" style="font-size: 16px;margin-right:3px;"></span>
+                                                    <div class="explore">Explore Character Data</div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="ontology-update" href="{{ url('/ontology-update') }}" style="text-decoration: none;">
+                                                <div style="height: 30px; padding-top: 8px">
+                                                    <span class="glyphicon glyphicon-stats" style="font-size: 16px;margin-right:3px;"></span>
+                                                    <div class="explore">Vocabulary/Ontology Update</div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="shared-character" href="{{ url('/shared-character') }}" style="text-decoration: none;">
+                                                <div style="height: 30px; padding-top: 8px">
+                                                    <span class="glyphicon glyphicon-eye-open" style="font-size: 16px;margin-right:3px;"></span>
+                                                    <div class="explore">Shared Characters</div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
