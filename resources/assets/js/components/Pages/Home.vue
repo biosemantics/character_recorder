@@ -7237,7 +7237,7 @@
                 var app = this;
                 axios.get("/chrecorder/public/api/v1/resetSystem")
                 .then((resp) => {
-                    console.log(resp);
+                    // console.log(resp);
                 });
             }
         },
