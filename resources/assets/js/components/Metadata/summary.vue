@@ -17,8 +17,8 @@
          <div class="col-md-12" style="font-size: 12px;">
              <br/>
             <b>How will the summary function be used?</b><br/>
-            
-            <div style="text-indent: 10px">For numerical characters only, the selected function will be used to compute an aggregate value from a set of values recorded for specimens, to be used in the description of the related taxon.
+            <div style="text-indent: 8px; font-weight: bold; font-style: italic;">For numerical characters only</div>
+            <div style="text-indent: 10px"> The selected function will be used to compute an aggregate value from a set of values recorded for specimens, to be used in the description of the related taxon.
             </div>
            
         </div>

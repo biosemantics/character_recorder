@@ -2251,15 +2251,19 @@
                                 for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
                                     if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
                                         console.log(methodEntry.resultAnnotations[i].value);
+                                        if (src == '') {
+                                            src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                        }
                                         if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
                                             var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
-                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
                                         } else {
-                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
                                         }
                                     }
                                 }
                                 if (src != '') {
+                                    src += "</div>";
                                     app.standardCharacters[index].tooltip = src + app.standardCharacters[index].tooltip;
                                 }
                             }
@@ -2283,13 +2287,19 @@
                                 for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
                                     if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
                                         console.log(methodEntry.resultAnnotations[i].value);
+                                        if (src == '') {
+                                            src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                        }
                                         if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
                                             var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
-                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
                                         } else {
-                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
                                         }
                                     }
+                                }
+                                if (src != '') {
+                                    src += '</div>';
                                 }
                             }
                         }
@@ -2312,15 +2322,19 @@
                             if (methodEntry) {
                                 for (var i = 0; i < methodEntry.resultAnnotations.length; i ++) {
                                     if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                                        if (src == '') {
+                                            src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                        }
                                         if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
                                             var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
-                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
                                         } else {
-                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-botton:10px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                                            src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
                                         }
                                     }
                                 }
                                 if (src != '') {
+                                    src += '</div>';
                                     app.userCharacters[index].tooltip = src + app.userCharacters[index].tooltip;
                                 }
                             }
@@ -3060,7 +3074,11 @@
                 if (app.middleCharacter == 'between'){
                     app.character.name += ' and ' + app.secondLastCharacter;
                 }
-                console.log("StoreCharacter!!!");
+
+                app.character.name = app.character.name.toLowerCase();
+                app.character.name = app.character.name.charAt(0).toUpperCase() + app.character.name.slice(1);
+
+                console.log("StoreCharacter!!!", app.character);
                 await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+app.character.name.toLowerCase()).then(resp=>{
                     if (resp.data.entries.length > 0) {
                         let methodEntry = resp.data.entries.filter(function(each) {
@@ -3407,7 +3425,7 @@
                     axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
                         .then(function (resp) {
                             awaitCount --;
-                    console.log('awaitCount',awaitCount);
+                            console.log('awaitCount',awaitCount);
                             console.log('search term resp', resp.data);
                             for (var i = 0; i < resp.data.entries.length; i++) {
                                 if (resp.data.entries[i].term == app.character.name) {
@@ -3418,11 +3436,11 @@
                         });
                     if (app.character['method_from'] != null && app.character['method_from'] != '') {
                         awaitCount ++;
-                    console.log('awaitCount',awaitCount);
+                        console.log('awaitCount',awaitCount);
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_from'].toLowerCase())
                             .then(function (resp) {
                                 awaitCount --;
-                    console.log('awaitCount',awaitCount);
+                                console.log('awaitCount',awaitCount);
                                 console.log('method_from search resp', resp.data);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
@@ -3457,11 +3475,11 @@
 
                     if (app.character['method_to'] != null && app.character['method_to'] != '') {
                         awaitCount ++;
-                    console.log('awaitCount',awaitCount);
+                        console.log('awaitCount',awaitCount);
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_to'].toLowerCase())
                             .then(function (resp) {
                                 awaitCount --;
-                    console.log('awaitCount',awaitCount);
+                                console.log('awaitCount',awaitCount);
                                 console.log('method_to search resp', resp.data);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
@@ -3495,11 +3513,11 @@
                     }
                     if (app.character['method_include'] != null && app.character['method_include'] != '') {
                         awaitCount ++;
-                    console.log('awaitCount',awaitCount);
+                        console.log('awaitCount',awaitCount);
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_include'].toLowerCase())
                             .then(function (resp) {
                                 awaitCount --;
-                    console.log('awaitCount',awaitCount);
+                                console.log('awaitCount',awaitCount);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.includeTerm = resp.data.entries[i].term;
@@ -3533,11 +3551,11 @@
 
                     if (app.character['method_exclude'] != null && app.character['method_exclude'] != '') {
                         awaitCount ++;
-                    console.log('awaitCount',awaitCount);
+                        console.log('awaitCount',awaitCount);
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_exclude'].toLowerCase())
                             .then(function (resp) {
                                 awaitCount --;
-                    console.log('awaitCount',awaitCount);
+                                console.log('awaitCount',awaitCount);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.excludeTerm = resp.data.entries[i].term;
@@ -3571,11 +3589,11 @@
 
                     if (app.character['method_where'] != null && app.character['method_where'] != '') {
                         awaitCount ++;
-                    console.log('awaitCount',awaitCount);
+                        console.log('awaitCount',awaitCount);
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character['method_where'].toLowerCase())
                             .then(function (resp) {
                                 awaitCount --;
-                    console.log('awaitCount',awaitCount);
+                                console.log('awaitCount',awaitCount);
                                 for (var i = 0; i < resp.data.entries.length; i++) {
                                     if (resp.data.entries[i].score == 1) {
                                         app.methodFieldData.whereTerm = resp.data.entries[i].term;
@@ -3811,7 +3829,9 @@
                 app.character = app.userCharacters.find(ch => ch.id == characterId);
                 if (!app.character) {
                     app.character = app.defaultCharacters.find(ch => ch.id == characterId);
-                    if (!app.userCharacters.find(ch => ch.name == app.character.name
+                    app.character.name = app.character.name.toLowerCase();
+                    app.character.name = app.character.name.charAt(0).toUpperCase() + app.character.name.slice(1);
+                    if (!app.userCharacters.find(ch => ch.name.toLowerCase() == app.character.name.toLowerCase()
                       && ch.method_from == app.character.method_from
                       && ch.method_to == app.character.method_to
                       && ch.method_include == app.character.method_include
@@ -3934,7 +3954,9 @@
                         var currentCharacters = resp.data.characters;
                     //    app.character.standard = 0;
                     //    app.character.username = app.characterUsername;
-                        if (currentCharacters.find(ch => ch.name == app.character.name
+                        app.character.name = app.character.name.toLowerCase();
+                        app.character.name = app.character.name.charAt(0).toUpperCase() + app.character.name.slice(1);
+                        if (currentCharacters.find(ch => ch.name.toLowerCase() == app.character.name.toLowerCase()
                             && ch.method_from == app.character.method_from
                             && ch.method_to == app.character.method_to
                             && ch.method_include == app.character.method_include

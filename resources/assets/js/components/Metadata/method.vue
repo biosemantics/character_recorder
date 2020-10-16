@@ -14,11 +14,15 @@
             <div v-for="(each, index) in methodEntry.resultAnnotations"
                  v-if="noneMethod == false && each.property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation'"
                  class="col-md-6">
+                 <!-- <label>{{ each.value.substring(1, each.value.length - 1) }}</label>
+                 <label>{{ each.value.indexOf('id=') < 0 ? 
+                        each.value.slice(each.value.indexOf('file/d/') + 7, each.value.indexOf('/view?usp=')) :
+                        each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1) }}</label> -->
                 <img class="img-method"
                      v-bind:class="{ greenBorder: illustratorProperty[index] }"
-                     v-on:click="clickedMethod(index, each.value.substring(1, each.value.length - 1))"
+                     v-on:click="clickedMethod(index, each.clickMethodValue)"
                      v-bind:id="'img-method-' + index" style="width: 100%;"
-                     v-bind:src="'https://drive.google.com/uc?id=' + each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1)"/>
+                     v-bind:src="'https://drive.google.com/uc?id=' + each.src"/>
             </div>
             <div v-if="!noneMethod && methodEntry.resultAnnotations && methodEntry.resultAnnotations.length > 0 && !edit_created_other && !editFlag" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
@@ -930,7 +934,6 @@
                         app.methodEntry = resp.data.entries.filter(function(each) {
                             return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
                         })[0];
-                        console.log('methodEntry', app.methodEntry);
                         if (app.methodEntry) {
                             app.methodArray = app.methodEntry.resultAnnotations.filter(function (e) {
                                 return e.property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation';
@@ -943,6 +946,18 @@
                                     }
                                 }
                             }
+                            for (var i = 0; i < app.methodEntry.resultAnnotations.length; i++) {
+                                if (app.methodEntry.resultAnnotations[i].property === 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                                    app.methodEntry.resultAnnotations[i].clickMethodValue = app.methodEntry.resultAnnotations[i].value.substring(1, app.methodEntry.resultAnnotations[i].value.length - 1);
+                                    if (app.methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
+                                        app.methodEntry.resultAnnotations[i].src = app.methodEntry.resultAnnotations[i].value.slice(app.methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, app.methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                                    } else {
+                                        app.methodEntry.resultAnnotations[i].src = app.methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, app.methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1);
+                                    }
+                                    console.log(app.methodEntry.resultAnnotations[i].src);
+                                }
+                            }
+                            console.log('methodEntry', app.methodEntry);
                         } else {
                             app.methodEntry = true;
                             app.methodArray = resp.data.entries;
