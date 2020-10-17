@@ -2794,7 +2794,7 @@
                     requestBody = {
                         "user": app.sharedFlag ? '' : app.user.name,
                         "ontology": "carex",
-                        "term": wholeCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
+                        "term": wholeCharacter.toLowerCase(),
                         "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                         "definition": app.wholeCharacterDefinition,
                         "elucidation": "",
@@ -7259,7 +7259,7 @@
                 axios.get("/chrecorder/public/api/v1/resetSystem")
                 .then((resp) => {
                     // console.log(resp);
-                    alert("System reset, Reloading...");
+                    alert("Click OK to reset the system");
                     window.location.reload()
                 });
             }
