@@ -11,7 +11,7 @@
             </div>
             <div style="margin-left: 35px">
                 <div v-for="each in resultList">
-                    <div style="width: 350px; height: 50px; border-radius: 10px; margin: 3px; padding: 7px; box-shadow: 1px 1px 1px grey" v-bind:style="{ backgroundColor: each.index == 1 && 'gold' || each.index == 2 && 'yellow' || each.index == 3 && 'lightyellow' || each.index > 3 && '#FFFFFE'}">
+                    <div style="width: 500px; height: 50px; border-radius: 10px; margin: 3px; padding: 7px; box-shadow: 1px 1px 1px grey" v-bind:style="{ backgroundColor: each.index == 1 && 'gold' || each.index == 2 && 'yellow' || each.index == 3 && 'lightyellow' || each.index > 3 && '#FFFFFE'}">
                         <div style="float: left" class="numberCircle" v-bind:style="{ borderColor: '#333333', color: '#333333'}">
                             {{each.index}}
                         </div>

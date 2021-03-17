@@ -31,5 +31,6 @@ class Kernel extends ConsoleKernel
         //     $hc->test();
         // })->everyMinute();
         $schedule->call('\App\Http\Controllers\Api\V1\HomeController@test')->daily();
+        $schedule->call('\App\Http\Controllers\Api\V1\HomeController@updateStandardCharacter')->daily();
     }
 }

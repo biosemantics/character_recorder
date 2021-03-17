@@ -71,7 +71,9 @@ class HomeController extends Controller
             'getMatrixNames',
             'importMatrix',
             'overwriteMatrix',
-            'getTaxons'
+            'getTaxons',
+            'resetSystem',
+            'newMatrix'
         ]);
     }
 
@@ -238,7 +240,7 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
-        $standardCharacters = StandardCharacter::all();
+        $standardCharacters = StandardCharacter::whereRaw('name NOT LIKE "%(general)"')->get();
         $standardUsages = Character::join('standard_characters','standard_characters.name','=','characters.name')->where('standard_characters.username','=','characters.username')->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))->groupBy('standard_characters.id')->get();
 
         foreach ($standardUsages as $su) {
@@ -354,6 +356,7 @@ class HomeController extends Controller
         $character = new Character([
             'name' => $request->input('name'),
             'IRI' => $request->input('IRI'),
+            'parent_term' => $request->input('parent_term'),
             'method_from' => $request->input('method_from'),
             'method_to' => $request->input('method_to'),
             'method_include' => $request->input('method_include'),
@@ -529,6 +532,11 @@ class HomeController extends Controller
                 }
             }
             if ($flag) {
+                // Value::create([
+                //     'character_id' => $eachCharacter->id,
+                //     'header_id' => 1,
+                //     'value' => $eachCharacter->name,
+                // ]);
                 array_push($temp,[
                     'character_id' => $eachCharacter->id,
                     'header_id' => 1,
@@ -538,6 +546,11 @@ class HomeController extends Controller
             }
             foreach($headers as $header) {
                 if ($valueFlag[$eachCharacter->id][$header->id]) {
+                    // Value::create([
+                    //     'character_id' => $eachCharacter->id,
+                    //     'header_id' => $header->id,
+                    //     'value' => '',
+                    // ]);
                     array_push($temp,[
                         'character_id' => $eachCharacter->id,
                         'header_id' => $header->id,
@@ -614,6 +627,7 @@ class HomeController extends Controller
         $character = new Character([
             'name' => $request->input('name'),
             'IRI' => $request->input('IRI'),
+            'parent_term' => $request->input('parent_term'),
             'method_from' => $request->input('method_from'),
             'method_to' => $request->input('method_to'),
             'method_include' => $request->input('method_include'),
@@ -727,7 +741,7 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $order = Character::max('order') + 1;
-        $characters = Character::where('owner_name', '=', $username)->select('name','method_from','method_to','method_include','method_exclude','method_where','owner_name')->get();
+        $characters = Character::where('owner_name', '=', $username)->select('name','IRI','method_from','method_to','method_include','method_exclude','method_where','owner_name')->get();
         $userTags = UserTag::where('user_id', '=', Auth::id())->get();
         $newCharacters = [];
         $newUserTags = [];
@@ -735,6 +749,7 @@ class HomeController extends Controller
             $flag = true;
             foreach ($characters as $ch){
                 if ($eachCharacter['name'] == $ch['name']
+                  && $eachCharacter['IRI'] == $ch['IRI']
                   && $eachCharacter['method_from'] == $ch['method_from']
                   && $eachCharacter['method_to'] == $ch['method_to']
                   && $eachCharacter['method_include'] == $ch['method_include']
@@ -747,6 +762,8 @@ class HomeController extends Controller
             if ($flag) {
                 array_push($newCharacters,[
                     'name' => $eachCharacter['name'],
+                    'IRI' => $eachCharacter['IRI'],
+                    'parent_term' => $eachCharacter['parent_term'],
                     'method_from' => $eachCharacter['method_from'],
                     'method_to' => $eachCharacter['method_to'],
                     'method_include' => $eachCharacter['method_include'],
@@ -1191,6 +1208,7 @@ class HomeController extends Controller
         $oldTag = $character->standard_tag;
 
         $character->name = $request->input('name');
+        $character->parent_term = $request->input('parent_term');
         $character->method_from = $request->input('method_from');
         $character->method_to = $request->input('method_to');
         $character->method_include = $request->input('method_include');
@@ -1862,13 +1880,18 @@ class HomeController extends Controller
                                     'value_id' => $eachValue->id,
                                     'negation' => $eachColorDetails->negation,
                                     'pre_constraint' => $eachColorDetails->pre_constraint,
+                                    'certainty_constraint' => $eachColorDetails->certainty_constraint,
                                     'degree_constraint' => $eachColorDetails->degree_constraint,
                                     'brightness' => $eachColorDetails->brightness,
-                                    'brightness' => $eachColorDetails->brightness,
+                                    'birghtness_IRI' => $eachColorDetails->brightness_IRI,
                                     'reflectance' => $eachColorDetails->reflectance,
+                                    'reflectance_IRI' => $eachColorDetails->reflectance_IRI,
                                     'saturation' => $eachColorDetails->saturation,
+                                    'saturation_IRI' => $eachColorDetails->saturation_IRI,
                                     'colored' => $eachColorDetails->colored,
+                                    'colored_IRI' => $eachColorDetails->colored_IRI,
                                     'multi_colored' => $eachColorDetails->multi_colored,
+                                    'multi_colored_IRI' => $eachColorDetails->multi_colored_IRI,
                                     'post_constraint' => $eachColorDetails->post_constraint,
                                 ]);
 
@@ -1891,9 +1914,10 @@ class HomeController extends Controller
                                     'value_id' => $eachValue->id,
                                     'negation' => $eachNonColorDetails->negation,
                                     'pre_constraint' => $eachNonColorDetails->pre_constraint,
-                                    'pre_constraint' => $eachNonColorDetails->pre_constraint,
                                     'certainty_constraint' => $eachNonColorDetails->certainty_constraint,
+                                    'degree_constraint' => $eachNonColorDetails->degree_constraint,
                                     'main_value' => $eachNonColorDetails->main_value,
+                                    'main_value_IRI' => $eachNonColorDetails->main_value_IRI,
                                     'post_constraint' => $eachNonColorDetails->post_constraint,
                                 ]);
 
@@ -2095,7 +2119,8 @@ class HomeController extends Controller
 
     public function partNameConverter($partName){
         $word = explode('_of_', explode('_in_', $partName)[0])[0];
-        return $this->pluralToSingle($word) . substr($partName, strlen($word));
+        // return $this->pluralToSingle($word) . substr($partName, strlen($word));
+        return $this->pluralToSingle($word);
     }
 
     public function registerType($writer, &$types, $type, $sampleName, $graph, $ccs){
@@ -2119,6 +2144,9 @@ class HomeController extends Controller
 
     public function registerPartName($writer, &$partNames, &$types, $charName, $qualityName, $sampleName, $graph, $ccs) {
         $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
+        if (strpos($qualityName, 'distance_of_') !== false) {
+            $qualityName = str_replace('distance_of_', 'distance_between_', $qualityName);
+        }
         if (strstr($charName,'plant')){
             $writer->addTriple($sampleName, ':has_quality', $ccs.$charName, $graph);
         }
@@ -2132,6 +2160,9 @@ class HomeController extends Controller
             }
             $writer->addTriple($ccs.$partName, ':has_quality', $ccs.$qualityName, $graph);
         }
+        if (strpos($charName, 'distance_of_') !== false) {
+            $charName = str_replace('distance_of_', 'distance_between_', $charName);
+        }
         $writer->addTriple($ccs.$qualityName, $a, ":$charName", $graph);
     }
 
@@ -2142,6 +2173,7 @@ class HomeController extends Controller
         || startsWith($charName, 'depth_of_')
         || startsWith($charName, 'diameter_of_')
         || startsWith($charName, 'distance_between_')
+        || startsWith($charName, 'distance_of_')
         || startsWith($charName, 'count_of_')
         || startsWith($charName, 'ratio_of_');
     }
@@ -2205,7 +2237,7 @@ class HomeController extends Controller
         for ($i = $headers->count() - 1 ; $i >= 0 ; $i--) {
             $header = $headers[$i];
             if ($header->id != 1){
-                $writer->addPrefix($specimenName . $index ++, "http://biosemantics.arizona.edu/kb/".str_replace(' ','/',strtolower($user->taxon))."/" . $header->header. "#");
+                $writer->addPrefix($specimenName . $index ++, "http://biosemantics.arizona.edu/kb/".str_replace(' ','/',strtolower($user->taxon))."/" .str_replace(' ', '_', $header->header). "#");
             }
         }
 
@@ -2222,7 +2254,7 @@ class HomeController extends Controller
 
             $index ++;
 
-            $sampleName = "kb:" . str_replace(' ', '', ucwords(strtolower($user->taxon))) . $header->header;
+            $sampleName = "kb:" . str_replace(' ', '', ucwords(strtolower($user->taxon))) . str_replace(' ', '_', $header->header);
             $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
             $writer->addTriple($sampleName, "rdf:label",        "\"". $header->header . " for ". $user->taxon . "\"",   $graph);
             $writer->addTriple($sampleName, "rdf:id",           "\"some_Unique_ID_4_This_Sample\"", $graph);
@@ -2242,8 +2274,11 @@ class HomeController extends Controller
                         }
                         if ($this->checkHavingUnit($charName)){
                             $this->registerPartName($writer, $partNames, $types, $charName, $charName, $sampleName, $graph, $specimenName.$index.":");
-
+                            if (strpos($charName, 'distance_of_') !== false) {
+                                $charName = str_replace('distance_of_', 'distance_between_', $charName);
+                            }
                             $sample->value = $sample->value + 0.0;
+                            
                             $writer->addTriple($specimenName."$index:$charName", ":has_value", "\"$sample->value\"^^xsd:float", $graph);
                             if (!startsWith($charName, 'number_of_')
                                 &&!startsWith($charName, 'count_of_')
@@ -2735,6 +2770,7 @@ class HomeController extends Controller
             array_push($newCharacters, [
                 'name'           => $eachCharacter['name'],
                 'IRI'            => $eachCharacter['IRI'],
+                'parent_term'    => $eachCharacter['parent_term'],
                 'method_from'    => $eachCharacter['method_from'],
                 'method_to'      => $eachCharacter['method_to'],
                 'method_include' => $eachCharacter['method_include'],
@@ -2953,6 +2989,7 @@ class HomeController extends Controller
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'tags' => $returnUserTags,
+            'taxon' => $user['taxon']
         ];
 
         return $data;
@@ -2994,5 +3031,171 @@ class HomeController extends Controller
         ];
 
         return $data;
+    }
+    public function resetSystem(Request $request) {
+        Character::whereraw('1')->delete();
+        ColorDetails::whereraw('1')->delete();
+        NonColorDetails::whereraw('1')->delete();
+        Header::where('id', '!=', 1)->delete();
+        Matrix::whereraw('1')->delete();
+        UserTag::whereraw('1')->delete();
+        User::where('password', '')->delete();
+    }
+    public function updateStandardCharacter() {
+        $client = new Client(['base_uri' => 'http://shark.sbs.arizona.edu:8080']);
+
+        // $response = $client->request('GET', 'http://github.com');
+        // echo $response->getStatusCode();
+        // Initiate each request but do not block
+        $promises = [
+            'characters' => $client->getAsync('/carex/getStandardCollection'),
+        ];        
+        
+        // Wait for the requests to complete; throws a ConnectException
+        // if any of the requests fail
+        $responses = Promise\unwrap($promises);
+        
+        // Wait for the requests to complete, even if some of them fail
+        $responses = Promise\settle($promises)->wait();
+        
+        $bodyResponse = $responses['characters']['value']->getBody();
+        
+        $bodyJson = json_decode($bodyResponse, true);
+        if ($bodyJson) {
+            StandardCharacter::whereraw('1')->delete();
+            foreach ($bodyJson['entries'] as $character) {
+                $updatedCharacter = [
+                    'name' => ucfirst($character['term']),
+                    'parent_term' => $character['parentTerm'],
+                    'IRI' => null,
+                    'method_from' => null,
+                    'method_to' => null,
+                    'method_include' => null,
+                    'method_exclude' => null,
+                    'method_where' => null,
+                    'unit' => null,
+                    'creator' => null,
+                    'standard' => 1,
+                    'standard_tag' => null,
+                    'created_at' => null,
+                    'updated_at' => null,
+                    'username' => null,
+                    'usage_count' => null,
+                    'show_flag' => 1,
+                ];
+                foreach ($character['resultAnnotations'] as $property) {
+                    switch($property['property']) {
+                        case 'http://www.geneontology.org/formats/oboInOwl#id':
+                            $updatedCharacter['IRI'] = $property['value'];
+                            break;
+                        case 'http://www.geneontology.org/formats/oboInOwl#created_by':
+                            $updatedCharacter['creator'] = $property['value'];
+                            $updatedCharacter['username'] = $property['value'];
+                            break;
+                        case 'http://www.geneontology.org/formats/oboInOwl#creation_date':
+                            $createdDate = date_create_from_format('m-d-Y',$property['value']);
+                            if ($createdDate) {
+                                $updatedCharacter['created_at'] = date_format($createdDate, 'Y-m-d H:i:s');
+                            }
+                            break;
+                        case 'http://biosemantics.arizona.edu/ontologies/carex#updated_date':
+                            $updatedDate = date_create_from_format('m-d-Y',$property['value']);
+                            if ($updatedDate) {
+                                $updatedCharacter['updated_at'] = date_format($updatedDate, 'Y-m-d H:i:s');
+                            }
+                            break;
+                        case 'http://biosemantics.arizona.edu/ontologies/carex#quality_of_organ_group':
+                            $strIndex = strrpos($property['value'], "#");
+                            $updatedCharacter['standard_tag'] = ucfirst(str_replace("_", " ", substr($property['value'], $strIndex + 1)));
+                            break;
+                        case 'http://biosemantics.arizona.edu/ontologies/carex#measured_from':
+                            $strIndex = strrpos($property['value'], "#");
+                            if ($updatedCharacter['method_from']) {
+                                $updatedCharacter['method_from'] = $updatedCharacter['method_from'] . ' and ' . str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            } else {
+                                $updatedCharacter['method_from'] = str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            }
+                            break;
+                        case 'http://biosemantics.arizona.edu/ontologies/carex#measured_to':
+                            $strIndex = strrpos($property['value'], "#");
+                            if ($updatedCharacter['method_to']) {
+                                $updatedCharacter['method_to'] = $updatedCharacter['method_to'] . ' and ' . str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            } else {
+                                $updatedCharacter['method_to'] = str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            }
+                            break;
+                        case 'http://biosemantics.arizona.edu/ontologies/carex#measured_include':
+                            $strIndex = strrpos($property['value'], "#");
+                            if ($updatedCharacter['method_include']) {
+                                $updatedCharacter['method_include'] = $updatedCharacter['method_include'] . ' and ' . str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            } else {
+                                $updatedCharacter['method_include'] = str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            }
+                            break;
+                        case 'http://biosemantics.arizona.edu/ontologies/carex#measured_exclude':
+                            $strIndex = strrpos($property['value'], "#");
+                            if ($updatedCharacter['method_exclude']) {
+                                $updatedCharacter['method_exclude'] = $updatedCharacter['method_exclude'] . ' and ' . str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            } else {
+                                $updatedCharacter['method_exclude'] = str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            }
+                            break;
+                        case 'http://biosemantics.arizona.edu/ontologies/carex#measured_at':
+                            $strIndex = strrpos($property['value'], "#");
+                            if ($updatedCharacter['method_where']) {
+                                $updatedCharacter['method_where'] = $updatedCharacter['method_where'] . ' and ' . str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            } else {
+                                $updatedCharacter['method_where'] = str_replace("_", " ", substr($property['value'], $strIndex + 1));
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if ($updatedCharacter['standard_tag'] == null) {
+                    $updatedCharacter['standard_tag'] = 'Habit';
+                }
+                StandardCharacter::insert($updatedCharacter);
+            }
+        }
+        
+    }
+    public function getStandardTags() {
+        return StandardCharacter::select('standard_tag')->distinct('standard_tag')->get();
+    }
+    public function newMatrix() {
+        $user = User::where('id', '=', Auth::id())->first();
+        $username = explode('@', $user['email'])[0];
+
+        Character::where('owner_name', '=', $username)->delete();
+        Header::where('user_id', '=', $user['id'])->delete();
+        UserTag::where('user_id', '=', $user['id'])->delete();
+
+        $returnHeaders = $this->getHeaders();
+        $returnValues = $this->getValuesByCharacter();
+        $returnCharacters = $this->getArrayCharacters();
+        $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'headers' => $returnHeaders,
+            'characters' => $returnCharacters,
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'tags' => $returnUserTags,
+        ];
+
+        return $data;
+    }
+    public function getUsers() {
+        $users = User::where('password', '!=', '')->get();
+        $usernames = [];
+        foreach ($users as $user) {
+            $username = explode('@', $user['email'])[0];
+            array_push($usernames, $username);
+        }
+        
+        return $usernames;
     }
 }

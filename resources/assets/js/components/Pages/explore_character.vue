@@ -1,20 +1,30 @@
 <template>
     <div class="container" style="width: 90%">
         <center>
-            <div>
+            <div style="width: 90%;">
                 <h3>
                     Explore Character Data
                 </h3>
+                <span style="font-size: 16px;">This section demonstrates queries the user can execute against the character data. The system aggregates the data entered by all users each night into a RDF graph, which is used to support the search. Due to the <i>nightly</i> aggregation schedule, only data enter the day before can be queried.</span>
             </div>
             <div>
-                <a class="btn btn-primary" style = "float: left; padding: 2px;" href="/chrecorder/public"><span class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span></a>
+                <a 
+                    class="btn btn-primary" 
+                    style = "float: left; padding: 2px;" 
+                    href="/chrecorder/public" 
+                    v-tooltip="{ content:'<div>Go back to workspace</div>' }"
+                >
+                    <span class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span>
+                </a>
             </div>
-            <div style="margin-left: 35px">
+            <div style="margin-left: 35px; margin-top: 5px;">
                 <div class="row">
                     <div class="col-md-3">
                         <a v-on:click="handleUsedBy()" class="btn btn-primary" style="width: 100%; margin: 10px" :class="{disabled: searchType == 0}">Find characters used by ...</a><br>
                         <div v-if="searchType == 0" style="margin-left: 10px; width: 100%;">
-                            <input :disabled="bSearching" class="" v-model="username" style="width: 100%;" placeholder="Please enter an author name" v-on:keyup.enter="$event.target.blur(); exploreCharacter()"/>
+                            <select :disabled="bSearching" style="height: 26px; width: 100%;" v-model="username">
+                                <option v-for="username in usersData" :value="username">{{username}}</option>
+                            </select><br>
                             <br>
                             <a :disabled="bSearching" v-on:click="exploreCharacter()" class="btn btn-primary" style="width: 60%; margin: 10px" :class="{disabled: username == ''}">Go</a><br>
                         </div>
@@ -149,6 +159,9 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div v-if="characterData[searchType].values.length == 0" style="display: flex; justify-content: center; height: 300px; align-items: center;">
+                                <span style="font-size: 18px; font-weight: bold; width: 80%; text-align: center;">No data matches your query. If you added relevant data today, it will become available for query tomorrow.</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -542,7 +555,8 @@
                 treeData: null,
                 allTreeData: {},
                 findCharacterByStructure: true,
-                taxonData: []
+                taxonData: [],
+                usersData: []
             }
         },
         components: {
@@ -1213,6 +1227,11 @@
             //     console.log(resp);
             //     app.taxonData = resp.data.taxons;
             // });
+
+            axios.get('/chrecorder/public/api/v1/getUsers').then(function(resp){
+                console.log(resp);
+                app.usersData = resp.data;
+            });
 
             var query=` PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                     PREFIX iao: <http://purl.obolibrary.org/obo/iao.owl#>

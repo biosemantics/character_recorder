@@ -5,6 +5,16 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row panel">
+                        <div class="col-md-6">
+                            <p>This application features a spreadsheet for Carex taxonomists to record characters for their selected specimens. This experiemental application encourages the users to use standard vocabulary and add new terms to the vocabulary. It also lets the users see the character states recorded by other users for the same taxon.</p>
+                        </div>
+                        <div class="col-md-5 col-md-offset-1">
+                            <p>We hope the application will help reduce the variation, and increase the clarity and the parallelism in taxonomic descriptions. Try this application, and let use know how we can make it better.</p>
+                        </div>
+                    </div>                   
+                </div>
                 <div class="panel-heading font-20">Login</div>
 
                 <div class="panel-body">
