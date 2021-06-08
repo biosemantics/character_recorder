@@ -107,6 +107,7 @@
                                                 :set="previousUserCharacter=''"></span></a>
                                     </h4>
                                     <div v-for="eachCharacter in userCharacters"
+                                         :key="eachCharacter"
                                          v-if="eachCharacter.standard == 0"
                                          v-tooltip="eachCharacter.tooltip"
                                          style="display: table; cursor: pointer;">
@@ -139,9 +140,10 @@
                                         <a class="btn btn-add display-block"
                                            v-on:click="removeAllStandardFlag = true;"><span
                                                 class="glyphicon glyphicon-remove"></span></a></h4>
-                                    <div v-for="eachTag in standardCharactersTags" v-if="userCharacters.find(ch => ch.standard_tag == eachTag && ch.standard == 1)" style="display: table; cursor: pointer;">
+                                    <div v-for="eachTag in standardCharactersTags" :key="eachTag" v-if="userCharacters.find(ch => ch.standard_tag == eachTag && ch.standard == 1)" style="display: table; cursor: pointer;">
                                         <b>{{ eachTag }}</b>
                                         <div v-for="eachCharacter in userCharacters"
+                                            :key="eachCharacter"
                                             v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)"
                                             v-tooltip="eachCharacter.tooltip" style="margin-left: 50px;">
                                             <i v-bind:style="{color:(eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -284,11 +286,13 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="row in values"
+                                    :key="row"
                                     v-if="userCharacters.find(ch => ch.id == row[0].character_id) && userCharacters.find(ch => ch.id == row[0].character_id).show_flag == true"
                                     v-bind:class="{ active: row.findIndex(value => value.id == editingValueID) >= 0 }"
                                     v-bind:style="{'background-color': row.findIndex(value => value.id == editingValueID) >= 0 ? '#f5f5f5' : 'white'}">
                                     <td v-if="value.header_id == 1"
                                         v-for="value in row"
+                                        :key="value"
                                         style="cursor: pointer; display: flex; border-bottom:none">
                                         <div style="width: 30px;">
                                             <div style="height: 22px; line-height: 22px;">
@@ -1076,7 +1080,7 @@
                                                             v-model="currentColorValue.pre_constraint"
                                                             list="pre_list">
                                                         <datalist id="pre_list">
-                                                            <option v-for="each in preList" :value="each">{{ each }}
+                                                            <option v-for="each in preList" :key="each" :value="each">{{ each }}
                                                             </option>
                                                         </datalist>
                                                         <h5>
@@ -1169,7 +1173,7 @@
                                                             v-model="currentColorValue.post_constraint"
                                                             list="post_list">
                                                         <datalist id="post_list">
-                                                            <option v-for="each in postList" :value="each">{{ each }}
+                                                            <option v-for="each in postList" :key="each" :value="each">{{ each }}
                                                             </option>
                                                         </datalist>
                                                         <h5>
@@ -1228,7 +1232,7 @@
                                                                 <span>{{ currentColorDeprecatedDefinition[flag] ? currentColorDeprecatedDefinition[flag] : "No definition" }}.</span><br/>
                                                             </div>
                                                             <div v-else>
-                                                                <div v-for="eachSynonym in colorSynonyms[flag]">
+                                                                <div v-for="eachSynonym in colorSynonyms[flag]" :key="eachSynonym">
                                                                     <input type="radio" v-bind:id="eachSynonym.term"
                                                                         v-bind:value="eachSynonym.term"
                                                                         v-on:change="selectedSynonymForColor(flag)"
@@ -1252,7 +1256,7 @@
                                                         </div>
                                                         <div v-else>
                                                             <div style="margin-left:20px">
-                                                                <div v-for="eachSynonym in colorSynonyms[flag]">
+                                                                <div v-for="eachSynonym in colorSynonyms[flag]" :key="eachSynonym">
                                                                     <input type="radio" v-bind:id="eachSynonym.term"
                                                                         v-bind:value="eachSynonym.term"
                                                                         v-on:change="selectedSynonymForColor(flag)"
@@ -1481,7 +1485,7 @@
                                                             v-model="currentNonColorValue.pre_constraint"
                                                             list="pre_non_list">
                                                         <datalist id="pre_non_list">
-                                                            <option v-for="each in preList" :value="each">{{ each }}
+                                                            <option v-for="each in preList" :key="each" :value="each">{{ each }}
                                                             </option>
                                                         </datalist>
                                                         <h5>
@@ -1534,7 +1538,7 @@
                                                             v-model="currentNonColorValue.post_constraint"
                                                             list="post_non_list">
                                                         <datalist id="post_non_list" v-if="postList.length > 0">
-                                                            <option v-for="each in postList" :value="each">{{ each }}
+                                                            <option v-for="each in postList" :key="each" :value="each">{{ each }}
                                                             </option>
                                                         </datalist>
                                                         <h5>
@@ -1584,7 +1588,7 @@
                                                         </div>
                                                         <div v-else>
                                                             <div v-if="searchNonColorFlag == 1">
-                                                                <div v-for="eachSynonym in nonColorSynonyms">
+                                                                <div v-for="eachSynonym in nonColorSynonyms" :key="eachSynonym">
                                                                     <input type="radio" v-bind:id="eachSynonym.term"
                                                                         v-bind:value="eachSynonym.term"
                                                                         v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
@@ -1609,7 +1613,7 @@
 
                                                     <div v-else>
                                                         <div v-if="searchNonColorFlag == 1">
-                                                            <div v-for="eachSynonym in nonColorSynonyms">
+                                                            <div v-for="eachSynonym in nonColorSynonyms" :key="eachSynonym">
                                                                 <input type="radio" v-bind:id="eachSynonym.term"
                                                                     v-bind:value="eachSynonym.term"
                                                                     v-model="currentNonColorValue[currentNonColorValue.detailFlag]">

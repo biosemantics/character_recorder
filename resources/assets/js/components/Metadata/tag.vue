@@ -10,7 +10,7 @@
         <div class="col-md-12">
             <input v-if="viewFlag == false" style="width: 100%;" @change="handleDataFc()" :disabled="edit_created_other" type="text" list="user_tags" v-model="childData"/>
             <datalist id="user_tags" v-if="userTags.length > 0">
-                <option v-for="each in userTags" :value="each.tag_name">{{ each.tag_name }}</option>
+                <option v-for="each in userTags" :value="each.tag_name" :key="each">{{ each.tag_name }}</option>
             </datalist>
             <!--<select v-if="viewFlag == false" style="width: 100%;" v-model="childData" @change="handleDataFc()" :disabled="edit_created_other">-->
                 <!--<option value="m">m</option>-->

@@ -5,7 +5,7 @@
         </div>
         <div class="col-md-12">
             <select style="width: 100%; height: 300px;" multiple>
-                <option v-for="eachData in childData">
+                <option v-for="eachData in childData" :key="eachData">
                     {{ eachData }}
                 </option>
             </select>
