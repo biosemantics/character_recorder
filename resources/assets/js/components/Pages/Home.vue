@@ -239,7 +239,7 @@
                             <a class="btn btn-primary" v-on:click="resetSystem()" style="height: 27px; font-size: 12px; margin-top: 3px;" v-if="user.email == 'hong@test.com'">Reset System</a>
                         </div>
                         <div class="col-md-6">
-                            <h4 style="margin-top:3px;">You are editing {{ lastLoadMatrixName ? lastLoadMatrixName : 'unnamed matrix' }}</h4>
+                            <h4 style="margin-top:3px;">matrix displayed: {{ lastLoadMatrixName ? lastLoadMatrixName : 'unnamed matrix' }}</h4>
                         </div>
                         <div class="col-md-3">
                             <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;" style="height: 27px; font-size: 12px; margin-top: 3px;">Name this matrix version</a>
