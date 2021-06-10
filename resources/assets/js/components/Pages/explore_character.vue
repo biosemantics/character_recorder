@@ -23,7 +23,7 @@
                         <a v-on:click="handleUsedBy()" class="btn btn-primary" style="width: 100%; margin: 10px" :class="{disabled: searchType == 0}">Find characters used by ...</a><br>
                         <div v-if="searchType == 0" style="margin-left: 10px; width: 100%;">
                             <select :disabled="bSearching" style="height: 26px; width: 100%;" v-model="username">
-                                <option v-for="username in usersData" :key="username" :value="username">{{username}}</option>
+                                <option v-for="(username, index) in usersData" :key="index" :value="username">{{username}}</option>
                             </select><br>
                             <br>
                             <a :disabled="bSearching" v-on:click="exploreCharacter()" class="btn btn-primary" style="width: 60%; margin: 10px" :class="{disabled: username == ''}">Go</a><br>
@@ -31,7 +31,7 @@
                         <a v-on:click="handleAboutTaxon()" class="btn btn-primary" style="width: 100%; margin: 10px" :class="{disabled: searchType == 1}">Find characters about taxon ...</a><br>
                         <div v-if="searchType == 1" style="margin-left: 10px; width: 100%;">
                             <select :disabled="bSearching" style="height: 26px; width: 100%;" v-model="taxonName">
-                                <option v-for="taxon in taxonData" :key="taxon" :value="taxon">{{taxon}}</option>
+                                <option v-for="(taxon, index) in taxonData" :key="index" :value="taxon">{{taxon}}</option>
                             </select><br>
                             <a :disabled="bSearching" v-on:click="exploreCharacter()" class="btn btn-primary" style="width: 60%; margin: 10px" :class="{disabled: taxonName == ''}">Go</a><br>
                         </div>

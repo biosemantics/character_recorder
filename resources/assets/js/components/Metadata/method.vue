@@ -51,7 +51,7 @@
                         </div>
                         <div class="col-md-12" v-if="fromSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('from', each)" v-tooltip="each.tooltip"
-                               v-for="each in fromSynonyms" :key="each">
+                               v-for="(each, index) in fromSynonyms" :key="index">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('from')">None of above, add the
@@ -84,7 +84,7 @@
                         </div>
                         <div class="col-md-12" v-if="toSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('to', each)" v-tooltip="each.tooltip"
-                               v-for="each in toSynonyms" :key="each">
+                               v-for="(each, index) in toSynonyms" :key="index">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('to')">None of above, add the
@@ -118,7 +118,7 @@
                         </div>
                         <div class="col-md-12" v-if="includeSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('include', each)" v-tooltip="each.tooltip"
-                               v-for="each in includeSynonyms" :key="each">
+                               v-for="(each, index) in includeSynonyms" :key="index">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('include')">None of above, add
@@ -152,7 +152,7 @@
                         </div>
                         <div class="col-md-12" v-if="excludeSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('exclude', each)" v-tooltip="each.tooltip"
-                               v-for="each in excludeSynonyms" :key="each">
+                               v-for="(each, index) in excludeSynonyms" :key="index">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('exclude')">None of above, add
@@ -185,7 +185,7 @@
                         </div>
                         <div class="col-md-12" v-if="whereSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('where', each)" v-tooltip="each.tooltip"
-                               v-for="each in whereSynonyms" :key="each">
+                               v-for="(each, index) in whereSynonyms" :key="index">
                                 {{ each.term }}
                             </a>
                             <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('where')">None of above, add the
