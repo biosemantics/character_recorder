@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="margin-top-10 row">
                                     <div class="col-md-12" style="line-height: 38px;">
-                                        <b class="some-container">I 'm measuring <a class="btn btn-primary"
+                                        <b class="some-container">I'm measuring <a class="btn btn-primary"
                                                                                     v-on:click="showStandardCharacters()"
                                         >
                                             the recommended set of characters
