@@ -22,7 +22,6 @@ class character extends Model
         'standard_tag',
         'usage_count',
         'show_flag',
-        'standard_tag',
         'summary',
     ];
     //

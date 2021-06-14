@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-8">
                         <div v-if="currentTermType == 1" style="margin-left: 15px; width: 100%;">
-                            <div class="row" v-for="eachTerm in deprecatedTerms" style="text-align: left">
+                            <div class="row" v-for="(eachTerm, index) in deprecatedTerms" :key="index" style="text-align: left">
                                 <div class="col-md-10">
                                     <div v-if="eachTerm['tagName'] && eachTerm['tagName'] != ''">
                                         <a v-on:click="handleClickDeprecatedTerm(eachTerm['tagName'])"><b>{{eachTerm['deprecate term']}}</b></a>
@@ -44,7 +44,7 @@
                             <!-- <div v-if="newSuperClassTerms.length == 0" style="font-size: xx-large;font-weight: bold;margin-top: 20%;">
                                 No terms with new superclass
                             </div> -->
-                            <div class="row" v-for="eachTerm in newSuperClassTerms" style="text-align: left">
+                            <div class="row" v-for="(eachTerm, index) in newSuperClassTerms" :key="index" style="text-align: left">
                                 <div class="col-md-10">
                                     <div>
                                         <b>{{eachTerm['moved term']}}</b>
@@ -73,7 +73,7 @@
                             <!-- <div v-if="newDefinitionTerms.length == 0" style="font-size: xx-large;font-weight: bold;margin-top: 20%;">
                                 No terms with new definition
                             </div> -->
-                            <div class="row" v-for="eachTerm in newDefinitionTerms" style="text-align: left">
+                            <div class="row" v-for="(eachTerm, index) in newDefinitionTerms" :key="index" style="text-align: left">
                                 <div class="col-md-10">
                                     <div>
                                         <b>{{eachTerm['term with new definition']}}</b>

@@ -16,158 +16,88 @@
 ###  http://biosemantics.arizona.edu/ontologies/carex#elucidation
 :elucidation rdf:type owl:AnnotationProperty ;
              rdfs:label "elucidation" ;
-             rdfs:subPropertyOf owl:topAnnotationProperty .
+             rdfs:subPropertyOf <http://purl.obolibrary.org/obo/IAO_0000115> .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym
 :has_not_recommended_synonym rdf:type owl:AnnotationProperty ;
-                             rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://biosemantics.arizona.edu/ontologies/carex#has_obsolescence_reason
-:has_obsolescence_reason rdf:type owl:AnnotationProperty ;
-                         <http://purl.obolibrary.org/obo/IAO_0000116> "equivalent to http://purl.obolibrary.org/obo/IAO_0000231" ;
-                         rdfs:label "has obsolescence reason"@en ;
-                         rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://biosemantics.arizona.edu/ontologies/carex#term_replaced_by
-:term_replaced_by rdf:type owl:AnnotationProperty ;
-                  <http://purl.obolibrary.org/obo/IAO_0000116> "equivalent to  \"http://purl.obolibrary.org/obo/IAO_0100001\"" ;
-                  rdfs:label "term replaced by"@en ;
-                  rdfs:subPropertyOf owl:topAnnotationProperty .
+                             rdfs:subPropertyOf <http://www.geneontology.org/formats/oboInOwl#hasBroadSynonym> .
 
 
 ###  http://purl.obolibrary.org/obo/IAO_0000112
 <http://purl.obolibrary.org/obo/IAO_0000112> rdf:type owl:AnnotationProperty ;
-                                             rdfs:label "example_of_usage" ;
-                                             rdfs:subPropertyOf owl:topAnnotationProperty .
+                                             rdfs:label "example_of_usage" .
 
 
 ###  http://purl.obolibrary.org/obo/IAO_0000114
 <http://purl.obolibrary.org/obo/IAO_0000114> rdf:type owl:AnnotationProperty ;
-                                             rdfs:label "has_curation_status" ;
-                                             rdfs:subPropertyOf owl:topAnnotationProperty .
+                                             rdfs:label "has_curation_status" .
 
 
 ###  http://purl.obolibrary.org/obo/IAO_0000115
 <http://purl.obolibrary.org/obo/IAO_0000115> rdf:type owl:AnnotationProperty ;
-                                             rdfs:label "definition" ;
-                                             rdfs:subPropertyOf owl:topAnnotationProperty .
+                                             rdfs:label "definition" .
 
 
 ###  http://purl.obolibrary.org/obo/IAO_0000116
 <http://purl.obolibrary.org/obo/IAO_0000116> rdf:type owl:AnnotationProperty ;
-                                             rdfs:label "editor_note" ;
-                                             rdfs:subPropertyOf owl:topAnnotationProperty .
+                                             rdfs:label "editor_note" .
 
 
 ###  http://purl.obolibrary.org/obo/IAO_0000117
 <http://purl.obolibrary.org/obo/IAO_0000117> rdf:type owl:AnnotationProperty ;
-                                             rdfs:label "term editor" ;
-                                             rdfs:subPropertyOf owl:topAnnotationProperty .
+                                             rdfs:label "term editor" .
 
 
 ###  http://purl.obolibrary.org/obo/IAO_0000119
 <http://purl.obolibrary.org/obo/IAO_0000119> rdf:type owl:AnnotationProperty ;
-                                             rdfs:label "definition_source" ;
-                                             rdfs:subPropertyOf owl:topAnnotationProperty .
+                                             rdfs:label "definition_source" .
 
 
 ###  http://purl.org/dc/elements/1.1/creator
-<http://purl.org/dc/elements/1.1/creator> rdf:type owl:AnnotationProperty ;
-                                          rdfs:subPropertyOf owl:topAnnotationProperty .
+<http://purl.org/dc/elements/1.1/creator> rdf:type owl:AnnotationProperty .
 
 
 ###  http://purl.org/dc/elements/1.1/date
-<http://purl.org/dc/elements/1.1/date> rdf:type owl:AnnotationProperty ;
-                                       rdfs:subPropertyOf owl:topAnnotationProperty .
+<http://purl.org/dc/elements/1.1/date> rdf:type owl:AnnotationProperty .
 
 
 ###  http://www.geneontology.org/formats/oboInOwl#created_by
 <http://www.geneontology.org/formats/oboInOwl#created_by> rdf:type owl:AnnotationProperty ;
-                                                          rdfs:label "created_by" ;
-                                                          rdfs:subPropertyOf owl:topAnnotationProperty .
+                                                          rdfs:label "created_by" .
 
 
 ###  http://www.geneontology.org/formats/oboInOwl#creation_date
 <http://www.geneontology.org/formats/oboInOwl#creation_date> rdf:type owl:AnnotationProperty ;
-                                                             rdfs:label "creation_date" ;
-                                                             rdfs:subPropertyOf owl:topAnnotationProperty .
+                                                             rdfs:label "creation_date" .
 
 
 ###  http://www.geneontology.org/formats/oboInOwl#hasBroadSynonym
 <http://www.geneontology.org/formats/oboInOwl#hasBroadSynonym> rdf:type owl:AnnotationProperty ;
-                                                               rdfs:label "has_broad_synonym" ;
-                                                               rdfs:subPropertyOf owl:topAnnotationProperty .
+                                                               rdfs:label "has_broad_synonym" .
 
 
 ###  http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
 <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> rdf:type owl:AnnotationProperty ;
-                                                               rdfs:label "has_exact_synonym" ;
-                                                               rdfs:subPropertyOf owl:topAnnotationProperty .
+                                                               rdfs:label "has_exact_synonym" .
 
 
 ###  http://www.geneontology.org/formats/oboInOwl#hasNarrowSynonym
 <http://www.geneontology.org/formats/oboInOwl#hasNarrowSynonym> rdf:type owl:AnnotationProperty ;
-                                                                rdfs:label "has_narrow_synonym" ;
-                                                                rdfs:subPropertyOf owl:topAnnotationProperty .
+                                                                rdfs:label "has_narrow_synonym" .
 
 
 ###  http://www.geneontology.org/formats/oboInOwl#hasRelatedSynonym
 <http://www.geneontology.org/formats/oboInOwl#hasRelatedSynonym> rdf:type owl:AnnotationProperty ;
-                                                                 rdfs:label "has_related_synonym" ;
-                                                                 rdfs:subPropertyOf owl:topAnnotationProperty .
+                                                                 rdfs:label "has_related_synonym" .
 
 
 ###  http://www.geneontology.org/formats/oboInOwl#id
-<http://www.geneontology.org/formats/oboInOwl#id> rdf:type owl:AnnotationProperty ;
-                                                  rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2000/01/rdf-schema#comment
-rdfs:comment rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2000/01/rdf-schema#isDefinedBy
-rdfs:isDefinedBy rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2000/01/rdf-schema#label
-rdfs:label rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2000/01/rdf-schema#seeAlso
-rdfs:seeAlso rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2002/07/owl#backwardCompatibleWith
-owl:backwardCompatibleWith rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2002/07/owl#deprecated
-owl:deprecated rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2002/07/owl#incompatibleWith
-owl:incompatibleWith rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2002/07/owl#priorVersion
-owl:priorVersion rdfs:subPropertyOf owl:topAnnotationProperty .
-
-
-###  http://www.w3.org/2002/07/owl#topAnnotationProperty
-owl:topAnnotationProperty rdf:type owl:AnnotationProperty .
-
-
-###  http://www.w3.org/2002/07/owl#versionInfo
-owl:versionInfo rdfs:subPropertyOf owl:topAnnotationProperty .
+<http://www.geneontology.org/formats/oboInOwl#id> rdf:type owl:AnnotationProperty .
 
 
 ###  http://www.w3.org/2004/02/skos/core#note
-<http://www.w3.org/2004/02/skos/core#note> rdf:type owl:AnnotationProperty ;
-                                           rdfs:subPropertyOf owl:topAnnotationProperty .
+<http://www.w3.org/2004/02/skos/core#note> rdf:type owl:AnnotationProperty .
 
 
 #################################################################
@@ -524,7 +454,6 @@ owl:versionInfo rdfs:subPropertyOf owl:topAnnotationProperty .
 ###  http://biosemantics.arizona.edu/ontologies/carex#accessory
 :accessory rdf:type owl:Class ;
            rdfs:subClassOf :anatomical_structure ;
-           <http://purl.obolibrary.org/obo/IAO_0000112> "spike 1 (occasionally 1–3 smaller accessory spikes), gynecandrous with staminate portion of spike 1–3 mm wide, to 50-flowered and pistillate portion of spike 5–9.5 mm wide, to 27-flowered or plants sometimes unisexual with staminate and pistillate spikes on different plants. [FNA, Carex exilis]" ;
            rdfs:label "accessory" .
 
 
@@ -576,13 +505,10 @@ owl:versionInfo rdfs:subPropertyOf owl:topAnnotationProperty .
 ###  http://biosemantics.arizona.edu/ontologies/carex#acuminate
 :acuminate rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :elucidation "\"https://drive.google.com/open?id=1wwG6N8X6Mlq5KZHVjtDTQnVOKKZ6wVUw\"" ;
-           :has_not_recommended_synonym "cuneate attenuate" ,
-                                        "short attenuate" ;
+           :elucidation "\"https://drive.google.com/open?id=196NCV0wBPkzD0l7Nx4l_do0M2TdSjigd\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A tapered shape quality inhering in a bearer by virtue of the bearer's tapering gradually to a sharp point\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-           <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "attenuate" ;
            <http://www.geneontology.org/formats/oboInOwl#id> "PATO_0002228" ;
            rdfs:label "acuminate"@en .
 
@@ -597,7 +523,7 @@ owl:versionInfo rdfs:subPropertyOf owl:topAnnotationProperty .
 ###  http://biosemantics.arizona.edu/ontologies/carex#acute
 :acute rdf:type owl:Class ;
        rdfs:subClassOf :shape ;
-       :elucidation "\"https://drive.google.com/open?id=15MsN-q-e9PPK7YXaYX1gQZiLNERCgl5r\"" ;
+       :elucidation "\"https://drive.google.com/open?id=1EscYTBvktztcmB_2YtQtw8FSugSojxxd\"" ;
        :has_not_recommended_synonym "acutish" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality of a process inhering in a bearer by virtue of the bearer's having a sudden onset, sharp rise, and short course\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
@@ -745,7 +671,7 @@ owl:versionInfo rdfs:subPropertyOf owl:topAnnotationProperty .
 ###  http://biosemantics.arizona.edu/ontologies/carex#aggregated
 :aggregated rdf:type owl:Class ;
             rdfs:subClassOf :arrangement ;
-            :elucidation "\"https://drive.google.com/open?id=1pYTHPyVfRhnQBukSVy8PMnb6DzAJ8Puh\"" ;
+            :elucidation "\"https://drive.google.com/open?id=1NAYw4Mw3jbYLbAllC4tn1hfdVhuRPM_p\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spatial pattern inhering in a bearer by virtue of the bearer's being gathered or tending to gather into a mass or whole\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -1066,7 +992,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#apiculate
 :apiculate rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :elucidation "\"https://drive.google.com/open?id=1hhUL4Cm0LX7Yuju-xfZJFMBzTKibM2CK\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1dPn7SCrDlRIH2psTrhjVHSa9lhCtgvfG\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's having a sharp or tapered end or point\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -1230,7 +1156,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#asymmetric
 :asymmetric rdf:type owl:Class ;
             rdfs:subClassOf :shape ;
-            :elucidation "\"https://drive.google.com/open?id=1lJSBPqVyFQPAD3CaouRSSEqh4tnm9O-1\"" ;
+            :elucidation "\"https://drive.google.com/open?id=1AVl57q5xWWnfJXoKuU6TwbWFEpCM2CRA\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"A symmetry quality inhering in a bearer by virtue of the bearer's lacking symmetry\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -1249,12 +1175,10 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#attenuate
 :attenuate rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :has_obsolescence_reason "This is a synonym of acuminate. AntonReznicek 2020-04-30." ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's gradually tapering to a slender point\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-           rdfs:label "attenuate"@en ;
-           owl:deprecated "true"^^xsd:boolean .
+           rdfs:label "attenuate"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#auricle
@@ -1271,7 +1195,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#auriculate
 :auriculate rdf:type owl:Class ;
             rdfs:subClassOf :shape ;
-            :elucidation "\"https://drive.google.com/open?id=1XqndU7VR-PyEd8nqA-jYTaQb6ieZlC_P\"" ;
+            :elucidation "\"https://drive.google.com/open?id=14ZwOr_vX0gkjpYiOJMH7fHdNO877bIzz\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's having a shape resembling an ear\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -1281,9 +1205,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#awl_shaped
 :awl_shaped rdf:type owl:Class ;
             rdfs:subClassOf :shape ;
-            :has_obsolescence_reason "This is a synonym of subulate. AntonReznicek 2020-04-30" ;
-            rdfs:label "awl shaped" ;
-            owl:deprecated "true"^^xsd:boolean .
+            rdfs:label "awl shaped" .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#awn
@@ -1678,7 +1600,7 @@ Both from FNA.""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#biconvex
 :biconvex rdf:type owl:Class ;
           rdfs:subClassOf :convex ;
-          :elucidation "\"https://drive.google.com/open?id=1N6Yv8j4tSzMzb1x_C0lk8gK9ko4Tb6Cd\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1j_bZu3e19dB_S7YnRS_fcsLjaKhcfsoN\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being convex on both sides or surface\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -1711,7 +1633,7 @@ Both from FNA.""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#bifid
 :bifid rdf:type owl:Class ;
        rdfs:subClassOf :branched ;
-       :elucidation "\"https://drive.google.com/open?id=1LF5L8zFrsT2axl-lLhoDC8mj7He9b_Lu\"" ;
+       :elucidation "\"https://drive.google.com/open?id=1czWSLZEYr_cZPWsgsNaWYCJhuSSubl6Q\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A branched quality inhering in a bearer by virtue of the bearer's being divided into two branches\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
        <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -1851,7 +1773,7 @@ FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#blotched
 :blotched rdf:type owl:Class ;
           rdfs:subClassOf :dotted ;
-          :elucidation "\"https://drive.google.com/open?id=1oFoT7zRQhPuP1sxhXcs8u-5gREynN2Uq\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1MHYPe0oElSQWKR4F0y4VwjJO1KxD0tIb\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A color pattern inhering in a bearer by virtue of bearer's being marked with irregularly shaped spots or blots of a different hue or degree of saturation\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -1893,18 +1815,15 @@ FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#blunt
 :blunt rdf:type owl:Class ;
        rdfs:subClassOf :shape ;
-       :has_obsolescence_reason "Blunt is a synonym of obtuse. AntonRiznicek 2020-04-30" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's terminating gradually in a rounded end\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
        <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-       rdfs:label "blunt"@en ;
-       owl:deprecated "true"^^xsd:boolean .
+       rdfs:label "blunt"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#boatshaped
 :boatshaped rdf:type owl:Class ;
             rdfs:subClassOf :shape ;
-            <http://purl.obolibrary.org/obo/IAO_0000112> "perigynia appressed_ascending to ascending , gold or whitish , boatshaped with wings adaxially incurved , conspicuously ( 0 – ) 5 – 10_veined abaxially , conspicuously 0 – 6_veined adaxially , lanceolate or occasionally ovate , planoconvex , 3 . 5 – 4 . 2 × 1 – 1 . 2 mm , 0 . 4 – 0 . 5 ( – 0 . 6 ) mm thick , margin flat , including wing 0 . 05 – 0 . 2 mm wide , ciliate_serrulate at least on distal body ; [Carex leporinella in FNA.]" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
             <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "boatshaped" ;
             rdfs:label "boat_shaped"@en .
@@ -2004,7 +1923,7 @@ FNA""" ;
                             owl:onProperty <http://purl.obolibrary.org/obo/BFO_0000051> ;
                             owl:someValuesFrom :branch
                           ] ;
-          :elucidation "\"https://drive.google.com/open?id=12rwEFrkLsvKONLsCrQ5s1cKoHD7qCGIS\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1wKTjJ8wBuHXRcd_9kJSGPW0dJPsyTLpX\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A branchiness quality inhering in a bearer by virtue of the bearer's having branches\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -2290,10 +2209,7 @@ FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#bulging
 :bulging rdf:type owl:Class ;
          rdfs:subClassOf :pubescence ,
-                         :relief ,
                          :shape ;
-         <http://purl.obolibrary.org/obo/IAO_0000115> "Bulging refers to the shape of the structure. In the one instance I know of its use, in Carex timida, it is used to describe the surface of the cells making up the cataphylls. The cells are bulging because when dry they still stick out like they were turgid with water, and hence, \"bulge\"." ;
-         <http://purl.obolibrary.org/obo/IAO_0000119> "JulianStarr 2020-05-11" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
          rdfs:label "bulging"@en .
 
@@ -2379,7 +2295,7 @@ FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#caudate
 :caudate rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=14mQ--2g_EJv-y32L5By-aIuGMzCeQzut\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1n_naqbvEavauDqEwxyAt46iCJKQ9_GoR\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality inhering in a bearer by virtue of the bearer's having a tail or tail_like projection\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -2433,20 +2349,6 @@ FNA""" ;
 :cell rdf:type owl:Class ;
       rdfs:subClassOf :anatomical_structure ;
       <http://purl.obolibrary.org/obo/IAO_0000112> "cataphylls with concave cells" ;
-      <http://purl.obolibrary.org/obo/IAO_0000115> "The smallest structural and functional unit of a organism(BY [Me] 2020/05/31) by [Me] via Conflict Resolver on 2020-05-31." ;
-      <http://purl.obolibrary.org/obo/IAO_0000116> "Past defintiions:Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-22" ,
-                                                   "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-22" ,
-                                                   "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-25" ,
-                                                   "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-31" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/22) by [Me] via Conflict Resolver on 2020-05-22.] [Consists of cytoplasm and a nucleus(BY [Hongcr] 2020/05/22) by [Hongcr] via Conflict Resolver on 2020-05-22.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-23" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/23) by [Me] via Conflict Resolver on 2020-05-23.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-24" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/24) by [Me] via Conflict Resolver on 2020-05-24.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-25" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/25) by [Me] via Conflict Resolver on 2020-05-25.] [The smallest structural and functional unit of a organism(BY [Me] 2020/05/24) by [Me] via Conflict Resolver on 2020-05-25.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-26" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/26) by [Me] via Conflict Resolver on 2020-05-26.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-27" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/27) by [Me] via Conflict Resolver on 2020-05-27.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-28" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/28) by [Me] via Conflict Resolver on 2020-05-28.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-29" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/29) by [Me] via Conflict Resolver on 2020-05-29.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-30" ,
-                                                   "Past defintiions:[The smallest structural and functional unit of a organism(BY [Me] 2020/05/30) by [Me] via Conflict Resolver on 2020-05-30.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-31" ;
       <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "cells" ;
       rdfs:label "cell" .
 
@@ -2606,12 +2508,9 @@ FNA""" ;
 :circular_obovate rdf:type owl:Class ;
                   rdfs:subClassOf :circular ,
                                   :obovate ;
-                  :has_not_recommended_synonym "subcircular" ;
                   <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                  <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "circular-obovate" ,
-                                                                                 "obovate circular" ,
-                                                                                 "obovate-circular" ;
-                  rdfs:label "circular obovate"@en .
+                  <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "obovate_circular" ;
+                  rdfs:label "circular_obovate"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#cladoprophyll
@@ -2642,7 +2541,8 @@ FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#clavate
 :clavate rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1pmfk-PkpBcGbQBx9IzzZ13F_Rb3TKrsU\"" ;
+         :elucidation """\"https://drive.google.com/open?id=1sWNxHfg7bl7wddmb_6ekuNQuM_Id2lH_
+\"""" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A concave 3_D shape quality inhering in a bearer by virtue of the bearer's gradually becoming thicker towards the end\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -2653,27 +2553,22 @@ FNA""" ;
 :clavate_cylindric rdf:type owl:Class ;
                    rdfs:subClassOf :clavate ,
                                    :cylindric ;
-                   :has_not_recommended_synonym "subclavate" ;
                    <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                   <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "clavate-cylindric" ,
-                                                                                  "cylindric clavate" ,
-                                                                                  "cylindric-clavate" ;
-                   rdfs:label "clavate cylindric"@en .
+                   rdfs:label "clavate_cylindric"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#clavate_ovoid
 :clavate_ovoid rdf:type owl:Class ;
                rdfs:subClassOf :clavate ,
                                :ovoid ;
-               :has_not_recommended_synonym "subclavate" ;
                <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-               rdfs:label "clavate ovoid"@en .
+               rdfs:label "clavate_ovoid"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#cleft
 :cleft rdf:type owl:Class ;
        rdfs:subClassOf :architecture ;
-       :elucidation "\"https://drive.google.com/open?id=10ieBG7RwMsadEmooZfLULNzgdDMxGvIL\"" ;
+       :elucidation "\"https://drive.google.com/open?id=1tplJtNZuvRHmiH8Ku1RtPBD2ZIq0mGs8\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A concave quality inhering in a bearer by virtue of the bearer's resembling a groove or fissure\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
        <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -2705,7 +2600,7 @@ FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#clustered
 :clustered rdf:type owl:Class ;
            rdfs:subClassOf :arrangement ;
-           :elucidation "\"https://drive.google.com/open?id=1pYTHPyVfRhnQBukSVy8PMnb6DzAJ8Puh\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1NAYw4Mw3jbYLbAllC4tn1hfdVhuRPM_p\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spatial pattern inhering in a bearer by virtue of the bearer's being gathered or tending to gather into a mass or whole\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3070,7 +2965,6 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 :compressed rdf:type owl:Class ;
             rdfs:subClassOf :shape ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-            <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "flattened" ;
             rdfs:label "compressed"@en .
 
 
@@ -3101,7 +2995,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#concave
 :concave rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1MPBNSAGU64ZLB7hk40inwmHuiwr8om2d\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1EvK_xUOd_HuLqDtAXpo5tTTt11K_tP6w\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality in a bearer by virtue of the bearer's curving inward\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3110,8 +3004,8 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#concavo_convex
 :concavo_convex rdf:type owl:Class ;
-                rdfs:subClassOf :concave ;
-                :elucidation "\"https://drive.google.com/open?id=1uMfQHI2Pe_Z8h9oMl5vMD5hnJuM9fida\"" ;
+                rdfs:subClassOf :shape ;
+                :elucidation "\"https://drive.google.com/open?id=1PsKb9qxACi0Yb81aktpyoh1_qDoWtv8L\"" ;
                 <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality that obtains by virtue of the bearer being concave on one side and convex on the other\"" ;
                 <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
                 <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3165,7 +3059,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#congested
 :congested rdf:type owl:Class ;
            rdfs:subClassOf :architecture ;
-           :elucidation "\"https://drive.google.com/open?id=1_fRa2uR0bt6i7affeo25ybynFs943E_4\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1Oh2faeQAuob5NdY7cSK8r9IkvACDa3wp\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A structural quality inhering in a bearer with some kind of aperture or opening that is blocked or clogged\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3219,7 +3113,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#constricted
 :constricted rdf:type owl:Class ;
              rdfs:subClassOf :size ;
-             :elucidation "\"https://drive.google.com/open?id=1pMkBKKnfQGwnpbIsF3JYp3IcocKdfOc_\"" ;
+             :elucidation "\"https://drive.google.com/open?id=10nSZmslvCrf3dcE_bQwkSbjzVilPXQHO\"" ;
              <http://purl.obolibrary.org/obo/IAO_0000115> "\"A structural quality inhering in a bearer by virtue of the bearer's being drawn together, compressed or squeezed physically\"" ;
              <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
              <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3263,7 +3157,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#convex
 :convex rdf:type owl:Class ;
         rdfs:subClassOf :shape ;
-        :elucidation "\"https://drive.google.com/open?id=1FA1uiHt30qvjmkN1WZm5acv315-fjbg_\"" ;
+        :elucidation "\"https://drive.google.com/open?id=1o50We0PAVJOo0zQULQPypzZbf_A3CteF\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality that obtains by virtue of the bearer having inward facing edges; having a surface or boundary that curves or bulges outward, as the exterior of a sphere\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3274,7 +3168,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#convolute
 :convolute rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :elucidation "\"https://drive.google.com/open?id=1am8hJS1sWkqsLeD0VPfcyA7ruNxPhlQF\"" ;
+           :elucidation "\"https://drive.google.com/open?id=13_ty_GhGosPjUtpumACGgTGzeUkxeB_o\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A curled quality inhering in a bearer by virtue of the bearer's one edge of its surface being wholly rolled up in another\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3301,7 +3195,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#cordate
 :cordate rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1bW87yxpH9xGbGtKgisym-oMSwbDbbXS5\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1iSGUxLU708tatFZuwN0eR5zJWJdsk6_w\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A concave 3_D shape quality inhering in a bearer by virtue of the bearer's having a sinus or rounded lobe at the base\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3404,8 +3298,8 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#course
 :course rdf:type owl:Class ;
         rdfs:subClassOf :quality ;
-        <http://purl.obolibrary.org/obo/IAO_0000115> "Linear, one_dimentional shape of the center line through the length of an axis or vein, e.g. spiraling, straight, zig_zagged. Plant Glossary (Taxon)" ,
-                                                     "The way in which something develops or progresses. BruceFord, 2019-09-04" ;
+        <http://purl.obolibrary.org/obo/IAO_0000115> "Linear, one_dimentional shape of the center line through the length of an axis or vein, e.g. spiraling, straight, zig_zagged." ;
+        <http://purl.obolibrary.org/obo/IAO_0000119> "Plant Glossary (Taxon)" ;
         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
         rdfs:label "course"@en .
 
@@ -3432,11 +3326,10 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#crenulate
 :crenulate rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :elucidation "\"https://drive.google.com/open?id=1Na6fZ-T3g3WAc6ghx0OK24U9UhwXMaWW\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1fG5Z00WvnJiAczWpXcdCjmQRPK4B5mXY\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A surface feature shape quality inhering in a bearer by virtue of the bearer's having the border, edge, or outline cut into a series of segments of circles resembling a scallop_shell\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-           <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "scalloped" ;
            rdfs:label "crenulate"@en .
 
 
@@ -3517,7 +3410,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#cuneate
 :cuneate rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1SS4MsmF_2klJOUDtHfSMiQQ2q9XTvcrH\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1h8z_5XcdCTcsl_gQXdw_PLTbVgk7T5NQ\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being narrowly triangular, wider at the apex and tapering toward the base\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3528,10 +3421,8 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 :cuneate_attenuate rdf:type owl:Class ;
                    rdfs:subClassOf :attenuate ,
                                    :cuneate ;
-                   :has_obsolescence_reason "This cannot describe a shape. AntonReznicek 2020-04-30" ;
                    <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                   rdfs:label "cuneate_attenuate"@en ;
-                   owl:deprecated "true"^^xsd:boolean .
+                   rdfs:label "cuneate_attenuate"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#cuplike
@@ -3579,12 +3470,18 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#cuspidate
 :cuspidate rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :elucidation "\"https://drive.google.com/open?id=1IfBWi187-78c_JeL2ljNoEGDBCiYtiHb\"" ;
+           :elucidation "\"https://drive.google.com/open?id=12Oh_l0umlDSvFjWnLM_OepLwn64hNwzn\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being tapering gradually into a rigid point\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
            <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "cuspitate"@en ;
            rdfs:label "cuspidate"@en .
+
+
+###  http://biosemantics.arizona.edu/ontologies/carex#cuspitate
+:cuspitate rdf:type owl:Class ;
+           rdfs:subClassOf :shape ;
+           rdfs:label "cuspitate" .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#cut
@@ -3743,7 +3640,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#decumbent
 :decumbent rdf:type owl:Class ;
            rdfs:subClassOf :growth_form ;
-           :elucidation "\"https://drive.google.com/open?id=1bBYBY7a_VPaWQrxewjTpArhdAPWSxVgu\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1F5_UOkBhMpLfF61jI6WNpJfBJ9OsGEwq\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A positional quality inhering in a bearer by virtue of the bearer's lying or growing on the ground but with erect or rising tips\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -3812,18 +3709,15 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
                rdfs:subClassOf :deltate ,
                                :ovate ;
                <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-               rdfs:label "deltate ovate"@en .
+               rdfs:label "deltate_ovate"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#deltoid_ovoid
 :deltoid_ovoid rdf:type owl:Class ;
                rdfs:subClassOf :deltate ,
                                :ovoid ;
-               :has_obsolescence_reason "this is a not recommended synonym of deltate ovate. AntonRezicek 2020-04-30" ;
-               :term_replaced_by :deltate_ovate ;
                <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-               rdfs:label "deltoid_ovoid"@en ;
-               owl:deprecated "true"^^xsd:boolean .
+               rdfs:label "deltoid_ovoid"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#dense
@@ -3886,8 +3780,8 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#derivation
 :derivation rdf:type owl:Class ;
             rdfs:subClassOf :quality ;
-            <http://purl.obolibrary.org/obo/IAO_0000115> "Ontogenetic origin, e.g.  andropetalous. Plant Glossary (Taxon)" ,
-                                                         "The development or origin of a structure from a source. BruceFord 2019-09-04" ;
+            <http://purl.obolibrary.org/obo/IAO_0000115> "Ontogenetic origin, e.g.  https://www.screencast.com/t/yNtcjcqA, andropetalous." ;
+            <http://purl.obolibrary.org/obo/IAO_0000119> "Plant Glossary (Taxon)" ;
             rdfs:label "derivation" .
 
 
@@ -3952,20 +3846,14 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#diamond
 :diamond rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :has_obsolescence_reason "synonym of rhombic. AntonReznicek 2020-04-30" ;
-         :term_replaced_by :rhombic ;
-         rdfs:label "diamond" ;
-         owl:deprecated "true"^^xsd:boolean .
+         rdfs:label "diamond" .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#diamond_shaped
 :diamond_shaped rdf:type owl:Class ;
                 rdfs:subClassOf :shape ;
-                :has_obsolescence_reason "synonym of rhombic. AntonReznicek 2020-04-30" ;
-                :term_replaced_by :rhombic ;
                 <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                rdfs:label "diamond_shaped"@en ;
-                owl:deprecated "true"^^xsd:boolean .
+                rdfs:label "diamond_shaped"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#differentiated
@@ -3978,7 +3866,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#dilated
 :dilated rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1c49No50vqFhAvUZjWkSgDAT-QYeECUgM\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1uOMGf0uPxEbh6yijxUVy_Rt_PM56HcPS\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A size quality inhering in a bearer by virtue of the bearer's being made wider or larger in all dimensions\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4267,7 +4155,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#distichous
 :distichous rdf:type owl:Class ;
             rdfs:subClassOf :arrangement ;
-            :elucidation "\"https://drive.google.com/open?id=1XsjMJupWQYenp7hrpMebOb1FfK5srSC6\"" ;
+            :elucidation "\"https://drive.google.com/open?id=1_Lj6ZhYj1_jj2IX5jpQnyZkTM04uHd5b\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spatial quality inhering in a bearer by virtue of the bearer's being arranged in two opposite rows (and hence in the same plane)\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4337,7 +4225,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#drooping
 :drooping rdf:type owl:Class ;
           rdfs:subClassOf :orientation ;
-          :elucidation "\"https://drive.google.com/open?id=1RuTuPRROheNARDiM50DNyiUg2VDZhm33\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1tQMqfdMoFXz77ZBW8NrGqrx8ITXqwZPt\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"To bent or hang downwards\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4443,7 +4331,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#ellipsoid
 :ellipsoid rdf:type owl:Class ;
            rdfs:subClassOf :elliptic ;
-           :elucidation "\"https://drive.google.com/open?id=1ckkdAstnDPc04PBPHiWSBJBD8CszNA7F\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1ucdvI_upV2St2NESRVHw2g65KYiQDqWt\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's being oval with two axes of symmetry, as produced by a conical section\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4462,7 +4350,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#elliptic
 :elliptic rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1ckkdAstnDPc04PBPHiWSBJBD8CszNA7F\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1ucdvI_upV2St2NESRVHw2g65KYiQDqWt\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's being oval with two axes of symmetry, as produced by a conical section\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4473,12 +4361,8 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 :elliptic_circular rdf:type owl:Class ;
                    rdfs:subClassOf :circular ,
                                    :elliptic ;
-                   :has_not_recommended_synonym "subcircular" ;
                    <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                   <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "circular elliptic" ,
-                                                                                  "circular-elliptic" ,
-                                                                                  "elliptic-circular" ;
-                   rdfs:label "elliptic circular"@en .
+                   rdfs:label "elliptic_circular"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#elliptic_lanceolate
@@ -4582,7 +4466,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#emarginate
 :emarginate rdf:type owl:Class ;
             rdfs:subClassOf :shape ;
-            :elucidation "\"https://drive.google.com/open?id=1OtjWAdLaHFhp71_JfEjrykG_l5ty821W\"" ;
+            :elucidation "\"https://drive.google.com/open?id=1ZHW4Yse7YYU84ChTNsn6ZtqO0A1cI_eL\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"A notched shape quality inhering in a bearer by virtue of the bearer's having a notched tip or edge\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4727,7 +4611,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#erect
 :erect rdf:type owl:Class ;
        rdfs:subClassOf :orientation ;
-       :elucidation "\"https://drive.google.com/open?id=1-3pWS8eIIv6_f1c1gjmVYRHqVhJHUd66\"" ;
+       :elucidation "\"https://drive.google.com/open?id=1wHIhpWp9imhEGKCqvETSfUVq8Uk0fJnB\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A positional quality inhering in a bearer by virtue of the bearer's being upright in position or posture\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
        <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4744,7 +4628,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#erose
 :erose rdf:type owl:Class ;
        rdfs:subClassOf :relief ;
-       :elucidation "\"https://drive.google.com/open?id=12QdrJPLB2X6JsNzAuzHv00HBRvKPTZGn\"" ;
+       :elucidation "\"https://drive.google.com/open?id=1EE2f8HvqWbj7AYq_3CEyhntLgzPXWzpQ\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A surface feature shape quality inhering in a bearer by virtue of the bearer's having an irregularly toothed edge\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
        <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4833,7 +4717,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#exserted
 :exserted rdf:type owl:Class ;
           rdfs:subClassOf :position ;
-          :elucidation "\"https://drive.google.com/open?id=1KDsXdiKHoBEedEjqtotxR24d3QBBE4qL\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1HA6Ky0u8ZOVW3JoVW3IbaXlrPVtNmCrM\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality inhering in a bearer by virtue of the bearer's protruding or projecting from the body\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4870,7 +4754,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#falcate
 :falcate rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=11IOGvBP3DO2ANgwU4gTjEtzZ8d9-oXiO\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1o5YdFqT2J0xowW4avbtM0yadP7P7fAfJ\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's having the shape of a scythe or sickle\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4893,7 +4777,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#fasciated
 :fasciated rdf:type owl:Class ;
            rdfs:subClassOf :fusion ;
-           :elucidation "\"https://drive.google.com/open?id=1AJWsbaD5ZS3EnSQHqpcA4pdHcLrt1-fO\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1DHO5nwfnWrf_m5xhTEujKKUp79zs7R2A\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being abnormally flattened or coalesced\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -4903,7 +4787,7 @@ Saturation is the intensity of a hue from gray tone (no saturation) to pure, viv
 ###  http://biosemantics.arizona.edu/ontologies/carex#fascicled
 :fascicled rdf:type owl:Class ;
            rdfs:subClassOf :arrangement ;
-           :elucidation "\"https://drive.google.com/open?id=1rgMDzfXMJj4BS0lZsqGwLL1HHjN6Be_K\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1H29cgLHcugcn1jzDKm53oguoR4OC6tfq\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A structural quality inhering in a bearer by virtue of the bearer's forming a bundle of aligned anatomical fibers, as of muscle or nerve\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -5209,9 +5093,7 @@ Both from FNA""" ;
 :flattened rdf:type owl:Class ;
            rdfs:subClassOf :depth ,
                            :shape ;
-           :has_obsolescence_reason "The same as compressed. AntonReznicek 2020-04-30" ;
-           rdfs:label "flattened" ;
-           owl:deprecated "true"^^xsd:boolean .
+           rdfs:label "flattened" .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#flattened_triangular
@@ -5361,18 +5243,7 @@ Both from FNA""" ;
 :free_limb rdf:type owl:Class ;
            rdfs:subClassOf :anatomical_structure ;
            <http://purl.obolibrary.org/obo/IAO_0000112> "ligules acute, 5 mm, free limb to 0.5 mm" ;
-           <http://purl.obolibrary.org/obo/IAO_0000116> "Deprecated by [Hongcr][Me] on 2020-05-23 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Hongcr][Me] on 2020-05-24 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Hongcr][Me] on 2020-05-25 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Hongcr][Me] on 2020-05-26 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Hongcr][Me] on 2020-05-27 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Hongcr][Me] on 2020-05-28 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Hongcr][Me] on 2020-05-29 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Hongcr][Me] on 2020-05-30 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Hongcr][Me] on 2020-05-31 for reasons: [I don't know what that means][Bad]. Consider [][]" ,
-                                                        "Deprecated by [Me][Hongcr] on 2020-05-22 for reasons: [Not sure what that means][Not sure what that means]. Consider [development][]" ;
-           rdfs:label "free limb" ;
-           owl:deprecated "true"^^xsd:boolean .
+           rdfs:label "free limb" .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#friable
@@ -5448,7 +5319,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#fusiform
 :fusiform rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1TS7aYgcLreaJsvyGH8UY8VMGZvnQ9ycZ\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1sxbSk8fCF_eABFvFsLXoc7fJ5zThPoX2\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"Having a spindle_like shape that is wide in the middle and tapers at both ends\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -5527,7 +5398,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#globular
 :globular rdf:type owl:Class ;
           rdfs:subClassOf :globose ;
-          :elucidation "\"https://drive.google.com/open?id=1dAzhfympxTIJjLRyqtu4yo0axm8Z-_Vt\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1okeFqWjA_c50u3BJ_cZxAeMx9UhBron_\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's resembling a ball (a sphere whose equatorial diameter is equal to the polar diameter)\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -5959,7 +5830,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#hispid
 :hispid rdf:type owl:Class ;
         rdfs:subClassOf :pubescence ;
-        :elucidation "\"https://drive.google.com/open?id=1ulkJngy9qYHZiqdZavKP_dvuW0m-HCUc\"" ;
+        :elucidation "\"https://drive.google.com/open?id=1gDy4WXzYOZOil8R66mtHhYqzCh_BgqUY\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality of being covered with stiff or rough hairs\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -5969,7 +5840,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#hispidulous
 :hispidulous rdf:type owl:Class ;
              rdfs:subClassOf :pubescence ;
-             :elucidation "\"https://drive.google.com/open?id=196iAtrZslSh3-k6xRSXCnqxGDRL0X9IE\"" ;
+             :elucidation "\"https://drive.google.com/open?id=1P0ALjZZ9MnjO7kXtxK3tB2emCnJ6LBYs\"" ;
              <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality of being minutely hispid\"" ;
              <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
              <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -6167,7 +6038,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#inflated
 :inflated rdf:type owl:Class ;
           rdfs:subClassOf :inflation ;
-          :elucidation "\"https://drive.google.com/open?id=1k3EmnAS_NrGwUoG0H5X5QBupcZILuCml\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1tVPIS8KMQI8xF9_6PtTywRkDreYXt54P\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A structure quality inhering in a bearer by virtue of the bearer's being filled with air\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -6349,7 +6220,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#involute
 :involute rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1QWIAZ6RPFlO9wv8lml6t_BB7E6JeZShs\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1OZajuj6m1GRpyz4THI9CV3PQyQaCe_8p\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A curled quality inhering in a bearer by virtue of the bearer's edges of its surface being rolled inwards spirally on each side\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -6399,19 +6270,6 @@ Both from FNA""" ;
 :keel rdf:type owl:Class ;
       rdfs:subClassOf :anatomical_structure ;
       <http://purl.obolibrary.org/obo/IAO_0000112> "antrorsely scabrous on margins and keel" ;
-      <http://purl.obolibrary.org/obo/IAO_0000115> "Veins(BY [Me] 2020/05/31) by [Me] via Conflict Resolver on 2020-05-31." ;
-      <http://purl.obolibrary.org/obo/IAO_0000116> "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-22" ,
-                                                   "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-25" ,
-                                                   "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-31" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/22) by [Me] via Conflict Resolver on 2020-05-22.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-23" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/23) by [Me] via Conflict Resolver on 2020-05-23.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-24" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/24) by [Me] via Conflict Resolver on 2020-05-24.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-25" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/24) by [Me] via Conflict Resolver on 2020-05-25.] [Veins(BY [Me] 2020/05/25) by [Me] via Conflict Resolver on 2020-05-25.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-26" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/26) by [Me] via Conflict Resolver on 2020-05-26.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-27" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/27) by [Me] via Conflict Resolver on 2020-05-27.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-28" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/28) by [Me] via Conflict Resolver on 2020-05-28.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-29" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/29) by [Me] via Conflict Resolver on 2020-05-29.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-30" ,
-                                                   "Past defintiions:[Veins(BY [Me] 2020/05/30) by [Me] via Conflict Resolver on 2020-05-30.] Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-31" ;
       <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/02/01" ;
       <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "keels"@en ;
       rdfs:label "keel"@en .
@@ -6469,7 +6327,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#lanceolate
 :lanceolate rdf:type owl:Class ;
             rdfs:subClassOf :shape ;
-            :elucidation "\"https://drive.google.com/open?id=1wUDgbcidvKYyvpJK3n5oKEp3-SRgUnDv\"" ;
+            :elucidation "\"https://drive.google.com/open?id=1g_VORUEKh8hkd5nBL3_uGLa_pHgBcMYN\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being shaped like a lance_head, considerably longer than wide, tapering towards the tip from below the middle; attached at the broad end\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -6519,8 +6377,7 @@ Both from FNA""" ;
                         rdfs:subClassOf :lanceovate ,
                                         :plano_convex ;
                         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                        rdfs:label "lanceovate_planoconvex"@en ;
-                        owl:deprecated "true"^^xsd:boolean .
+                        rdfs:label "lanceovate_planoconvex"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#lanceovoid
@@ -7017,6 +6874,7 @@ Both from FNA""" ;
                                         owl:onProperty :measures ;
                                         owl:someValuesFrom :perigynium
                                       ] ;
+                      :elucidation "\"https://drive.google.com/open?id=1l0NWAB2XUmpQqGZuwW50eIk4oF3RKI1s\"" ;
                       rdfs:label "length of perigynium" .
 
 
@@ -7043,8 +6901,8 @@ Both from FNA""" ;
                                              owl:onProperty :quality_of ;
                                              owl:someValuesFrom :perigynium_beak
                                            ] ;
-                           :elucidation "\"https://drive.google.com/open?id=1-1E87L7lEao8bjI3XlK3FDMT7UmIMGB3\"" ,
-                                        "\"https://drive.google.com/open?id=1A7e2k9fT-Q7C1G1K2kuAb3rBaUW0AkEE\"" ;
+                           :elucidation "\"https://drive.google.com/open?id=179yC6xcK1JXoaD9xECVydTBrPbkNv3Fn\"" ,
+                                        "\"https://drive.google.com/open?id=1Kb_9PmcB4BLYGdZi2UhR_wvWH_zZkF5r\"" ;
                            rdfs:label "length of perigynium beak" .
 
 
@@ -7289,21 +7147,10 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#life_cycle
 :life_cycle rdf:type owl:Class ;
             rdfs:subClassOf :quality ;
-            :term_replaced_by :life_stage ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "Life stages or events of a structure or organism, including states after life, e.g. budding, fruiting, dormant, seed_shed, decayed." ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "Plant Glossary (Taxon)" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-            rdfs:label "life cycle"@en ;
-            owl:deprecated "true"^^xsd:boolean .
-
-
-###  http://biosemantics.arizona.edu/ontologies/carex#life_stage
-:life_stage rdf:type owl:Class ;
-            rdfs:subClassOf :quality ;
-            <http://purl.obolibrary.org/obo/IAO_0000115> "Life stages or events of a structure or organism, including states after life, e.g. budding, fruiting, dormant, seed-shed, decayed." ;
-            <http://purl.obolibrary.org/obo/IAO_0000119> "Plant Glossary (Taxon)" ;
-            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-            rdfs:label "life stage"@en .
+            rdfs:label "life cycle"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#light
@@ -7401,47 +7248,16 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#linear
 :linear rdf:type owl:Class ;
         rdfs:subClassOf :shape ;
-        :elucidation "\"https://drive.google.com/open?id=1tCxBa7TjBZBhVGpCX0Nkdxa-tKK0so2B\"" ;
+        :elucidation "\"https://drive.google.com/open?id=1InsTSqYtecn2eoeTDJ2uCVXPvRaPpNbS\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being narrow, with the two opposite margins parallel\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
         rdfs:label "linear"@en .
 
 
-###  http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate
-:linear-oblanceolate rdf:type owl:Class ;
-                     rdfs:subClassOf :shape ;
-                     <http://purl.obolibrary.org/obo/IAO_0000116> "Adding 'Narrowly oblanceolate' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Him on 2020-05-23 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Narrowly oblanceolate' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Him on 2020-05-25 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Narrowly oblanceolate' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Him on 2020-05-27 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Narrowly oblanceolate' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Him on 2020-05-29 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Narrowly oblanceolate' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Him on 2020-05-31 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Oblanceolate-linear' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Me on 2020-05-23 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Oblanceolate-linear' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Me on 2020-05-25 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Oblanceolate-linear' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Me on 2020-05-27 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Oblanceolate-linear' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Me on 2020-05-29 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Adding 'Oblanceolate-linear' as exact_synomyn to http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate by Me on 2020-05-31 triggered the change of making the term a broad_synonym on this class (as opposed to the initial extact_synonym)" ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-21 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-22 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-23 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-24 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-25 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-26 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-27 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-28 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-29 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-30 via the mobile app " ,
-                                                                  "Moved http://biosemantics.arizona.edu/ontologies/carex#linear-oblanceolate from class toreview to subclass of http://biosemantics.arizona.edu/ontologies/carex#shape by [Me][Him] on 2020-05-31 via the mobile app " ;
-                     <http://www.geneontology.org/formats/oboInOwl#hasBroadSynonym> "Narrowly oblanceolate" ,
-                                                                                    "Oblanceolate-linear" ;
-                     <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "Narrowly oblanceolate" ,
-                                                                                    "Oblanceolate-linear" .
-
-
 ###  http://biosemantics.arizona.edu/ontologies/carex#linear_clavate
 :linear_clavate rdf:type owl:Class ;
                 rdfs:subClassOf :clavate ;
-                :has_not_recommended_synonym "subclavate" ;
                 <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
                 rdfs:label "linear_clavate"@en .
 
@@ -7496,7 +7312,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#lobed
 :lobed rdf:type owl:Class ;
        rdfs:subClassOf :architecture ;
-       :elucidation "\"https://drive.google.com/open?id=1k3BCm5f9oRSZ8OD8iVZvxLXv9QjNPRFk\"" ;
+       :elucidation "\"https://drive.google.com/open?id=1KwhtCz_ARhG2gZsMmXdMRaP1UzUVBMgF\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being partly divided into a determinate number of regions\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
        <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -7572,7 +7388,6 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#long_clavate
 :long_clavate rdf:type owl:Class ;
               rdfs:subClassOf :clavate ;
-              :has_not_recommended_synonym "subclavate" ;
               <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
               rdfs:label "long_clavate"@en .
 
@@ -8469,6 +8284,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#needlelike
 :needlelike rdf:type owl:Class ;
             rdfs:subClassOf :architecture ;
+            :elucidation "\"https://drive.google.com/open?id=1mmBNXsVLOuv__KxcjtrrhYbVzN84SfMs\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being linear, very narrow, tapering to a very fine point from a narrow base\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -8614,7 +8430,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#notched
 :notched rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1a_DhhzM_C32gWjtyezfLDHr8SHXku8Uh\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1EhjttfjL_6_JkD6Wse4KbTRLjBNs8Th_\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A concave quality inhering in a bearer by virtue of the bearer's shape being a V_shaped cut\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -8780,7 +8596,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#oblanceolate
 :oblanceolate rdf:type owl:Class ;
               rdfs:subClassOf :shape ;
-              :elucidation "\"https://drive.google.com/open?id=1btWKM8mvWY4qlcjjgK4dKJvVX_Dcr1ST\"" ;
+              :elucidation "\"https://drive.google.com/open?id=13U0FWnuELEAH10NYDH_b1RGybmXiHsyj\"" ;
               <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality inhering in a bearer by virtue of the bearer's being extended along a straight line, and is shaped like a reversed lance_point, with the tapering point attached to the leafstalk\"" ;
               <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
               <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -8820,7 +8636,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#oblong
 :oblong rdf:type owl:Class ;
         rdfs:subClassOf :shape ;
-        :elucidation "\"https://drive.google.com/open?id=11oXL_UZ3LAOtvmZZ6nzRdQ2DW_3uCFWi\"" ;
+        :elucidation "\"https://drive.google.com/open?id=1VNtZDJ_1yK0CiPzaymZggQViyi4ogK9d\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's having a somewhat elongated form with approximately parallel sides\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -8830,7 +8646,6 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#oblong_clavate
 :oblong_clavate rdf:type owl:Class ;
                 rdfs:subClassOf :clavate ;
-                :has_not_recommended_synonym "subclavate" ;
                 <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
                 rdfs:label "oblong_clavate"@en .
 
@@ -8923,7 +8738,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#obovate
 :obovate rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1VVSQ6gPcetKvfjxg2KeOfRNiXQ5p-VnS\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1bS7PvmxKby8N2mLlI1tri3w_F7MBXk1m\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's being egg_shaped and flat, with the narrow end attached to the base\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -9029,12 +8844,11 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#obtuse
 :obtuse rdf:type owl:Class ;
         rdfs:subClassOf :shape ;
-        :elucidation "\"https://drive.google.com/open?id=16K_Pttg9xjKevEQPRL1pjP_XyqWTHgze\"" ;
+        :elucidation "\"https://drive.google.com/open?id=1Wsvew5IAbr9ZJy1dK67WT5DFINeAD2dk\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being roundish, a little inclining to be oblong\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-        <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "obtusely"@en ,
-                                                                       "blunt" ;
+        <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "obtusely"@en ;
         rdfs:label "obtuse"@en .
 
 
@@ -9060,8 +8874,8 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#old
 :old rdf:type owl:Class ;
      rdfs:subClassOf :age ;
-     <http://purl.obolibrary.org/obo/IAO_0000115> "later stage of development, often associated with tissues that have been present throughout the growing season." ;
-     <http://purl.obolibrary.org/obo/IAO_0000119> "BruceFord 2019-09-04" ;
+     <http://purl.obolibrary.org/obo/IAO_0000115> "\"An age which is relatively high\"" ;
+     <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
      <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
      rdfs:label "old"@en .
 
@@ -9156,7 +8970,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#orbicular_ovate
 :orbicular_ovate rdf:type owl:Class ;
                  rdfs:subClassOf :ovate ;
-                 :elucidation "\"https://drive.google.com/open?id=1WqCIHs9wcOdcdYo5GkFJ9KWaWPpIUYP9\"" ;
+                 :elucidation "\"https://drive.google.com/open?id=10IsrPpS7cY_a4i_2mk16Xvveap5owFnz\"" ;
                  <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
                  rdfs:label "orbicular_ovate"@en .
 
@@ -9243,7 +9057,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#oval
 :oval rdf:type owl:Class ;
       rdfs:subClassOf :shape ;
-      :elucidation "\"https://drive.google.com/open?id=11CLJnDllI5NW38pnCW5CGKGqDTEnLCaW\"" ;
+      :elucidation "\"https://drive.google.com/open?id=127_Vo4u1XRWZ1b2rya9H2n1FMN3ha6_B\"" ;
       <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's exhibiting a continuous convex surface with an axis of symmetry and one axis longer than the other; egg_shaped\"" ;
       <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
       <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -9253,7 +9067,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#ovate
 :ovate rdf:type owl:Class ;
        rdfs:subClassOf :shape ;
-       :elucidation "\"https://drive.google.com/open?id=11CLJnDllI5NW38pnCW5CGKGqDTEnLCaW\"" ;
+       :elucidation "\"https://drive.google.com/open?id=127_Vo4u1XRWZ1b2rya9H2n1FMN3ha6_B\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's exhibiting a continuous convex surface with an axis of symmetry and one axis longer than the other; egg_shaped\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
        <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -9272,12 +9086,9 @@ Both from FNA""" ;
 :ovate_circular rdf:type owl:Class ;
                 rdfs:subClassOf :circular ,
                                 :ovate ;
-                :has_not_recommended_synonym "subcircular" ;
                 <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "circular ovate" ,
-                                                                               "circular-ovate" ,
-                                                                               "ovate-circular" ;
-                rdfs:label "ovate circular"@en .
+                <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "circular_ovate" ;
+                rdfs:label "ovate_circular"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#ovate_clavate
@@ -9417,7 +9228,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#ovoid
 :ovoid rdf:type owl:Class ;
        rdfs:subClassOf :shape ;
-       :elucidation "\"https://drive.google.com/open?id=11CLJnDllI5NW38pnCW5CGKGqDTEnLCaW\"" ;
+       :elucidation "\"https://drive.google.com/open?id=127_Vo4u1XRWZ1b2rya9H2n1FMN3ha6_B\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's exhibiting a continuous convex surface with an axis of symmetry and one axis longer than the other; egg_shaped\"" ;
        <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
        <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -9519,30 +9330,9 @@ Both from FNA""" ;
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#pale_hyaline
 :pale_hyaline rdf:type owl:Class ;
-              rdfs:subClassOf :reflectance ;
+              rdfs:subClassOf :hyaline ,
+                              :pale ;
               <http://purl.obolibrary.org/obo/IAO_0000112> "\"leaves : others grading from maroon to green on back , pale hyaline on front ;\" FNA" ;
-              <http://purl.obolibrary.org/obo/IAO_0000116> "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-21" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-22" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-23" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-24" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-25" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-26" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-27" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-28" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-29" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-30" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#hyaline, but detached by [Me][Him] on 2020-05-31" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-23" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-24" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-25" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-26" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-27" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-28" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-29" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-30" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Hongcr][Me][Him] on 2020-05-31" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Me][Him][Hongcr] on 2020-05-21" ,
-                                                           "The term was a subclass of http://biosemantics.arizona.edu/ontologies/carex#pale, but detached by [Me][Him][Hongcr] on 2020-05-22" ;
               <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
               rdfs:label "pale hyaline"@en .
 
@@ -10120,12 +9910,9 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#plano_convex
 :plano_convex rdf:type owl:Class ;
               rdfs:subClassOf :convex ;
-              :has_not_recommended_synonym "sub-plano-convex" ,
-                                           "sub-planoconvex" ,
-                                           "subplanoconvex" ;
               <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-              <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "plano-convex"@en ;
-              rdfs:label "planoconvex"@en .
+              <http://www.geneontology.org/formats/oboInOwl#hasExactSynonym> "planoconvex"@en ;
+              rdfs:label "plano_convex"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#planoconvex
@@ -10285,7 +10072,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#procumbent
 :procumbent rdf:type owl:Class ;
             rdfs:subClassOf :growth_form ;
-            :elucidation "\"https://drive.google.com/open?id=1fFdn_lwxSJfgkOUtbuOJwqwd7nF60vW4\"" ;
+            :elucidation "\"https://drive.google.com/open?id=1Lo1CkTj7RlL0D_csDpleeGXBvdp2TkDJ\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"Growing horizontal to the ground without setting roots\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -10326,7 +10113,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#prominence
 :prominence rdf:type owl:Class ;
             rdfs:subClassOf :quality ;
-            :elucidation "\"https://drive.google.com/open?id=1CMUfbiWq_7RCEBktGIYqa-ik2u99tx8I\"" ;
+            :elucidation "\"https://drive.google.com/open?id=1_LqFux5zXURXAtsvxlIOtcoAF_fq_n5Z\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality inhering in a bearer by virtue of the degree to which the bearers stands out or projects beyond a surface or line\"" ;
             <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -10336,7 +10123,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#prominent
 :prominent rdf:type owl:Class ;
            rdfs:subClassOf :prominence ;
-           :elucidation "\"https://drive.google.com/open?id=1CMUfbiWq_7RCEBktGIYqa-ik2u99tx8I\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1_LqFux5zXURXAtsvxlIOtcoAF_fq_n5Z\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality inhering in a bearer by virtue of the bearer's standing out or projecting beyond a surface or line\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -10363,7 +10150,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#prostrate
 :prostrate rdf:type owl:Class ;
            rdfs:subClassOf :growth_form ;
-           :elucidation "\"https://drive.google.com/open?id=1lEFYheJxdFSUhUCd-uBqndj2-Y_fvJ2g\"" ;
+           :elucidation "\"https://drive.google.com/open?id=15voXJt2lqidwrhJwqMtPpjmpUUKSjTII\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A positional quality inhering in a bearer by virtue of the bearer's being stretched out and lying at full length along the ground\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -10779,7 +10566,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#pubescent
 :pubescent rdf:type owl:Class ;
            rdfs:subClassOf :pubescence ;
-           :elucidation "\"https://drive.google.com/open?id=1ogG7eB8sL2DtUhOZkcX74-FYMeP_O3MH\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1Bd_W585heL4EExGa1fbRdsxiJ2flhA7k\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A maturity quality inhering in a bearer by virtue of the bearer's having arrived at the onset of puberty (the age at which sex glands become functional) but not yet fully mature\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -10796,7 +10583,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#punctate
 :punctate rdf:type owl:Class ;
           rdfs:subClassOf :relief ;
-          :elucidation "\"https://drive.google.com/open?id=1Es8tkANjWUYzOo2GxJoQzA1oVIq5lm4z\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1G02R5_GbVtt32mGoA8_Q4iclah8566cO\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A pattern inhering in a surface by virtue of the bearer's being marked by the presence of dots, punctures, points or pits\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -10896,7 +10683,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#pyramidal
 :pyramidal rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :elucidation "\"https://drive.google.com/open?id=1KYrTUD4ws4yX9JUY3W0X2gz92Ta6C8vZ\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1GHoIMt6PLD2Hjb52RvM69P8YCHlwtcdq\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's having triangular faces that meet at a common point and containing a polygonal shaped base\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -10915,7 +10702,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#quadrangular
 :quadrangular rdf:type owl:Class ;
               rdfs:subClassOf :shape ;
-              :elucidation "\"https://drive.google.com/open?id=16EAscL1b4KnQfr6vu37069EypSiwYt_d\"" ;
+              :elucidation "\"https://drive.google.com/open?id=1kXTH_NKq3t6srRjen2KKS0n5V_wQFskT\"" ;
               <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's having four angles and four sides\"" ;
               <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
               <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -11052,7 +10839,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#recurved
 :recurved rdf:type owl:Class ;
           rdfs:subClassOf :curvature ;
-          :elucidation "\"https://drive.google.com/open?id=1FDXerJHuJmZV-2djv8w-XmdPXqaF74_d\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1OXHDKmMtZdJHn_pyPnerKg8Ft2KEywsa\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A curvature quality inhering in a bearer by virtue of the bearer's being curved backward or inward\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -11217,8 +11004,6 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#relative_position
 :relative_position rdf:type owl:Class ;
                    rdfs:subClassOf :quality ;
-                   <http://purl.obolibrary.org/obo/IAO_0000115> "A point defined with reference to another position." ;
-                   <http://purl.obolibrary.org/obo/IAO_0000119> "BruceFord 2019-09-10" ;
                    rdfs:label "relative position" .
 
 
@@ -11279,7 +11064,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#reniform
 :reniform rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1uOJcPcUVQmmOFczonIyroqiy000Zuchm\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1U0Lhz1mKUEfFN1kc_rwrPKXl8X_dZK_z\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A concave 3_D shape quality inhering in a bearer by virtue of the bearer's having the shape of a kidney\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -11289,10 +11074,9 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#reproduction
 :reproduction rdf:type owl:Class ;
               rdfs:subClassOf :quality ;
-              <http://purl.obolibrary.org/obo/IAO_0000115> "The mode of reproduction or the mode of the development of reproductive organs, including characters of fertility, mating systems, dispersal and pollination strategies, and maturation or distribution of female and/or male flowers. E.g., agamospermous, allogamous, self_fertilizing, polycarpic. This term does not cover reproductive organs/structures themselves, which should go to Anatomical  Structure." ;
-              <http://purl.obolibrary.org/obo/IAO_0000119> "Plant Glossary (TAXON)" ;
+              <http://purl.obolibrary.org/obo/IAO_0000115> "The mode of reproduction or the mode of the development of reproductive organs, including characters of fertility, mating systems, dispersal and pollination strategies, and maturation or distribution of female and/or male flowers. E.g., agamospermous, allogamous, self_fertilizing, polycarpic . Reproductive organs/structures go into Structure." ;
+              <http://purl.obolibrary.org/obo/IAO_0000119> "Plant Glossary" ;
               <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-              rdfs:comment "The production of new individuals through sexual or asexual means. Sexual reproduction involves the transfer of male gametes to female gametes through a process called pollination. Male gametes are contained within pollen grains. Female gametes are found within ovules which are surrounded by an ovary. Pollination can occur via the transfer of pollen from a flower on the same or a different individual. After fertilization, the ovules become seeds and the ovary becomes a fruit. In Carex, seeds are never liberated from the ovary and are called an achenes. Asexual reproduction results in the production of new individuals or stems that are genetically identical to the parent. In sedges, this is most commonly accomplished through the production of new stems from a rhizome. Apomixis, the production of seed without fertilization, does not occur in Carex. BruceFord 2019-09-10" ;
               rdfs:label "reproduction"@en .
 
 
@@ -11330,7 +11114,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#revolute
 :revolute rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1NAOWTsqsvATHZ-h42b5kV-G8pj1fTkoK\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1MmlrfjJsxE5fNkK0KU4i2KEgWFMiSwTL\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A curled quality inhering in a bearer by virtue of the bearer's edges of its surface being rolled backwards spirally on each side\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -11417,7 +11201,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#rhomboid
 :rhomboid rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1InzzC2NTZR2wSYED1TU22eiTP-kAqw1R\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1G_qMu_CbV3xIGlupTiw1z3ERAtcVclxT\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's being oval and a little angular in the middle\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           rdfs:label "rhomboid" .
@@ -11602,7 +11386,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#rugose
 :rugose rdf:type owl:Class ;
         rdfs:subClassOf :relief ;
-        :elucidation "\"https://drive.google.com/open?id=1vpmLHRJqaAVu9zDxTnAlKT5NjRfHnVhZ\"" ;
+        :elucidation "\"https://drive.google.com/open?id=1FuWes7Nz_F4pCUVVUlAYBN3HyZky_o2y\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000115> "\"A surface feature shape quality inhering in a bearer by virtue of the bearer's having many wrinkles or creases on the surface\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -11783,13 +11567,10 @@ Both from FNA""" ;
 :scalloped rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
            :elucidation "\"https://drive.google.com/open?id=1fG5Z00WvnJiAczWpXcdCjmQRPK4B5mXY\"" ;
-           :has_obsolescence_reason "Synonym to crenulate." ;
-           :term_replaced_by :crenulate ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A surface feature shape quality inhering in a bearer by virtue of the bearer's having the border, edge, or outline cut into a series of segments of circles resembling a scallop_shell\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-           rdfs:label "scalloped"@en ;
-           owl:deprecated "true"^^xsd:boolean .
+           rdfs:label "scalloped"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#scaly
@@ -11970,7 +11751,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#setose
 :setose rdf:type owl:Class ;
         rdfs:subClassOf :pubescence ;
-        :elucidation "\"https://drive.google.com/open?id=10X50YEYb3mUgwqkqb2szkCvdTnJam06x\"" ;
+        :elucidation "\"https://drive.google.com/open?id=1IcJYXWuhdr72JHh8lw8As4Yy6KHqbD2S\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000115> "\"A hairy quality inhering in a bearer by virtue of the bearer's being covered with setae\"" ;
         <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
         <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -12437,10 +12218,8 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#short_attenuate
 :short_attenuate rdf:type owl:Class ;
                  rdfs:subClassOf :attenuate ;
-                 :has_obsolescence_reason "attenuate by definition is 'gradual', so short can not apply. AntonReznicek 2020-04-30" ;
                  <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                 rdfs:label "short_attenuate"@en ;
-                 owl:deprecated "true"^^xsd:boolean .
+                 rdfs:label "short_attenuate"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#short_awned
@@ -12746,7 +12525,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#sinuous
 :sinuous rdf:type owl:Class ;
          rdfs:subClassOf :course ;
-         :elucidation "\"https://drive.google.com/open?id=18ekLSaFufiAyAkAWpQ4v3yHCG6Z0CxDf\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1N0dEjLOHxDo23_u3scwbkY7L99Vc2PeN\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A curvature quality inhering in a bearer by virtue of the bearer's having many curves and turns\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -12899,7 +12678,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#spherical
 :spherical rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :elucidation "\"https://drive.google.com/open?id=1dAzhfympxTIJjLRyqtu4yo0axm8Z-_Vt\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1okeFqWjA_c50u3BJ_cZxAeMx9UhBron_\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A spheroid quality inhering in a bearer by virtue of the bearer's resembling a ball (a sphere whose equatorial diameter is equal to the polar diameter)\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -13166,7 +12945,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#sterile
 :sterile rdf:type owl:Class ;
          rdfs:subClassOf :reproduction ;
-         :elucidation "\"https://drive.google.com/open?id=1pBAbrj6eIvnh1y5cr3pr8IVy0zis76hq\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1nYoeoXY_EQtmnNcEVP65TZZT6cbjDI0D\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A fertility quality inhering in a bearer by virtue of the bearer's being incapable of initiating, sustaining, or supporting reproduction\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -13362,7 +13141,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#subacute
 :subacute rdf:type owl:Class ;
           rdfs:subClassOf :acute ;
-          :elucidation "\"https://drive.google.com/open?id=1-geJgR05ERvrZH3Hhj_OaQxnN3T7F4YD\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1mmBNXsVLOuv__KxcjtrrhYbVzN84SfMs\"" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
           rdfs:label "subacute"@en .
 
@@ -13398,21 +13177,17 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#subcircular
 :subcircular rdf:type owl:Class ;
              rdfs:subClassOf :circular ;
-             :has_obsolescence_reason "Ovate, elliptic, and obovate circular already cover all the ways an object can be nearly circular. AntonReznicek 2020-04-30" ;
              <http://purl.obolibrary.org/obo/IAO_0000115> "\"A circular shape quality inhering in a bearer by virtue of the bearer's being nearly, but not perfectly, circular\"" ;
              <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
              <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-             rdfs:label "subcircular"@en ;
-             owl:deprecated "true"^^xsd:boolean .
+             rdfs:label "subcircular"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#subclavate
 :subclavate rdf:type owl:Class ;
             rdfs:subClassOf :clavate ;
-            :has_obsolescence_reason "all the ways something can be nearly but not quite clavate are covered by the other subclasses of clavate. AntonReznicek 2020-04-30" ;
             <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-            rdfs:label "subclavate"@en ;
-            owl:deprecated "true"^^xsd:boolean .
+            rdfs:label "subclavate"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#subcordate
@@ -13579,10 +13354,8 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#subplano_convex
 :subplano_convex rdf:type owl:Class ;
                  rdfs:subClassOf :plano_convex ;
-                 :term_replaced_by :plano_convex ;
                  <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
-                 rdfs:label "subplano_convex"@en ;
-                 owl:deprecated "true"^^xsd:boolean .
+                 rdfs:label "subplano_convex"@en .
 
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#subrhombic
@@ -13653,7 +13426,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#subulate
 :subulate rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1CjuwSWWVKaHtjxz6YdFl67UqFKZgdFgF\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1mmBNXsVLOuv__KxcjtrrhYbVzN84SfMs\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's being linear, very narrow, tapering to a very fine point from a narrow base\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -13734,7 +13507,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#symmetric
 :symmetric rdf:type owl:Class ;
            rdfs:subClassOf :shape ;
-           :elucidation "\"https://drive.google.com/open?id=13pYi0u2QFmxfMQ-3s6ghiRkn80mU_3W2\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1a5KAZLwr4JPchlHLvHt_jRv9EwfprK7G\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A symmetry quality inhering in a bearer by virtue of the bearer's being capable of division by a longitudinal plane into similar halves\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -14272,7 +14045,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#toothed
 :toothed rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1kbHhHTPLwDrBv13FAwyFHiaLjEt49N48\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1VdanpFf6GX1n0zr54w_rg5CrSWBpUcRE\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A surface feature shape quality inhering in a bearer by virtue of the bearer's having toothlike projections in the margin\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -14315,7 +14088,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#translucent
 :translucent rdf:type owl:Class ;
              rdfs:subClassOf :reflectance ;
-             :elucidation "\"https://drive.google.com/open?id=1o1d3catw-VI2IcrEbmzPLwOq8GMV4uN6\"" ;
+             :elucidation "\"https://drive.google.com/open?id=1_CjME2Bl1fo56WmHmLn8YQpZZXzqB3JU\"" ;
              <http://purl.obolibrary.org/obo/IAO_0000115> "\"A optical quality inhering in a bearer by virtue of the bearer's exhibiting low opacity\"" ;
              <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
              <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -14386,7 +14159,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#truncate
 :truncate rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1F9jjJhoXUR01Ae1IFaqYuPUPn2MhUokO\"" ;
+          :elucidation "\"https://drive.google.com/open?id=1cnvWQoJe_pm45zh3rGggmC8Tl9EOKiJm\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's terminating abruptly by having or as if having an end or point cut off\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -14403,7 +14176,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#tubular
 :tubular rdf:type owl:Class ;
          rdfs:subClassOf :shape ;
-         :elucidation "\"https://drive.google.com/open?id=1HurKHzh5HhkQLU6LG_CfqJb76Mr1N_1M\"" ;
+         :elucidation "\"https://drive.google.com/open?id=1UiPMsMvCdlF_kW1judsrfscTDktLdd7R\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000115> "\"A cylindrical shape that is hollow\"" ;
          <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
          <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -14501,7 +14274,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#undulate
 :undulate rdf:type owl:Class ;
           rdfs:subClassOf :shape ;
-          :elucidation "\"https://drive.google.com/open?id=1MEc8JE_Dcwy4vbKI-KXINzXKSgptYqAl\"" ;
+          :elucidation "\"https://drive.google.com/open?id=17vVPHL2GdPd9_y0hsCgxoPZ_b017AXsS\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000115> "\"A shape quality inhering in a bearer by virtue of the bearer's having a sinuate margin and rippled surface\"" ;
           <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
           <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -14671,7 +14444,7 @@ Both from FNA""" ;
 ###  http://biosemantics.arizona.edu/ontologies/carex#vestigial
 :vestigial rdf:type owl:Class ;
            rdfs:subClassOf :prominence ;
-           :elucidation "\"https://drive.google.com/open?id=1G5GPutepFDAPxssyMczPhS3mKjx-dqtZ\"" ;
+           :elucidation "\"https://drive.google.com/open?id=1hACn0zXZzqQpIvRxDci6CvpAxn7nOJ0n\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000115> "\"A quality inhering in a bearer by virtue of the bearer's being a remnant structure from earlier development or evolution\"" ;
            <http://purl.obolibrary.org/obo/IAO_0000119> "PATO" ;
            <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
@@ -15289,10 +15062,7 @@ Both from FNA""" ;
 
 ###  http://biosemantics.arizona.edu/ontologies/carex#young
 :young rdf:type owl:Class ;
-       rdfs:subClassOf :age ,
-                       :life_cycle ;
-       <http://purl.obolibrary.org/obo/IAO_0000115> "first or early stage of growth or development,  often associated with tissues that first develop early in the growing season." ;
-       <http://purl.obolibrary.org/obo/IAO_0000119> "BruceFord 2019-09-04" ;
+       rdfs:subClassOf :life_cycle ;
        rdfs:label "young" .
 
 
@@ -15348,29 +15118,6 @@ Both from FNA""" ;
                                                                                                 owl:someValuesFrom :style
                                                                                               ] ;
                                                                               <http://purl.obolibrary.org/obo/IAO_0000112> "style tapering from swelling just beyond attachment to achene , bent , ascending through entire orifice (Carex)" ;
-                                                                              <http://purl.obolibrary.org/obo/IAO_0000115> "The point where one structure is connected to another(BY [Me] 2020/05/31) by [Me] via Conflict Resolver on 2020-05-31." ,
-                                                                                                                           "The points where two things join(BY [Hongcr] 2020/05/31) by [Hongcr] via Conflict Resolver on 2020-05-31." ;
-                                                                              <http://purl.obolibrary.org/obo/IAO_0000116> "Past defintiions:Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-25" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-31" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-22" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-23" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-24" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-25" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-26" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-27" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-28" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-29" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-30" ,
-                                                                                                                           "Past defintiions:Moved to notes based on decision by [Me] via Conflict Resolver on 2020-05-31" ,
-                                                                                                                           "Past defintiions:[The point back to one structure is connected to another(BY [Me] 2020/05/22) by [Me] via Conflict Resolver on 2020-05-22.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-23" ,
-                                                                                                                           "Past defintiions:[The point where one structure is connected to another(BY [Me] 2020/05/23) by [Me] via Conflict Resolver on 2020-05-23.] [The points where two things join(BY [Hongcr] 2020/05/23) by [Hongcr] via Conflict Resolver on 2020-05-23.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-24" ,
-                                                                                                                           "Past defintiions:[The point where one structure is connected to another(BY [Me] 2020/05/24) by [Me] via Conflict Resolver on 2020-05-24.] [The points where two things join(BY [Hongcr] 2020/05/24) by [Hongcr] via Conflict Resolver on 2020-05-24.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-25" ,
-                                                                                                                           "Past defintiions:[The point where one structure is connected to another(BY [Me] 2020/05/25) by [Me] via Conflict Resolver on 2020-05-25.] [The points where two things join(BY [Hongcr] 2020/05/25) by [Hongcr] via Conflict Resolver on 2020-05-25.] [The point where one structure is connected to another(BY [Me] 2020/05/24) by [Me] via Conflict Resolver on 2020-05-25.] [The points where two things join(BY [Hongcr] 2020/05/24) by [Hongcr] via Conflict Resolver on 2020-05-25.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-26" ,
-                                                                                                                           "Past defintiions:[The point where one structure is connected to another(BY [Me] 2020/05/27) by [Me] via Conflict Resolver on 2020-05-27.] [The points where two things join(BY [Hongcr] 2020/05/27) by [Hongcr] via Conflict Resolver on 2020-05-27.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-28" ,
-                                                                                                                           "Past defintiions:[The point where one structure is connected to another(BY [Me] 2020/05/28) by [Me] via Conflict Resolver on 2020-05-28.] [The points where two things join(BY [Hongcr] 2020/05/28) by [Hongcr] via Conflict Resolver on 2020-05-28.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-29" ,
-                                                                                                                           "Past defintiions:[The point where one structure is connected to another(BY [Me] 2020/05/29) by [Me] via Conflict Resolver on 2020-05-29.] [The points where two things join(BY [Hongcr] 2020/05/29) by [Hongcr] via Conflict Resolver on 2020-05-29.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-30" ,
-                                                                                                                           "Past defintiions:[The points where two things join(BY [Hongcr] 2020/05/26) by [Hongcr] via Conflict Resolver on 2020-05-26.] [The point where one structure is connected to another(BY [Me] 2020/05/26) by [Me] via Conflict Resolver on 2020-05-26.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-27" ,
-                                                                                                                           "Past defintiions:[The points where two things join(BY [Hongcr] 2020/05/30) by [Hongcr] via Conflict Resolver on 2020-05-30.] [The point where one structure is connected to another(BY [Me] 2020/05/30) by [Me] via Conflict Resolver on 2020-05-30.] Moved to notes based on decision by [Hongcr] via Conflict Resolver on 2020-05-31" ;
                                                                               rdfs:label "attachment (structure)" .
 
 
@@ -15389,27 +15136,6 @@ Both from FNA""" ;
 #################################################################
 #    Annotations
 #################################################################
-
-:Length_of_testnoun1 <http://purl.obolibrary.org/obo/IAO_0000115> "from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/31) by [Me][Him] via Conflict Resolver on 2020-05-31." ,
-                                                                  "from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/31) by [Me][Him] via Conflict Resolver on 2020-05-31." ;
-                     <http://purl.obolibrary.org/obo/IAO_0000116> "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-23" ,
-                                                                  "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-24" ,
-                                                                  "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-25" ,
-                                                                  "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-26" ,
-                                                                  "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-27" ,
-                                                                  "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-28" ,
-                                                                  "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-29" ,
-                                                                  "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-30" ,
-                                                                  "Past defintiions:Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-31" ,
-                                                                  "Past defintiions:[from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/24) by [Me][Him] via Conflict Resolver on 2020-05-24.] [from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/24) by [Me][Him] via Conflict Resolver on 2020-05-24.] Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-25" ,
-                                                                  "Past defintiions:[from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/23) by [Me][Him] via Conflict Resolver on 2020-05-23.] [from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/23) by [Me][Him] via Conflict Resolver on 2020-05-23.] Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-24" ,
-                                                                  "Past defintiions:[from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/25) by [Me][Him] via Conflict Resolver on 2020-05-25.] [from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/25) by [Me][Him] via Conflict Resolver on 2020-05-25.] [from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/24) by [Me][Him] via Conflict Resolver on 2020-05-25.] [from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/24) by [Me][Him] via Conflict Resolver on 2020-05-25.] Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-26" ,
-                                                                  "Past defintiions:[from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/26) by [Me][Him] via Conflict Resolver on 2020-05-26.] [from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/26) by [Me][Him] via Conflict Resolver on 2020-05-26.] Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-27" ,
-                                                                  "Past defintiions:[from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/27) by [Me][Him] via Conflict Resolver on 2020-05-27.] [from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/27) by [Me][Him] via Conflict Resolver on 2020-05-27.] Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-28" ,
-                                                                  "Past defintiions:[from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/28) by [Me][Him] via Conflict Resolver on 2020-05-28.] [from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/28) by [Me][Him] via Conflict Resolver on 2020-05-28.] Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-29" ,
-                                                                  "Past defintiions:[from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/29) by [Me][Him] via Conflict Resolver on 2020-05-29.] [from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/29) by [Me][Him] via Conflict Resolver on 2020-05-29.] Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-30" ,
-                                                                  "Past defintiions:[from [edge] to [top] include [top] exclude [top] where [top](BY [Me][Him] 2020/05/30) by [Me][Him] via Conflict Resolver on 2020-05-30.] [from [edge] to [test] include [testInclude] exclude [testExclude] where [testWhere](BY [Me][Him] 2020/05/30) by [Me][Him] via Conflict Resolver on 2020-05-30.] Moved to notes based on decision by [Me][Him] via Conflict Resolver on 2020-05-31" .
-
 
 :reaching <http://www.geneontology.org/formats/oboInOwl#creation_date> "2018/03/15" ;
           rdfs:label "reaching"@en ,

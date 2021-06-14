@@ -19,48 +19,64 @@
 
 @prefix ccs3: <http://biosemantics.arizona.edu/kb/carex/capitata/Sample3#>.
 
-data:graph_carex_capitata_new00 {
+@prefix ccs4: <http://biosemantics.arizona.edu/kb/carex/capitata/Sample4#>.
+
+data:graph_carex_capitata_maxtest {
 kb:CarexCapitataSample1 rdf:label "Sample1 for Carex capitata";
     rdf:id "some_Unique_ID_4_This_Sample";
     iao:is_about ncbi:txid140797;
     :specimen_of :Carex_Capitata;
-    a obi:specimen;
-    :has_part ccs1:achene.
-ccs1:achene a :achene;
-    :has_quality ccs1:color_of_achene.
-ccs1:color_of_achene a :color_of_achene;
-    :has_hue_value :pink.
-kb:CarexCapitataSample1 :has_part ccs1:style.
-ccs1:style a :style;
-    :has_quality ccs1:duration_of_style.
-ccs1:duration_of_style a :duration_of_style;
-    :has_value :annual.
+
+    a obi:specimen.
 kb:CarexCapitataSample2 rdf:label "Sample2 for Carex capitata";
     rdf:id "some_Unique_ID_4_This_Sample";
     iao:is_about ncbi:txid140797;
     :specimen_of :Carex_Capitata;
-    a obi:specimen;
-    :has_part ccs2:achene.
-ccs2:achene a :achene;
-    :has_quality ccs2:color_of_achene.
-ccs2:color_of_achene a :color_of_achene;
-    :has_hue_value :pink.
-ccs2:style :has_quality ccs2:duration_of_style.
-ccs2:duration_of_style a :duration_of_style;
-    :has_value :annual.
+    a obi:specimen.
 kb:CarexCapitataSample3 rdf:label "Sample3 for Carex capitata";
     rdf:id "some_Unique_ID_4_This_Sample";
     iao:is_about ncbi:txid140797;
     :specimen_of :Carex_Capitata;
+    a obi:specimen.
+kb:CarexCapitataSample4 rdf:label "Sample4 for Carex capitata";
+    rdf:id "some_Unique_ID_4_This_Sample";
+    iao:is_about ncbi:txid140797;
+    :specimen_of :Carex_Capitata;
     a obi:specimen;
-    :has_part ccs3:achene.
-ccs3:achene a :achene;
-    :has_quality ccs3:color_of_achene.
-ccs3:color_of_achene a :color_of_achene;
-    :has_hue_value :pink.
-ccs3:style :has_quality ccs3:duration_of_style.
-ccs3:duration_of_style a :duration_of_style;
-    :has_value :persistent
+    :has_part ccs4:stem.
+ccs4:stem a :stem;
+    :has_quality ccs4:width_of_stem.
+ccs4:width_of_stem a :width_of_stem;
+    :has_value "3"^^xsd:float;
+    :has_unit uo:cm.
+kb:CarexCapitataSample4 :has_part ccs4:stem.
+ccs4:stem a :stem;
+    :has_quality ccs4:length_of_stem.
+ccs4:length_of_stem a :length_of_stem;
+    :has_value "3"^^xsd:float;
+    :has_unit uo:cm.
+kb:CarexCapitataSample4 :has_part ccs4:stem.
+ccs4:stem a :stem;
+    :has_quality ccs4:shape_of_stem_in_transverse_section.
+ccs4:shape_of_stem_in_transverse_section a :shape_of_stem_in_transverse_section;
+    :has_value :linear.
+kb:CarexCapitataSample4 :has_part ccs4:filament.
+ccs4:filament a :filament;
+    :has_quality ccs4:length_of_filament.
+ccs4:length_of_filament a :length_of_filament;
+    :has_value "3"^^xsd:float;
+    :has_unit uo:cm.
+kb:CarexCapitataSample4 :has_part ccs4:stem.
+ccs4:stem a :stem;
+    :has_quality ccs4:pubescence_of_stem.
+ccs4:pubescence_of_stem a :pubescence_of_stem;
+    :has_value :smooth.
+kb:CarexCapitataSample4 :has_part ccs4:anther_and_filament.
+ccs4:anther_and_filament a :anther_and_filament;
+    :has_quality ccs4:distance_between_anther_and_filament.
+ccs4:distance_between_anther_and_filament a :distance_between_anther_and_filament;
+    :has_value "4"^^xsd:float;
+    :has_unit uo:cm
 }
-data:graph_carex_capitata_new00 dc:creator app:new00;
-	:export_date "2021-04-01T02:54:44"^^xsd:dateTime.
+data:graph_carex_capitata_maxtest dc:creator app:maxtest;
+	:export_date "2021-03-15T02:12:30"^^xsd:dateTime.
