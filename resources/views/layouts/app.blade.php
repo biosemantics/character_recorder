@@ -8,23 +8,25 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Character Recorder') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/tabs-component.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
-	<script>
-
+    <link href="{{ asset('css/ldbtn.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/loading.min.css') }}" rel="stylesheet">
+    <!-- Hotjar Tracking Code for shark.sbs.arizona.edu/chrecorder/public -->
+    <script>
         (function(h,o,t,j,a,r){
-			h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-			h._hjSettings={hjid:1284454,hjsv:6};
-			a=o.getElementsByTagName('head')[0];
-			r=o.createElement('script');r.async=1;
-			r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-			a.appendChild(r);
-		})(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-	</script>
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:1699692,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
     <style>
         html, body {
             background-color: #fff;
@@ -75,6 +77,17 @@
 
         .m-b-md {
             margin-bottom: 30px;
+        }
+
+        .explore {
+            color: #216a94;
+            font-family: Arial;
+            display: inline;
+            vertical-align: bottom;
+        }
+
+        .explore:hover{
+            color: #23527c;
         }
     </style>
 </head>
@@ -137,10 +150,75 @@
                         @endguest
                     </ul>
                 </div>
-                <div>
-                    <a id="top-user" href="{{ url('/leader-board') }}">
-                        {{ getTopUser() }}
-                    </a>
+                <div class="row">
+                    <div class="col-md-4">
+                        <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
+                            <div style="height: 34px;padding-top: 10px;">
+                                <img src="{{ asset('images/crown.png') }}" style="display: inline"/>
+                                <div class="explore" style="font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3">
+                        <!-- <div style="float: right">
+                            <a id="explore-character" href="{{ url('/explore-character') }}" style="text-decoration: none;">
+                                <div style="height: 34px; padding-top: 8px">
+                                    <span class="glyphicon glyphicon-list" style="font-size: 20px"></span>
+                                    <div class="explore">Explore Character Data</div>
+                                </div>
+                            </a>
+                        </div> -->
+                    </div>
+                    <div class="col-md-1">
+                    </div>
+                    <div class="col-md-3">
+                        <!-- <div style="float: right">
+                            <a id="ontology-update" href="{{ url('/ontology-update') }}" style="text-decoration: none;">
+                                <div style="height: 34px; padding-top: 8px">
+                                    <span class="glyphicon glyphicon-stats" style="font-size: 20px"></span>
+                                    <div class="explore">Ontology Update</div>
+                                </div>
+                            </a>
+                        </div> -->
+                        <div class="collapse navbar-collapse" id="app-subnav-collapse">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                        <span class="glyphicon glyphicon-option-horizontal" style="font-size: 20px;color: #216a94;"></span>
+                                    </a>
+
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a id="explore-character" href="{{ url('/explore-character') }}" style="text-decoration: none;">
+                                                <div style="height: 30px; padding-top: 8px">
+                                                    <span class="glyphicon glyphicon-eye-open" style="font-size: 16px;margin-right:3px;"></span>
+                                                    <div class="explore">Explore Character Data</div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="shared-character" href="{{ url('/shared-character') }}" style="text-decoration: none;">
+                                                <div style="height: 30px; padding-top: 8px">
+                                                    <img src="{{ asset('images/venn.png') }}" style="display:inline;width: 19px;"/>
+                                                    <div class="explore">Shared Characters</div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a id="ontology-update" href="{{ url('/ontology-update') }}" style="text-decoration: none;">
+                                                <div style="height: 30px; padding-top: 8px">
+                                                    <span class="glyphicon glyphicon-stats" style="font-size: 16px;margin-right:3px;"></span>
+                                                    <div class="explore">Vocabulary/Ontology Update</div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </nav>

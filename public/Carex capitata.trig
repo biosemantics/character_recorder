@@ -1,0 +1,66 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix iao: <http://purl.obolibrary.org/obo/iao.owl#>.
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix obi: <http://purl.obolibrary.org/obo/obi.owl#>.
+@prefix uo: <http://purl.obolibrary.org/obo/uo.owl#>.
+@prefix ncbi: <https://www.ncbi.nlm.nih.gov/Taxonomy#>.
+@prefix mo: <http://biosemantics.arizona.edu/ontologies/modifierlist#>.
+@prefix : <http://biosemantics.arizona.edu/ontologies/carex#>.
+@prefix kb: <http://biosemantics.arizona.edu/kb/carex#>.
+@prefix data: <http://biosemantics.arizona.edu/kb/data#>.
+@prefix app: <http://shark.sbs.arizona.edu/chrecorder#>.
+
+@prefix ccs1: <http://biosemantics.arizona.edu/kb/carex/capitata/Sample1#>.
+
+@prefix ccs2: <http://biosemantics.arizona.edu/kb/carex/capitata/Sample2#>.
+
+@prefix ccs3: <http://biosemantics.arizona.edu/kb/carex/capitata/Sample3#>.
+
+data:graph_carex_capitata_new00 {
+kb:CarexCapitataSample1 rdf:label "Sample1 for Carex capitata";
+    rdf:id "some_Unique_ID_4_This_Sample";
+    iao:is_about ncbi:txid140797;
+    :specimen_of :Carex_Capitata;
+    a obi:specimen;
+    :has_part ccs1:achene.
+ccs1:achene a :achene;
+    :has_quality ccs1:color_of_achene.
+ccs1:color_of_achene a :color_of_achene;
+    :has_hue_value :pink.
+kb:CarexCapitataSample1 :has_part ccs1:style.
+ccs1:style a :style;
+    :has_quality ccs1:duration_of_style.
+ccs1:duration_of_style a :duration_of_style;
+    :has_value :annual.
+kb:CarexCapitataSample2 rdf:label "Sample2 for Carex capitata";
+    rdf:id "some_Unique_ID_4_This_Sample";
+    iao:is_about ncbi:txid140797;
+    :specimen_of :Carex_Capitata;
+    a obi:specimen;
+    :has_part ccs2:achene.
+ccs2:achene a :achene;
+    :has_quality ccs2:color_of_achene.
+ccs2:color_of_achene a :color_of_achene;
+    :has_hue_value :pink.
+ccs2:style :has_quality ccs2:duration_of_style.
+ccs2:duration_of_style a :duration_of_style;
+    :has_value :annual.
+kb:CarexCapitataSample3 rdf:label "Sample3 for Carex capitata";
+    rdf:id "some_Unique_ID_4_This_Sample";
+    iao:is_about ncbi:txid140797;
+    :specimen_of :Carex_Capitata;
+    a obi:specimen;
+    :has_part ccs3:achene.
+ccs3:achene a :achene;
+    :has_quality ccs3:color_of_achene.
+ccs3:color_of_achene a :color_of_achene;
+    :has_hue_value :pink.
+ccs3:style :has_quality ccs3:duration_of_style.
+ccs3:duration_of_style a :duration_of_style;
+    :has_value :persistent
+}
+data:graph_carex_capitata_new00 dc:creator app:new00;
+	:export_date "2021-04-01T02:54:44"^^xsd:dateTime.

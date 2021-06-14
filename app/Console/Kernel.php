@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Illuminate\Support\Facades\DB;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,19 +24,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
-    }
-
-    /**
-     * Register the commands for the application.
-     *
-     * @return void
-     */
-    protected function commands()
-    {
-        $this->load(__DIR__.'/Commands');
-
-        require base_path('routes/console.php');
+        // DB::table('headers')->where('id', '=', 1)->update(['user_id' => 10]);
+        // $schedule->call(function () {
+        //     DB::table('headers')->where('id', '=', 1)->update(['user_id' => 1]);
+        //     $hc = new \App\Http\Controllers\Api\V1\HomeController();
+        //     $hc->test();
+        // })->everyMinute();
+        $schedule->call('\App\Http\Controllers\Api\V1\HomeController@test')->daily();
+        $schedule->call('\App\Http\Controllers\Api\V1\HomeController@updateStandardCharacter')->daily();
     }
 }

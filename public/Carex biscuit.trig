@@ -1,0 +1,88 @@
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#>.
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>.
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>.
+@prefix owl: <http://www.w3.org/2002/07/owl#>.
+@prefix iao: <http://purl.obolibrary.org/obo/iao.owl#>.
+@prefix dc: <http://purl.org/dc/terms/>.
+@prefix obi: <http://purl.obolibrary.org/obo/obi.owl#>.
+@prefix uo: <http://purl.obolibrary.org/obo/uo.owl#>.
+@prefix ncbi: <https://www.ncbi.nlm.nih.gov/Taxonomy#>.
+@prefix mo: <http://biosemantics.arizona.edu/ontologies/modifierlist#>.
+@prefix : <http://biosemantics.arizona.edu/ontologies/carex#>.
+@prefix kb: <http://biosemantics.arizona.edu/kb/carex#>.
+@prefix data: <http://biosemantics.arizona.edu/kb/data#>.
+@prefix app: <http://shark.sbs.arizona.edu/chrecorder#>.
+
+@prefix ccs1: <http://biosemantics.arizona.edu/kb/carex/biscuit/Sample1#>.
+
+@prefix ccs2: <http://biosemantics.arizona.edu/kb/carex/biscuit/Sample2#>.
+
+@prefix ccs3: <http://biosemantics.arizona.edu/kb/carex/biscuit/Sample3#>.
+
+data:graph_carex_biscuit_aaa {
+kb:CarexBiscuitSample1 rdf:label "Sample1 for Carex biscuit";
+    rdf:id "some_Unique_ID_4_This_Sample";
+    iao:is_about ncbi:txidunknown;
+    a obi:specimen;
+    :has_quality ccs1:growth_form_of_plant.
+ccs1:growth_form_of_plant a :growth_form_of_plant;
+    :has_value :herb.
+kb:CarexBiscuitSample1 :has_part ccs1:rhizome_internode.
+ccs1:rhizome_internode a :rhizome_internode;
+    :has_quality ccs1:length_of_rhizome_internode.
+ccs1:length_of_rhizome_internode a :length_of_rhizome_internode;
+    :has_value "12"^^xsd:float;
+    :has_unit uo:cm.
+kb:CarexBiscuitSample1 :has_part ccs1:stem.
+ccs1:stem a :stem;
+    :has_quality ccs1:shape_of_stem_in_transverse_section.
+ccs1:shape_of_stem_in_transverse_section a :shape_of_stem_in_transverse_section;
+    :has_value :obdeltoid.
+ccs1:stem :has_quality ccs1:color_of_stem.
+ccs1:color_of_stem a :color_of_stem;
+    :has_hue_value :pink.
+kb:CarexBiscuitSample2 rdf:label "Sample2 for Carex biscuit";
+    rdf:id "some_Unique_ID_4_This_Sample";
+    iao:is_about ncbi:txidunknown;
+    a obi:specimen;
+    :has_quality ccs2:growth_form_of_plant.
+ccs2:growth_form_of_plant a :growth_form_of_plant;
+    :has_value :herb.
+kb:CarexBiscuitSample2 :has_part ccs2:rhizome_internode.
+ccs2:rhizome_internode a :rhizome_internode;
+    :has_quality ccs2:length_of_rhizome_internode.
+ccs2:length_of_rhizome_internode a :length_of_rhizome_internode;
+    :has_value "12"^^xsd:float;
+    :has_unit uo:cm.
+kb:CarexBiscuitSample2 :has_part ccs2:stem.
+ccs2:stem a :stem;
+    :has_quality ccs2:shape_of_stem_in_transverse_section.
+ccs2:shape_of_stem_in_transverse_section a :shape_of_stem_in_transverse_section;
+    :has_value :obdeltoid.
+ccs2:stem :has_quality ccs2:color_of_stem.
+ccs2:color_of_stem a :color_of_stem;
+    :has_hue_value :pink.
+kb:CarexBiscuitSample3 rdf:label "Sample3 for Carex biscuit";
+    rdf:id "some_Unique_ID_4_This_Sample";
+    iao:is_about ncbi:txidunknown;
+    a obi:specimen;
+    :has_quality ccs3:growth_form_of_plant.
+ccs3:growth_form_of_plant a :growth_form_of_plant;
+    :has_value :herb.
+kb:CarexBiscuitSample3 :has_part ccs3:rhizome_internode.
+ccs3:rhizome_internode a :rhizome_internode;
+    :has_quality ccs3:length_of_rhizome_internode.
+ccs3:length_of_rhizome_internode a :length_of_rhizome_internode;
+    :has_value "12"^^xsd:float;
+    :has_unit uo:cm.
+kb:CarexBiscuitSample3 :has_part ccs3:stem.
+ccs3:stem a :stem;
+    :has_quality ccs3:shape_of_stem_in_transverse_section.
+ccs3:shape_of_stem_in_transverse_section a :shape_of_stem_in_transverse_section;
+    :has_value :obdeltoid.
+ccs3:stem :has_quality ccs3:color_of_stem.
+ccs3:color_of_stem a :color_of_stem;
+    :has_hue_value :pink
+}
+data:graph_carex_biscuit_aaa dc:creator app:aaa;
+	:export_date "2020-03-15T09:14:28" ^^xsd:dateTime.

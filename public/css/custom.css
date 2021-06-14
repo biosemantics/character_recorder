@@ -335,7 +335,6 @@ input.display-block {
 }
 
 .td-input:focus {
-    min-width: 300px;
 }
 
 .cr-table > tbody > tr > td {
@@ -352,7 +351,7 @@ input.display-block {
     display: block;
     position: absolute;
     top: 24%;
-    right: 29%;
+    right: 32%;
     width: 200px;
     height: 200px;
     border-radius: 100px;
@@ -780,3 +779,21 @@ body {
 /*.container .table-responsive {*/
     /*min-height: 500px;*/
 /*}*/
+
+.numberCircle {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+
+    background: none;
+    border: 3px solid black;
+    color: black;
+    text-align: center;
+
+    font: 24px Arial, sans-serif;
+}
+::placeholder {
+    color: lightgrey;
+    opacity: 1; /* Firefox */
+}

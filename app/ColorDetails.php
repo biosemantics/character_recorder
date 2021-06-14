@@ -13,10 +13,15 @@ class ColorDetails extends Model
         'certainty_constraint',
         'degree_constraint',
         'brightness',
+        'brightness_IRI',
         'reflectance',
+        'reflectance_IRI',
         'saturation',
+        'saturation_IRI',
         'colored',
+        'colored_IRI',
         'multi_colored',
+        'multi_colored_IRI',
         'post_constraint'];
 
 }

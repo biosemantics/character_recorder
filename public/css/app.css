@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);@import url(https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css);@charset "UTF-8";
 
 /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
@@ -8349,5 +8349,13 @@ div.dropdown div.item:first-child {
   .character-modal .modal-container {
     width: 540px !important;
   }
+}
+
+.tooltip.standard-tooltip .tooltip-inner {
+  max-width: 1080px;
+}
+
+.highlight {
+  background-color: #eee;
 }
 

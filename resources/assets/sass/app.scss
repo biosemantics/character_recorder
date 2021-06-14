@@ -7,6 +7,7 @@
 
 // Bootstrap
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css");
 
 div.dropdown div.item:first-child {
     font-weight: 600!important;
@@ -17,4 +18,15 @@ div.dropdown div.item:first-child {
     .character-modal .modal-container {
         width: 540px !important;
     }
+}
+.tooltip {  
+    &.standard-tooltip {
+      .tooltip-inner {
+        max-width: 1080px;
+      }
+    }
+  }
+
+.highlight {
+  background-color: #eee;
 }
