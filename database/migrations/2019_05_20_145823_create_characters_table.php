@@ -30,6 +30,8 @@ class CreateCharactersTable extends Migration
             $table->string('summary', 150)->nullable();
             $table->integer('usage_count')->nullable();
             $table->boolean('show_flag')->nullable();
+            $table->string('owner_name')->nullable();
+            $table->integer('order')->nullable();
             $table->timestamps();
         });
     }
