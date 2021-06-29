@@ -114,7 +114,7 @@
                                         <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag">
                                             {{ eachCharacter.standard_tag }} </b>
                                         <div style="margin-left: 50px;">
-                                            <i v-bind:style="{color:(eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <i v-bind:style="{color:(eachCharacter.parent_term && eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <a style="margin-left: 45px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                                                     <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench" ></span>
                                                 </a>
@@ -146,7 +146,7 @@
                                             :key="index"
                                             v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)"
                                             v-tooltip="eachCharacter.tooltip" style="margin-left: 50px;">
-                                            <i v-bind:style="{color:(eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            <i v-bind:style="{color:(eachCharacter.parent_term && eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <a style="margin-left: 35px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                                                     <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench" ></span>
                                                 </a>
