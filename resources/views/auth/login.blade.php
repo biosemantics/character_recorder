@@ -13,7 +13,7 @@
                         <div class="col-md-5 col-md-offset-1">
                             <p>We hope the application will help reduce the variation, and increase the clarity and the parallelism in taxonomic descriptions. Try this application, and let use know how we can make it better.</p>
                         </div>
-                    </div>                   
+                    </div>
                 </div>
                 <div class="panel-heading font-20">Login</div>
 

@@ -8,10 +8,10 @@
                 <span style="font-size: 16px;">This section demonstrates queries the user can execute against the character data. The system aggregates the data entered by all users each night into a RDF graph, which is used to support the search. Due to the <i>nightly</i> aggregation schedule, only data enter the day before can be queried.</span>
             </div>
             <div>
-                <a 
-                    class="btn btn-primary" 
-                    style = "float: left; padding: 2px;" 
-                    href="/chrecorder/public" 
+                <a
+                    class="btn btn-primary"
+                    style = "float: left; padding: 2px;"
+                    href="/chrecorder/public"
                     v-tooltip="{ content:'<div>Go back to workspace</div>' }"
                 >
                     <span class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span>
@@ -128,15 +128,15 @@
                                 </div>
                                 <div v-if="characterType == 'Color'">
                                     <div style="width: 100%; text-align: left; margin-top: 6px;">brightness: <b>{{currentColorValue.brightness}}</b></div>
-                                    
+
                                     <div style="width: 100%; text-align: left; margin-top: 6px;">reflectance: <b>{{currentColorValue.reflectance}}</b></div>
-                                    
+
                                     <div style="width: 100%; text-align: left; margin-top: 6px;">saturation: <b>{{currentColorValue.saturation}}</b></div>
-                                    
+
                                     <div style="width: 100%; text-align: left; margin-top: 6px;">color: <b> {{currentColorValue.color}}</b></div>
-                                    
+
                                     <div style="width: 100%; text-align: left; margin-top: 6px;">pattern: <b> {{currentColorValue.pattern}}</b></div>
-                                    
+
                                 </div>
                                 <div>
                                     <div style="width: 100%; text-align: left; margin-top: 6px;">post_constraint: <b> {{(characterType == 'Color' ? currentColorValue : currentNonColorValue).post_constraint}}</b></div>
@@ -482,11 +482,11 @@
 <script>
     import Vue from 'vue';
     import LiquorTree from 'liquor-tree';
-    
+
     Vue.use(LiquorTree);
-    
+
     const url = 'https://shark.sbs.arizona.edu:8443/blazegraph/namespace/kb/sparql';
-    function makeBaseAuth(user, pswd){ 
+    function makeBaseAuth(user, pswd){
         var token = user + ':' + pswd;
         var hash = "";
         if (btoa) {
@@ -810,7 +810,7 @@
                 let query = ``;
                 switch(app.searchType){
                     case 0:
-                        query=`PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                        query=`PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -825,7 +825,7 @@
                                 PREFIX data:<http://biosemantics.arizona.edu/kb/data#>
                                 PREFIX app:<http://shark.sbs.arizona.edu/chrecorder#>
 
-                                select distinct ?graph ?character 
+                                select distinct ?graph ?character
                                 where {
                                         ?graph dc:creator app:${app.username}.
                                         GRAPH ?graph{
@@ -859,7 +859,7 @@
                         })
                         break;
                     case 1:
-                        query=`PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                        query=`PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                             PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -884,7 +884,7 @@
                                     ?iCharacter a ?character.
                                 }
                         }`;
-                            
+
                         app.api(query, data => {
                             console.log(data);
                             app.bSearching = false;
@@ -913,7 +913,7 @@
                         break;
                     case 2:
                         query=`BASE <http://biosemantics.arizona.edu/ontologies/carex#>
-                            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                             PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -966,7 +966,7 @@
                         if (app.checkHaveUnit(app.characterType)){
                             query=` BASE <http://biosemantics.arizona.edu/ontologies/carex#>
                                     ##foundation namespaces
-                                    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                                    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                                     PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                     PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -1035,12 +1035,12 @@
                                 app.bSearching = false;
                             })
                         }
-                        else 
+                        else
                         {
                             if (app.characterType == 'Color') {
                                 if (app.currentColorValue.negation && app.currentColorValue.negation == 'not') {
                                     query=` BASE <http://biosemantics.arizona.edu/ontologies/carex#>
-                                            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                                            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                                             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                             PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -1059,9 +1059,9 @@
                                             where {
                                                 GRAPH ?graph {
                                                     ?negation a owl:NegativePropertyAssertion ;
-                                                                owl:sourceIndividual   ?structure;  
-                                                                owl:targetIndividual   ?character.    
-                                                    
+                                                                owl:sourceIndividual   ?structure;
+                                                                owl:targetIndividual   ?character.
+
                                                     ${app.currentColorValue.color!='' && app.currentColorValue.color ? '?character :has_hue_value :' + app.currentColorValue.color.replace(' ', '_').replace('-','_') + '.' : ''}
                                                     ${app.currentColorValue.brightness!='' && app.currentColorValue.brightness ? '?character :has_brightness_value :' + app.currentColorValue.brightness.replace(' ', '_').replace('-','_') + '.' : ''}
                                                     ${app.currentColorValue.reflectance!='' && app.currentColorValue.reflectance ? '?character :has_reflectance_value :' + app.currentColorValue.reflectance.replace(' ', '_').replace('-','_') + '.' : ''}
@@ -1075,7 +1075,7 @@
                                 }
                                 else {
                                     query = `   BASE <http://biosemantics.arizona.edu/ontologies/carex#>
-                                                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                                                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                                                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -1096,7 +1096,7 @@
                                                     GRAPH ?graph {
                                                         ?structure :has_quality ?character.
                                                         ?character a ?icharacter.
-                                                        
+
                                                         ${app.currentColorValue.color!='' && app.currentColorValue.color ? '?character :has_hue_value :' + app.currentColorValue.color.replace(' ', '_').replace('-','_') + '.' : ''}
                                                         ${app.currentColorValue.brightness!='' && app.currentColorValue.brightness ? '?character :has_brightness_value :' + app.currentColorValue.brightness.replace(' ', '_').replace('-','_') + '.' : ''}
                                                         ${app.currentColorValue.reflectance!='' && app.currentColorValue.reflectance ? '?character :has_reflectance_value :' + app.currentColorValue.reflectance.replace(' ', '_').replace('-','_') + '.' : ''}
@@ -1112,7 +1112,7 @@
                             else {
                                 if (app.currentNonColorValue.negation && app.currentNonColorValue.negation == 'not'){
                                     query=` BASE <http://biosemantics.arizona.edu/ontologies/carex#>
-                                            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                                            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                                             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                             PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -1131,9 +1131,9 @@
                                             where {
                                                 GRAPH ?graph {
                                                     ?negation a owl:NegativePropertyAssertion ;
-                                                            owl:sourceIndividual   ?structure;  
+                                                            owl:sourceIndividual   ?structure;
                                                             owl:targetIndividual   ?character.
-                                                    
+
                                                     ${app.currentNonColorValue.main_value!='' && app.currentNonColorValue.main_value ? '?character :has_value :' + app.currentNonColorValue.main_value.replace(' ', '_').replace('-','_') + '.' : ''}
                                                     ${app.currentNonColorValue.certainty_constraint!='' && app.currentNonColorValue.certainty_constraint ? '?character :has_certainty_value_modifier mo:' + app.currentNonColorValue.certainty_constraint.replace(' ', '_').replace('-','_') + '.' : ''}
                                                     ${app.currentNonColorValue.degree_constraint!='' && app.currentNonColorValue.degree_constraint ? '?character :has_degree_value_modifier mo:' + app.currentNonColorValue.degree_constraint.replace(' ', '_').replace('-','_') + '.' : ''}
@@ -1143,7 +1143,7 @@
                                 }
                                 else {
                                     query = `   BASE <http://biosemantics.arizona.edu/ontologies/carex#>
-                                                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> 
+                                                PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
                                                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                                                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                                                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -1164,7 +1164,7 @@
                                                     GRAPH ?graph {
                                                         ?structure :has_quality ?character.
                                                         ?character a ?icharacter.
-                                                        
+
                                                         ${app.currentNonColorValue.main_value!='' && app.currentNonColorValue.main_value ? '?character :has_value :' + app.currentNonColorValue.main_value.replace(' ', '_').replace('-','_') + '.' : ''}
                                                         ${app.currentNonColorValue.certainty_constraint!='' && app.currentNonColorValue.certainty_constraint ? '?character :has_certainty_value_modifier mo:' + app.currentNonColorValue.certainty_constraint.replace(' ', '_').replace('-','_') + '.' : ''}
                                                         ${app.currentNonColorValue.degree_constraint!='' && app.currentNonColorValue.degree_constraint ? '?character :has_degree_value_modifier mo:' + app.currentNonColorValue.degree_constraint.replace(' ', '_').replace('-','_') + '.' : ''}
@@ -1211,7 +1211,7 @@
         },
         mounted() {
             var app = this;
-            
+
             console.log(app.user);
 
             app.user.name = app.user.email.split('@')[0];

@@ -18,9 +18,9 @@
                                 </div>
                             </div>
                             <div style="position: absolute; right: 150px;">
-                                <a 
-                                    class="btn btn-primary" 
-                                    v-on:click="collapsedFlag = true;showSetupArea=false;" 
+                                <a
+                                    class="btn btn-primary"
+                                    v-on:click="collapsedFlag = true;showSetupArea=false;"
                                     style="width: 40px;"
                                     v-tooltip="{ content:'<div>Hide Setup buttons</div>' }"
                                 >
@@ -38,7 +38,7 @@
                             </div>
                         </div> -->
                     </div>
-                    
+
                     <div class="row" v-if="showSetupArea == true">
                         <div class="col-md-12">
                             <div v-if="matrixShowFlag == false"
@@ -86,8 +86,8 @@
                                     <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Go To Matrix</a>
                                     <!-- <a class="btn btn-primary" v-on:click="loadMatrixDialog = true;"
                                        style="width: 200px; ">Load Matrix Version</a> -->
-                                    <a 
-                                        class="btn btn-primary" 
+                                    <a
+                                        class="btn btn-primary"
                                         v-on:click="collapsedFlag = true;showSetupArea=false;"
                                         style="width: 40px;"
                                         v-tooltip="{ content:'<div>Hide Setup buttons</div>' }"
@@ -177,8 +177,8 @@
                                     <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Go To Matrix</a>
                                     <!-- <a class="btn btn-primary" v-on:click="loadMatrixDialog = true;"
                                        style="width: 200px; ">Load Matrix Version</a> -->
-                                    <a 
-                                        class="btn btn-primary" 
+                                    <a
+                                        class="btn btn-primary"
                                         v-on:click="collapsedFlag = true;showSetupArea=false;"
                                         style="width: 40px;"
                                         v-tooltip="{ content:'<div>Hide Setup buttons</div>' }"
@@ -217,9 +217,9 @@
                                 </div>
                             </div>
                             <div style="position: absolute; right: 150px;">
-                                <a 
-                                    class="btn btn-primary" 
-                                    v-on:click="collapsedFlag = false;" 
+                                <a
+                                    class="btn btn-primary"
+                                    v-on:click="collapsedFlag = false;"
                                     style="width: 40px;"
                                     v-tooltip="{ content:'<div>Show Setup buttons</div>' }"
                                 >
@@ -310,7 +310,7 @@
                                             {{ value.value }}
                                         </div>
                                         <div v-if="userCharacters.find(ch => ch.id == value.character_id).deprecated >= 0">
-                                            <a  class="btn btn-add" 
+                                            <a  class="btn btn-add"
                                                 style="line-height: 30px; margin-left: 5px;"
                                                 v-on:click="onResolveUserCharacter(userCharacters.find(ch => ch.id == value.character_id))">
                                                 <span class="glyphicon glyphicon-wrench"></span>
@@ -380,71 +380,71 @@
                                                     <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{cv.negation}} </span>
                                                     <span style="color:#636b6f;" v-if="cv.certainty_constraint && cv.certainty_constraint != ''">{{cv.certainty_constraint}} </span>
                                                     <span style="color:#636b6f;" v-if="cv.degree_constraint && cv.degree_constraint != ''">{{cv.degree_constraint}} </span>
-                                                    <span 
+                                                    <span
                                                         v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI) >= 0 ? 'bold' : 'linear'}"
-                                                        style="color:#636b6f;" 
+                                                        style="color:#636b6f;"
                                                         v-if="cv.brightness && cv.brightness != ''">
-                                                        {{cv.brightness}} 
-                                                        <a 
-                                                            class="btn btn-add display-block" 
-                                                            style="padding: 0px" 
+                                                        {{cv.brightness}}
+                                                        <a
+                                                            class="btn btn-add display-block"
+                                                            style="padding: 0px"
                                                             v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI), 'colorBrightness')"
                                                             v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI) >= 0">
                                                             <span class="glyphicon glyphicon-wrench">
                                                             </span>
                                                         </a>
                                                     </span>
-                                                    
-                                                    <span 
+
+                                                    <span
                                                         v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI) >= 0 ? 'bold' : 'linear'}"
-                                                        style="color:#636b6f;" 
+                                                        style="color:#636b6f;"
                                                         v-if="cv.reflectance && cv.reflectance != ''">
-                                                        {{cv.reflectance}} 
-                                                        <a 
-                                                            class="btn btn-add display-block" 
-                                                            style="padding: 0px" 
+                                                        {{cv.reflectance}}
+                                                        <a
+                                                            class="btn btn-add display-block"
+                                                            style="padding: 0px"
                                                             v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI), 'colorReflectance')"
                                                             v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI) >= 0">
                                                             <span class="glyphicon glyphicon-wrench">
                                                             </span>
                                                         </a>
                                                     </span>
-                                                    <span 
+                                                    <span
                                                         v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI) >= 0 ? 'bold' : 'linear'}"
-                                                        style="color:#636b6f;" 
+                                                        style="color:#636b6f;"
                                                         v-if="cv.saturation && cv.saturation != ''">
-                                                        {{cv.saturation}} 
-                                                        <a 
-                                                            class="btn btn-add display-block" 
-                                                            style="padding: 0px" 
+                                                        {{cv.saturation}}
+                                                        <a
+                                                            class="btn btn-add display-block"
+                                                            style="padding: 0px"
                                                             v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI), 'colorSaturation')"
                                                             v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI) >= 0">
                                                             <span class="glyphicon glyphicon-wrench">
                                                             </span>
                                                         </a>
                                                     </span>
-                                                    <span 
+                                                    <span
                                                         v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI) >= 0 ? 'bold' : 'linear'}"
-                                                        style="color:#636b6f;" 
+                                                        style="color:#636b6f;"
                                                         v-if="cv.colored && cv.colored != ''">
-                                                        {{cv.colored}} 
-                                                        <a 
-                                                            class="btn btn-add display-block" 
-                                                            style="padding: 0px" 
+                                                        {{cv.colored}}
+                                                        <a
+                                                            class="btn btn-add display-block"
+                                                            style="padding: 0px"
                                                             v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI), 'colorColored')"
                                                             v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI) >= 0">
                                                             <span class="glyphicon glyphicon-wrench">
                                                             </span>
                                                         </a>
                                                     </span>
-                                                    <span 
+                                                    <span
                                                         v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI) >= 0 ? 'bold' : 'linear'}"
-                                                        style="color:#636b6f;" 
+                                                        style="color:#636b6f;"
                                                         v-if="cv.multi_colored && cv.multi_colored != ''">
-                                                        {{cv.multi_colored}} 
-                                                        <a 
-                                                            class="btn btn-add display-block" 
-                                                            style="padding: 0px" 
+                                                        {{cv.multi_colored}}
+                                                        <a
+                                                            class="btn btn-add display-block"
+                                                            style="padding: 0px"
                                                             v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI), 'colorMultiColored')"
                                                             v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI) >= 0">
                                                             <span class="glyphicon glyphicon-wrench">
@@ -456,7 +456,7 @@
                                                         </span>
                                                     </a>
                                                 </div>
-                                                <div v-for="ncv in allNonColorValues" v-if="ncv.value_id == value.id" style="text-align: left" :key="ncv.id" 
+                                                <div v-for="ncv in allNonColorValues" v-if="ncv.value_id == value.id" style="text-align: left" :key="ncv.id"
                                                     v-bind:style="{'font-weight': isNonColorDeprecated(ncv) >= 0 ? 'bold' : 'linear'}">
                                                     {{nonColorValueText(ncv)}}
                                                     <a class="btn btn-add display-block" style="padding: 0px" v-on:click="onResolveNonColorValue(ncv)" v-if="isNonColorDeprecated(ncv) >= 0">
@@ -529,14 +529,14 @@
                                                 <br>
                                                 <div class="row">
                                                     <div class="col-md-4">
-                                                        <input 
-                                                            style="height: 26px; width: 100%;" 
-                                                            type="text" 
-                                                            v-on:focus="nounUndefined = false; 
-                                                                        secondNounUndefined = false; 
+                                                        <input
+                                                            style="height: 26px; width: 100%;"
+                                                            type="text"
+                                                            v-on:focus="nounUndefined = false;
+                                                                        secondNounUndefined = false;
                                                                         lastCharacterDefinition = '';
-                                                                        firstCharacterUndefined = false; 
-                                                                        firstCharacterDefinition = ''; 
+                                                                        firstCharacterUndefined = false;
+                                                                        firstCharacterDefinition = '';
                                                                         wholeCharacterUndefined=false;
                                                                         wholeCharacterDefinition='';
                                                                         firstNounDeprecated=false;
@@ -552,7 +552,7 @@
                                                                         secondNounSynonym=false;
                                                                         secondNounSynonymNotifyMessage='';
                                                                         "
-                                                            list="first_characters" 
+                                                            list="first_characters"
                                                             placeholder="select or type"
                                                             v-model="firstCharacter"
                                                         />
@@ -582,13 +582,13 @@
                                                         </select>
                                                     </div>
                                                     <div class="col-md-5">
-                                                        <input 
-                                                            v-model="lastCharacter" 
-                                                            v-on:focus="nounUndefined = false; 
-                                                                        secondNounUndefined = false; 
+                                                        <input
+                                                            v-model="lastCharacter"
+                                                            v-on:focus="nounUndefined = false;
+                                                                        secondNounUndefined = false;
                                                                         lastCharacterDefinition = '';
-                                                                        firstCharacterUndefined = false; 
-                                                                        firstCharacterDefinition = ''; 
+                                                                        firstCharacterUndefined = false;
+                                                                        firstCharacterDefinition = '';
                                                                         wholeCharacterUndefined=false;
                                                                         wholeCharacterDefinition='';
                                                                         firstNounDeprecated=false;
@@ -603,19 +603,19 @@
                                                                         firstNounSynonymNotifyMessage='';
                                                                         secondNounSynonym=false;
                                                                         secondNounSynonymNotifyMessage='';
-                                                                        " 
-                                                            placeholder="enter a singular noun" 
+                                                                        "
+                                                            placeholder="enter a singular noun"
                                                         />
                                                         <br v-if="middleCharacter=='between'"/>
                                                         <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and</div>
-                                                        <input 
-                                                            v-if="middleCharacter=='between'" 
-                                                            v-model="secondLastCharacter" 
-                                                            v-on:focus="nounUndefined = false; 
-                                                                        secondNounUndefined = false; 
+                                                        <input
+                                                            v-if="middleCharacter=='between'"
+                                                            v-model="secondLastCharacter"
+                                                            v-on:focus="nounUndefined = false;
+                                                                        secondNounUndefined = false;
                                                                         lastCharacterDefinition = '';
-                                                                        firstCharacterUndefined = false; 
-                                                                        firstCharacterDefinition = ''; 
+                                                                        firstCharacterUndefined = false;
+                                                                        firstCharacterDefinition = '';
                                                                         wholeCharacterUndefined=false;
                                                                         wholeCharacterDefinition='';
                                                                         firstNounDeprecated=false;
@@ -630,7 +630,7 @@
                                                                         firstNounSynonymNotifyMessage='';
                                                                         secondNounSynonym=false;
                                                                         secondNounSynonymNotifyMessage='';
-                                                                        " 
+                                                                        "
                                                             placeholder="enter a singular noun"
                                                         />
                                                     </div>
@@ -685,13 +685,13 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <a class="btn btn-primary ok-btn"
-                                                   v-bind:class="{ 
-                                                       disabled: !firstCharacter || 
-                                                                !middleCharacter || 
-                                                                !lastCharacter || 
-                                                                nounUndefined && !lastCharacterDefinition || 
-                                                                firstCharacterUndefined && !firstCharacterDefinition || 
-                                                                wholeCharacterUndefined && !wholeCharacterDefinition || 
+                                                   v-bind:class="{
+                                                       disabled: !firstCharacter ||
+                                                                !middleCharacter ||
+                                                                !lastCharacter ||
+                                                                nounUndefined && !lastCharacterDefinition ||
+                                                                firstCharacterUndefined && !firstCharacterDefinition ||
+                                                                wholeCharacterUndefined && !wholeCharacterDefinition ||
                                                                 middleCharacter=='between' && (!secondLastCharacter || secondNounUndefined && !secondLastCharacterDefinition) ||
                                                                 firstNounDeprecated ||
                                                                 secondNounDeprecated ||
@@ -1119,7 +1119,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'brightness', $event)"
-                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
+                                                            v-on:keyup.enter="$event.target.blur();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.brightness"
                                                             class="color-input">
@@ -1129,7 +1129,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'reflectance', $event)"
-                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
+                                                            v-on:keyup.enter="$event.target.blur();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.reflectance"
                                                             class="color-input">
@@ -1139,7 +1139,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'saturation', $event)"
-                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
+                                                            v-on:keyup.enter="$event.target.blur();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.saturation"
                                                             class="color-input">
@@ -1149,7 +1149,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'colored', $event)"
-                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
+                                                            v-on:keyup.enter="$event.target.blur();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.colored"
                                                             class="color-input">
@@ -1159,7 +1159,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeColorSection(currentColorValue, 'multi_colored', $event)"
-                                                            v-on:keyup.enter="$event.target.blur();saveColorValue();"
+                                                            v-on:keyup.enter="$event.target.blur();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentColorValue.multi_colored"
                                                             class="color-input">
@@ -1228,7 +1228,7 @@
                                                                 <input type="radio" v-bind:id="currentColorDeprecated[flag]['replacement term']"
                                                                     v-bind:value="currentColorDeprecated[flag]['replacement term']"
                                                                     v-model="currentColorValue[flag]">
-                                                                <label v-bind:for="currentColorDeprecated[flag]['replacement term']">{{ currentColorDeprecated[flag]['replacement term'] }} ({{ currentColorDeprecatedParent[flag] }}): </label> 
+                                                                <label v-bind:for="currentColorDeprecated[flag]['replacement term']">{{ currentColorDeprecated[flag]['replacement term'] }} ({{ currentColorDeprecatedParent[flag] }}): </label>
                                                                 <span>{{ currentColorDeprecatedDefinition[flag] ? currentColorDeprecatedDefinition[flag] : "No definition" }}.</span><br/>
                                                             </div>
                                                             <div v-else>
@@ -1296,9 +1296,9 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    
+
                                                 </div>
-                                                
+
                                                 <div class="row">
                                                     <div style="float: right; margin-right: 20px;">
                                                         <a class="btn btn-primary ok-btn"
@@ -1321,8 +1321,8 @@
                                                         :disabled="saveColorButtonFlag"
                                                         v-on:click="saveColorValue(true)">
                                                             Save & New </a> -->
-                                                        <a v-on:click="colorDetailsFlag = false;" 
-                                                            class="btn btn-danger" 
+                                                        <a v-on:click="colorDetailsFlag = false;"
+                                                            class="btn btn-danger"
                                                             style="width: 70px;"
                                                             v-bind:class="{disabled: saveInProgress}">
                                                             Cancel
@@ -1524,7 +1524,7 @@
                                                     </div>
                                                     <div style="display: inline-block;">
                                                         <input v-on:focus="changeNonColorSection(currentNonColorValue, 'main_value', $event)"
-                                                            v-on:keyup.enter="$event.target.blur();saveNonColorValue();"
+                                                            v-on:keyup.enter="$event.target.blur();"
                                                             style="width: 90px; border:none; border-bottom: 1px solid; text-align:left;"
                                                             v-model="currentNonColorValue.main_value"
                                                             >
@@ -1583,7 +1583,7 @@
                                                             <input type="radio" v-bind:id="currentNonColorDeprecated['replacement term']"
                                                                 v-bind:value="currentNonColorDeprecated['replacement term']"
                                                                 v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
-                                                            <label v-bind:for="currentNonColorDeprecated['replacement term']">{{ currentNonColorDeprecated['replacement term'] }} ({{ currentNonColorDeprecatedParent }}): </label> 
+                                                            <label v-bind:for="currentNonColorDeprecated['replacement term']">{{ currentNonColorDeprecated['replacement term'] }} ({{ currentNonColorDeprecatedParent }}): </label>
                                                             <span>{{ currentNonColorDeprecatedDefinition ? currentNonColorDeprecatedDefinition : 'No Definition' }}.</span><br/>
                                                         </div>
                                                         <div v-else>
@@ -1656,13 +1656,13 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="row">
                                                     <div style="float: right; margin-right: 20px">
                                                         <a class="btn btn-primary ok-btn"
                                                             style="width: 70px;"
-                                                            v-bind:class="{disabled: saveNonColorButtonFlag || 
-                                                                                     saveInProgress || 
+                                                            v-bind:class="{disabled: saveNonColorButtonFlag ||
+                                                                                     saveInProgress ||
                                                                                      (currentNonColorDeprecated && currentNonColorDeprecated['deprecate term'] == currentNonColorValue[currentNonColorValue.detailFlag])}"
                                                             v-on:click="saveNonColorValue()"
                                                         >
@@ -1673,7 +1673,7 @@
                                                         :disabled="saveNonColorButtonFlag"
                                                         v-on:click="saveNonColorValue(true)">
                                                             Save & New </a> -->
-                                                        <a 
+                                                        <a
                                                             v-on:click="nonColorDetailsFlag = false;currentNonColorValue.main_value='';currentNonColorValue.negation = null;currentNonColorValue.pre_constraint = null;currentNonColorValue.certainty_constraint = null;currentNonColorValue.degree_constraint = null;currentNonColorValue.post_constraint = null;currentNonColorValue.confirmedFlag['main_value'] = false;"
                                                             class="btn btn-danger"
                                                             style="width: 70px;"
@@ -2026,7 +2026,7 @@
                                             <div class="col-md-12">
                                                 <a class="btn btn-primary ok-btn"
                                                    v-on:click="nameMatrixDialog=true;">
-                                                    Yes </a>                                                    
+                                                    Yes </a>
                                                 <a class="btn btn-default ok-btn"
                                                    v-on:click="setNewValues">
                                                     No </a>
@@ -2218,7 +2218,7 @@
                 </div>
             </form>
         </div>
-        <viewer :images="images"           
+        <viewer :images="images"
                 class="viewer" ref="viewer"
                 @inited="inited"
         >
@@ -2266,9 +2266,9 @@
         RED : "red",
         PURPLE : "purple",
     }
-    
-    
-    function makeBaseAuth(user, pswd){ 
+
+
+    function makeBaseAuth(user, pswd){
         var token = user + ':' + pswd;
         var hash = "";
         if (btoa) {
@@ -2814,6 +2814,7 @@
                 // }
                 app.editFlag = false;
                 sessionStorage.setItem('editFlag', false);
+                console.log("selectedCharacter", selectedCharacter);
                 if (!selectedCharacter) {
                     app.firstCharacter = '';
                     app.middleCharacter = '';
@@ -2827,7 +2828,7 @@
                     app.wholeCharacterUndefined = false;
                     app.firstCharacterDefinition = '';
                     app.wholeCharacterDefinition = '';
-                    
+
                     app.firstNounDeprecated=false;
                     app.firstNounDeprecatedNotifyMessage='';
                     app.secondNounDeprecated=false;
@@ -2850,17 +2851,22 @@
                     app.item = selectedItem;
                     console.log('selectedCharacter.username', app.character.username.substr(app.character.username.length - app.user.name.length));
 
-                    if (app.character.username.includes(app.user.name)) {
-                    //    app.viewFlag = false;
-                    //    sessionStorage.setItem('viewFlag', false);
-                    //    sessionStorage.setItem('edit_created_other', false);
-                        app.editCharacter({character_id: app.character.id}, true);
-                    } else {
-                        app.viewFlag = true;
-                        sessionStorage.setItem('viewFlag', true);
-                        sessionStorage.setItem('edit_created_other', true);
-                        app.editCharacter(app.character);
-                    }
+                    app.viewFlag = true;
+                    sessionStorage.setItem('viewFlag', true);
+                    sessionStorage.setItem('edit_created_other', true);
+                    app.editCharacter(app.character);
+
+                    // if (app.character.username.includes(app.user.name)) {
+                    // //    app.viewFlag = false;
+                    // //    sessionStorage.setItem('viewFlag', false);
+                    // //    sessionStorage.setItem('edit_created_other', false);
+                    //     app.editCharacter({character_id: app.character.id}, true);
+                    // } else {
+                    //     app.viewFlag = true;
+                    //     sessionStorage.setItem('viewFlag', true);
+                    //     sessionStorage.setItem('edit_created_other', true);
+                    //     app.editCharacter(app.character);
+                    // }
                 }
                 console.log('selectedCharacter', selectedCharacter);
             },
@@ -3127,7 +3133,7 @@
             },
             trimInputString(inputString) {
                 var index = 0;
-                while (inputString[index] == ' ') { 
+                while (inputString[index] == ' ') {
                     index ++;
                 }
                 inputString = inputString.slice(index, inputString.length);
@@ -3171,7 +3177,7 @@
             async checkStoreCharacter() {
                 var app = this;
                 var requestBody = {};
-                
+
                 if (app.firstCharacterUndefined){
                     var date = new Date();
                     requestBody = {
@@ -3257,7 +3263,7 @@
                 }
 
                 let wholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                
+
                 if (app.middleCharacter == 'between'){
                     wholeCharacter += ' and ' + app.secondLastCharacter;
                 }
@@ -3302,7 +3308,7 @@
                     app.firstNounDeprecated = true;
                     if (nounDeprecatedValue['replacement term']) {
                         let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + nounDeprecatedValue['replacement term'];
-                
+
                         if (app.middleCharacter == 'between'){
                             tempWholeCharacter += ' and ' + app.secondLastCharacter;
                         }
@@ -3311,13 +3317,13 @@
                         .then(function(resp){
                             console.log('term?'+tempWholeCharacter, resp.data);
                             if (resp.data.entries.length > 0){
-                                app.firstNounDeprecatedNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is replaced by <b>' + 
-                                                                        nounDeprecatedValue['replacement term'] + 
-                                                                        '</b>. Please cancel and use the existing character <b>' + 
-                                                                        tempWholeCharacter + '</b>.'; 
+                                app.firstNounDeprecatedNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is replaced by <b>' +
+                                                                        nounDeprecatedValue['replacement term'] +
+                                                                        '</b>. Please cancel and use the existing character <b>' +
+                                                                        tempWholeCharacter + '</b>.';
                             } else {
-                                app.firstNounDeprecatedNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is a deprecated term" + 
-                                                                        (nounDeprecatedValue['replacement term'] ? 
+                                app.firstNounDeprecatedNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is a deprecated term" +
+                                                                        (nounDeprecatedValue['replacement term'] ?
                                                                         ", consider using <b>" + nounDeprecatedValue['replacement term'] + "</b>." :
                                                                         " because <b>" + nounDeprecatedValue['deprecated reason'] + "</b>. Please use another term.");
                             }
@@ -3339,9 +3345,9 @@
                                     if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
                                         if (methodEntry.resultAnnotations[i].value == app.lastCharacter.toLowerCase()) {
                                             app.firstNounNotRecommend = true;
-                                            
+
                                             let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
-                                    
+
                                             if (app.middleCharacter == 'between'){
                                                 tempWholeCharacter += ' and ' + app.secondLastCharacter;
                                             }
@@ -3350,12 +3356,12 @@
                                             .then(function(resp){
                                                 console.log('term?'+tempWholeCharacter, resp.data);
                                                 if (resp.data.entries.length > 0){
-                                                    app.firstNounNotRecommendNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is replaced by <b>" + 
-                                                                                            methodEntry.term + 
-                                                                                            "</b>. Please cancel and use the existing character <b>" + 
-                                                                                            tempWholeCharacter + "</b>."; 
+                                                    app.firstNounNotRecommendNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is replaced by <b>" +
+                                                                                            methodEntry.term +
+                                                                                            "</b>. Please cancel and use the existing character <b>" +
+                                                                                            tempWholeCharacter + "</b>.";
                                                 } else {
-                                                    app.firstNounNotRecommendNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is a not recommended synonym of <b>' + 
+                                                    app.firstNounNotRecommendNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is a not recommended synonym of <b>' +
                                                                                             methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
                                                 }
                                             });
@@ -3378,9 +3384,9 @@
                                         }
                                     }
                                     if (app.firstNounSynonym == true) {
-                                        
+
                                         let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
-                            
+
                                         if (app.middleCharacter == 'between'){
                                             tempWholeCharacter += ' and ' + app.secondLastCharacter;
                                         }
@@ -3389,12 +3395,12 @@
                                         .then(function(resp){
                                             console.log('term?'+tempWholeCharacter, resp.data);
                                             if (resp.data.entries.length > 0){
-                                                app.firstNounSynonymNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is replaced by <b>' + 
-                                                                                        methodEntry.term + 
-                                                                                        '</b>. Please cancel and use the existing character <b>' + 
-                                                                                        tempWholeCharacter + '</b>.'; 
+                                                app.firstNounSynonymNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is replaced by <b>' +
+                                                                                        methodEntry.term +
+                                                                                        '</b>. Please cancel and use the existing character <b>' +
+                                                                                        tempWholeCharacter + '</b>.';
                                             } else {
-                                                app.firstNounSynonymNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is an exact synonym of <b>' + 
+                                                app.firstNounSynonymNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is an exact synonym of <b>' +
                                                                                         methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
                                             }
                                         });
@@ -3411,7 +3417,7 @@
                         app.secondNounDeprecated = true;
                         if (secondNounDeprecatedValue['replacement term']) {
                             let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                    
+
                             if (app.middleCharacter == 'between'){
                                 tempWholeCharacter += ' and ' + secondNounDeprecatedValue['replacement term'];
                             }
@@ -3420,13 +3426,13 @@
                             .then(function(resp){
                                 console.log('term?'+tempWholeCharacter, resp.data);
                                 if (resp.data.entries.length > 0){
-                                    app.secondNounDeprecatedNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is replaced by <b>' + 
-                                                                            secondNounDeprecatedValue['replacement term'] + 
-                                                                            '</b>. Please cancel and use the existing character <b>' + 
-                                                                            tempWholeCharacter + '</b>.'; 
+                                    app.secondNounDeprecatedNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is replaced by <b>' +
+                                                                            secondNounDeprecatedValue['replacement term'] +
+                                                                            '</b>. Please cancel and use the existing character <b>' +
+                                                                            tempWholeCharacter + '</b>.';
                                 } else {
-                                    app.secondNounDeprecatedNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is a deprecated term' + 
-                                                                            (secondNounDeprecatedValue['replacement term'] ? 
+                                    app.secondNounDeprecatedNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is a deprecated term' +
+                                                                            (secondNounDeprecatedValue['replacement term'] ?
                                                                             ', consider using <b>' + secondNounDeprecatedValue['replacement term'] + '</b>.' :
                                                                             ' because ' + secondNounDeprecatedValue['deprecated reason'] + '. Please use another term.');
                                 }
@@ -3453,9 +3459,9 @@
                                         }
                                     }
                                     if (app.secondNounNotRecommend == true) {
-                                        
+
                                         let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                            
+
                                         if (app.middleCharacter == 'between'){
                                             tempWholeCharacter += ' and ' + methodEntry.term;
                                         }
@@ -3464,12 +3470,12 @@
                                         .then(function(resp){
                                             console.log('term?'+tempWholeCharacter, resp.data);
                                             if (resp.data.entries.length > 0){
-                                                app.secondNounNotRecommendNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is replaced by <b>' + 
-                                                                                        methodEntry.term + 
-                                                                                        '</b>. Please cancel and use the existing character <b>' + 
-                                                                                        tempWholeCharacter + '</b>.'; 
+                                                app.secondNounNotRecommendNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is replaced by <b>' +
+                                                                                        methodEntry.term +
+                                                                                        '</b>. Please cancel and use the existing character <b>' +
+                                                                                        tempWholeCharacter + '</b>.';
                                             } else {
-                                                app.secondNounNotRecommendNotifyMessage = "Term <b>" + app.secondLastCharacter + '</b> is a not recommended synonym of <b>' + 
+                                                app.secondNounNotRecommendNotifyMessage = "Term <b>" + app.secondLastCharacter + '</b> is a not recommended synonym of <b>' +
                                                                                         methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
                                             }
                                         });
@@ -3489,9 +3495,9 @@
                                             }
                                         }
                                         if (app.secondNounSynonym == true) {
-                                            
+
                                             let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                            
+
                                             if (app.middleCharacter == 'between'){
                                                 tempWholeCharacter += ' and ' + methodEntry.term;
                                             }
@@ -3500,12 +3506,12 @@
                                             .then(function(resp){
                                                 console.log('term?'+tempWholeCharacter, resp.data);
                                                 if (resp.data.entries.length > 0){
-                                                    app.secondNounSynonymNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is replaced by <b>' + 
-                                                                                            methodEntry.term + 
-                                                                                            '</b>. Please cancel and use the existing character <b>' + 
-                                                                                            tempWholeCharacter + '</b>.'; 
+                                                    app.secondNounSynonymNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is replaced by <b>' +
+                                                                                            methodEntry.term +
+                                                                                            '</b>. Please cancel and use the existing character <b>' +
+                                                                                            tempWholeCharacter + '</b>.';
                                                 } else {
-                                                    app.secondNounSynonymNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is an exact synonym of <b>' + 
+                                                    app.secondNounSynonymNotifyMessage = 'Term <b>' + app.secondLastCharacter + '</b> is an exact synonym of <b>' +
                                                                                             methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
                                                 }
                                             });
@@ -3515,7 +3521,7 @@
                             }
                         });
                     }
-                } 
+                }
 
                 if (!app.firstNounDeprecated && !app.secondNounDeprecated && !app.firstNounNotRecommend && !app.secondNounNotRecommend && !app.firstNounSynonym && !app.secondNounSynonym) {
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase().replaceAll(' ', '_'))
@@ -3526,11 +3532,11 @@
                         }
                     });
                 }
-                
+
                 if (
-                    !app.firstCharacterUndefined && 
-                    !app.nounUndefined && 
-                    (app.middleCharacter != 'between' || !app.secondNounUndefined) && 
+                    !app.firstCharacterUndefined &&
+                    !app.nounUndefined &&
+                    (app.middleCharacter != 'between' || !app.secondNounUndefined) &&
                     !app.wholeCharacterUndefined &&
                     !app.firstNounDeprecated &&
                     !app.secondNounDeprecated &&
@@ -3625,7 +3631,7 @@
                 var app = this;
                 app.character = {};
                 app.character.name = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                
+
                 if (app.middleCharacter == 'between'){
                     app.character.name += ' and ' + app.secondLastCharacter;
                 }
@@ -3889,7 +3895,7 @@
                             if (app.userTags[0])app.showTableForTab(app.userTags[0].tag_name);
                         }
                         else app.showTableForTab(app.currentTab);
-                        
+
                     });
 
             },
@@ -4549,7 +4555,7 @@
                                         app.character.username += ', ' + app.character.owner_name;
                                     }
                                 }
-        
+
                                 axios.post('/chrecorder/public/api/v1/character/update-character', app.character)
                                     .then(function (resp) {
                                         app.userTags = resp.data.userTags;
@@ -4583,7 +4589,7 @@
                                     console.log('******1');
                                     console.log('app.character.username', app.character.username);
                                     console.log('app.character.owner_name', app.character.owner_name);
-                                    if (!app.character.username.includes(app.character.owner_name)) {
+                                    if (app.character.username != app.user.name) {
                                         console.log('******2');
                                         app.character.standard = 0;
                                         app.character.username += ', ' + app.user.name;
@@ -4917,7 +4923,7 @@
                                         }
                                     }
                                     for (var ind = 0; ind < app.allNonColorValues.length; ind ++) {
-                                        if (app.allNonColorValues[ind].value_id == rows[j].id) {                              
+                                        if (app.allNonColorValues[ind].value_id == rows[j].id) {
                                             var nonColorValue = app.allNonColorValues[ind];
                                             if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == nonColorValue.main_value_IRI) >= 0) {
                                                 return 1;
@@ -4927,7 +4933,7 @@
 
                                 }
                             }
-                        }                        
+                        }
                     }
                 }
                 return 0;
@@ -5112,7 +5118,7 @@
                             }
                         }
                         if (app.checkValueArray(tempValueArray)) {
-                            
+
                             var currentCharacter = app.userCharacters.find(ch => ch.id == filteredValues[0].character_id);
                             if (!currentCharacter.name.split(' of ')[1]){
                                 currentCharacter.name = currentCharacter.name.replace(' between ', ' of ');
@@ -5148,7 +5154,7 @@
                                                 tempRpArray.push(tempValueArray[l]);
                                             }
                                         }
-                                        
+
                                         tempRpArray.sort((a, b) => a - b);
                                         var minValue = tempRpArray[0];
                                         var maxValue = tempRpArray[tempRpArray.length - 1];
@@ -5247,7 +5253,7 @@
                                     var checkValueIdArray = [];
                                     var isInvariant = true;
                                     var cTmp = '';
-                                    
+
                                     for (var k = 0; k < filteredValues.length; k++) {
                                         if (filteredValues[k].header_id != 1 && filteredValues[k].value != '') {
                                             cTmp = filteredValues[k].value;
@@ -5503,7 +5509,7 @@
                                     var checkValueIdArray = [];
                                     var isInvariant = true;
                                     var cTmp = '';
-                                    
+
                                     for (var k = 0; k < filteredValues.length; k++) {
                                         if (filteredValues[k].header_id != 1 && filteredValues[k].value != '') {
                                             cTmp = filteredValues[k].value;
@@ -5722,7 +5728,7 @@
                 var app = this;
 
                 arrayColorValues.sort((a, b) => (!app.checkAllowRange(a, b) && a.colored > b.colored) ? 1 : -1);
-                
+
                 arrayColorValues.sort(function (x, y) {
                     return x.colored == 'white' ? -1 : y.colored == 'white' ? 1 : 0;
                 });
@@ -5934,7 +5940,7 @@
                 app.saveColorButtonFlag = true;
                 console.log('currentColorValue', app.currentColorValue);
                 console.log('app.currentColorValue', app.currentColorValue);
-                
+
                 app.originColorValue = app.currentColorValue;
 
                 if (app.currentColorValue['brightness'] && app.currentColorValue.confirmedFlag['brightness'] == false && !app.colorSynonyms['brightness'] && !app.searchTreeData(app.colTreeData['brightness'], app.currentColorValue['brightness'])) {
@@ -6134,7 +6140,7 @@
                                                         console.log('save api resp', resp);
                                                     });
                                             });
-                                    }   
+                                    }
                                 }
                             }
                             if (app.currentColorDeprecated[flag]) {
@@ -6194,8 +6200,8 @@
                                 }
                             }
                         }
-                        console.log('postFlag', postFlag);                        
-            //    }                        
+                        console.log('postFlag', postFlag);
+            //    }
                         if (postFlag == true) {
                             axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
                                 .then(async function (resp) {
@@ -6362,7 +6368,7 @@
                     app.toRemoveBracketConfirmFlag = true;
                     return;
                 }
-                
+
                 var characterId = app.values.find(eachValue => eachValue.find(eachItem => eachItem.id == app.currentNonColorValue.value_id) != null)[0].character_id;
                 var characterName = app.userCharacters.find(ch => ch.id == characterId).name;
                 console.log('characterName', characterName);
@@ -6440,8 +6446,8 @@
                                         app.saveInProgress = false;
                                         return;
                                     }
-                                }                                
-                                
+                                }
+
                                 postValue['main_value'] = app.currentNonColorValue['main_value'];
                                 var date = new Date();
                                 requestBody = {
@@ -6498,7 +6504,7 @@
                                             });
                                     });
                             }
-                        } 
+                        }
 
                         if (app.currentNonColorDeprecated) {
                             let parentTerm = "";
@@ -6797,7 +6803,7 @@
                         });
                     if (currentCharacter.name.startsWith('Color')) {
                         app.colTreeData = [];
-                        
+
                         app.colorDetailsFlag = true;
                         app.currentColorValueExist = true;
                         app.colorComment = {};
@@ -6857,7 +6863,7 @@
                     } else {
                         app.nonColorDetailsFlag = true;
                         app.textureTreeData = null;
-                        
+
                         app.nonColorDetailsFlag = true;
                         app.currentNonColorValueExist = true;
                         app.nonColorComment = {};
@@ -6868,7 +6874,7 @@
                         app.nonColorDefinition = {};
                         app.userNonColorDefinition = {};
                         app.currentNonColorValue.taxon = app.taxonName;
- 
+
                         app.currentNonColorValue.placeholderName = currentCharacter.name.split('of')[0].toLowerCase();
                         if (app.currentNonColorValue.placeholderName[app.currentNonColorValue.placeholderName.length - 1] == ' ') {
                             app.currentNonColorValue.placeholderName = app.currentNonColorValue.placeholderName.substring(0, app.currentNonColorValue.placeholderName.length - 1);
@@ -6963,7 +6969,7 @@
 
                                 color.detailFlag = flag;
                                 app.colorExistFlag = true;
-                                
+
                                 app.filterFlag = false;
                                 const timerID=setTimeout(() => {
                                     app.filterFlag = true;
@@ -7003,7 +7009,7 @@
                                 const timerID=setTimeout(() => {
                                     app.filterFlag = true;
                                 }, 50)
-                                
+
                                 if (app.colorDetailsFlag){
                                     app.colorDetailsFlag = false;
                                     app.colorDetailsFlag = true;
@@ -7125,12 +7131,12 @@
             //    }
 
                 if (flag == 'main_value') {
-                    
+
                     if (app.userNonColorDefinition['main_value']==' ')
                         app.userNonColorDefinition['main_value']='';
                     if (app.nonColorSampleText['main_value']==' ')
                         app.nonColorSampleText['main_value']='';
-                        
+
                     app.currentNonColorValue.confirmedFlag['main_value'] = false;
                     if (!app.textureTreeData){
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText.replace('-', '_'))
@@ -7373,8 +7379,8 @@
                                     app.nonColorDefinition[flag] = null;
                                 }
                             }
-                        } 
-                        
+                        }
+
                         // else if (app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag])) {
                         //     app.searchNonColorFlag = 2;
                         //     app.exactNonColor = app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag]);
@@ -7529,7 +7535,7 @@
                         app.taxonName = res.data.taxon;
                         app.showSetupArea = false;
                     })
-                
+
             },
             nameMatrix() {
                 var app = this;
@@ -7586,14 +7592,14 @@
                         app.currentVersion = null;
                         app.currentName = '';
                         app.showNamesList = [];
-                        
+
                         app.userCharacters = res.data.characters;
                         app.headers = res.data.headers;
                         app.values = res.data.values;
                         app.userTags = res.data.tags;
                         app.allColorValues = res.data.allColorValues;
                         app.allNonColorValues = res.data.allNonColorValues;
-                        
+
                         app.lastLoadMatrixName = '';
                         app.confirmNewMatrixDialog = false;
                         app.showSetupArea = true;
@@ -7631,7 +7637,7 @@
                 };
                 app.extraColors = [];
                 app.currentColorValue.detailsFlag = null;
-                
+
                 // setTimeout(() => {
                 //     console.log("v-if", (app.currentColorValue.detailFlag == 'brightness'
                 //     || app.currentColorValue.detailFlag == 'reflectance'
@@ -7880,7 +7886,7 @@
                     });
                 }
                 axios.get('/chrecorder/public/api/v1/character/getCharacterNames').then(result=>{
-                    
+
                     for (let i = 0 ; i < result.data.length; i ++) {
                         axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term='+result.data[i].name.toLowerCase().replace(' ', '_').replace('-', '_')).then(resp=>{
                             if (resp.data.entries.length > 0) {
@@ -8213,7 +8219,7 @@
                             } else {
                                 if (app.userTags[0]) {
                                     app.showTableForTab(app.userTags[0].tag_name);
-                                }                            
+                                }
                             }
                         });
                 }).then(function () {
@@ -8239,7 +8245,7 @@
                             }
                         }
                     }
-                    
+
                     var qualityData = resp.data.children;
                     for (var i = 0; i < qualityData.length; i++) {
                         if (qualityData[i].text=='coloration') {
@@ -8250,7 +8256,7 @@
                             for (var j = 0; j < qualityData[i].children.length; j++) {
                                 app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text]=[];
                                 app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text].push(qualityData[i].children[j].text);
-                                
+
                                 if ('children' in qualityData[i].children[j]) {
                                     for (var k = 0; k < qualityData[i].children[j].children.length; k++) {
                                         app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text].push(qualityData[i].children[j].children[k].text);
@@ -8272,7 +8278,7 @@
                 .then(function (resp) {
                     resp.data.sort((a,b) => app.tagOrder(a)-app.tagOrder(b));
                     app.userTags = resp.data;
-                    
+
                     for (var i = 0; i < app.userTags.length; i ++) {
                         console.log(app.userTags[i].tag_name);
                         app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
@@ -8283,7 +8289,7 @@
                     } else {
                         if (app.userTags[0]) {
                             app.showTableForTab(app.userTags[0].tag_name);
-                        }                            
+                        }
                     }
                     console.log('userTags', app.userTags);
                 });

@@ -175,8 +175,8 @@
 
 <script>
     import Vue from 'vue';
-    
-    function makeBaseAuth(user, pswd){ 
+
+    function makeBaseAuth(user, pswd){
         var token = user + ':' + pswd;
         var hash = "";
         if (btoa) {
@@ -242,32 +242,32 @@
                                                             var colorValue = app.allColorValues[ind];
                                                             if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.brightness_IRI) {
                                                                 app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                                break;              
+                                                                break;
                                                             }
                                                             if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.reflectance_IRI) {
                                                                 app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                                break;              
+                                                                break;
                                                             }
                                                             if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.saturation_IRI) {
                                                                 app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                                break;              
+                                                                break;
                                                             }
                                                             if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.colored_IRI) {
                                                                 app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                                break;              
+                                                                break;
                                                             }
                                                             if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.multi_colored_IRI) {
                                                                 app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                                break;              
+                                                                break;
                                                             }
                                                         }
                                                     }
                                                     for (var ind = 0; ind < app.allNonColorValues.length; ind ++) {
-                                                        if (app.allNonColorValues[ind].value_id == rows[l].id) {                              
+                                                        if (app.allNonColorValues[ind].value_id == rows[l].id) {
                                                             var nonColorValue = app.allNonColorValues[ind];
                                                             if (app.deprecatedTerms[i]['deprecated IRI'] == nonColorValue.main_value_IRI) {
                                                                 app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                                break;              
+                                                                break;
                                                             }
                                                         }
                                                     }
@@ -298,7 +298,7 @@
                     .then(function (resp) {
                         app.newSuperClassTerms = resp.data['moved classes'];
                         console.log('app.newSuperClass', app.newSuperClassTerms);
-                    });                
+                    });
             },
             handleNewDefinition() {
                 var app = this;
@@ -420,32 +420,32 @@
                                                         var colorValue = app.allColorValues[ind];
                                                         if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.brightness_IRI) {
                                                             app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                            break;              
+                                                            break;
                                                         }
                                                         if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.reflectance_IRI) {
                                                             app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                            break;              
+                                                            break;
                                                         }
                                                         if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.saturation_IRI) {
                                                             app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                            break;              
+                                                            break;
                                                         }
                                                         if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.colored_IRI) {
                                                             app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                            break;              
+                                                            break;
                                                         }
                                                         if (app.deprecatedTerms[i]['deprecated IRI'] == colorValue.multi_colored_IRI) {
                                                             app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                            break;              
+                                                            break;
                                                         }
                                                     }
                                                 }
                                                 for (var ind = 0; ind < app.allNonColorValues.length; ind ++) {
-                                                    if (app.allNonColorValues[ind].value_id == rows[l].id) {                              
+                                                    if (app.allNonColorValues[ind].value_id == rows[l].id) {
                                                         var nonColorValue = app.allNonColorValues[ind];
                                                         if (app.deprecatedTerms[i]['deprecated IRI'] == nonColorValue.main_value_IRI) {
                                                             app.deprecatedTerms[i]['tagName'] = app.userTags[j].tag_name;
-                                                            break;              
+                                                            break;
                                                         }
                                                     }
                                                 }
@@ -471,7 +471,7 @@
         },
         mounted() {
             var app = this;
-            
+
             console.log(app.user);
 
             app.user.name = app.user.email.split('@')[0];
