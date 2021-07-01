@@ -6295,6 +6295,7 @@
                                     app.saveInProgress = false;
                                     app.preList = resp.data.preList;
                                     app.postList = resp.data.postList;
+
                                     if (newFlag == false) {
                                         app.colorDetailsFlag = false;
                                     } else {
@@ -6319,6 +6320,8 @@
                                     app.allColorValues = resp.data.allColorValues;
                                     app.allNonColorValues = resp.data.allNonColorValues;
                                     app.currentColorValue['value_id'] = app.currentColorValue.value_id;
+                                    app.defaultCharacters = resp.data.defaultCharacters;
+                                    app.refreshDefaultCharacters();
                                     app.getDeprecatedValue();
                                 }).then(() => {
                                     axios.post('/chrecorder/public/api/v1/getAllDetails')
@@ -6591,6 +6594,8 @@
                                     app.nonColorDetails = resp.data.nonColorDetails;
                                     app.allNonColorValues = resp.data.allNonColorValues;
                                     app.currentNonColorValue.detailsFlag = null;
+                                    app.defaultCharacters = resp.data.defaultCharacters;
+                                    app.refreshDefaultCharacters();
                                     app.getDeprecatedValue();
                                     if (newFlag == false) {
                                         app.nonColorDetailsFlag = false;
@@ -7664,6 +7669,8 @@
                         app.postList = resp.data.postList;
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
+                        app.defaultCharacters = resp.data.defaultCharacters;
+                        app.refreshDefaultCharacters();
                         app.getDeprecatedValue();
                     });
             },
@@ -7700,6 +7707,8 @@
                         app.postList = resp.data.postList;
                         app.allColorValues = resp.data.allColorValues;
                         app.allNonColorValues = resp.data.allNonColorValues;
+                        app.defaultCharacters = resp.data.defaultCharacters;
+                        app.refreshDefaultCharacters();
                         app.getDeprecatedValue();
                     });
             },

@@ -1460,6 +1460,7 @@ class HomeController extends Controller
 
         $returnValues = $this->getValuesByCharacter();
         $returnAllDetailValues = $this->getAllDetails();
+        $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'id'=>$id,
             'values' => $returnValues,
@@ -1468,6 +1469,7 @@ class HomeController extends Controller
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
             'colorDetails' => $returnColorDetails,
+            'defaultCharacters' => $returnDefaultCharacters
         ];
 
         return $data;
@@ -1618,7 +1620,7 @@ class HomeController extends Controller
         $returnValues = $this->getValuesByCharacter();
         $returnAllDetailValues = $this->getAllDetails();
         $returnNonColorDetails = NonColorDetails::where('value_id', '=', $request->input('value_id'))->get();
-
+        $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
@@ -1626,6 +1628,7 @@ class HomeController extends Controller
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
             'nonColorDetails' => $returnNonColorDetails,
+            'defaultCharacters' => $returnDefaultCharacters
         ];
 
         return $data;
@@ -1770,7 +1773,7 @@ class HomeController extends Controller
         $constraints = $this->getDefaultConstraint($characterName);
 
         $returnAllDetailValues = $this->getAllDetails();
-
+        $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'colorDetails' => $returnColorDetails,
             'values' => $returnValues,
@@ -1778,6 +1781,7 @@ class HomeController extends Controller
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
+            'defaultCharacters' => $returnDefaultCharacters
         ];
 
         return $data;
@@ -1811,7 +1815,7 @@ class HomeController extends Controller
         $constraints = $this->getDefaultConstraint($characterName);
 
         $returnAllDetailValues = $this->getAllDetails();
-
+        $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'nonColorDetails' => $returnNonColorDetails,
             'values' => $returnValues,
@@ -1819,6 +1823,7 @@ class HomeController extends Controller
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
+            'defaultCharacters' => $returnDefaultCharacters
         ];
 
         return $data;
