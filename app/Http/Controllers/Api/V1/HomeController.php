@@ -1788,7 +1788,7 @@ class HomeController extends Controller
     }
 
     public function removeEachNonColorDetails(Request $request) {
-        $eachNonColorDetails = NonColorDetails::find($request->input('id'))->first();
+        $eachNonColorDetails = NonColorDetails::find($request->input('id'));
 
         if ($eachNonColorDetails) {
             $eachNonColorDetails->delete();
