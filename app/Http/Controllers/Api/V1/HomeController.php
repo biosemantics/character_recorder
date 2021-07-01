@@ -242,9 +242,14 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $standardCharacters = StandardCharacter::whereRaw('name NOT LIKE "%(general)"')->get();
-//        $standardUsages = Character::join('standard_characters','standard_characters.name','=','characters.name')->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))->groupBy('standard_characters.id')->get();
-         $standardUsages = Character::join('standard_characters','standard_characters.name','=','characters.name')->where('standard_characters.username','=','characters.username')->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))->groupBy('standard_characters.id')->get();
 
+        $standardUsages = Character::join('standard_characters', function($join){
+            $join->on('standard_characters.name', '=', 'characters.name')
+                ->on('standard_characters.username', '=', 'characters.username');
+        })
+            ->select('standard_characters.id as id',  DB::raw('sum(characters.usage_count) as usage_count'))
+            ->groupBy('standard_characters.id')
+            ->get();
         foreach ($standardUsages as $su) {
             foreach($standardCharacters as $sc){
                 if ($sc->id == $su->id){
@@ -265,7 +270,7 @@ class HomeController extends Controller
         $userCharacters = Character::where('standard', '=', 0)
             ->whereRaw('username LIKE CONCAT("%", owner_name)')
             ->get();
-         $userUsages = DB::table('characters as A')->join('characters as B', 'A.name', '=', 'B.name')->where('A.standard','=',0)->whereRaw('A.username like concat("%", A.owner_name)')->where('A.username','=','B.username')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
+        $userUsages = DB::table('characters as A')->join('characters as B', 'A.name', '=', 'B.name')->where('A.standard','=',0)->whereRaw('A.username like concat("%", A.owner_name)')->where('A.username','=','B.username')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
 //        $userUsages = DB::table('characters as A')->join('characters as B', 'A.name', '=', 'B.name')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
         foreach ($userUsages as $uu) {
             foreach ($userCharacters as $uc){
@@ -708,6 +713,7 @@ class HomeController extends Controller
     public function updateValue(Request $request) {
         $value = Value::where('id', '=', $request->input('id'))->first();
 
+        $oldValue = $value->value;
         $v = $request->input('value');
         $value->value = $v;
 //        if (is_numeric($v)) {
@@ -734,7 +740,9 @@ class HomeController extends Controller
             ->where('value', '<>', $character->name)
             ->count();
         if ($valueCount == 1) {
-            $character->usage_count = $character->usage_count + 1;
+            if ($oldValue == null || $oldValue == '') {
+                $character->usage_count = $character->usage_count + 1;
+            }
         } else if ($valueCount < 1) {
             if ($character->usage_count > 0) {
                 $character->usage_count = $character->usage_count - 1;
