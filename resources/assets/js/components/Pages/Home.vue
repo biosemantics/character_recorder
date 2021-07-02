@@ -5138,7 +5138,7 @@ export default {
     },
     containsObject(obj, list) {
       for (var i = 0; i < list.length; i++) {
-        if (list[i].name == obj.name && list[i].username == obj.username) {
+        if (list[i].name == obj.name && list[i].text == obj.text) {
           return false;
         }
       }
