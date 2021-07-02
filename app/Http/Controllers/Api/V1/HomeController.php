@@ -270,7 +270,12 @@ class HomeController extends Controller
         $userCharacters = Character::where('standard', '=', 0)
             ->whereRaw('username LIKE CONCAT("%", owner_name)')
             ->get();
-        $userUsages = DB::table('characters as A')->join('characters as B', 'A.name', '=', 'B.name')->where('A.standard','=',0)->whereRaw('A.username like concat("%", A.owner_name)')->where('A.username','=','B.username')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
+//        $userUsages = DB::table('characters as B')->join('characters as A', 'A.name', '=', 'B.name')->where('A.standard','=', 0)->where('A.username','=','B.username')->whereRaw('A.username like concat("%", A.owner_name)')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
+        $userUsages = DB::select( DB::raw('SELECT A.id AS id, SUM(B.usage_count) AS usage_count
+                                    FROM characters AS A
+                                    INNER JOIN characters AS B ON A.name = B.name
+                                    WHERE A.username = B.username AND A.standard = 0 AND A.username LIKE CONCAT("%", A.owner_name)
+                                    GROUP BY A.id') );
 //        $userUsages = DB::table('characters as A')->join('characters as B', 'A.name', '=', 'B.name')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
         foreach ($userUsages as $uu) {
             foreach ($userCharacters as $uc){
