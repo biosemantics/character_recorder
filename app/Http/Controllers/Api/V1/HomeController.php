@@ -1381,6 +1381,7 @@ class HomeController extends Controller
                     $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
                     foreach ($existColorDetails as $eachColorDetails) {
                         $eachColorDetails['username'] = $eachCharacter['owner_name'];
+                        $eachColorDetails['usage_count'] = Character::where('name', '=', $selectedCharacter['name'])->where('username', '=', $selectedCharacter['username'])->select(DB::raw('sum(usage_count) as total'))->first()->total;
                         array_push($existDetails, $eachColorDetails);
                     }
                 }
@@ -1390,7 +1391,7 @@ class HomeController extends Controller
         $data = [
             'colorDetails' => $colorDetails,
             'values' => $returnValues,
-            'existColorDetails' => $existDetails
+            'existColorDetails' => $existDetails,
         ];
 
         return $data;
