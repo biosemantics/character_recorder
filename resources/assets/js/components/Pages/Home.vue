@@ -6041,7 +6041,7 @@ export default {
       var postFlag = true;
       var comparedFlag = true;
       app.saveColorButtonFlag = true;
-      console.log('app.currentColorValue', app.currentColorValue);
+      console.log('app.currentColorValue1', app.currentColorValue);
 
       app.originColorValue = app.currentColorValue;
 
@@ -6218,7 +6218,7 @@ export default {
                   requestBody = {
                     "user": app.sharedFlag ? '' : app.user.name,
                     "ontology": "carex",
-                    "term": postValue['main_value'],
+                    "term": postValue[flag],
                     "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                     "definition": synonym.definition,
                     "elucidation": "",
