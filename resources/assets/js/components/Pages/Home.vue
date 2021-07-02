@@ -4904,8 +4904,8 @@ export default {
                 }
                 //app.values = resp.data.values;
                 app.defaultCharacters = resp.data.defaultCharacters;
-                app.refreshUserCharacters();
                 app.refreshDefaultCharacters();
+                app.refreshUserCharacters();
                 app.showTableForTab(app.currentTab);
               }
             });
@@ -5136,6 +5136,14 @@ export default {
           app.showTableForTab(app.currentTab);
         });
     },
+    containsObject(obj, list) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].name == obj.name && list[i].username == obj.username) {
+          return false;
+        }
+      }
+      return true;
+    },
     async refreshDefaultCharacters() {
       var app = this;
       app.standardCharacters = [];
@@ -5166,7 +5174,9 @@ export default {
         // temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
         var imageSrc = await app.getTooltipImageString(temp.name);
         temp.tooltip = imageSrc + temp.tooltip;
-        app.standardCharacters.push(temp);
+        if (app.containsObject(temp, app.standardCharacters)) {
+          app.standardCharacters.push(temp);
+        }
       }
 
       // for (var index = 0; index < app.standardCharacters.length; index ++) {
