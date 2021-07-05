@@ -19,10 +19,15 @@ div.dropdown div.item:first-child {
         width: 540px !important;
     }
 }
-.tooltip {  
+.tooltip {
     &.standard-tooltip {
       .tooltip-inner {
         max-width: 1080px;
+        .row {
+          h6 {
+            margin: 2px 2px;
+          }
+        }
       }
     }
   }
