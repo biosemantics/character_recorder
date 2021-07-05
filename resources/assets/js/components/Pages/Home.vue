@@ -2835,7 +2835,7 @@ export default {
                     src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
                   }
                   if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
-                    var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                    var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view'));
                     src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
                   } else {
                     src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
@@ -2871,7 +2871,7 @@ export default {
                     src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
                   }
                   if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
-                    var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                    var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view'));
                     src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
                   } else {
                     src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
@@ -2906,7 +2906,7 @@ export default {
                     src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
                   }
                   if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
-                    var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                    var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view'));
                     src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
                   } else {
                     src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
@@ -3939,6 +3939,7 @@ export default {
     getStandardCollections() {
       var app = this;
       app.standardCollections = [];
+      var order = 0;
       axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollection")
       .then(function(resp) {
         var collectionList = resp.data.entries;
@@ -3977,9 +3978,9 @@ export default {
                   && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_where")) != undefined) {
                   tempCharacter.method_where = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_where")).value.split("#")[1].replaceAll('_', ' ');
                 }
-                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_as")) != 'undefined'
-                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_as")) != undefined) {
-                  tempCharacter.method_as = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_as")).value.split("#")[1].replaceAll('_', ' ');
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_at")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_at")) != undefined) {
+                  tempCharacter.method_where = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_at")).value.split("#")[1].replaceAll('_', ' ');
                 }
                 if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("elucidation")) != 'undefined'
                   && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("elucidation")) != undefined) {
@@ -4020,6 +4021,8 @@ export default {
                 tempCharacter.username = tempCharacter.creator;
                 tempCharacter.owner_name = app.user.name;
                 tempCharacter.show_flag = 0;
+                tempCharacter.id = order;
+                order++;
                 app.standardCollections.push(tempCharacter);
               }
             }
@@ -5046,14 +5049,14 @@ export default {
         app.userCharacters[i].deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.userCharacters[i].IRI);
 
         var src = '';
-        if (app.userCharacters[i].elucidation != '') {
+        if (app.userCharacters[i].elucidation != '' && app.userCharacters[i].elucidation != null) {
           if (src == '') {
             src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
           }
           var imgUrls = app.userCharacters[i].elucidation.split(',');
           for (var j = 0; j < imgUrls.length; j++) {
             if (imgUrls[j].indexOf('id=') < 0) {
-              var id = imgUrls[j].slice(imgUrls[j].indexOf('file/d/') + 7, imgUrls[j].indexOf('/view?usp='));
+              var id = imgUrls[j].slice(imgUrls[j].indexOf('file/d/') + 7, imgUrls[j].indexOf('/view'));
               src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
             } else {
               src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + imgUrls[j].split('id=')[1].substring(0, imgUrls[j].split('id=')[1].length - 1) + "'/></div>";
@@ -5243,39 +5246,103 @@ export default {
     },
     async refreshDefaultCharacters() {
       var app = this;
+      var tempDefaultCharacters = [];
       app.standardCharacters = [];
-      console.log("temp.text");
-      for (var i = 0; i < app.defaultCharacters.length; i++) {
+      for (var i = 0; i < app.standardCollections.length; i++) {
         var temp = {};
-        temp.name = app.defaultCharacters[i].name;
-        temp.text = app.defaultCharacters[i].name + ' by ' + app.defaultCharacters[i].username + ' (' + app.defaultCharacters[i].usage_count + ')';
-        temp.value = app.defaultCharacters[i].id;
-        temp.tooltip = '';
+        var defChs = app.defaultCharacters.filter(eachCh => eachCh.standard == 1 && eachCh.name == app.standardCollections[i].name && eachCh.username == app.standardCollections[i].username);
+        app.standardCollections[i].usage_count = 0;
+        for (var j = 0; j < defChs.length; j++) {
+          app.standardCollections[i].usage_count += defChs[j].usage_count;
+        }
 
-        if (app.defaultCharacters[i].method_from != null && app.defaultCharacters[i].method_from != '') {
-          temp.tooltip = temp.tooltip + 'From: ' + app.defaultCharacters[i].method_from + ', ';
+        temp.name = app.standardCollections[i].name;
+        temp.text = app.standardCollections[i].name + ' by ' + app.standardCollections[i].username + ' (' + app.standardCollections[i].usage_count + ')';
+        temp.tooltip = '';
+        temp.value = app.standardCollections[i].id;
+
+        if (app.standardCollections[i].method_from != null && app.standardCollections[i].method_from != '') {
+          temp.tooltip = temp.tooltip + 'From: ' + app.standardCollections[i].method_from + ', ';
         }
-        if (app.defaultCharacters[i].method_to != null && app.defaultCharacters[i].method_to != '') {
-          temp.tooltip = temp.tooltip + 'To: ' + app.defaultCharacters[i].method_to + ', ';
+        if (app.standardCollections[i].method_to != null && app.standardCollections[i].method_to != '') {
+          temp.tooltip = temp.tooltip + 'To: ' + app.standardCollections[i].method_to + ', ';
         }
-        if (app.defaultCharacters[i].method_include != null && app.defaultCharacters[i].method_include != '') {
-          temp.tooltip = temp.tooltip + 'Include: ' + app.defaultCharacters[i].method_include + ', ';
+        if (app.standardCollections[i].method_include != null && app.standardCollections[i].method_include != '') {
+          temp.tooltip = temp.tooltip + 'Include: ' + app.standardCollections[i].method_include + ', ';
         }
-        if (app.defaultCharacters[i].method_exclude != null && app.defaultCharacters[i].method_exclude != '') {
-          temp.tooltip = temp.tooltip + 'Exclude: ' + app.defaultCharacters[i].method_exclude + ', ';
+        if (app.standardCollections[i].method_exclude != null && app.standardCollections[i].method_exclude != '') {
+          temp.tooltip = temp.tooltip + 'Exclude: ' + app.standardCollections[i].method_exclude + ', ';
         }
-        if (app.defaultCharacters[i].method_where != null && app.defaultCharacters[i].method_where != '') {
-          temp.tooltip = temp.tooltip + 'Where: ' + app.defaultCharacters[i].method_where;
+        if (app.standardCollections[i].method_where != null && app.standardCollections[i].method_where != '') {
+          temp.tooltip = temp.tooltip + 'Where: ' + app.standardCollections[i].method_where;
         }
-        temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.defaultCharacters[i].IRI);
-        // temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
-        var imageSrc = await app.getTooltipImageString(temp.name);
-        temp.tooltip = imageSrc + temp.tooltip;
+        temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.standardCollections[i].IRI);
+
+        var src = '';
+        if (app.standardCollections[i].elucidation != '' && app.standardCollections[i].elucidation != null) {
+          if (src == '') {
+            src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+          }
+          var imgUrls = app.standardCollections[i].elucidation.split(',');
+          for (var j = 0; j < imgUrls.length; j++) {
+            if (imgUrls[j].indexOf('id=') < 0) {
+              var id = imgUrls[j].slice(imgUrls[j].indexOf('file/d/') + 7, imgUrls[j].indexOf('/view'));
+              src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+            } else {
+              src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + imgUrls[j].split('id=')[1].substring(0, imgUrls[j].split('id=')[1].length - 1) + "'/></div>";
+            }
+          }
+          if (src != '') {
+            src += '</div>';
+          }
+        }
+
+        // var imageSrc = await app.getTooltipImageString(temp.name);
+        temp.tooltip = src + temp.tooltip;
+
         if (app.containsObject(temp, app.standardCharacters)) {
           app.standardCharacters.push(temp);
         }
+        tempDefaultCharacters.push(app.standardCollections[i]);
       }
+      for (var i = 0; i < app.defaultCharacters.length; i++) {
+        var temp = {};
 
+        // need to be removed later *** start ***
+        if (app.defaultCharacters[i].standard == 0) {
+          temp.name = app.defaultCharacters[i].name;
+          temp.text = app.defaultCharacters[i].name + ' by ' + app.defaultCharacters[i].username + ' (' + app.defaultCharacters[i].usage_count + ')';
+          temp.value = app.defaultCharacters[i].id;
+          temp.tooltip = '';
+
+          if (app.defaultCharacters[i].method_from != null && app.defaultCharacters[i].method_from != '') {
+            temp.tooltip = temp.tooltip + 'From: ' + app.defaultCharacters[i].method_from + ', ';
+          }
+          if (app.defaultCharacters[i].method_to != null && app.defaultCharacters[i].method_to != '') {
+            temp.tooltip = temp.tooltip + 'To: ' + app.defaultCharacters[i].method_to + ', ';
+          }
+          if (app.defaultCharacters[i].method_include != null && app.defaultCharacters[i].method_include != '') {
+            temp.tooltip = temp.tooltip + 'Include: ' + app.defaultCharacters[i].method_include + ', ';
+          }
+          if (app.defaultCharacters[i].method_exclude != null && app.defaultCharacters[i].method_exclude != '') {
+            temp.tooltip = temp.tooltip + 'Exclude: ' + app.defaultCharacters[i].method_exclude + ', ';
+          }
+          if (app.defaultCharacters[i].method_where != null && app.defaultCharacters[i].method_where != '') {
+            temp.tooltip = temp.tooltip + 'Where: ' + app.defaultCharacters[i].method_where;
+          }
+          temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.defaultCharacters[i].IRI);
+          // temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
+          var imageSrc = await app.getTooltipImageString(temp.name);
+          temp.tooltip = imageSrc + temp.tooltip;
+          // need to be removed later *** end ***
+          if (app.containsObject(temp, app.standardCharacters)) {
+            app.standardCharacters.push(temp);
+            tempDefaultCharacters.push(app.defaultCharacters[i]);
+          }
+        }
+      }
+      app.defaultCharacters = tempDefaultCharacters;
+      console.log('app.standardCharacters for refresh', app.standardCharacters);
       // for (var index = 0; index < app.standardCharacters.length; index ++) {
       //     app.getTooltipImage(app.standardCharacters[index].name, index);
       // }
@@ -7308,7 +7375,7 @@ export default {
                 if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
                   var id = '';
                   if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
-                    id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                    id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view'));
                   } else {
                     id = methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1);
                   }
@@ -8401,7 +8468,67 @@ export default {
     await axios.get('/chrecorder/public/api/v1/standard_characters')
       .then(async function (resp) {
         console.log('standardCharacters', resp);
-        app.defaultCharacters = resp.data.sort(function (a, b) {
+        app.defaultCharacters = resp.data;
+        app.refreshDefaultCharacters();
+      });
+        // app.defaultCharacters = resp.data.sort(function (a, b) {
+        //   if (a.name < b.name) {
+        //     return -1;
+        //   }
+        //   if (a.name > b.name) {
+        //     return 1;
+        //   }
+        //   return 0;
+        // });
+        //
+        // var toolTopIndex = 0;
+        // for (var i = 0; i < resp.data.length; i++) {
+        //   var temp = {};
+        //   temp.name = resp.data[i].name;
+        //   // if (resp.data[i].standard == 1) {
+        //   //   if (toolTopIndex % 12 == 0) {
+        //   //     app.standardCharactersTooltip += '<div class="row">';
+        //   //   }
+        //   //   app.standardCharactersTooltip += '<div class="col-md-1" style="padding:0 !important;">';
+        //   //   app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + resp.data[i].name + '</h6>';
+        //   //   app.standardCharactersTooltip += '</div>';
+        //   //   if (toolTopIndex % 12 == 11) {
+        //   //     app.standardCharactersTooltip += '</div>';
+        //   //   }
+        //   //   toolTopIndex++;
+        //   // }
+        //   temp.text = resp.data[i].name + ' by ' + resp.data[i].username + ' (' + resp.data[i].usage_count + ')';
+        //   temp.value = resp.data[i].id;
+        //   temp.tooltip = '';
+        //
+        //   if (resp.data[i].method_from != null && resp.data[i].method_from != '') {
+        //     temp.tooltip = temp.tooltip + 'From: ' + resp.data[i].method_from + ', ';
+        //   }
+        //   if (resp.data[i].method_to != null && resp.data[i].method_to != '') {
+        //     temp.tooltip = temp.tooltip + 'To: ' + resp.data[i].method_to + ', ';
+        //   }
+        //   if (resp.data[i].method_include != null && resp.data[i].method_include != '') {
+        //     temp.tooltip = temp.tooltip + 'Include: ' + resp.data[i].method_include + ', ';
+        //   }
+        //   if (resp.data[i].method_exclude != null && resp.data[i].method_exclude != '') {
+        //     temp.tooltip = temp.tooltip + 'Exclude: ' + resp.data[i].method_exclude + ', ';
+        //   }
+        //   if (resp.data[i].method_where != null && resp.data[i].method_where != '') {
+        //     temp.tooltip = temp.tooltip + 'Where: ' + resp.data[i].method_where;
+        //   }
+        //   // var definitionKey = temp.name.slice(0, temp.name.indexOf(' '));
+        //   // var definitionVar = app.definitionData.find(eachDefinition => eachDefinition.IRI == ('http://biosemantics.arizona.edu/ontologies/carex#' + (definitionKey == 'Color' ? 'coloration' : definitionKey.toLowerCase)));
+        //   // if (definitionVar) {
+        //   //     temp.tooltip += definitionKey + ' is defined as ' + definitionVar.definition;
+        //   // }
+        //   temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == resp.data[i].IRI);
+        //   app.standardCharacters.push(temp);
+        // }
+    console.log('v1/character');
+    axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
+      .then(function (resp) {
+        console.log('resp character', resp.data);
+        app.userCharacters = resp.data.characters.sort(function (a, b) {
           if (a.name < b.name) {
             return -1;
           }
@@ -8410,103 +8537,47 @@ export default {
           }
           return 0;
         });
-        var toolTopIndex = 0;
-        for (var i = 0; i < resp.data.length; i++) {
-          var temp = {};
-          temp.name = resp.data[i].name;
-          // if (resp.data[i].standard == 1) {
-          //   if (toolTopIndex % 12 == 0) {
-          //     app.standardCharactersTooltip += '<div class="row">';
-          //   }
-          //   app.standardCharactersTooltip += '<div class="col-md-1" style="padding:0 !important;">';
-          //   app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + resp.data[i].name + '</h6>';
-          //   app.standardCharactersTooltip += '</div>';
-          //   if (toolTopIndex % 12 == 11) {
-          //     app.standardCharactersTooltip += '</div>';
-          //   }
-          //   toolTopIndex++;
-          // }
-          temp.text = resp.data[i].name + ' by ' + resp.data[i].username + ' (' + resp.data[i].usage_count + ')';
-          temp.value = resp.data[i].id;
-          temp.tooltip = '';
-
-          if (resp.data[i].method_from != null && resp.data[i].method_from != '') {
-            temp.tooltip = temp.tooltip + 'From: ' + resp.data[i].method_from + ', ';
-          }
-          if (resp.data[i].method_to != null && resp.data[i].method_to != '') {
-            temp.tooltip = temp.tooltip + 'To: ' + resp.data[i].method_to + ', ';
-          }
-          if (resp.data[i].method_include != null && resp.data[i].method_include != '') {
-            temp.tooltip = temp.tooltip + 'Include: ' + resp.data[i].method_include + ', ';
-          }
-          if (resp.data[i].method_exclude != null && resp.data[i].method_exclude != '') {
-            temp.tooltip = temp.tooltip + 'Exclude: ' + resp.data[i].method_exclude + ', ';
-          }
-          if (resp.data[i].method_where != null && resp.data[i].method_where != '') {
-            temp.tooltip = temp.tooltip + 'Where: ' + resp.data[i].method_where;
-          }
-          // var definitionKey = temp.name.slice(0, temp.name.indexOf(' '));
-          // var definitionVar = app.definitionData.find(eachDefinition => eachDefinition.IRI == ('http://biosemantics.arizona.edu/ontologies/carex#' + (definitionKey == 'Color' ? 'coloration' : definitionKey.toLowerCase)));
-          // if (definitionVar) {
-          //     temp.tooltip += definitionKey + ' is defined as ' + definitionVar.definition;
-          // }
-          temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == resp.data[i].IRI);
-          app.standardCharacters.push(temp);
+        app.headers = resp.data.headers;
+        app.values = resp.data.values;
+        console.log('headers', app.headers);
+        console.log('values', app.values);
+        app.allColorValues = resp.data.allColorValues;
+        app.allNonColorValues = resp.data.allNonColorValues;
+        if (resp.data.taxon != null) {
+          app.taxonName = resp.data.taxon;
         }
-        console.log('v1/character');
-        axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
-          .then(function (resp) {
-            console.log('resp character', resp.data);
-            app.userCharacters = resp.data.characters.sort(function (a, b) {
-              if (a.name < b.name) {
-                return -1;
-              }
-              if (a.name > b.name) {
-                return 1;
-              }
-              return 0;
-            });
-            app.headers = resp.data.headers;
-            app.values = resp.data.values;
-            console.log('headers', app.headers);
-            console.log('values', app.values);
-            app.allColorValues = resp.data.allColorValues;
-            app.allNonColorValues = resp.data.allNonColorValues;
-            if (resp.data.taxon != null) {
-              app.taxonName = resp.data.taxon;
-            }
-            app.columnCount = resp.data.headers.length - 1;
-            if (app.columnCount == 0) {
-              app.columnCount = 3;
-            }
-            if (app.headers.length > 1) {
-              if (app.values.find(value => value.header_id != 1)) {
-                if (app.values.find(value => value.header_id != 1).length != 0) {
-                  app.matrixShowFlag = true;
-                  app.collapsedFlag = true;
-
-                }
-              }
-            }
-
-            app.refreshUserCharacters();
-            if (app.deprecatedTagName && app.deprecatedTagName != '') {
-              app.showTableForTab(app.deprecatedTagName);
-            } else {
-              if (app.userTags[0]) {
-                app.showTableForTab(app.userTags[0].tag_name);
-              }
-            }
-          });
-      }).then(function () {
-        for (var i = 0; i < app.standardCharacters.length; i++) {
-          app.getTooltipImage(app.standardCharacters[i].name, i);
+        app.columnCount = resp.data.headers.length - 1;
+        if (app.columnCount == 0) {
+          app.columnCount = 3;
         }
-        // console.log(app.userCharacters.length);
-        // for (var i = 0; i < app.userCharacters.length; i ++) {
-        //     app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
-        // }
+        if (app.headers.length > 1) {
+          if (app.values.find(value => value.header_id != 1)) {
+            if (app.values.find(value => value.header_id != 1).length != 0) {
+              app.matrixShowFlag = true;
+              app.collapsedFlag = true;
+
+            }
+          }
+        }
+
+        app.refreshUserCharacters();
+        if (app.deprecatedTagName && app.deprecatedTagName != '') {
+          app.showTableForTab(app.deprecatedTagName);
+        } else {
+          if (app.userTags[0]) {
+            app.showTableForTab(app.userTags[0].tag_name);
+          }
+        }
       });
+      // }).then(function () {
+      //   for (var i = 0; i < app.standardCharacters.length; i++) {
+      //     app.getTooltipImage(app.standardCharacters[i].name, i);
+      //   }
+      //   // console.log(app.userCharacters.length);
+      //   // for (var i = 0; i < app.userCharacters.length; i ++) {
+      //   //     app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
+      //   // }
+      // });
 
     axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=quality')
       .then(function (resp) {

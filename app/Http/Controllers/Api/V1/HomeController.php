@@ -248,32 +248,37 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
-        $standardCharacters = StandardCharacter::whereRaw('name NOT LIKE "%(general)"')->get();
+//        $standardCharacters = StandardCharacter::whereRaw('name NOT LIKE "%(general)"')->get();
+//
+//        $standardUsages = Character::join('standard_characters', function ($join) {
+//            $join->on('standard_characters.name', '=', 'characters.name')
+//                ->on('standard_characters.username', '=', 'characters.username');
+//        })
+//            ->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))
+//            ->groupBy('standard_characters.id')
+//            ->get();
+//        foreach ($standardUsages as $su) {
+//            foreach ($standardCharacters as $sc) {
+//                if ($sc->id == $su->id) {
+//                    $sc->usage_count = $su->usage_count;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        foreach ($standardCharacters as $sc) {
+//            if (!$sc->usage_count) {
+//                $sc->usage_count = 0;
+//            }
+//        }
+//
+//        $standardCharacters = $standardCharacters->toArray();
 
-        $standardUsages = Character::join('standard_characters', function ($join) {
-            $join->on('standard_characters.name', '=', 'characters.name')
-                ->on('standard_characters.username', '=', 'characters.username');
-        })
-            ->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))
-            ->groupBy('standard_characters.id')
-            ->get();
-        foreach ($standardUsages as $su) {
-            foreach ($standardCharacters as $sc) {
-                if ($sc->id == $su->id) {
-                    $sc->usage_count = $su->usage_count;
-                    break;
-                }
-            }
+        $standardCharacters = Character::where('standard', '=', 1)->get()->toArray();
+        $stdUserCharacters = Character::where('standard', '=', 0)->whereRaw('username NOT LIKE CONCAT("%", owner_name)')->get()->toArray();
+        foreach ($stdUserCharacters as $key=>$value) {
+            $stdUserCharacters[$key]['standard'] = 1;
         }
-
-        foreach ($standardCharacters as $sc) {
-            if (!$sc->usage_count) {
-                $sc->usage_count = 0;
-            }
-        }
-
-        $standardCharacters = $standardCharacters->toArray();
-
         $userCharacters = Character::where('standard', '=', 0)
             ->whereRaw('username LIKE CONCAT("%", owner_name)')
             ->get();
@@ -293,7 +298,7 @@ class HomeController extends Controller
             }
         }
         $userCharacters = $userCharacters->toArray();
-
+        $standardCharacters = array_merge($standardCharacters, $stdUserCharacters);
         $defaultCharacters = array_merge($standardCharacters, $userCharacters);
 
         return $defaultCharacters;
@@ -859,28 +864,7 @@ class HomeController extends Controller
                 }
 
                 array_push($newCharacters, $tempStdCharacter);
-//
-//                array_push($newCharacters, [
-//                    'name' => $eachCharacter['name'],
-//                    'IRI' => $eachCharacter['IRI'],
-//                    'parent_term' => $eachCharacter['parent_term'],
-//                    'method_from' => $eachCharacter['method_from'] ? $eachCharacter['method_from'] : '',
-//                    'method_to' => $eachCharacter['method_to'] ? $eachCharacter['method_to'] : '',
-//                    'method_include' => $eachCharacter['method_include'] ? $eachCharacter['method_include'] : '',
-//                    'method_exclude' => $eachCharacter['method_exclude'] ? $eachCharacter['method_exclude'] : '',
-//                    'method_where' => $eachCharacter['method_where'] ? $eachCharacter['method_where'] : '',
-//                    'method_as' => $eachCharacter['method_as'] ? $eachCharacter['method_as'] : '',
-//                    'unit' => $eachCharacter['unit'],
-//                    'standard' => $eachCharacter['standard'],
-//                    'creator' => $eachCharacter['creator'],
-//                    'username' => $eachCharacter['username'],
-//                    'owner_name' => $username,
-//                    'usage_count' => 0,
-//                    'show_flag' => $eachCharacter['show_flag'] ? 1 : 0,
-//                    'standard_tag' => $eachCharacter['standard_tag'],
-//                    'summary' => $eachCharacter['summary'],
-//                    'order' => $order,
-//                ]);
+
                 $order = $order + 1;
 
                 $flag = true;
