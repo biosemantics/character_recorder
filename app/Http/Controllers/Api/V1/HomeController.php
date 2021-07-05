@@ -22,7 +22,7 @@ use GuzzleHttp\Promise;
 
 use pietercolpaert\hardf\TriGWriter;
 
-function startsWith ($string, $startString)
+function startsWith($string, $startString)
 {
     $len = strlen($startString);
     return (substr($string, 0, $len) === $startString);
@@ -78,19 +78,22 @@ class HomeController extends Controller
         ]);
     }
 
-    public function getHeaders() {
+    public function getHeaders()
+    {
         return Header::where('user_id', Auth::id())
             ->orWhere('user_id', NULL)
             ->orderBy('header', 'desc')->get();
     }
 
-    public function getHeaders1($userID) {
+    public function getHeaders1($userID)
+    {
         return Header::where('user_id', $userID)
             ->orWhere('user_id', NULL)
             ->orderBy('header', 'desc')->get();
     }
 
-    public function getAllDetails() {
+    public function getAllDetails()
+    {
 
         $colorValues = ColorDetails::all();
         $nonColorValues = NonColorDetails::all();
@@ -103,16 +106,16 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function getValuesByCharacter1( $userID )
+    public function getValuesByCharacter1($userID)
     {
         $user = User::where('id', '=', $userID)->first();
         $username = explode('@', $user['email'])[0];
 
         $allCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
         $headers = $this->getHeaders1($userID);
-        $values = Value::join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->select('values.id as id','values.character_id as character_id', 'values.header_id as header_id','values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
-        $colorDetails = ColorDetails::join('values','values.id','=','color_details.value_id')->join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->get();
-        $nonColorDetails = NonColorDetails::join('values','values.id','=','non_color_details.value_id')->join('characters','characters.id','=','values.character_id')->where('characters.owner_name','=',$username)->get();
+        $values = Value::join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->select('values.id as id', 'values.character_id as character_id', 'values.header_id as header_id', 'values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
+        $colorDetails = ColorDetails::join('values', 'values.id', '=', 'color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
+        $nonColorDetails = NonColorDetails::join('values', 'values.id', '=', 'non_color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
 
         $characters = [];
         $valueFlag = [];
@@ -121,31 +124,31 @@ class HomeController extends Controller
         $value_id = [];
         $char_count = 0;
         $i = 0;
-        foreach ($headers as $header){
+        foreach ($headers as $header) {
             $header_id[$header->id] = $i;
             $i = $i + 1;
         }
-        foreach ($allCharacters as $ac){
+        foreach ($allCharacters as $ac) {
             $character_id[$ac->id] = $char_count;
             $characters[$char_count] = [];
-            for ($j = 0; $j < $i ; $j ++){
-                array_push($characters[$char_count],[]);
+            for ($j = 0; $j < $i; $j++) {
+                array_push($characters[$char_count], []);
             }
             $char_count = $char_count + 1;
         }
 
-        foreach ($values as $val){
+        foreach ($values as $val) {
             //$val->value = substr($val->value, 0, -1);
-            if (!$val->value){
+            if (!$val->value) {
                 $val->value = '';
             }
             $characters[$character_id[$val->character_id]][$header_id[$val->header_id]] = $val;
             $value_id[$val->id] = 1;
         }
 
-        foreach ($colorDetails as $col){
-            if ($value_id[$col->value_id]){
-                if ($value_id[$col->value_id] == 1){
+        foreach ($colorDetails as $col) {
+            if ($value_id[$col->value_id]) {
+                if ($value_id[$col->value_id] == 1) {
                     $value_id[$col->value_id] = 2;
                     if ($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->header_id != 1) {
                         $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = '';
@@ -161,7 +164,7 @@ class HomeController extends Controller
                         ($col->saturation ? ($col->saturation . ' ') : '') .
                         ($col->colored ? ($col->colored . ' ') : '') .
                         ($col->multi_colored ? ($col->multi_colored . ' ') : '') .
-                        ($col->post_constraint ? ($col->post_constraint . ' ') : '') ;
+                        ($col->post_constraint ? ($col->post_constraint . ' ') : '');
                     if ($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value != '') {
                         $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = substr($characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value, 0, -1);
                         $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value = $characters[$character_id[$col->character_id]][$header_id[$col->header_id]]->value . '; ';
@@ -170,9 +173,9 @@ class HomeController extends Controller
             }
         }
 
-        foreach ($nonColorDetails as $nonCol){
-            if ($value_id[$nonCol->value_id]){
-                if ($value_id[$nonCol->value_id] == 1){
+        foreach ($nonColorDetails as $nonCol) {
+            if ($value_id[$nonCol->value_id]) {
+                if ($value_id[$nonCol->value_id] == 1) {
                     $value_id[$nonCol->value_id] = 2;
                     if ($characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->header_id != 1) {
                         $characters[$character_id[$nonCol->character_id]][$header_id[$nonCol->header_id]]->value = '';
@@ -198,11 +201,13 @@ class HomeController extends Controller
         return $characters;
     }
 
-    public function getValuesByCharacter() {
+    public function getValuesByCharacter()
+    {
         return $this->getValuesByCharacter1(Auth::id());
     }
 
-    public function checkNumericalCharacter($str) {
+    public function checkNumericalCharacter($str)
+    {
         if (substr($str, 0, 5) == 'Width'
             || substr($str, 0, 5) == 'Depth'
             || substr($str, 0, 5) == 'Count'
@@ -215,7 +220,8 @@ class HomeController extends Controller
         }
     }
 
-    public function getArrayCharacters() {
+    public function getArrayCharacters()
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
@@ -223,11 +229,11 @@ class HomeController extends Controller
 
         $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
         $usageCounts = [];
-        $usageCounts = Character::where('owner_name','=',$username)->join('values','values.character_id','=','characters.id')->where('header_id','>=',2)->where('value','<>','')->select('characters.id',DB::raw('count(values.id) as usageCount'))->groupBy('characters.id')->get();
+        $usageCounts = Character::where('owner_name', '=', $username)->join('values', 'values.character_id', '=', 'characters.id')->where('header_id', '>=', 2)->where('value', '<>', '')->select('characters.id', DB::raw('count(values.id) as usageCount'))->groupBy('characters.id')->get();
 
-        foreach($usageCounts as $uc){
-            foreach($arrayCharacters as $ac){
-                if ($ac->id == $uc->id){
+        foreach ($usageCounts as $uc) {
+            foreach ($arrayCharacters as $ac) {
+                if ($ac->id == $uc->id) {
                     $ac->usageCount = $uc->usageCount;
                     break;
                 }
@@ -236,31 +242,32 @@ class HomeController extends Controller
         return $arrayCharacters;
     }
 
-    public function getDefaultCharacters() {
+    public function getDefaultCharacters()
+    {
 
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
         $standardCharacters = StandardCharacter::whereRaw('name NOT LIKE "%(general)"')->get();
 
-        $standardUsages = Character::join('standard_characters', function($join){
+        $standardUsages = Character::join('standard_characters', function ($join) {
             $join->on('standard_characters.name', '=', 'characters.name')
                 ->on('standard_characters.username', '=', 'characters.username');
         })
-            ->select('standard_characters.id as id',  DB::raw('sum(characters.usage_count) as usage_count'))
+            ->select('standard_characters.id as id', DB::raw('sum(characters.usage_count) as usage_count'))
             ->groupBy('standard_characters.id')
             ->get();
         foreach ($standardUsages as $su) {
-            foreach($standardCharacters as $sc){
-                if ($sc->id == $su->id){
+            foreach ($standardCharacters as $sc) {
+                if ($sc->id == $su->id) {
                     $sc->usage_count = $su->usage_count;
                     break;
                 }
             }
         }
 
-        foreach($standardCharacters as $sc){
-            if (!$sc->usage_count){
+        foreach ($standardCharacters as $sc) {
+            if (!$sc->usage_count) {
                 $sc->usage_count = 0;
             }
         }
@@ -271,15 +278,15 @@ class HomeController extends Controller
             ->whereRaw('username LIKE CONCAT("%", owner_name)')
             ->get();
 //        $userUsages = DB::table('characters as B')->join('characters as A', 'A.name', '=', 'B.name')->where('A.standard','=', 0)->where('A.username','=','B.username')->whereRaw('A.username like concat("%", A.owner_name)')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
-        $userUsages = DB::select( DB::raw('SELECT A.id AS id, SUM(B.usage_count) AS usage_count
+        $userUsages = DB::select(DB::raw('SELECT A.id AS id, SUM(B.usage_count) AS usage_count
                                     FROM characters AS A
                                     INNER JOIN characters AS B ON A.name = B.name
                                     WHERE A.username = B.username AND A.standard = 0 AND A.username LIKE CONCAT("%", A.owner_name)
-                                    GROUP BY A.id') );
+                                    GROUP BY A.id'));
 //        $userUsages = DB::table('characters as A')->join('characters as B', 'A.name', '=', 'B.name')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
         foreach ($userUsages as $uu) {
-            foreach ($userCharacters as $uc){
-                if ($uc->id == $uu->id){
+            foreach ($userCharacters as $uc) {
+                if ($uc->id == $uu->id) {
                     $uc->usage_count = $uu->usage_count;
                     break;
                 }
@@ -292,7 +299,8 @@ class HomeController extends Controller
         return $defaultCharacters;
     }
 
-    public function removeString($string, $compareStr) {
+    public function removeString($string, $compareStr)
+    {
         $string = str_replace($compareStr, '', $string); // Replaces all spaces with hyphens.
         $string = preg_replace('/[^A-Za-z0-9, \-]/', '', $string); // Removes special chars.
 
@@ -300,19 +308,22 @@ class HomeController extends Controller
     }
 
 
-    public function getStandardCharacters() {
+    public function getStandardCharacters()
+    {
         $result = $this->getDefaultCharacters();
 
         return $result;
     }
 
-    public function getUserTags(Request $request, $userId) {
+    public function getUserTags(Request $request, $userId)
+    {
         $userTags = UserTag::where('user_id', '=', $userId)->get();
 
         return $userTags;
     }
 
-    public function createUserTag(Request $request) {
+    public function createUserTag(Request $request)
+    {
         $userTag = new UserTag([
             'tag_name' => $request->input('user_tag'),
             'user_id' => $request->input('user_id')
@@ -322,7 +333,8 @@ class HomeController extends Controller
         return $userTag;
     }
 
-    public function removeUserTag(Request $request) {
+    public function removeUserTag(Request $request)
+    {
         $userTag = UserTag::where([
             ['tag_name', '=', $request->input('user_tag')],
             ['user_id', '=', $request->input('user_id')],
@@ -332,7 +344,8 @@ class HomeController extends Controller
         return $userTags;
     }
 
-    public function deleteHeader(Request $request, $headerId) {
+    public function deleteHeader(Request $request, $headerId)
+    {
 
         $valuesArray = Value::where('header_id', '=', $headerId)->get();
         foreach ($valuesArray as $eachValue) {
@@ -365,7 +378,9 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function changeTaxon(Request $request, $taxon) {
+
+    public function changeTaxon(Request $request, $taxon)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $user->taxon = $taxon;
         $user->save();
@@ -377,7 +392,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function storeCharacter(Request $request) {
+    public function storeCharacter(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
@@ -423,7 +439,9 @@ class HomeController extends Controller
         return $data;
 
     }
-    public function getCharacter(Request $request, $userId) {
+
+    public function getCharacter(Request $request, $userId)
+    {
         $user = User::where('id', '=', $userId)->first();
         $username = explode('@', $user['email'])[0];
 
@@ -452,7 +470,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function deleteCharacter(Request $request, $userId, $characterId) {
+    public function deleteCharacter(Request $request, $userId, $characterId)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
         if (Character::where('standard_tag', '=', Character::where('id', '=', $characterId)->first()->standard_tag)
@@ -486,7 +505,6 @@ class HomeController extends Controller
         $defaultCharacters = $this->getDefaultCharacters();
 
 
-
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
@@ -505,7 +523,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function storeMatrix(Request $request) {
+    public function storeMatrix(Request $request)
+    {
         $user = User::where('id', '=', $request->input('user_id'))->first();
         $username = explode('@', $user['email'])[0];
         $characters = Character::where('owner_name', '=', $username)->get();
@@ -519,10 +538,10 @@ class HomeController extends Controller
         if ($previousHeaderCount < $columnCount) {
             for ($i = 0; $i < ($columnCount - $previousHeaderCount); $i++) {
                 $flag = true;
-                while ($flag){
+                while ($flag) {
                     $flag = false;
-                    foreach ($headers as $header){
-                        if ($header->header == 'Sample'.$sampleNum){
+                    foreach ($headers as $header) {
+                        if ($header->header == 'Sample' . $sampleNum) {
                             $sampleNum = $sampleNum + 1;
                             $flag = true;
                         }
@@ -544,17 +563,17 @@ class HomeController extends Controller
         $valueFlag = [];
         foreach ($characters as $eachCharacter) {
             $valueFlag[$eachCharacter->id] = [];
-            foreach ($headers as $header){
+            foreach ($headers as $header) {
                 $valueFlag[$eachCharacter->id][$header->id] = 1;
             }
         }
-        foreach ($values as $val){
+        foreach ($values as $val) {
             $valueFlag[$val->character_id][$val->header_id] = 0;
         }
         foreach ($characters as $eachCharacter) {
             $flag = true;
-            foreach ($headerValues as $hv){
-                if ($hv['character_id'] == $eachCharacter->id){
+            foreach ($headerValues as $hv) {
+                if ($hv['character_id'] == $eachCharacter->id) {
                     $flag = false;
                     break;
                 }
@@ -565,21 +584,21 @@ class HomeController extends Controller
                 //     'header_id' => 1,
                 //     'value' => $eachCharacter->name,
                 // ]);
-                array_push($temp,[
+                array_push($temp, [
                     'character_id' => $eachCharacter->id,
                     'header_id' => 1,
                     'value' => $eachCharacter->name,
                 ]);
 
             }
-            foreach($headers as $header) {
+            foreach ($headers as $header) {
                 if ($valueFlag[$eachCharacter->id][$header->id]) {
                     // Value::create([
                     //     'character_id' => $eachCharacter->id,
                     //     'header_id' => $header->id,
                     //     'value' => '',
                     // ]);
-                    array_push($temp,[
+                    array_push($temp, [
                         'character_id' => $eachCharacter->id,
                         'header_id' => $header->id,
                         'value' => '',
@@ -606,7 +625,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function addMoreColumn(Request $request, $columnCount) {
+    public function addMoreColumn(Request $request, $columnCount)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
         $oldHeaderCount = Header::where('user_id', '=', Auth::id())->count();
@@ -648,7 +668,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function addCharacter(Request $request) {
+    public function addCharacter(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
@@ -715,7 +736,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function updateValue(Request $request) {
+    public function updateValue(Request $request)
+    {
         $value = Value::where('id', '=', $request->input('id'))->first();
 
         $oldValue = $value->value;
@@ -773,68 +795,109 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function addStandardCharacter(Request $request) {
+    public function addStandardCharacter(Request $request)
+    {
         $standardCharacters = $request->all();
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
         $order = Character::max('order') + 1;
-        $characters = Character::where('owner_name', '=', $username)->select('name','IRI','method_from','method_to','method_include','method_exclude','method_where','owner_name')->get();
+        $characters = Character::where('owner_name', '=', $username)->select('name', 'IRI', 'method_from', 'method_to', 'method_include', 'method_exclude', 'method_where', 'owner_name')->get();
         $userTags = UserTag::where('user_id', '=', Auth::id())->get();
         $newCharacters = [];
         $newUserTags = [];
+
+        $allChKeys = ['name',
+            'IRI',
+            'parent_term',
+            'method_from',
+            'method_to',
+            'method_include',
+            'method_exclude',
+            'method_where',
+            'method_as',
+            'elucidation',
+            'creator',
+            'unit',
+            'standard',
+            'username',
+            'owner_name',
+            'standard_tag',
+            'summary',
+            'usage_count',
+            'order',
+            'show_flag',
+        ];
         foreach ($standardCharacters as $eachCharacter) {
             $flag = true;
-            foreach ($characters as $ch){
+            foreach ($characters as $ch) {
                 if ($eachCharacter['name'] == $ch['name']
-                  && $eachCharacter['IRI'] == $ch['IRI']
-                  && $eachCharacter['method_from'] == $ch['method_from']
-                  && $eachCharacter['method_to'] == $ch['method_to']
-                  && $eachCharacter['method_include'] == $ch['method_include']
-                  && $eachCharacter['method_exclude'] == $ch['method_exclude']
-                  && $eachCharacter['method_where'] == $ch['method_where']){
+                    && $eachCharacter['IRI'] == $ch['IRI']
+                    && $eachCharacter->method_from == $ch['method_from']
+                    && $eachCharacter->method_to == $ch['method_to']
+                    && $eachCharacter->method_include == $ch['method_include']
+                    && $eachCharacter->method_exclude == $ch['method_exclude']
+                    && $eachCharacter->method_where == $ch['method_where']
+                    && $eachCharacter->method_as == $ch['method_as']) {
                     $flag = false;
                     break;
                 }
             }
             if ($flag) {
-                array_push($newCharacters,[
-                    'name' => $eachCharacter['name'],
-                    'IRI' => $eachCharacter['IRI'],
-                    'parent_term' => $eachCharacter['parent_term'],
-                    'method_from' => $eachCharacter['method_from'],
-                    'method_to' => $eachCharacter['method_to'],
-                    'method_include' => $eachCharacter['method_include'],
-                    'method_exclude' => $eachCharacter['method_exclude'],
-                    'method_where' => $eachCharacter['method_where'],
-                    'unit' => $eachCharacter['unit'],
-                    'standard' => $eachCharacter['standard'],
-                    'creator' => $eachCharacter['creator'],
-                    'username' => $eachCharacter['username'],
-                    'owner_name' => $username,
-                    'usage_count' => 0,
-                    'show_flag' => $eachCharacter['show_flag']?1:0,
-                    'standard_tag' => $eachCharacter['standard_tag'],
-                    'summary' => $eachCharacter['summary'],
-                    'order' => $order,
-                ]);
+                $stdKeys = array_keys($eachCharacter);
+                $tempStdCharacter = [];
+                foreach ($allChKeys as $eachChKey) {
+                    if (in_array($eachChKey, $stdKeys)) {
+                        $tempStdCharacter[$eachChKey] = $eachCharacter[$eachChKey];
+                    } else if ($eachChKey == 'order') {
+                        $tempStdCharacter[$eachChKey] = $order;
+                    } else if ($eachChKey == 'usage_count') {
+                        $tempStdCharacter[$eachChKey] = 0;
+                    } else {
+                        $tempStdCharacter[$eachChKey] = '';
+                    }
+                }
+
+                array_push($newCharacters, $tempStdCharacter);
+//
+//                array_push($newCharacters, [
+//                    'name' => $eachCharacter['name'],
+//                    'IRI' => $eachCharacter['IRI'],
+//                    'parent_term' => $eachCharacter['parent_term'],
+//                    'method_from' => $eachCharacter['method_from'] ? $eachCharacter['method_from'] : '',
+//                    'method_to' => $eachCharacter['method_to'] ? $eachCharacter['method_to'] : '',
+//                    'method_include' => $eachCharacter['method_include'] ? $eachCharacter['method_include'] : '',
+//                    'method_exclude' => $eachCharacter['method_exclude'] ? $eachCharacter['method_exclude'] : '',
+//                    'method_where' => $eachCharacter['method_where'] ? $eachCharacter['method_where'] : '',
+//                    'method_as' => $eachCharacter['method_as'] ? $eachCharacter['method_as'] : '',
+//                    'unit' => $eachCharacter['unit'],
+//                    'standard' => $eachCharacter['standard'],
+//                    'creator' => $eachCharacter['creator'],
+//                    'username' => $eachCharacter['username'],
+//                    'owner_name' => $username,
+//                    'usage_count' => 0,
+//                    'show_flag' => $eachCharacter['show_flag'] ? 1 : 0,
+//                    'standard_tag' => $eachCharacter['standard_tag'],
+//                    'summary' => $eachCharacter['summary'],
+//                    'order' => $order,
+//                ]);
                 $order = $order + 1;
 
                 $flag = true;
-                foreach ($userTags as $tag){
-                    if ($tag['tag_name'] == $eachCharacter['standard_tag']){
+                foreach ($userTags as $tag) {
+                    if ($tag['tag_name'] == $eachCharacter['standard_tag']) {
                         $flag = false;
                         break;
                     }
                 }
-                foreach ($newUserTags as $tag){
-                    if ($tag['tag_name'] == $eachCharacter['standard_tag']){
+                foreach ($newUserTags as $tag) {
+                    if ($tag['tag_name'] == $eachCharacter['standard_tag']) {
                         $flag = false;
                         break;
                     }
                 }
                 if ($flag) {
-                    array_push($newUserTags,[
+                    array_push($newUserTags, [
                         'user_id' => Auth::id(),
                         'tag_name' => $eachCharacter['standard_tag']
                     ]);
@@ -849,17 +912,18 @@ class HomeController extends Controller
         return $returnCharacters;
     }
 
-    public function removeAllStandard(Request $request) {
+    public function removeAllStandard(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
-        $st_tags = Character::where('owner_name', '=', $username)->groupBy('standard_tag')->having(DB::raw('sum(standard)'),'>',0)->having(DB::raw('sum(standard)-count(*)'),'<',2)->select('standard_tag')->get();
+        $st_tags = Character::where('owner_name', '=', $username)->groupBy('standard_tag')->having(DB::raw('sum(standard)'), '>', 0)->having(DB::raw('sum(standard)-count(*)'), '<', 2)->select('standard_tag')->get();
         $tags = [];
-        foreach($st_tags as $tag){
-            array_push($tags,$tag->standard_tag);
+        foreach ($st_tags as $tag) {
+            array_push($tags, $tag->standard_tag);
         }
         Character::where('owner_name', '=', $username)->where('standard', '=', 1)->delete();
-        UserTag::where('user_id','=',Auth::id())->whereIn('tag_name',$tags)->delete();
+        UserTag::where('user_id', '=', Auth::id())->whereIn('tag_name', $tags)->delete();
 
         // $characters = Character::where('owner_name', '=', $username)->where('standard', '=', 1)->get();
         // foreach($characters as $eachCharacter) {
@@ -896,7 +960,8 @@ class HomeController extends Controller
 
     }
 
-    public function showTabCharacter(Request $request, $tabName) {
+    public function showTabCharacter(Request $request, $tabName)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
@@ -928,12 +993,13 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function removeAll(Request $request) {
+    public function removeAll(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
         $characters = Character::where('owner_name', '=', $username)->where('standard', '=', 0)->get();
-        foreach($characters as $eachCharacter) {
+        foreach ($characters as $eachCharacter) {
             if (Value::where('character_id', '=', $eachCharacter->id)->first()) {
                 Value::where('character_id', '=', $eachCharacter->id)->delete();
             }
@@ -962,7 +1028,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function updateUnit(Request $request) {
+    public function updateUnit(Request $request)
+    {
         $character = Character::where('id', '=', $request->input('character_id'))->first();
         $oldUnit = $character->unit;
         if ($character->unit != $request->input('unit')) {
@@ -1069,7 +1136,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function exportDescription(Request $request) {
+    public function exportDescription(Request $request)
+    {
 
         $fileName = $request->input('taxon');
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
@@ -1094,14 +1162,14 @@ class HomeController extends Controller
         $objWriter->save($fileName . '.docx');
 
 
-
         return array(
-            'is_success'    =>  1,
-            'doc_url'       =>  '/chrecorder/public/' . $fileName . '.docx',
+            'is_success' => 1,
+            'doc_url' => '/chrecorder/public/' . $fileName . '.docx',
         );
     }
 
-    public function exportDescriptionCsv(Request $request) {
+    public function exportDescriptionCsv(Request $request)
+    {
         $fileName = $request->input('taxon');
         $userCharacters = $request->input('userCharacters');
         $headers = $request->input('headers');
@@ -1158,13 +1226,14 @@ class HomeController extends Controller
         $writer->save($fileName . '.csv');
 
         return array(
-            'is_success'    =>  1,
-            'doc_url'       =>  '/chrecorder/public/' . $fileName .'.csv',
+            'is_success' => 1,
+            'doc_url' => '/chrecorder/public/' . $fileName . '.csv',
         );
     }
 
 
-    public function calcSummary($arrayRow) {
+    public function calcSummary($arrayRow)
+    {
         $returnValue = '';
         $sum = 0;
         $arrayLength = 0;
@@ -1217,7 +1286,8 @@ class HomeController extends Controller
         return $returnValue;
     }
 
-    public function updateSummary(Request $request) {
+    public function updateSummary(Request $request)
+    {
         $character = Character::where('id', '=', $request->input('character_id'))->first();
         $character->summary = $request->input('summary');
         $character->save();
@@ -1237,7 +1307,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function updateCharacter(Request $request) {
+    public function updateCharacter(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
@@ -1278,8 +1349,8 @@ class HomeController extends Controller
 
                 if (UserTag::where('tag_name', '=', $character->standard_tag)->where('user_id', '=', Auth::id())->first() == null) {
                     $userTag = new UserTag([
-                        'tag_name'  =>  $character->standard_tag,
-                        'user_id'   =>  Auth::id()
+                        'tag_name' => $character->standard_tag,
+                        'user_id' => Auth::id()
                     ]);
 
                     $userTag->save();
@@ -1300,13 +1371,14 @@ class HomeController extends Controller
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'defaultCharacters' => $returnDefaultCharacters,
-            'userTags'  => $returnUserTags
+            'userTags' => $returnUserTags
         ];
 
         return $data;
     }
 
-    public function changeOrder(Request $request) {
+    public function changeOrder(Request $request)
+    {
         $firstId = $request->input('firstId');
         $secondId = $request->input('secondId');
 
@@ -1333,7 +1405,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function updateHeader(Request $request) {
+    public function updateHeader(Request $request)
+    {
         $header = Header::where('id', '=', $request->input('id'))->first();
         $header->header = $request->input('header');
         $header->save();
@@ -1348,7 +1421,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function getUsage(Request $request, $characterId) {
+    public function getUsage(Request $request, $characterId)
+    {
         $character = Character::where('id', '=', $characterId)->first();
         $usage = 0;
         if ($character) {
@@ -1361,7 +1435,9 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function getColorDetails(Request $request, $valueId) {
+
+    public function getColorDetails(Request $request, $valueId)
+    {
         $colorDetails = ColorDetails::where('value_id', '=', $valueId)->get();
         $returnValues = $this->getValuesByCharacter();
         $user = User::where('id', '=', Auth::id())->first();
@@ -1376,7 +1452,7 @@ class HomeController extends Controller
         foreach ($characterList as $eachCharacter) {
             $tempFlag = false;
             foreach ($users as $eachUser) {
-                if (substr( $eachUser->email, 0, strlen($eachCharacter['owner_name']) + 1 ) == $eachCharacter['owner_name'] . '@') {
+                if (substr($eachUser->email, 0, strlen($eachCharacter['owner_name']) + 1) == $eachCharacter['owner_name'] . '@') {
                     $tempFlag = true;
                 }
             }
@@ -1402,7 +1478,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function saveColorValue(Request $request) {
+    public function saveColorValue(Request $request)
+    {
         $colorValues = $request->all();
         $id = 0;
 
@@ -1453,8 +1530,7 @@ class HomeController extends Controller
             }
         }
 
-        if ($tempCount == 1)
-        {
+        if ($tempCount == 1) {
             $character->usage_count = $character->usage_count + 1;
             $character->save();
         }
@@ -1468,7 +1544,7 @@ class HomeController extends Controller
         $returnAllDetailValues = $this->getAllDetails();
         $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
-            'id'=>$id,
+            'id' => $id,
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
@@ -1481,14 +1557,15 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function getConstraint(Request $request, $characterName) {
+    public function getConstraint(Request $request, $characterName)
+    {
         $characters = Character::where('name', '=', $characterName)->get();
 
         $preList = ['longitudinally'];
         $postList = ['when young'];
         foreach ($characters as $eachCharacter) {
             $values = Value::where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
-            foreach($values as $eachValue) {
+            foreach ($values as $eachValue) {
                 $details = ColorDetails::where('value_id', '=', $eachValue->id)->get();
                 foreach ($details as $each) {
                     if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
@@ -1529,7 +1606,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function getNonColorDetails(Request $request, $valueId) {
+    public function getNonColorDetails(Request $request, $valueId)
+    {
         $nonColorDetails = NonColorDetails::where('value_id', '=', $valueId)->get();
         $returnValues = $this->getValuesByCharacter();
 
@@ -1545,7 +1623,7 @@ class HomeController extends Controller
         foreach ($characterList as $eachCharacter) {
             $tempFlag = false;
             foreach ($users as $eachUser) {
-                if (substr( $eachUser->email, 0, strlen($eachCharacter['owner_name']) + 1 ) == $eachCharacter['owner_name'] . '@') {
+                if (substr($eachUser->email, 0, strlen($eachCharacter['owner_name']) + 1) == $eachCharacter['owner_name'] . '@') {
                     $tempFlag = true;
                 }
             }
@@ -1571,7 +1649,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function saveNonColorValue(Request $request) {
+    public function saveNonColorValue(Request $request)
+    {
         $nonColorValues = $request->all();
 
         $nonColorDetails = NonColorDetails::where('id', '=', $request->input('id'))->first();
@@ -1587,16 +1666,16 @@ class HomeController extends Controller
 
             $nonColorDetails->save();
         } else {
-            if (Value::where('id', '=', $request->input('value_id'))->first()->header_id != 1){
+            if (Value::where('id', '=', $request->input('value_id'))->first()->header_id != 1) {
                 $nonColorDetails = new NonColorDetails([
                     'value_id' => $request->input('value_id'),
-                    'negation' =>  $request->input('negation') ?  $request->input('negation') : null,
-                    'pre_constraint' =>  $request->input('pre_constraint') ?  $request->input('pre_constraint') : null,
-                    'certainty_constraint' =>  $request->input('certainty_constraint') ?  $request->input('certainty_constraint') : null,
-                    'degree_constraint' =>  $request->input('degree_constraint') ?  $request->input('degree_constraint') : null,
-                    'main_value' =>  $request->input('main_value') ?  $request->input('main_value') : null,
-                    'main_value_IRI' =>  $request->input('main_value_IRI') ?  $request->input('main_value_IRI') : null,
-                    'post_constraint' =>  $request->input('post_constraint') ?  $request->input('post_constraint') : null,
+                    'negation' => $request->input('negation') ? $request->input('negation') : null,
+                    'pre_constraint' => $request->input('pre_constraint') ? $request->input('pre_constraint') : null,
+                    'certainty_constraint' => $request->input('certainty_constraint') ? $request->input('certainty_constraint') : null,
+                    'degree_constraint' => $request->input('degree_constraint') ? $request->input('degree_constraint') : null,
+                    'main_value' => $request->input('main_value') ? $request->input('main_value') : null,
+                    'main_value_IRI' => $request->input('main_value_IRI') ? $request->input('main_value_IRI') : null,
+                    'post_constraint' => $request->input('post_constraint') ? $request->input('post_constraint') : null,
                 ]);
 
                 $nonColorDetails->save();
@@ -1640,14 +1719,15 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function getDefaultConstraint($characterName) {
+    public function getDefaultConstraint($characterName)
+    {
         $characters = Character::where('name', 'like', $characterName)->get();
 
         $preList = ['longitudinally'];
         $postList = ['when young'];
         foreach ($characters as $eachCharacter) {
             $values = Value::where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
-            foreach($values as $eachValue) {
+            foreach ($values as $eachValue) {
                 $details = ColorDetails::where('value_id', '=', $eachValue->id)->get();
                 foreach ($details as $each) {
                     if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
@@ -1685,14 +1765,15 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function getDefaultConstraint1() {
+    public function getDefaultConstraint1()
+    {
         $characters = Character::all();
 
         $preList = ['longitudinally'];
         $postList = ['when young'];
         foreach ($characters as $eachCharacter) {
             $values = Value::where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
-            foreach($values as $eachValue) {
+            foreach ($values as $eachValue) {
                 $details = ColorDetails::where('value_id', '=', $eachValue->id)->get();
                 foreach ($details as $each) {
                     if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
@@ -1730,7 +1811,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function removeColorValue(Request $request) {
+    public function removeColorValue(Request $request)
+    {
         $valueId = $request->input('value_id');
 
         ColorDetails::where('value_id', '=', $valueId)->delete();
@@ -1752,7 +1834,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function removeEachColorDetails(Request $request) {
+    public function removeEachColorDetails(Request $request)
+    {
         $eachColorDetails = ColorDetails::find($request->input('id'));
         if ($eachColorDetails) {
             $eachColorDetails->delete();
@@ -1793,7 +1876,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function removeEachNonColorDetails(Request $request) {
+    public function removeEachNonColorDetails(Request $request)
+    {
         $eachNonColorDetails = NonColorDetails::find($request->input('id'));
 
         if ($eachNonColorDetails) {
@@ -1835,7 +1919,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function removeNonColorValue(Request $request) {
+    public function removeNonColorValue(Request $request)
+    {
         $valueId = $request->input('value_id');
 
         NonColorDetails::where('value_id', '=', $valueId)->delete();
@@ -1858,7 +1943,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function getColorValues(Request $request) {
+    public function getColorValues(Request $request)
+    {
         $valueIds = $request->input('value_id');
 
         $colorValues = ColorDetails::whereIn('value_id', $valueIds)->get();
@@ -1870,7 +1956,8 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function overwriteValue(Request $request) {
+    public function overwriteValue(Request $request)
+    {
         $value = $request->all();
 
         $selectedValue = Value::where('id', '=', $value['id'])->first();
@@ -1959,7 +2046,8 @@ class HomeController extends Controller
 
     }
 
-    public function keepExistValue(Request $request) {
+    public function keepExistValue(Request $request)
+    {
         $value = $request->all();
 
         $selectedValue = Value::where('id', '=', $value['id'])->first();
@@ -2055,7 +2143,8 @@ class HomeController extends Controller
 
     }
 
-    public function getCharacterNameById($userID) {
+    public function getCharacterNameById($userID)
+    {
         $user = User::where('id', '=', $userID)->first();
         $username = explode('@', $user->email)[0];
 
@@ -2063,44 +2152,47 @@ class HomeController extends Controller
 
         $returenCharacters = [];
 
-        foreach($characters as $char){
+        foreach ($characters as $char) {
             $returenCharacters[$char->id] = $char->name;
         }
 
         return $returenCharacters;
     }
 
-    public function getColorDetailsById($userID) {
+    public function getColorDetailsById($userID)
+    {
         $valueIds = Value::join('headers', 'headers.id', '=', 'values.header_id')->where('headers.user_id', '=', $userID)->select('values.id')->get();
         $ids = [];
         $returnDetails = [];
-        foreach($valueIds as $value){
+        foreach ($valueIds as $value) {
             array_push($ids, $value->id);
             $returnDetails[$value->id] = [];
         }
         $colDetails = ColorDetails::whereIn('value_id', $ids)->get();
-        foreach($colDetails as $col){
+        foreach ($colDetails as $col) {
             array_push($returnDetails[$col->value_id], $col);
         }
         return $returnDetails;
     }
 
-    public function getNonColorDetailsById($userID) {
+    public function getNonColorDetailsById($userID)
+    {
         $valueIds = Value::join('headers', 'headers.id', '=', 'values.header_id')->where('headers.user_id', '=', $userID)->select('values.id')->get();
         $ids = [];
         $returnDetails = [];
-        foreach($valueIds as $value){
+        foreach ($valueIds as $value) {
             array_push($ids, $value->id);
             $returnDetails[$value->id] = [];
         }
         $nonColDetails = NonColorDetails::whereIn('value_id', $ids)->get();
-        foreach($nonColDetails as $nonCol){
+        foreach ($nonColDetails as $nonCol) {
             array_push($returnDetails[$nonCol->value_id], $nonCol);
         }
         return $returnDetails;
     }
 
-    public function getColorDetailText($col) {
+    public function getColorDetailText($col)
+    {
         $text = ($col->pre_constraint ? ($col->pre_constraint . ' ') : '') .
             ($col->certainty_constraint ? ($col->certainty_constraint . ' ') : '') .
             ($col->degree_constraint ? ($col->degree_constraint . ' ') : '') .
@@ -2116,7 +2208,8 @@ class HomeController extends Controller
         return $text;
     }
 
-    public function getNonColorDetailText($nonCol) {
+    public function getNonColorDetailText($nonCol)
+    {
         $text = ($nonCol->pre_constraint ? ($nonCol->pre_constraint . ' ') : '') .
             ($nonCol->certainty_constraint ? ($nonCol->certainty_constraint . ' ') : '') .
             ($nonCol->degree_constraint ? ($nonCol->degree_constraint . ' ') : '') .
@@ -2128,49 +2221,52 @@ class HomeController extends Controller
         return $text;
     }
 
-    public function writeColorDetail($writer, $subject, $col, $graph){
+    public function writeColorDetail($writer, $subject, $col, $graph)
+    {
         if ($col->colored) {
-            $writer->addTriple($subject, ":has_hue_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->colored)))), $graph);
+            $writer->addTriple($subject, ":has_hue_value", ":" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $col->colored)))), $graph);
         }
         if ($col->certainty_constraint) {
-            $writer->addTriple($subject, ":has_certainty_value_modifier", "mo:".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->certainty_constraint)))), $graph);
+            $writer->addTriple($subject, ":has_certainty_value_modifier", "mo:" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $col->certainty_constraint)))), $graph);
         }
         if ($col->degree_constraint) {
-            $writer->addTriple($subject, ":has_degree_value_modifier", "mo:".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->degree_constraint)))), $graph);
+            $writer->addTriple($subject, ":has_degree_value_modifier", "mo:" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $col->degree_constraint)))), $graph);
         }
         if ($col->brightness) {
-            $writer->addTriple($subject, ":has_brightness_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->brightness)))), $graph);
+            $writer->addTriple($subject, ":has_brightness_value", ":" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $col->brightness)))), $graph);
         }
         if ($col->reflectance) {
-            $writer->addTriple($subject, ":has_reflectance_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->reflectance)))), $graph);
+            $writer->addTriple($subject, ":has_reflectance_value", ":" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $col->reflectance)))), $graph);
         }
         if ($col->saturation) {
-            $writer->addTriple($subject, ":has_saturation_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->saturation)))), $graph);
+            $writer->addTriple($subject, ":has_saturation_value", ":" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $col->saturation)))), $graph);
         }
         if ($col->multi_colored) {
-            $writer->addTriple($subject, ":has_pattern_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$col->multi_colored)))), $graph);
+            $writer->addTriple($subject, ":has_pattern_value", ":" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $col->multi_colored)))), $graph);
         }
-        if ($col->pre_constraint || $col->post_constraint){
-            $writer->addTriple($subject, ":has_value", "\"".$this->getColorDetailText($col)."\"", $graph);
+        if ($col->pre_constraint || $col->post_constraint) {
+            $writer->addTriple($subject, ":has_value", "\"" . $this->getColorDetailText($col) . "\"", $graph);
         }
     }
 
-    public function writeNonColorDetail($writer, $subject, $nonCol, $graph){
+    public function writeNonColorDetail($writer, $subject, $nonCol, $graph)
+    {
         if ($nonCol->main_value) {
-            $writer->addTriple($subject, ":has_value", ":".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$nonCol->main_value)))), $graph);
+            $writer->addTriple($subject, ":has_value", ":" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $nonCol->main_value)))), $graph);
         }
         if ($nonCol->certainty_constraint) {
-            $writer->addTriple($subject, ":has_certainty_value_modifier", "mo:".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$nonCol->certainty_constraint)))), $graph);
+            $writer->addTriple($subject, ":has_certainty_value_modifier", "mo:" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $nonCol->certainty_constraint)))), $graph);
         }
         if ($nonCol->degree_constraint) {
-            $writer->addTriple($subject, ":has_degree_value_modifier", "mo:".str_replace("(","", str_replace(")","",str_replace(" ", "_", str_replace("-","_",$nonCol->degree_constraint)))), $graph);
+            $writer->addTriple($subject, ":has_degree_value_modifier", "mo:" . str_replace("(", "", str_replace(")", "", str_replace(" ", "_", str_replace("-", "_", $nonCol->degree_constraint)))), $graph);
         }
-        if ($nonCol->pre_constraint || $nonCol->post_constraint){
-            $writer->addTriple($subject, ":has_value", "\"".$this->getNonColorDetailText($nonCol)."\"", $graph);
+        if ($nonCol->pre_constraint || $nonCol->post_constraint) {
+            $writer->addTriple($subject, ":has_value", "\"" . $this->getNonColorDetailText($nonCol) . "\"", $graph);
         }
     }
 
-    public function pluralToSingle($word){
+    public function pluralToSingle($word)
+    {
         $plurals = [
             'plants' => 'plant',
             'internodes' => 'internode',
@@ -2216,94 +2312,98 @@ class HomeController extends Controller
             'body' => 'body',
             'orifice' => 'orifice',
         ];
-        if (array_key_exists($word,$plurals)){
+        if (array_key_exists($word, $plurals)) {
             return $plurals[$word];
         }
-        if (substr($word, strlen($word) - 1) == "s"){
+        if (substr($word, strlen($word) - 1) == "s") {
             return substr($word, 0, strlen($word) - 1);
         }
         return $word;
     }
 
-    public function partNameConverter($partName){
+    public function partNameConverter($partName)
+    {
         $word = explode('_of_', explode('_in_', $partName)[0])[0];
         // return $this->pluralToSingle($word) . substr($partName, strlen($word));
         return $this->pluralToSingle($word);
     }
 
-    public function registerType($writer, &$types, $type, $sampleName, $graph, $ccs){
+    public function registerType($writer, &$types, $type, $sampleName, $graph, $ccs)
+    {
         $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
         $i = 2;
-        if (!array_search($type, $types)){
+        if (!array_search($type, $types)) {
             array_push($types, $type);
-            $newType = explode('_of_',explode('_in_', $type)[0])[0];
-            $writer->addTriple($ccs.$type, $a, ":".$this->partNameConverter($newType), $graph);
-            while (strlen($newType) != strlen($type)){
+            $newType = explode('_of_', explode('_in_', $type)[0])[0];
+            $writer->addTriple($ccs . $type, $a, ":" . $this->partNameConverter($newType), $graph);
+            while (strlen($newType) != strlen($type)) {
                 $partOf = $this->partNameConverter(substr($type, strlen($newType) + 4));
-                $writer->addTriple($ccs.$type, ":part_of", $ccs.$partOf, $graph);
+                $writer->addTriple($ccs . $type, ":part_of", $ccs . $partOf, $graph);
                 $type = $partOf;
-                $newType = explode('_of_',explode('_in_', $type)[0])[0];
-                $writer->addTriple($ccs.$type, $a, ":".$this->partNameConverter($newType), $graph);
-                $i --;
-                if (!$i)return;
+                $newType = explode('_of_', explode('_in_', $type)[0])[0];
+                $writer->addTriple($ccs . $type, $a, ":" . $this->partNameConverter($newType), $graph);
+                $i--;
+                if (!$i) return;
             }
         }
     }
 
-    public function registerPartName($writer, &$partNames, &$types, $charName, $qualityName, $sampleName, $graph, $ccs) {
+    public function registerPartName($writer, &$partNames, &$types, $charName, $qualityName, $sampleName, $graph, $ccs)
+    {
         $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
         if (strpos($qualityName, 'distance_of_') !== false) {
             $qualityName = str_replace('distance_of_', 'distance_between_', $qualityName);
         }
-        if (strstr($charName,'plant')){
-            $writer->addTriple($sampleName, ':has_quality', $ccs.$charName, $graph);
-        }
-        else {
+        if (strstr($charName, 'plant')) {
+            $writer->addTriple($sampleName, ':has_quality', $ccs . $charName, $graph);
+        } else {
             $partName = explode('_of_', $charName)[1];
             $partName = $this->partNameConverter($partName);
-            if (!array_search($partName, $partNames)){
+            if (!array_search($partName, $partNames)) {
                 array_push($partNames, $partName);
-                $writer->addTriple($sampleName, ':has_part', $ccs.$partName, $graph);
+                $writer->addTriple($sampleName, ':has_part', $ccs . $partName, $graph);
                 $this->registerType($writer, $types, $partName, $sampleName, $graph, $ccs);
             }
-            $writer->addTriple($ccs.$partName, ':has_quality', $ccs.$qualityName, $graph);
+            $writer->addTriple($ccs . $partName, ':has_quality', $ccs . $qualityName, $graph);
         }
         if (strpos($charName, 'distance_of_') !== false) {
             $charName = str_replace('distance_of_', 'distance_between_', $charName);
         }
-        $writer->addTriple($ccs.$qualityName, $a, ":$charName", $graph);
+        $writer->addTriple($ccs . $qualityName, $a, ":$charName", $graph);
     }
 
-    public function checkHavingUnit($charName) {
+    public function checkHavingUnit($charName)
+    {
         return startsWith($charName, 'length_of_')
-        || startsWith($charName, 'width_of_')
-        || startsWith($charName, 'number_of_')
-        || startsWith($charName, 'depth_of_')
-        || startsWith($charName, 'diameter_of_')
-        || startsWith($charName, 'distance_between_')
-        || startsWith($charName, 'distance_of_')
-        || startsWith($charName, 'count_of_')
-        || startsWith($charName, 'ratio_of_');
+            || startsWith($charName, 'width_of_')
+            || startsWith($charName, 'number_of_')
+            || startsWith($charName, 'depth_of_')
+            || startsWith($charName, 'diameter_of_')
+            || startsWith($charName, 'distance_between_')
+            || startsWith($charName, 'distance_of_')
+            || startsWith($charName, 'count_of_')
+            || startsWith($charName, 'ratio_of_');
     }
 
-    public function getSpecimenName($taxon) {
+    public function getSpecimenName($taxon)
+    {
         $words = explode(' ', strtolower($taxon));
         $str = '';
-        foreach($words as $word){
+        foreach ($words as $word) {
             $str .= substr($word, 0, 1);
         }
 
-        return $str.'s';
+        return $str . 's';
     }
 
-    public function getTrigDescription($userID, $taxons) {
+    public function getTrigDescription($userID, $taxons)
+    {
         $user = User::where('id', '=', $userID)->first();
         // $txid = $request->input('id');
         $txid = '';
-        if (array_key_exists( $user->taxon, $taxons) ){
+        if (array_key_exists($user->taxon, $taxons)) {
             $txid = $taxons[$user->taxon];
-        }
-        else {
+        } else {
             $txid = $this->getTaxonID($userID);
             $taxons[$user->taxon] = $txid;
         }
@@ -2312,25 +2412,25 @@ class HomeController extends Controller
 
         $writer = new TriGWriter([
             "prefixes" => [
-                "xsd"   =>   "http://www.w3.org/2001/XMLSchema#",
-                "rdfs"  =>   "http://www.w3.org/2000/01/rdf-schema#",
-                "rdf"   =>   "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-                "owl"   =>   "http://www.w3.org/2002/07/owl#",
-                "iao"   =>   "http://purl.obolibrary.org/obo/iao.owl#",
-                "dc"    =>   "http://purl.org/dc/terms/",
+                "xsd" => "http://www.w3.org/2001/XMLSchema#",
+                "rdfs" => "http://www.w3.org/2000/01/rdf-schema#",
+                "rdf" => "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+                "owl" => "http://www.w3.org/2002/07/owl#",
+                "iao" => "http://purl.obolibrary.org/obo/iao.owl#",
+                "dc" => "http://purl.org/dc/terms/",
 
                 #utility namespaces
-                "obi"   =>  "http://purl.obolibrary.org/obo/obi.owl#",
-                "uo"    =>  "http://purl.obolibrary.org/obo/uo.owl#",
-                "ncbi"  =>  "https://www.ncbi.nlm.nih.gov/Taxonomy#",
-                "mo"    =>  "http://biosemantics.arizona.edu/ontologies/modifierlist#",
+                "obi" => "http://purl.obolibrary.org/obo/obi.owl#",
+                "uo" => "http://purl.obolibrary.org/obo/uo.owl#",
+                "ncbi" => "https://www.ncbi.nlm.nih.gov/Taxonomy#",
+                "mo" => "http://biosemantics.arizona.edu/ontologies/modifierlist#",
 
                 #domain namespaces
-                ""      =>  "http://biosemantics.arizona.edu/ontologies/carex#",
-                "kb"    =>  "http://biosemantics.arizona.edu/kb/carex#",
-                "data"  =>  "http://biosemantics.arizona.edu/kb/data#",
-                "app"   =>  "http://shark.sbs.arizona.edu/chrecorder#",
-                ],
+                "" => "http://biosemantics.arizona.edu/ontologies/carex#",
+                "kb" => "http://biosemantics.arizona.edu/kb/carex#",
+                "data" => "http://biosemantics.arizona.edu/kb/data#",
+                "app" => "http://shark.sbs.arizona.edu/chrecorder#",
+            ],
             "format" => "trig" //Other possible values: n-quads, trig or turtle
         ]);
 
@@ -2342,95 +2442,91 @@ class HomeController extends Controller
 
 
         $index = 1;
-        for ($i = $headers->count() - 1 ; $i >= 0 ; $i--) {
+        for ($i = $headers->count() - 1; $i >= 0; $i--) {
             $header = $headers[$i];
-            if ($header->id != 1){
-                $writer->addPrefix($specimenName . $index ++, "http://biosemantics.arizona.edu/kb/".str_replace(' ','/',strtolower($user->taxon))."/" .str_replace(' ', '_', $header->header). "#");
+            if ($header->id != 1) {
+                $writer->addPrefix($specimenName . $index++, "http://biosemantics.arizona.edu/kb/" . str_replace(' ', '/', strtolower($user->taxon)) . "/" . str_replace(' ', '_', $header->header) . "#");
             }
         }
 
-        $graph = 'data:graph_'.str_replace(' ','_',strtolower($user->taxon)).'_'.explode('@', $user->email)[0];
+        $graph = 'data:graph_' . str_replace(' ', '_', strtolower($user->taxon)) . '_' . explode('@', $user->email)[0];
 
         $index = 0;
         $partNames = [];
-        for ($i = $headers->count() - 1 ; $i >= 0 ; $i--) {
+        for ($i = $headers->count() - 1; $i >= 0; $i--) {
             $types = [];
             $header = $headers[$i];
-            if ($header->id == 1){
+            if ($header->id == 1) {
                 continue;
             }
 
-            $index ++;
+            $index++;
 
             $sampleName = "kb:" . str_replace(' ', '', ucwords(strtolower($user->taxon))) . str_replace(' ', '_', $header->header);
             $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-            $writer->addTriple($sampleName, "rdf:label",        "\"". $header->header . " for ". $user->taxon . "\"",   $graph);
-            $writer->addTriple($sampleName, "rdf:id",           "\"some_Unique_ID_4_This_Sample\"", $graph);
-            $writer->addTriple($sampleName, "iao:is_about",     "ncbi:txid$txid",                  $graph);
-            $writer->addTriple($sampleName, ":specimen_of",     ":".str_replace(' ', '_', ucwords(strtolower($user->taxon))),                  $graph);
-            $writer->addTriple($sampleName, $a,                 "obi:specimen",                     $graph);
+            $writer->addTriple($sampleName, "rdf:label", "\"" . $header->header . " for " . $user->taxon . "\"", $graph);
+            $writer->addTriple($sampleName, "rdf:id", "\"some_Unique_ID_4_This_Sample\"", $graph);
+            $writer->addTriple($sampleName, "iao:is_about", "ncbi:txid$txid", $graph);
+            $writer->addTriple($sampleName, ":specimen_of", ":" . str_replace(' ', '_', ucwords(strtolower($user->taxon))), $graph);
+            $writer->addTriple($sampleName, $a, "obi:specimen", $graph);
 
-            foreach( $values as $character){
-                foreach( $character as $sample) {
-                    if ($sample->value != '' && $sample->value != null && $sample->header_id == $header->id){
-                        $charName = str_replace('-','_',str_replace(' ','_',strtolower($characterName[$sample->character_id])));
-                        if (strpos($charName, '_between_') !== false){
+            foreach ($values as $character) {
+                foreach ($character as $sample) {
+                    if ($sample->value != '' && $sample->value != null && $sample->header_id == $header->id) {
+                        $charName = str_replace('-', '_', str_replace(' ', '_', strtolower($characterName[$sample->character_id])));
+                        if (strpos($charName, '_between_') !== false) {
                             $charName = str_replace('_between_', '_of_', $charName);
                         };
-                        if ($charName == 'shape_of_stem_in_cross_section'){
+                        if ($charName == 'shape_of_stem_in_cross_section') {
                             $charName = 'shape_of_stem_in_transverse_section';
                         }
-                        if ($this->checkHavingUnit($charName)){
-                            $this->registerPartName($writer, $partNames, $types, $charName, $charName, $sampleName, $graph, $specimenName.$index.":");
+                        if ($this->checkHavingUnit($charName)) {
+                            $this->registerPartName($writer, $partNames, $types, $charName, $charName, $sampleName, $graph, $specimenName . $index . ":");
                             if (strpos($charName, 'distance_of_') !== false) {
                                 $charName = str_replace('distance_of_', 'distance_between_', $charName);
                             }
                             $sample->value = $sample->value + 0.0;
 
-                            $writer->addTriple($specimenName."$index:$charName", ":has_value", "\"$sample->value\"^^xsd:float", $graph);
+                            $writer->addTriple($specimenName . "$index:$charName", ":has_value", "\"$sample->value\"^^xsd:float", $graph);
                             if (!startsWith($charName, 'number_of_')
-                                &&!startsWith($charName, 'count_of_')
-                                &&!startsWith($charName, 'ratio_of_')
-                            ){
-                                $writer->addTriple($specimenName."$index:$charName", ":has_unit", "uo:$sample->unit", $graph);
+                                && !startsWith($charName, 'count_of_')
+                                && !startsWith($charName, 'ratio_of_')
+                            ) {
+                                $writer->addTriple($specimenName . "$index:$charName", ":has_unit", "uo:$sample->unit", $graph);
                             }
-                        }
-                        else {
+                        } else {
                             if ($colDetails[$sample->id] || $nonColDetails[$sample->id]) {
-                                $cols = startsWith($charName,'color_of_') ? $colDetails[$sample->id] : $nonColDetails[$sample->id];
-                                for ($j = 0 ; $j < count($cols) ; $j ++ ) {
-                                    if ($cols[$j]->negation){
+                                $cols = startsWith($charName, 'color_of_') ? $colDetails[$sample->id] : $nonColDetails[$sample->id];
+                                for ($j = 0; $j < count($cols); $j++) {
+                                    if ($cols[$j]->negation) {
                                         $partName = explode('_of_', $charName)[1];
                                         $partName = $this->partNameConverter($partName);
-                                        if (startsWith($charName,'color_of_')){
-                                            $this->writeColorDetail($writer, $specimenName."$index:".str_replace(' ','_',$this->getColorDetailText($cols[$j])), $cols[$j], $graph);
-                                        }
-                                        else {
-                                            $this->writeNonColorDetail($writer, $specimenName."$index:".str_replace(' ','_',$this->getNonColorDetailText($cols[$j])), $cols[$j], $graph);
+                                        if (startsWith($charName, 'color_of_')) {
+                                            $this->writeColorDetail($writer, $specimenName . "$index:" . str_replace(' ', '_', $this->getColorDetailText($cols[$j])), $cols[$j], $graph);
+                                        } else {
+                                            $this->writeNonColorDetail($writer, $specimenName . "$index:" . str_replace(' ', '_', $this->getNonColorDetailText($cols[$j])), $cols[$j], $graph);
                                         }
                                         $writer->addTriple("[]", "rdf:type", "owl:NegativePropertyAssertion", $graph);
-                                        $writer->addTriple("", "owl:sourceIndividual", $specimenName."$index:".$partName, $graph);
-                                        $writer->addTriple("", "owl:sourceIndividual", $specimenName."$index:".$partName, $graph);
+                                        $writer->addTriple("", "owl:sourceIndividual", $specimenName . "$index:" . $partName, $graph);
+                                        $writer->addTriple("", "owl:sourceIndividual", $specimenName . "$index:" . $partName, $graph);
                                         $writer->addTriple("", "owl:assertionProperty", ":has_quality", $graph);
 
-                                        if (startsWith($charName,'color_of_')){
-                                            $writer->addTriple("", "owl:targetIndividual", "$specimenName"."$index:".str_replace(' ','_',$this->getColorDetailText($cols[$j])), $graph);
-                                        }
-                                        else {
-                                            $writer->addTriple("", "owl:targetIndividual", "$specimenName"."$index:".str_replace(' ','_',$this->getNonColorDetailText($cols[$j])), $graph);
+                                        if (startsWith($charName, 'color_of_')) {
+                                            $writer->addTriple("", "owl:targetIndividual", "$specimenName" . "$index:" . str_replace(' ', '_', $this->getColorDetailText($cols[$j])), $graph);
+                                        } else {
+                                            $writer->addTriple("", "owl:targetIndividual", "$specimenName" . "$index:" . str_replace(' ', '_', $this->getNonColorDetailText($cols[$j])), $graph);
                                         }
                                         continue;
                                     }
-                                    $qualityName = $charName."_".($j + 1);
-                                    if (count($cols) == 1){
+                                    $qualityName = $charName . "_" . ($j + 1);
+                                    if (count($cols) == 1) {
                                         $qualityName = $charName;
                                     }
-                                    $this->registerPartName($writer, $partNames, $types, $charName, $qualityName, $sampleName, $graph, $specimenName."$index:");
-                                    if (startsWith($charName,'color_of_')){
-                                        $this->writeColorDetail($writer, $specimenName."$index:".$qualityName, $cols[$j], $graph);
-                                    }
-                                    else {
-                                        $this->writeNonColorDetail($writer, $specimenName."$index:".$qualityName, $cols[$j], $graph);
+                                    $this->registerPartName($writer, $partNames, $types, $charName, $qualityName, $sampleName, $graph, $specimenName . "$index:");
+                                    if (startsWith($charName, 'color_of_')) {
+                                        $this->writeColorDetail($writer, $specimenName . "$index:" . $qualityName, $cols[$j], $graph);
+                                    } else {
+                                        $this->writeNonColorDetail($writer, $specimenName . "$index:" . $qualityName, $cols[$j], $graph);
                                     }
                                 }
                             }
@@ -2440,8 +2536,8 @@ class HomeController extends Controller
             }
         }
 
-        $txt = $graph . " dc:creator app:". explode('@', $user->email)[0] . ";\n";
-        $txt .= "\t:export_date \"".date("Y-m-d")."T".date("h:i:s")."\"^^xsd:dateTime.";
+        $txt = $graph . " dc:creator app:" . explode('@', $user->email)[0] . ";\n";
+        $txt .= "\t:export_date \"" . date("Y-m-d") . "T" . date("h:i:s") . "\"^^xsd:dateTime.";
 
         return [
             'description' => $writer->end() . $txt,
@@ -2449,14 +2545,15 @@ class HomeController extends Controller
         ];
     }
 
-    public function exportDescriptionTrig(Request $request) {
+    public function exportDescriptionTrig(Request $request)
+    {
 
         $user = User::where('id', '=', Auth::id())->first();
 
         $fileName = $user->taxon;
-        $file = fopen($fileName.".trig", "w") or die("Unable to open file!");
+        $file = fopen($fileName . ".trig", "w") or die("Unable to open file!");
 
-        $taxons=[];
+        $taxons = [];
         $result = $this->getTrigDescription(Auth::id(), $taxons)['description'];
 
         fwrite($file, $result);
@@ -2468,12 +2565,13 @@ class HomeController extends Controller
         fclose($file);
 
         return array(
-            'is_success'    =>  1,
-            'doc_url'       =>  '/chrecorder/public/' . $fileName .'.trig',
+            'is_success' => 1,
+            'doc_url' => '/chrecorder/public/' . $fileName . '.trig',
         );
     }
 
-    public function getTaxonID($userId) {
+    public function getTaxonID($userId)
+    {
 
         $fetchdata = [];
         $user = User::where('id', '=', $userId)->first();
@@ -2484,7 +2582,7 @@ class HomeController extends Controller
         // echo $response->getStatusCode();
         // Initiate each request but do not block
         $promises = [
-            'taxonId' => $client->getAsync('/entrez/eutils/esearch.fcgi',['query' => ['db' => 'taxonomy', 'term' => $user->taxon]]),
+            'taxonId' => $client->getAsync('/entrez/eutils/esearch.fcgi', ['query' => ['db' => 'taxonomy', 'term' => $user->taxon]]),
         ];
 
         // Wait for the requests to complete; throws a ConnectException
@@ -2506,21 +2604,22 @@ class HomeController extends Controller
         //the purposes of testing.
         $jsonArray = json_decode($jsonString, true);
 
-        if (count($jsonArray['IdList'])){
+        if (count($jsonArray['IdList'])) {
             return $jsonArray['IdList']['Id'];
-        }
-        else {
+        } else {
             return "unkown";
         }
     }
-    public function test() {
+
+    public function test()
+    {
 
         $users = User::where('password', '!=', '')->get();
         {
             $client = new Client(['base_uri' => 'https://shark.sbs.arizona.edu:8443/blazegraph/namespace/kb/']);
 
             $promises = [
-                'taxonId' => $client->postAsync('sparql',['form_params' => ['update' => 'DELETE { ?book ?p ?v } WHERE { ?book ?p ?v .}']]),
+                'taxonId' => $client->postAsync('sparql', ['form_params' => ['update' => 'DELETE { ?book ?p ?v } WHERE { ?book ?p ?v .}']]),
             ];
 
             $responses = Promise\unwrap($promises);
@@ -2528,18 +2627,18 @@ class HomeController extends Controller
             // Wait for the requests to complete, even if some of them fail
             $responses = Promise\settle($promises)->wait();
         }
-        $taxons=[];
-        foreach($users as $user) {
+        $taxons = [];
+        foreach ($users as $user) {
             $client = new Client(['base_uri' => 'https://shark.sbs.arizona.edu:8443/blazegraph/namespace/kb/']);
 
             $result = $this->getTrigDescription($user->id, $taxons);
             echo $user->id . '<br/>';
-            echo $result['description'] .'<br/>';
-            echo implode("<br/>" ,$result['taxons']) .'<br/>';
+            echo $result['description'] . '<br/>';
+            echo implode("<br/>", $result['taxons']) . '<br/>';
             $taxons = $result['taxons'];
             $query = 'insert data{' . $result['description'] . '}';
             $promises = [
-                'taxonId' => $client->postAsync('sparql',['form_params' => ['update' => $query]]),
+                'taxonId' => $client->postAsync('sparql', ['form_params' => ['update' => $query]]),
             ];
 
             $responses = Promise\unwrap($promises);
@@ -2560,7 +2659,7 @@ class HomeController extends Controller
             $taxons = $result['taxons'];
             $query = 'insert data{' . $read . '}';
             $promises = [
-                'taxonId' => $client->postAsync('sparql',['form_params' => ['update' => $query]]),
+                'taxonId' => $client->postAsync('sparql', ['form_params' => ['update' => $query]]),
             ];
 
             $responses = Promise\unwrap($promises);
@@ -2570,55 +2669,75 @@ class HomeController extends Controller
         }
 
     }
-    public function setIRI(Request $request) {
+
+    public function setIRI(Request $request)
+    {
         $standardCharacter = StandardCharacter::find($request->input('id'));
         if ($standardCharacter) {
             $standardCharacter->IRI = $request->input('IRI');
             $standardCharacter->save();
         }
     }
-    public function setCharacterIRI(Request $request) {
+
+    public function setCharacterIRI(Request $request)
+    {
         Character::where('name', '=', $request->input('name'))->update(['IRI' => $request->input('IRI')]);
     }
-    public function getCharacterNames(Request $request) {
+
+    public function getCharacterNames(Request $request)
+    {
         return Character::select('name')->distinct('name')->get();
     }
-    public function setNonColorValueIRI(Request $request) {
+
+    public function setNonColorValueIRI(Request $request)
+    {
         $id = $request->input('id');
         $main_value_IRI = $request->input('main_value_IRI');
         NonColorDetails::where('id', '=', $id)->update(['main_value_IRI' => $main_value_IRI]);
     }
-    public function setColorBrightnessIRI(Request $request) {
+
+    public function setColorBrightnessIRI(Request $request)
+    {
         $id = $request->input('id');
         $main_value_IRI = $request->input('IRI');
         ColorDetails::where('id', '=', $id)->update(['brightness_IRI' => $main_value_IRI]);
     }
-    public function setColorReflectanceIRI(Request $request) {
+
+    public function setColorReflectanceIRI(Request $request)
+    {
         $id = $request->input('id');
         $main_value_IRI = $request->input('IRI');
         ColorDetails::where('id', '=', $id)->update(['reflectance_IRI' => $main_value_IRI]);
     }
-    public function setColorSaturationIRI(Request $request) {
+
+    public function setColorSaturationIRI(Request $request)
+    {
         $id = $request->input('id');
         $main_value_IRI = $request->input('IRI');
         ColorDetails::where('id', '=', $id)->update(['saturation_IRI' => $main_value_IRI]);
     }
-    public function setColorColoredIRI(Request $request) {
+
+    public function setColorColoredIRI(Request $request)
+    {
         $id = $request->input('id');
         $main_value_IRI = $request->input('IRI');
         ColorDetails::where('id', '=', $id)->update(['colored_IRI' => $main_value_IRI]);
     }
-    public function setColorMultiColoredIRI(Request $request) {
+
+    public function setColorMultiColoredIRI(Request $request)
+    {
         $id = $request->input('id');
         $main_value_IRI = $request->input('IRI');
         ColorDetails::where('id', '=', $id)->update(['multi_colored_IRI' => $main_value_IRI]);
     }
-    public function resolveCharacter(Request $request) {
+
+    public function resolveCharacter(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
-        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $deprecatedIRI = $request->input('deprecatedIRI');
         $replacementTerm = $request->input('replacementTerm');
-        $replacementIRI  = $request->input('replacementIRI');
+        $replacementIRI = $request->input('replacementIRI');
         $characterResult = Character::where([['IRI', '=', $deprecatedIRI], ['owner_name', '=', $username]])->get();
         foreach ($characterResult as $eachCharacter) {
             $eachCharacter->IRI = $replacementIRI;
@@ -2665,11 +2784,13 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function resolveNonColorValue(Request $request) {
+
+    public function resolveNonColorValue(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
-        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $deprecatedIRI = $request->input('deprecatedIRI');
         $replacementTerm = $request->input('replacementTerm');
-        $replacementIRI  = $request->input('replacementIRI');
+        $replacementIRI = $request->input('replacementIRI');
         $nonColorsResult = NonColorDetails::where('main_value_IRI', '=', $deprecatedIRI)->get();
         foreach ($nonColorsResult as $eachValue) {
             $value = Value::where('id', '=', $eachValue->value_id)->first();
@@ -2694,11 +2815,13 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function resolveColorBrightness(Request $request) {
+
+    public function resolveColorBrightness(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
-        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $deprecatedIRI = $request->input('deprecatedIRI');
         $replacementTerm = $request->input('replacementTerm');
-        $replacementIRI  = $request->input('replacementIRI');
+        $replacementIRI = $request->input('replacementIRI');
         $colorsResult = ColorDetails::where('brightness_IRI', '=', $deprecatedIRI)->get();
         foreach ($colorsResult as $eachValue) {
             $value = Value::where('id', '=', $eachValue->value_id)->first();
@@ -2723,11 +2846,13 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function resolveColorReflectance(Request $request) {
+
+    public function resolveColorReflectance(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
-        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $deprecatedIRI = $request->input('deprecatedIRI');
         $replacementTerm = $request->input('replacementTerm');
-        $replacementIRI  = $request->input('replacementIRI');
+        $replacementIRI = $request->input('replacementIRI');
         $colorsResult = ColorDetails::where('reflectance_IRI', '=', $deprecatedIRI)->get();
         foreach ($colorsResult as $eachValue) {
             $value = Value::where('id', '=', $eachValue->value_id)->first();
@@ -2752,11 +2877,13 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function resolveColorSaturation(Request $request) {
+
+    public function resolveColorSaturation(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
-        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $deprecatedIRI = $request->input('deprecatedIRI');
         $replacementTerm = $request->input('replacementTerm');
-        $replacementIRI  = $request->input('replacementIRI');
+        $replacementIRI = $request->input('replacementIRI');
         $colorsResult = ColorDetails::where('saturation_IRI', '=', $deprecatedIRI)->get();
         foreach ($colorsResult as $eachValue) {
             $value = Value::where('id', '=', $eachValue->value_id)->first();
@@ -2781,11 +2908,13 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function resolveColorColored(Request $request) {
+
+    public function resolveColorColored(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
-        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $deprecatedIRI = $request->input('deprecatedIRI');
         $replacementTerm = $request->input('replacementTerm');
-        $replacementIRI  = $request->input('replacementIRI');
+        $replacementIRI = $request->input('replacementIRI');
         $colorsResult = ColorDetails::where('colored_IRI', '=', $deprecatedIRI)->get();
         foreach ($colorsResult as $eachValue) {
             $value = Value::where('id', '=', $eachValue->value_id)->first();
@@ -2810,11 +2939,13 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function resolveColorMultiColored(Request $request) {
+
+    public function resolveColorMultiColored(Request $request)
+    {
         $user = User::where('id', '=', Auth::id())->first();
-        $deprecatedIRI   = $request->input('deprecatedIRI');
+        $deprecatedIRI = $request->input('deprecatedIRI');
         $replacementTerm = $request->input('replacementTerm');
-        $replacementIRI  = $request->input('replacementIRI');
+        $replacementIRI = $request->input('replacementIRI');
         $colorsResult = ColorDetails::where('multi_colored_IRI', '=', $deprecatedIRI)->get();
         foreach ($colorsResult as $eachValue) {
             $value = Value::where('id', '=', $eachValue->value_id)->first();
@@ -2839,12 +2970,15 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function getMatrixNames(Request $request) {
+
+    public function getMatrixNames(Request $request)
+    {
         $names = Matrix::where('user_id', '=', Auth::id())->select('matrix_name')->get();
         return $names;
     }
 
-    public function nameMatrixFunc($matrixName) {
+    public function nameMatrixFunc($matrixName)
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
         $fakeUser = User::create([
@@ -2860,14 +2994,14 @@ class HomeController extends Controller
             'named_user_id' => $fakeUser['id']
         ]);
 
-        $usertags = UserTag::where('user_id', '=', Auth::id())->select('user_id','tag_name')->get();
+        $usertags = UserTag::where('user_id', '=', Auth::id())->select('user_id', 'tag_name')->get();
         $newUserTags = [];
         foreach ($usertags as $usertag) {
             array_push($newUserTags, [
                 'user_id' => $fakeUser['id'],
                 'tag_name' => $usertag['tag_name'],
-                'created_at' => date("Y-m-d")." ".date("H:i:s"),
-                'updated_at' => date("Y-m-d")." ".date("H:i:s")
+                'created_at' => date("Y-m-d") . " " . date("H:i:s"),
+                'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
         }
         UserTag::insert($newUserTags);
@@ -2876,27 +3010,27 @@ class HomeController extends Controller
         $newCharacters = [];
         foreach ($characters as $eachCharacter) {
             array_push($newCharacters, [
-                'name'           => $eachCharacter['name'],
-                'IRI'            => $eachCharacter['IRI'],
-                'parent_term'    => $eachCharacter['parent_term'],
-                'method_from'    => $eachCharacter['method_from'],
-                'method_to'      => $eachCharacter['method_to'],
+                'name' => $eachCharacter['name'],
+                'IRI' => $eachCharacter['IRI'],
+                'parent_term' => $eachCharacter['parent_term'],
+                'method_from' => $eachCharacter['method_from'],
+                'method_to' => $eachCharacter['method_to'],
                 'method_include' => $eachCharacter['method_include'],
                 'method_exclude' => $eachCharacter['method_exclude'],
-                'method_where'   => $eachCharacter['method_where'],
-                'method_as'      => $eachCharacter['method_as'],
-                'creator'        => $eachCharacter['creator'],
-                'unit'           => $eachCharacter['unit'],
-                'standard'       => $eachCharacter['standard'],
-                'username'       => $eachCharacter['username'],
-                'owner_name'     => $username . '_ver_' . $matrixName,
-                'standard_tag'   => $eachCharacter['standard_tag'],
-                'summary'        => $eachCharacter['summary'],
-                'usage_count'    => $eachCharacter['usage_count'],
-                'order'          => $eachCharacter['order'],
-                'show_flag'      => $eachCharacter['show_flag'],
-                'created_at'     => date("Y-m-d")." ".date("H:i:s"),
-                'updated_at'     => date("Y-m-d")." ".date("H:i:s")
+                'method_where' => $eachCharacter['method_where'],
+                'method_as' => $eachCharacter['method_as'],
+                'creator' => $eachCharacter['creator'],
+                'unit' => $eachCharacter['unit'],
+                'standard' => $eachCharacter['standard'],
+                'username' => $eachCharacter['username'],
+                'owner_name' => $username . '_ver_' . $matrixName,
+                'standard_tag' => $eachCharacter['standard_tag'],
+                'summary' => $eachCharacter['summary'],
+                'usage_count' => $eachCharacter['usage_count'],
+                'order' => $eachCharacter['order'],
+                'show_flag' => $eachCharacter['show_flag'],
+                'created_at' => date("Y-m-d") . " " . date("H:i:s"),
+                'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
         }
         Character::insert($newCharacters);
@@ -2922,9 +3056,9 @@ class HomeController extends Controller
                     $eachCharacter['usage_count'] == $eachNewCharacter['usage_count'] &&
                     $eachCharacter['order'] == $eachNewCharacter['order'] &&
                     $eachCharacter['show_flag'] == $eachNewCharacter['show_flag']) {
-                        $characterIds[$eachCharacter['id']] = $eachNewCharacter['id'];
-                        break;
-                    }
+                    $characterIds[$eachCharacter['id']] = $eachNewCharacter['id'];
+                    break;
+                }
             }
         }
 
@@ -2932,10 +3066,10 @@ class HomeController extends Controller
         $newHeaders = [];
         foreach ($headers as $eachHeader) {
             array_push($newHeaders, [
-                'header'        => $eachHeader['header'],
-                'user_id'       => $fakeUser['id'],
-                'created_at'    => date("Y-m-d")." ".date("H:i:s"),
-                'updated_at'    => date("Y-m-d")." ".date("H:i:s")
+                'header' => $eachHeader['header'],
+                'user_id' => $fakeUser['id'],
+                'created_at' => date("Y-m-d") . " " . date("H:i:s"),
+                'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
         }
         Header::insert($newHeaders);
@@ -2952,69 +3086,69 @@ class HomeController extends Controller
         }
 
         $values = Value::join('characters', 'characters.id', '=', 'values.character_id')
-                        ->where('characters.owner_name', '=', $username)
-                        ->select('values.id as id',
-                                 'values.character_id as character_id',
-                                 'values.header_id as header_id',
-                                 'values.value as value')
-                        ->get();
+            ->where('characters.owner_name', '=', $username)
+            ->select('values.id as id',
+                'values.character_id as character_id',
+                'values.header_id as header_id',
+                'values.value as value')
+            ->get();
         $newValues = [];
         foreach ($values as $eachValue) {
             array_push($newValues, [
-                'character_id'   => $characterIds[$eachValue['character_id']],
-                'header_id'      => $eachValue['header_id'] == 1 ? 1 : $headerIds[$eachValue['header_id']],
-                'value'          => $eachValue['value'],
-                'created_at'     => date("Y-m-d")." ".date("H:i:s"),
-                'updated_at'     => date("Y-m-d")." ".date("H:i:s")
+                'character_id' => $characterIds[$eachValue['character_id']],
+                'header_id' => $eachValue['header_id'] == 1 ? 1 : $headerIds[$eachValue['header_id']],
+                'value' => $eachValue['value'],
+                'created_at' => date("Y-m-d") . " " . date("H:i:s"),
+                'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
         }
         Value::insert($newValues);
 
         $newValues = Value::join('characters', 'characters.id', '=', 'values.character_id')
-                        ->where('characters.owner_name', '=', $username . '_ver_' . $matrixName)
-                        ->select('values.id as id',
-                                 'values.character_id as character_id',
-                                 'values.header_id as header_id',
-                                 'values.value as value')
-                        ->get();
+            ->where('characters.owner_name', '=', $username . '_ver_' . $matrixName)
+            ->select('values.id as id',
+                'values.character_id as character_id',
+                'values.header_id as header_id',
+                'values.value as value')
+            ->get();
         $valueIds = [];
         foreach ($values as $eachValue) {
             foreach ($newValues as $eachNewValue) {
                 if ($eachNewValue['character_id'] == $characterIds[$eachValue['character_id']] &&
                     ($eachValue['header_id'] == 1 || $eachNewValue['header_id'] == $headerIds[$eachValue['header_id']])) {
-                        $valueIds[$eachValue['id']] = $eachNewValue['id'];
-                        break;
-                    }
+                    $valueIds[$eachValue['id']] = $eachNewValue['id'];
+                    break;
+                }
             }
         }
 
         $valueIdsResults = Value::join('headers', 'headers.id', '=', 'values.header_id')->where('headers.user_id', '=', $user['id'])->select('values.id')->get();
         $ids = [];
-        foreach($valueIdsResults as $value){
+        foreach ($valueIdsResults as $value) {
             array_push($ids, $value->id);
         }
         $colorDetails = ColorDetails::whereIn('value_id', $ids)->get();
         $newColorDetails = [];
         foreach ($colorDetails as $eachColorDetail) {
             array_push($newColorDetails, [
-                'value_id'              => $valueIds[$eachColorDetail['value_id']],
-                'negation'              => $eachColorDetail['negation'],
-                'pre_constraint'        => $eachColorDetail['pre_constraint'],
-                'certainty_constraint'  => $eachColorDetail['certainty_constraint'],
-                'degree_constraint'     => $eachColorDetail['degree_constraint'],
-                'brightness'            => $eachColorDetail['brightness'],
-                'brightness_IRI'        => $eachColorDetail['brightness_IRI'],
-                'reflectance'           => $eachColorDetail['reflectance'],
-                'reflectance_IRI'       => $eachColorDetail['reflectance_IRI'],
-                'saturation'            => $eachColorDetail['saturation'],
-                'saturation_IRI'        => $eachColorDetail['saturation_IRI'],
-                'colored'               => $eachColorDetail['colored'],
-                'colored_IRI'           => $eachColorDetail['colored_IRI'],
-                'multi_colored'         => $eachColorDetail['multi_colored'],
-                'multi_colored_IRI'     => $eachColorDetail['multi_colored_IRI'],
-                'post_constraint'       => $eachColorDetail['post_constraint'],
-                'created_at'            => date("Y-m-d")." ".date("H:i:s"),
-                'updated_at'            => date("Y-m-d")." ".date("H:i:s")
+                'value_id' => $valueIds[$eachColorDetail['value_id']],
+                'negation' => $eachColorDetail['negation'],
+                'pre_constraint' => $eachColorDetail['pre_constraint'],
+                'certainty_constraint' => $eachColorDetail['certainty_constraint'],
+                'degree_constraint' => $eachColorDetail['degree_constraint'],
+                'brightness' => $eachColorDetail['brightness'],
+                'brightness_IRI' => $eachColorDetail['brightness_IRI'],
+                'reflectance' => $eachColorDetail['reflectance'],
+                'reflectance_IRI' => $eachColorDetail['reflectance_IRI'],
+                'saturation' => $eachColorDetail['saturation'],
+                'saturation_IRI' => $eachColorDetail['saturation_IRI'],
+                'colored' => $eachColorDetail['colored'],
+                'colored_IRI' => $eachColorDetail['colored_IRI'],
+                'multi_colored' => $eachColorDetail['multi_colored'],
+                'multi_colored_IRI' => $eachColorDetail['multi_colored_IRI'],
+                'post_constraint' => $eachColorDetail['post_constraint'],
+                'created_at' => date("Y-m-d") . " " . date("H:i:s"),
+                'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
         }
         ColorDetails::insert($newColorDetails);
@@ -3023,16 +3157,16 @@ class HomeController extends Controller
         $newNonColorDetails = [];
         foreach ($nonColorDetails as $eachNonColorDetail) {
             array_push($newNonColorDetails, [
-                'value_id'              => $valueIds[$eachNonColorDetail['value_id']],
-                'negation'              => $eachNonColorDetail['negation'],
-                'pre_constraint'        => $eachNonColorDetail['pre_constraint'],
-                'certainty_constraint'  => $eachNonColorDetail['certainty_constraint'],
-                'degree_constraint'     => $eachNonColorDetail['degree_constraint'],
-                'main_value'            => $eachNonColorDetail['main_value'],
-                'main_value_IRI'        => $eachNonColorDetail['main_value_IRI'],
-                'post_constraint'       => $eachNonColorDetail['post_constraint'],
-                'created_at'            => date("Y-m-d")." ".date("H:i:s"),
-                'updated_at'            => date("Y-m-d")." ".date("H:i:s")
+                'value_id' => $valueIds[$eachNonColorDetail['value_id']],
+                'negation' => $eachNonColorDetail['negation'],
+                'pre_constraint' => $eachNonColorDetail['pre_constraint'],
+                'certainty_constraint' => $eachNonColorDetail['certainty_constraint'],
+                'degree_constraint' => $eachNonColorDetail['degree_constraint'],
+                'main_value' => $eachNonColorDetail['main_value'],
+                'main_value_IRI' => $eachNonColorDetail['main_value_IRI'],
+                'post_constraint' => $eachNonColorDetail['post_constraint'],
+                'created_at' => date("Y-m-d") . " " . date("H:i:s"),
+                'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
         }
         NonColorDetails::insert($newNonColorDetails);
@@ -3056,16 +3190,19 @@ class HomeController extends Controller
         return $data;
     }
 
-    public function nameMatrix(Request $request) {
+    public function nameMatrix(Request $request)
+    {
         $matrixName = $request->input('matrixname');
         $data = $this->nameMatrixFunc($matrixName);
         return $data;
     }
-    public function importMatrix(Request $request) {
+
+    public function importMatrix(Request $request)
+    {
         $matrixName = $request->input('matrixname');
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
-        $versionUser = User::where('email', '=',  $username . '_ver_' . $matrixName . '@email.com')->first();
+        $versionUser = User::where('email', '=', $username . '_ver_' . $matrixName . '@email.com')->first();
 
         Matrix::where('user_id', '=', $user['id'])->update(['user_id' => $versionUser['id']]);
         User::where('id', '=', $user['id'])->delete();
@@ -3079,7 +3216,7 @@ class HomeController extends Controller
             'password' => $user['password'],
             'remember_token' => $user['remember_token'],
             'taxon' => $user['taxon']
-            ]);
+        ]);
         Character::where('owner_name', '=', $username . '_ver_' . $matrixName)->update(['owner_name' => $username]);
 
         $this->nameMatrixFunc($matrixName);
@@ -3102,11 +3239,13 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function overwriteMatrix(Request $request) {
+
+    public function overwriteMatrix(Request $request)
+    {
         $matrixName = $request->input('matrixname');
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
-        $versionUser = User::where('email', '=',  $username . '_ver_' . $matrixName . '@email.com')->first();
+        $versionUser = User::where('email', '=', $username . '_ver_' . $matrixName . '@email.com')->first();
 
         Matrix::where([['user_id', '=', $user['id']], ['matrix_name', '=', $matrixName]])->delete();
         User::where('id', '=', $versionUser['id'])->delete();
@@ -3131,7 +3270,9 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function getTaxons(Request $request) {
+
+    public function getTaxons(Request $request)
+    {
         $taxons = User::distinct()->get(['taxon']);
 
         $data = [
@@ -3140,7 +3281,9 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function resetSystem(Request $request) {
+
+    public function resetSystem(Request $request)
+    {
         Character::whereraw('1')->delete();
         ColorDetails::whereraw('1')->delete();
         NonColorDetails::whereraw('1')->delete();
@@ -3149,7 +3292,9 @@ class HomeController extends Controller
         UserTag::whereraw('1')->delete();
         User::where('password', '')->delete();
     }
-    public function updateStandardCharacter() {
+
+    public function updateStandardCharacter()
+    {
         $client = new Client(['base_uri' => 'http://shark.sbs.arizona.edu:8080']);
 
         // $response = $client->request('GET', 'http://github.com');
@@ -3192,7 +3337,7 @@ class HomeController extends Controller
                     'show_flag' => 1,
                 ];
                 foreach ($character['resultAnnotations'] as $property) {
-                    switch($property['property']) {
+                    switch ($property['property']) {
                         case 'http://www.geneontology.org/formats/oboInOwl#id':
                             $updatedCharacter['IRI'] = $property['value'];
                             break;
@@ -3201,13 +3346,13 @@ class HomeController extends Controller
                             $updatedCharacter['username'] = $property['value'];
                             break;
                         case 'http://www.geneontology.org/formats/oboInOwl#creation_date':
-                            $createdDate = date_create_from_format('m-d-Y',$property['value']);
+                            $createdDate = date_create_from_format('m-d-Y', $property['value']);
                             if ($createdDate) {
                                 $updatedCharacter['created_at'] = date_format($createdDate, 'Y-m-d H:i:s');
                             }
                             break;
                         case 'http://biosemantics.arizona.edu/ontologies/carex#updated_date':
-                            $updatedDate = date_create_from_format('m-d-Y',$property['value']);
+                            $updatedDate = date_create_from_format('m-d-Y', $property['value']);
                             if ($updatedDate) {
                                 $updatedCharacter['updated_at'] = date_format($updatedDate, 'Y-m-d H:i:s');
                             }
@@ -3268,10 +3413,14 @@ class HomeController extends Controller
         }
 
     }
-    public function getStandardTags() {
+
+    public function getStandardTags()
+    {
         return StandardCharacter::select('standard_tag')->distinct('standard_tag')->get();
     }
-    public function newMatrix() {
+
+    public function newMatrix()
+    {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
 
@@ -3296,7 +3445,9 @@ class HomeController extends Controller
 
         return $data;
     }
-    public function getUsers() {
+
+    public function getUsers()
+    {
         $users = User::where('password', '!=', '')->get();
         $usernames = [];
         foreach ($users as $user) {

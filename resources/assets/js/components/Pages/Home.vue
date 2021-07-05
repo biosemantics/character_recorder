@@ -2506,6 +2506,7 @@ export default {
         'https://drive.google.com/uc?id=15MsN-q-e9PPK7YXaYX1gQZiLNERCgl5r',
         'https://drive.google.com/uc?id=1wwG6N8X6Mlq5KZHVjtDTQnVOKKZ6wVUw'
       ],
+      standardCollections: [],
       character: {},
       userCharacters: [],
       defaultCharacters: [],
@@ -3935,34 +3936,108 @@ export default {
       }
       return result;
     },
+    getStandardCollections() {
+      var app = this;
+      app.standardCollections = [];
+      axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollection")
+      .then(function(resp) {
+        var collectionList = resp.data.entries;
+        axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollectionOrder")
+        .then(function(resp) {
+          console.log('collectionList', collectionList);
+          console.log('getStandardCollectionOrder resp', resp);
+          var orderList = JSON.parse(resp.data.replaceAll("'", '"'));
+          console.log('orderList', orderList);
+
+          for (var i = 0; i < collectionList.length; i++) {
+            for (var orderKey in orderList) {
+              var characterName = collectionList[i].term.charAt(0).toUpperCase() + collectionList[i].term.slice(1);
+              if (orderList[orderKey].includes(characterName)) {
+                var tempCharacter = {};
+                tempCharacter.name = characterName;
+                tempCharacter.IRI = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property == "http://www.geneontology.org/formats/oboInOwl#id").value;
+                tempCharacter.parent_term = collectionList[i].parentTerm;
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_from")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_from")) != undefined) {
+                  tempCharacter.method_from = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_from")).value.split("#")[1].replaceAll('_', ' ');
+                }
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_to")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_to")) != undefined) {
+                  tempCharacter.method_to = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_to")).value.split("#")[1].replaceAll('_', ' ');
+                }
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_include")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_include")) != undefined) {
+                  tempCharacter.method_include = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_include")).value.split("#")[1].replaceAll('_', ' ');
+                }
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_exclude")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_exclude")) != undefined) {
+                  tempCharacter.measured_exclude = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_exclude")).value.split("#")[1].replaceAll('_', ' ');
+                }
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_where")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_where")) != undefined) {
+                  tempCharacter.method_where = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_where")).value.split("#")[1].replaceAll('_', ' ');
+                }
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_as")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_as")) != undefined) {
+                  tempCharacter.method_as = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_as")).value.split("#")[1].replaceAll('_', ' ');
+                }
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("elucidation")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("elucidation")) != undefined) {
+                  var tempElucidations = collectionList[i].resultAnnotations.filter(eachProperty => eachProperty.property.endsWith("elucidation"));
+                  for (var j = 0; j < tempElucidations.length; j++) {
+                    if (j == 0) {
+                      tempCharacter.elucidation = tempElucidations[j].value
+                    }
+                    if (j > 0) {
+                      tempCharacter.elucidation = tempCharacter.elucidation + ','+ tempElucidations[j].value;
+                    }
+                  }
+                }
+                if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("created_by")) != 'undefined'
+                  && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("created_by")) != undefined) {
+                  tempCharacter.creator = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("created_by")).value;
+
+                }
+                tempCharacter.show_flag = false;
+                if (tempCharacter.name.startsWith('Length of')
+                  || tempCharacter.name.startsWith('Width of')
+                  || tempCharacter.name.startsWith('Depth of')
+                  || tempCharacter.name.startsWith('Diameter of')
+                  || tempCharacter.name.startsWith('Count of')
+                  || tempCharacter.name.startsWith('Distance between')) {
+                  tempCharacter.unit = 'cm';
+                  tempCharacter.summary = 'range-percentile';
+                } else if (tempCharacter.name.startsWith('Number of')
+                  || tempCharacter.name.startsWith('Ratio of')) {
+                  tempCharacter.unit = '';
+                  tempCharacter.summary = 'range-percentile';
+                } else {
+                  tempCharacter.unit = '';
+                  tempCharacter.summary = '';
+                }
+                tempCharacter.standard = 1;
+                tempCharacter.standard_tag = orderKey;
+                tempCharacter.username = tempCharacter.creator;
+                tempCharacter.owner_name = app.user.name;
+                tempCharacter.show_flag = 0;
+                app.standardCollections.push(tempCharacter);
+              }
+            }
+          }
+          console.log('standardCollections', app.standardCollections);
+        });
+      });
+    },
     showStandardCharacters() {
       var app = this;
       // app.isLoading = true;
       app.standardShowFlag = !app.standardShowFlag;
       console.log('userCharacters', app.userCharacters);
-      console.log('defaultCharacters', app.defaultCharacters);
+      console.log('defaultCharacters', app.standardCollections);
       var postCharacters = [];
-      for (var i = 0; i < app.defaultCharacters.length; i++) {
-        var character = app.defaultCharacters[i];
-        if (!app.userCharacters.find(ch => ch.name == character.name) && character.standard == 1) {
-          //    character.username = app.user.name;
-          character.show_flag = false;
-          if (character.name.startsWith('Length of')
-            || character.name.startsWith('Width of')
-            || character.name.startsWith('Depth of')
-            || character.name.startsWith('Diameter of')
-            || character.name.startsWith('Count of')
-            || character.name.startsWith('Distance between')) {
-            character.unit = 'cm';
-            character.summary = 'range-percentile';
-          } else if (character.name.startsWith('Number of')
-            || character.name.startsWith('Ratio of')) {
-            character.unit = '';
-            character.summary = 'range-percentile';
-          } else {
-            character.unit = '';
-            character.summary = '';
-          }
+      for (var i = 0; i < app.standardCollections.length; i++) {
+        var character = app.standardCollections[i];
+        if (!app.userCharacters.find(ch => ch.name == character.name)) {
           postCharacters.push(character);
         }
       }
@@ -4969,7 +5044,29 @@ export default {
           app.userCharacters[i].tooltip += definitionKey + ' is defined as ' + definitionVar.definition;
         }
         app.userCharacters[i].deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.userCharacters[i].IRI);
-        app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
+
+        var src = '';
+        if (app.userCharacters[i].elucidation != '') {
+          if (src == '') {
+            src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+          }
+          var imgUrls = app.userCharacters[i].elucidation.split(',');
+          for (var j = 0; j < imgUrls.length; j++) {
+            if (imgUrls[j].indexOf('id=') < 0) {
+              var id = imgUrls[j].slice(imgUrls[j].indexOf('file/d/') + 7, imgUrls[j].indexOf('/view?usp='));
+              src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+            } else {
+              src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + imgUrls[j].split('id=')[1].substring(0, imgUrls[j].split('id=')[1].length - 1) + "'/></div>";
+            }
+          }
+          if (src != '') {
+            src += '</div>';
+          }
+        }
+        app.userCharacters[i].tooltip = src + app.userCharacters[i].tooltip;
+
+
+        // app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
       }
       for (var i = 0; i < app.userTags.length; i++) {
         console.log(app.userTags[i].tag_name);
@@ -4989,7 +5086,7 @@ export default {
     showTableForTab(tagName) {
       var app = this;
       // app.isLoading = true;
-      if (!app.userTags.find(tag => tag.tag_name == tagName)) {
+      if (!app.userTags.find(tag => tag.tag_name == tagName) && app.userTags.length > 0) {
         tagName = app.userTags[0].tag_name;
       }
       app.currentTab = tagName;
@@ -8265,6 +8362,7 @@ export default {
     var app = this;
     app.generateDescriptionTooltip = '<div>Click this button to generate a textual description of the taxon based on the matrix. Use up/down arrow in the matrix to adjust the order of the characters shown in the text</div>';
     app.isLoading = true;
+    app.getStandardCollections();
     await axios.get("http://shark.sbs.arizona.edu:8080/carex/getTree")
       .then(function (resp) {
         app.treeResult = resp.data;
@@ -8278,6 +8376,28 @@ export default {
         console.log('app.deprecatedTerms', app.deprecatedTerms);
       });
     console.log('standard_characters');
+    await axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollectionOrder")
+      .then(function(resp) {
+        console.log('getStandardCollectionOrder resp', resp);
+        var standardCharacters = JSON.parse(resp.data.replaceAll("'", '"'));
+        var toolTopIndex = 0;
+        for (var keyVal in standardCharacters) {
+          console.log("stdChKey", keyVal);
+          app.standardCharactersTags.push(keyVal);
+          for (var i = 0; i < standardCharacters[keyVal].length; i++) {
+            if (toolTopIndex % 12 == 0) {
+              app.standardCharactersTooltip += '<div class="row">';
+            }
+            app.standardCharactersTooltip += '<div class="col-md-1" style="padding: 0px 2px !important;">';
+            app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + standardCharacters[keyVal][i] + '</h6>';
+            app.standardCharactersTooltip += '</div>';
+            if (toolTopIndex % 12 == 11) {
+              app.standardCharactersTooltip += '</div>';
+            }
+            toolTopIndex++;
+          }
+        }
+      });
     await axios.get('/chrecorder/public/api/v1/standard_characters')
       .then(async function (resp) {
         console.log('standardCharacters', resp);
@@ -8294,18 +8414,18 @@ export default {
         for (var i = 0; i < resp.data.length; i++) {
           var temp = {};
           temp.name = resp.data[i].name;
-          if (resp.data[i].standard == 1) {
-            if (toolTopIndex % 12 == 0) {
-              app.standardCharactersTooltip += '<div class="row">';
-            }
-            app.standardCharactersTooltip += '<div class="col-md-1">';
-            app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + resp.data[i].name + '</h6>';
-            app.standardCharactersTooltip += '</div>';
-            if (toolTopIndex % 12 == 11) {
-              app.standardCharactersTooltip += '</div>';
-            }
-            toolTopIndex++;
-          }
+          // if (resp.data[i].standard == 1) {
+          //   if (toolTopIndex % 12 == 0) {
+          //     app.standardCharactersTooltip += '<div class="row">';
+          //   }
+          //   app.standardCharactersTooltip += '<div class="col-md-1" style="padding:0 !important;">';
+          //   app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + resp.data[i].name + '</h6>';
+          //   app.standardCharactersTooltip += '</div>';
+          //   if (toolTopIndex % 12 == 11) {
+          //     app.standardCharactersTooltip += '</div>';
+          //   }
+          //   toolTopIndex++;
+          // }
           temp.text = resp.data[i].name + ' by ' + resp.data[i].username + ' (' + resp.data[i].usage_count + ')';
           temp.value = resp.data[i].id;
           temp.tooltip = '';
@@ -8454,13 +8574,13 @@ export default {
         console.log('matrixNames', resp);
         app.namesList = resp.data;
       });
-    axios.get("/chrecorder/public/api/v1/getStandardTags")
-      .then((resp) => {
-        for (var i = 0; i < resp.data.length; i++) {
-          app.standardCharactersTags.push(resp.data[i].standard_tag);
-        }
-        console.log(app.standardCharactersTags);
-      });
+    // axios.get("/chrecorder/public/api/v1/getStandardTags")
+    //   .then((resp) => {
+    //     for (var i = 0; i < resp.data.length; i++) {
+    //       app.standardCharactersTags.push(resp.data[i].standard_tag);
+    //     }
+    //     console.log(app.standardCharactersTags);
+    //   });
     app.isLoading = false;
   },
   mounted() {
