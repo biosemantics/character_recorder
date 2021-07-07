@@ -3199,7 +3199,7 @@ class HomeController extends Controller
             'email' => $user['email'],
             'password' => $user['password'],
             'remember_token' => $user['remember_token'],
-            'taxon' => $user['taxon']
+//            'taxon' => $user['taxon']
         ]);
         Character::where('owner_name', '=', $username . '_ver_' . $matrixName)->update(['owner_name' => $username]);
 
@@ -3218,7 +3218,7 @@ class HomeController extends Controller
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'tags' => $returnUserTags,
-            'taxon' => $user['taxon']
+            'taxon' => $versionUser['taxon']
         ];
 
         return $data;
