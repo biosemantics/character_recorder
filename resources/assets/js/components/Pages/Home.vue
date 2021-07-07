@@ -1245,7 +1245,7 @@
                           <!--<input style="width: 300px;" v-model="colorSearchText" placeholder="Enter a term to filter the term tree"/>-->
                           <tree
                             :data="treeData"
-                            :options="colorTreeOption"
+                            :options="treeOption"
                             :filter="filterFlag?currentColorValue[currentColorValue.detailFlag]:null"
                             ref="colorTree"
                             @node:selected="onTreeNodeSelected"
@@ -1257,6 +1257,8 @@
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
                                 <span v-if="node.data.details[0].definition" @click="showDefinition(node, $event)"><img
                                   src="/chrecorder/public/images/icon-definition.png" style="width: 12px;"/></span>
+<!--                                <span v-if="node.text == 'brown'" @click="showPalette(node, $event)"><img-->
+<!--                                  src="/chrecorder/public/images/color-palette.png" style="width: 12px;"/></span>-->
                               </div>
                             </div>
                           </tree>
@@ -1626,7 +1628,7 @@
                           <!--<input style="width: 300px;" v-model="nonColorSearchText" placeholder="Enter a term to filter the term tree"/>-->
                           <tree
                             :data="textureTreeData"
-                            :options="colorTreeOption"
+                            :options="treeOption"
                             :filter="filterFlag?currentNonColorValue.main_value:null"
                             ref="nonColorTree"
                             @node:selected="onTextureTreeNodeSelected"
@@ -2158,7 +2160,7 @@
                 <div class="modal-container" style="width: 600px;">
                   <div style="max-height:80vh; overflow-y: auto;">
                     <div class="modal-header">
-                      <b style="text-align: left">Name this matrix version</b>
+                      <b style="text-align: left">Name this matrix version for <span style="color: red; font-weight: bold;">{{ taxonName }}</span></b>
                       <br/>
                     </div>
                     <div class="modal-body" style="min-height: 25vh;">
@@ -2560,7 +2562,7 @@ export default {
       treeData: this.colorTreeData,
       colTreeData: [],
       colorSearchText: null,
-      colorTreeOption: {
+      treeOption: {
         multiple: true,
         autoCheckChildren: false,
         parentSelect: false,
@@ -2751,6 +2753,11 @@ export default {
       event.preventDefault();
       app.images = node.data.images;
       this.$viewer.show();
+    },
+    showPalette(node, event) {
+      var app = this;
+      event.preventDefault();
+      console.log('showPalette node', node);
     },
     showDefinition(node, event) {
       var app = this;
@@ -7839,7 +7846,7 @@ export default {
       app.loadMatrixConfirmDialog = false;
       axios.post('/chrecorder/public/api/v1/importMatrix', postValue)
         .then((res) => {
-          console.log(res);
+          console.log('importMatrix resp', res);
           app.userCharacters = res.data.characters;
           app.headers = res.data.headers;
           app.values = res.data.values;
