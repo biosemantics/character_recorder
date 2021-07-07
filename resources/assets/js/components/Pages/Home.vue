@@ -2160,7 +2160,7 @@
                 <div class="modal-container" style="width: 600px;">
                   <div style="max-height:80vh; overflow-y: auto;">
                     <div class="modal-header">
-                      <b style="text-align: left">Name this matrix version for <span style="color: red; font-weight: bold;">{{ taxonName }}</span></b>
+                      <b style="text-align: left">Name this matrix version for <span style="font-style: italic;">{{ taxonName }}</span></b>
                       <br/>
                     </div>
                     <div class="modal-body" style="min-height: 25vh;">
