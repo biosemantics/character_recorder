@@ -3945,17 +3945,34 @@ export default {
         var collectionList = resp.data.entries;
         axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollectionOrder")
         .then(function(resp) {
-          console.log('collectionList', collectionList);
-          console.log('getStandardCollectionOrder resp', resp);
+          var standardCharacters = JSON.parse(resp.data.replaceAll("'", '"'));
+          var toolTopIndex = 0;
+          for (var keyVal in standardCharacters) {
+            app.standardCharactersTags.push(keyVal);
+            for (var i = 0; i < standardCharacters[keyVal].length; i++) {
+              if (toolTopIndex % 12 == 0) {
+                app.standardCharactersTooltip += '<div class="row">';
+              }
+              app.standardCharactersTooltip += '<div class="col-md-1" style="padding: 0px 2px !important;">';
+              app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + standardCharacters[keyVal][i] + '</h6>';
+              app.standardCharactersTooltip += '</div>';
+              if (toolTopIndex % 12 == 11) {
+                app.standardCharactersTooltip += '</div>';
+              }
+              toolTopIndex++;
+            }
+          }
+
           var orderList = JSON.parse(resp.data.replaceAll("'", '"'));
           console.log('orderList', orderList);
+
 
           for (var i = 0; i < collectionList.length; i++) {
             for (var orderKey in orderList) {
               var characterName = collectionList[i].term.charAt(0).toUpperCase() + collectionList[i].term.slice(1);
               if (orderList[orderKey].includes(characterName)) {
                 var tempCharacter = {};
-                tempCharacter.name = characterName;
+                tempCharacter.name = collectionList[i].term.charAt(0).toUpperCase() + collectionList[i].term.slice(1);
                 tempCharacter.IRI = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property == "http://www.geneontology.org/formats/oboInOwl#id").value;
                 tempCharacter.parent_term = collectionList[i].parentTerm;
                 if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_from")) != 'undefined'
@@ -4021,12 +4038,23 @@ export default {
                 tempCharacter.username = tempCharacter.creator;
                 tempCharacter.owner_name = app.user.name;
                 tempCharacter.show_flag = 0;
-                tempCharacter.id = order;
+                tempCharacter.id = order + 1;
                 order++;
                 app.standardCollections.push(tempCharacter);
               }
             }
           }
+          var tempStandardCollection = [];
+          for (var orderKey in orderList) {
+            for (var i = 0; i < orderList[orderKey].length; i++) {
+              for (var j = 0; j < app.standardCollections.length; j++) {
+                if (orderList[orderKey][i] == app.standardCollections[j].name) {
+                  tempStandardCollection.push(app.standardCollections[j]);
+                }
+              }
+            }
+          }
+          app.standardCollections = tempStandardCollection;
           console.log('standardCollections', app.standardCollections);
         });
       });
@@ -4050,15 +4078,16 @@ export default {
       axios.post('/chrecorder/public/api/v1/character/add-standard', postCharacters)
         .then(function (resp) {
           console.log('addStandard resp', resp.data);
-          app.userCharacters = resp.data.sort(function (a, b) {
-            if (a.name < b.name) {
-              return -1;
-            }
-            if (a.name > b.name) {
-              return 1;
-            }
-            return 0;
-          });
+          // app.userCharacters = resp.data.sort(function (a, b) {
+          //   if (a.name < b.name) {
+          //     return -1;
+          //   }
+          //   if (a.name > b.name) {
+          //     return 1;
+          //   }
+          //   return 0;
+          // });
+          app.userCharacters = resp.data;
           app.isLoading = false;
           app.refreshUserCharacters();
           // app.showTableForTab(app.currentTab);
@@ -8443,28 +8472,10 @@ export default {
         console.log('app.deprecatedTerms', app.deprecatedTerms);
       });
     console.log('standard_characters');
-    await axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollectionOrder")
-      .then(function(resp) {
-        console.log('getStandardCollectionOrder resp', resp);
-        var standardCharacters = JSON.parse(resp.data.replaceAll("'", '"'));
-        var toolTopIndex = 0;
-        for (var keyVal in standardCharacters) {
-          console.log("stdChKey", keyVal);
-          app.standardCharactersTags.push(keyVal);
-          for (var i = 0; i < standardCharacters[keyVal].length; i++) {
-            if (toolTopIndex % 12 == 0) {
-              app.standardCharactersTooltip += '<div class="row">';
-            }
-            app.standardCharactersTooltip += '<div class="col-md-1" style="padding: 0px 2px !important;">';
-            app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + standardCharacters[keyVal][i] + '</h6>';
-            app.standardCharactersTooltip += '</div>';
-            if (toolTopIndex % 12 == 11) {
-              app.standardCharactersTooltip += '</div>';
-            }
-            toolTopIndex++;
-          }
-        }
-      });
+    // await axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollectionOrder")
+    //   .then(function(resp) {
+    //
+    //   });
     await axios.get('/chrecorder/public/api/v1/standard_characters')
       .then(async function (resp) {
         console.log('standardCharacters', resp);
@@ -8528,15 +8539,16 @@ export default {
     axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
       .then(function (resp) {
         console.log('resp character', resp.data);
-        app.userCharacters = resp.data.characters.sort(function (a, b) {
-          if (a.name < b.name) {
-            return -1;
-          }
-          if (a.name > b.name) {
-            return 1;
-          }
-          return 0;
-        });
+        // app.userCharacters = resp.data.characters.sort(function (a, b) {
+        //   if (a.name < b.name) {
+        //     return -1;
+        //   }
+        //   if (a.name > b.name) {
+        //     return 1;
+        //   }
+        //   return 0;
+        // });
+        app.userCharacters = resp.data.characters;
         app.headers = resp.data.headers;
         app.values = resp.data.values;
         console.log('headers', app.headers);
