@@ -1429,6 +1429,10 @@ class HomeController extends Controller
         $selectedCharacter = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first();
         $users = User::where('taxon', '=', $user->taxon)->get();
 
+        $userIdList = [];
+        foreach ($users as $eachUser) {
+            array_push($userIdList, $eachUser['id']);
+        }
         $characterList = Character::where('name', '=', $selectedCharacter->name)->get()->toArray();
 
         $existDetails = [];
@@ -1445,17 +1449,29 @@ class HomeController extends Controller
                 foreach ($values as $eachValue) {
                     $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
                     foreach ($existColorDetails as $eachColorDetails) {
-                        $ownerUsers = Character::where('name', '=', $selectedCharacter['name'])->where('username', '=', $selectedCharacter['username'])->where('usage_count', '<>', 0)->get();
+                        $eachColorDetails['usage_count'] = 0;
+//                        $ownerCharacters = Character::where('name', '=', $eachCharacter['name'])->where('username', '=', $eachCharacter['username'])->where('owner_name', '=', $eachCharacter['owner_name'])->where('usage_count', '<>', 0)->get();
+//                        $ownerCharacters = Character::whereIn('id', Value::whereIn('id', ColorDetails::where('value_id', '=', $eachColorDetails['value_id'])
+//                            ->select('value_id')
+//                            ->get()
+//                            ->toArray())
+//                            ->select('character_id')
+//                            ->get()
+//                            ->toArray())
+//                            ->get();
+                        $eachColorDetails['usage_count'] = Character::find(Value::find($eachColorDetails['value_id'])->character_id)->usage_count;
+                        $eachColorDetails['username'] = Character::find(Value::find($eachColorDetails['value_id'])->character_id)->owner_name;
 
-                        foreach ($ownerUsers as $ownerUsers) {
-                            if (array_key_exists('username', $eachColorDetails)) {
-                                $eachColorDetails['username'] = $eachColorDetails['username'] . ', ' . $ownerUsers['owner_name'];
-                            } else {
-                                $eachColorDetails['username'] = $ownerUsers['owner_name'];
-                            }
-                        }
+//                        foreach ($ownerCharacters as $eachOwnCh) {
+//                            if (array_key_exists('username', $eachColorDetails)) {
+//                                $eachColorDetails['username'] = $eachColorDetails['username'] . ', ' . $eachOwnCh['owner_name'];
+//                            } else {
+//                                $eachColorDetails['username'] = $eachOwnCh['owner_name'];
+//                            }
+//                            $eachColorDetails['usage_count'] += $eachOwnCh['usage_count'];
+//                        }
 
-                        $eachColorDetails['usage_count'] = Character::where('name', '=', $selectedCharacter['name'])->where('username', '=', $selectedCharacter['username'])->select(DB::raw('sum(usage_count) as total'))->first()->total;
+//                        $eachColorDetails['usage_count'] = Character::where('name', '=', $selectedCharacter['name'])->where('username', '=', $selectedCharacter['username'])->select(DB::raw('sum(usage_count) as total'))->first()->total;
                         array_push($existDetails, $eachColorDetails);
                     }
                 }
