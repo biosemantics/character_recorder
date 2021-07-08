@@ -3532,7 +3532,7 @@ export default {
                   return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
                 })[0];
                 if (methodEntry && methodEntry.term != app.lastCharacter.toLowerCase()) {
-                  var tempBroadSynonyms = resp.data.entries;
+                  var tempBroadSynonyms = methodEntry.resultAnnotations.filter(each => each.property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");
                   for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
                     if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
                       if (methodEntry.resultAnnotations[i].value == app.lastCharacter.toLowerCase()) {
@@ -3565,10 +3565,10 @@ export default {
                   } else {
                     if (tempBroadSynonyms.length > 0) {
                       app.firstNounBroadSynonym = true;
-                      app.firstNounBroadSynonymNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                      app.firstNounBroadSynonymNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].value;
                       if (tempBroadSynonyms.length > 1) {
                         for (var i = 1; i < tempBroadSynonyms.length; i++) {
-                          app.firstNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                          app.firstNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].value;
                         }
                       }
                       app.firstNounBroadSynonymNotifyMessage += "</b>.";
@@ -3655,7 +3655,7 @@ export default {
                     return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
                   })[0];
                   if (methodEntry && methodEntry.term != app.secondLastCharacter.toLowerCase()) {
-                    var tempBroadSynonyms = resp.data.entries;
+                    var tempBroadSynonyms = methodEntry.resultAnnotations.filter(each => each.property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");
                     for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
                       if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
                         if (methodEntry.resultAnnotations[i].value == app.secondLastCharacter.toLowerCase()) {
@@ -3688,10 +3688,10 @@ export default {
                     } else {
                       if (tempBroadSynonyms.length > 0) {
                         app.secondNounBroadSynonym = true;
-                        app.secondNounBroadSynonymNotifyMessage = "Term <b>" + app.secondLastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                        app.secondNounBroadSynonymNotifyMessage = "Term <b>" + app.secondLastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].value;
                         if (tempBroadSynonyms.length > 1) {
                           for (var i = 1; i < tempBroadSynonyms.length; i++) {
-                            app.secondNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                            app.secondNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].value;
                           }
                         }
                         app.secondNounBroadSynonymNotifyMessage += "</b>.";
@@ -7080,12 +7080,6 @@ export default {
             && array[i].multi_colored == result[j].multi_colored
             && array[i].post_constraint == result[j].post_constraint) {
             result[j].count = result[j].count + 1;
-            if (array[i].usage_count > 0) {
-              if (!result[j].username.split(', ').includes(array[i].username)) {
-                result[j].usage_count = result[j].usage_count + array[i].usage_count;
-                result[j].username = result[j].username + ', ' + array[i].username;
-              }
-            }
             resultFlag = false;
           }
         }
