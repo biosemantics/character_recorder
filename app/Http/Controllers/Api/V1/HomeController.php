@@ -1445,7 +1445,16 @@ class HomeController extends Controller
                 foreach ($values as $eachValue) {
                     $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
                     foreach ($existColorDetails as $eachColorDetails) {
-                        $eachColorDetails['username'] = $eachCharacter['owner_name'];
+                        $ownerUsers = Character::where('name', '=', $selectedCharacter['name'])->where('username', '=', $selectedCharacter['username'])->where('usage_count', '<>', 0)->get();
+
+                        foreach ($ownerUsers as $ownerUsers) {
+                            if (array_key_exists('username', $eachColorDetails)) {
+                                $eachColorDetails['username'] = $eachColorDetails['username'] . ', ' . $ownerUsers['owner_name'];
+                            } else {
+                                $eachColorDetails['username'] = $ownerUsers['owner_name'];
+                            }
+                        }
+
                         $eachColorDetails['usage_count'] = Character::where('name', '=', $selectedCharacter['name'])->where('username', '=', $selectedCharacter['username'])->select(DB::raw('sum(usage_count) as total'))->first()->total;
                         array_push($existDetails, $eachColorDetails);
                     }
@@ -1509,7 +1518,7 @@ class HomeController extends Controller
         $tempCount = 0;
 
         foreach ($characterValues as $eachValue) {
-            if (ColorDetails::where('value_id', '=', $eachValue['id'])->first()) {
+            if (ColorDetails::where('value_id', '=', $eachValue['id'])->count() == 1) {
                 $tempCount++;
             }
         }

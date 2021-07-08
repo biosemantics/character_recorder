@@ -19,7 +19,7 @@
                   <a class="btn btn-primary" v-on:click="loadMatrixDialog = true;">Load Matrix Version</a>
                 </div>
               </div>
-              <div style="position: absolute; right: 150px;">
+              <div v-if="matrixShowFlag == true" style="position: absolute; right: 150px;">
                 <a
                   class="btn btn-primary"
                   v-on:click="collapsedFlag = true;showSetupArea=false;"
@@ -579,8 +579,12 @@
                                                                         secondNounNotRecommendNotifyMessage='';
                                                                         firstNounSynonym=false;
                                                                         firstNounSynonymNotifyMessage='';
+                                                                        firstNounBroadSynonym=false;
+                                                                        firstNounBroadSynonymNotifyMessage='';
                                                                         secondNounSynonym=false;
                                                                         secondNounSynonymNotifyMessage='';
+                                                                        secondNounBroadSynonym=false;
+                                                                        secondNounBroadSynonymNotifyMessage='';
                                                                         "
                               list="first_characters"
                               placeholder="select or type"
@@ -631,8 +635,12 @@
                                                                         secondNounNotRecommendNotifyMessage='';
                                                                         firstNounSynonym=false;
                                                                         firstNounSynonymNotifyMessage='';
+                                                                        firstNounBroadSynonym=false;
+                                                                        firstNounBroadSynonymNotifyMessage='';
                                                                         secondNounSynonym=false;
                                                                         secondNounSynonymNotifyMessage='';
+                                                                        secondNounBroadSynonym=false;
+                                                                        secondNounBroadSynonymNotifyMessage='';
                                                                         "
                               placeholder="enter a singular noun"
                             />
@@ -658,8 +666,12 @@
                                                                         secondNounNotRecommendNotifyMessage='';
                                                                         firstNounSynonym=false;
                                                                         firstNounSynonymNotifyMessage='';
+                                                                        firstNounBroadSynonym=false;
+                                                                        firstNounBroadSynonymNotifyMessage=''
                                                                         secondNounSynonym=false;
                                                                         secondNounSynonymNotifyMessage='';
+                                                                        secondNounBroadSynonym=false;
+                                                                        secondNounBroadSynonymNotifyMessage='';
                                                                         "
                               placeholder="enter a singular noun"
                             />
@@ -688,8 +700,16 @@
                           <div class="col-md-12" v-html="firstNounSynonymNotifyMessage">
                           </div>
                         </div>
+                        <div class="row" v-if="firstNounBroadSynonym">
+                          <div class="col-md-12" v-html="firstNounBroadSynonymNotifyMessage">
+                          </div>
+                        </div>
                         <div class="row" v-if="secondNounSynonym">
                           <div class="col-md-12" v-html="secondNounSynonymNotifyMessage">
+                          </div>
+                        </div>
+                        <div class="row" v-if="secondNounBroadSynonym">
+                          <div class="col-md-12" v-html="secondNounBroadSynonymNotifyMessage">
                           </div>
                         </div>
                         <div class="row" v-if="firstCharacterUndefined">
@@ -727,15 +747,17 @@
                                                                 !middleCharacter ||
                                                                 !lastCharacter ||
                                                                 nounUndefined && !lastCharacterDefinition ||
-                                                                firstCharacterUndefined && !firstCharacterDefinition ||
+                                                                firstCharacterUndefined && !firstCharacterDefinition  && !firstNounBroadSynonym||
                                                                 wholeCharacterUndefined && !wholeCharacterDefinition ||
-                                                                middleCharacter=='between' && (!secondLastCharacter || secondNounUndefined && !secondLastCharacterDefinition) ||
+                                                                middleCharacter=='between' && (!secondLastCharacter && !secondNounBroadSynonym || secondNounUndefined && !secondLastCharacterDefinition) ||
                                                                 firstNounDeprecated ||
                                                                 secondNounDeprecated ||
                                                                 firstNounNotRecommend ||
                                                                 secondNounNotRecommend ||
                                                                 firstNounSynonym ||
-                                                                secondNounSynonym
+                                                                firstNounBroadSynonym ||
+                                                                secondNounSynonym ||
+                                                                secondNounBroadSynonym
                                                         }"
                            v-on:click="checkBracketConfirm()">
                           &nbsp; &nbsp; Next: Define Character &nbsp; &nbsp; </a>
@@ -1046,7 +1068,7 @@
                           </div>
                           <div v-if="existColorDetailsFlag == true" style="margin-top: 10px;">
                             <div v-for="(eachDetails,index) in existColorDetails" :key="eachDetails.id"
-                                 style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                 style="border-bottom: gray; padding: 2px; font-size: 11pt">
                               <hr v-if="index" style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
                               <span style="margin-left: 20px; margin-right: 50px">
                                                                 <a class="btn btn-primary"
@@ -1089,7 +1111,7 @@
                                                                 , usages = {{ eachDetails.usage_count }}
                                                             </span>
                               <span>
-                                                                , used by = {{ eachDetails.username }}
+                                                                , creator = {{ eachDetails.username }}
                                                             </span>
                             </div>
                           </div>
@@ -1251,12 +1273,12 @@
                             @node:selected="onTreeNodeSelected"
                             style="max-height: 300px;">
                             <div slot-scope="{ node }" class="node-container">
-                              <div class="node-text" v-tooltip="node.text">
+                              <div class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
-                                <span v-if="node.data.details[0].definition" @click="showDefinition(node, $event)"><img
-                                  src="/chrecorder/public/images/icon-definition.png" style="width: 12px;"/></span>
+<!--                                <span v-if="node.data.details[0].definition" @click="showDefinition(node, $event)"><img-->
+<!--                                  src="/chrecorder/public/images/icon-definition.png" style="width: 12px;"/></span>-->
 <!--                                <span v-if="node.text == 'brown'" @click="showPalette(node, $event)"><img-->
 <!--                                  src="/chrecorder/public/images/color-palette.png" style="width: 12px;"/></span>-->
                               </div>
@@ -1434,7 +1456,7 @@
                           </div>
                           <div v-if="existNonColorDetailsFlag == true" style="margin-top: 10px;">
                             <div v-for="(eachDetails, index) in existNonColorDetails" :key="eachDetails.id"
-                                 style="border-bottom: gray; padding 2px; font-size: 11pt">
+                                 style="border-bottom: gray; padding: 2px; font-size: 11pt">
                               <hr v-if="index" style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
                               <span style="margin-left: 20px; margin-right: 50px">
                                                                 <a class="btn btn-primary"
@@ -1465,7 +1487,7 @@
                                                                 , usages = {{ eachDetails.count }}
                                                             </span>
                               <span>
-                                                                , used by = {{ eachDetails.username }}
+                                                                , creator = {{ eachDetails.username }}
                                                             </span>
                             </div>
                           </div>
@@ -1634,12 +1656,12 @@
                             @node:selected="onTextureTreeNodeSelected"
                             style="max-height: 300px;">
                             <div slot-scope="{ node }" class="node-container">
-                              <div class="node-text" v-tooltip="node.text">
+                              <div class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
-                                <span v-if="node.data.details[0].definition" @click="showDefinition(node, $event)"><img
-                                  src="/chrecorder/public/images/icon-definition.png" style="width: 12px;"/></span>
+<!--                                <span v-if="node.data.details[0].definition" @click="showDefinition(node, $event)"><img-->
+<!--                                  src="/chrecorder/public/images/icon-definition.png" style="width: 12px;"/></span>-->
                               </div>
                             </div>
                           </tree>
@@ -2719,8 +2741,12 @@ export default {
       secondNounNotRecommendNotifyMessage: '',
       firstNounSynonym: false,
       firstNounSynonymNotifyMessage: '',
+      firstNounBroadSynonym: false,
+      firstNounBroadSynonymNotifyMessage: '',
       secondNounSynonym: false,
       secondNounSynonymNotifyMessage: '',
+      secondNounBroadSynonym: false,
+      secondNounBroadSynonymNotifyMessage: '',
       showSetupArea: false,
       editingValueID: -1,
       confirmNewMatrixDialog: false,
@@ -2967,8 +2993,12 @@ export default {
         app.secondNounNotRecommendNotifyMessage = '';
         app.firstNounSynonym = false;
         app.firstNounSynonymNotifyMessage = '';
+        app.firstNounBroadSynonym = false;
+        app.firstNounBroadSynonymNotifyMessage = '';
         app.secondNounSynonym = false;
         app.secondNounSynonymNotifyMessage = '';
+        app.secondNounBroadSynonym = false;
+        app.secondNounBroadSynonymNotifyMessage = '';
 
         app.newCharacterFlag = true;
         app.viewFlag = false;
@@ -3423,7 +3453,7 @@ export default {
 
       await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.firstCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
         .then(function (resp) {
-          console.log('term?' + app.firstCharacter, resp.data);
+          console.log('termfirstCharacter?' + app.firstCharacter, resp.data);
           if (!resp.data.entries.length) {
             app.firstCharacterUndefined = true;
           }
@@ -3441,7 +3471,7 @@ export default {
 
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
             .then(function (resp) {
-              console.log('term?' + tempWholeCharacter, resp.data);
+              console.log('term1' + tempWholeCharacter, resp.data);
               if (resp.data.entries.length > 0) {
                 app.firstNounDeprecatedNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is replaced by <b>' +
                   nounDeprecatedValue['replacement term'] +
@@ -3480,7 +3510,7 @@ export default {
 
                       await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
                         .then(function (resp) {
-                          console.log('term?' + tempWholeCharacter, resp.data);
+                          console.log('term2 tempWholeCharacter?' + tempWholeCharacter, resp.data);
                           if (resp.data.entries.length > 0) {
                             app.firstNounNotRecommendNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is replaced by <b>" +
                               methodEntry.term +
@@ -3501,6 +3531,7 @@ export default {
                   return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
                 })[0];
                 if (methodEntry && methodEntry.term != app.lastCharacter.toLowerCase()) {
+                  var tempBroadSynonyms = methodEntry.resultAnnotations.filter(each => each.property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");
                   for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
                     if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
                       if (methodEntry.resultAnnotations[i].value == app.lastCharacter.toLowerCase()) {
@@ -3519,7 +3550,7 @@ export default {
 
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
                       .then(function (resp) {
-                        console.log('term?' + tempWholeCharacter, resp.data);
+                        console.log('term tempWholeCharacter?' + tempWholeCharacter, resp.data);
                         if (resp.data.entries.length > 0) {
                           app.firstNounSynonymNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is replaced by <b>' +
                             methodEntry.term +
@@ -3530,6 +3561,17 @@ export default {
                             methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
                         }
                       });
+                  } else {
+                    if (tempBroadSynonyms.length > 0) {
+                      app.firstNounBroadSynonym = true;
+                      app.firstNounBroadSynonymNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].value;
+                      if (tempBroadSynonyms.length > 1) {
+                        for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                          app.firstNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].value;
+                        }
+                      }
+                      app.firstNounBroadSynonymNotifyMessage += "</b>.";
+                    }
                   }
                 }
               }
@@ -3612,6 +3654,7 @@ export default {
                     return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
                   })[0];
                   if (methodEntry && methodEntry.term != app.secondLastCharacter.toLowerCase()) {
+                    var tempBroadSynonyms = methodEntry.resultAnnotations.filter(each => each.property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");
                     for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
                       if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
                         if (methodEntry.resultAnnotations[i].value == app.secondLastCharacter.toLowerCase()) {
@@ -3641,6 +3684,17 @@ export default {
                               methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
                           }
                         });
+                    } else {
+                      if (tempBroadSynonyms.length > 0) {
+                        app.secondNounBroadSynonym = true;
+                        app.secondNounBroadSynonymNotifyMessage = "Term <b>" + app.secondLastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].value;
+                        if (tempBroadSynonyms.length > 1) {
+                          for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                            app.secondNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].value;
+                          }
+                        }
+                        app.secondNounBroadSynonymNotifyMessage += "</b>.";
+                      }
                     }
                   }
                 }
@@ -3649,10 +3703,10 @@ export default {
         }
       }
 
-      if (!app.firstNounDeprecated && !app.secondNounDeprecated && !app.firstNounNotRecommend && !app.secondNounNotRecommend && !app.firstNounSynonym && !app.secondNounSynonym) {
+      if (!app.firstNounDeprecated && !app.secondNounDeprecated && !app.firstNounNotRecommend && !app.secondNounNotRecommend && !app.firstNounSynonym && !app.secondNounSynonym && !app.firstNounBroadSynonym && !app.secondNounBroadSynonym) {
         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase().replaceAll(' ', '_'))
           .then(function (resp) {
-            console.log('term?' + wholeCharacter, resp.data);
+            console.log('term 3 wholeCharacter?' + wholeCharacter, resp.data);
             if (!resp.data.entries.length) {
               app.wholeCharacterUndefined = true;
             }
@@ -3669,7 +3723,9 @@ export default {
         !app.firstNounNotRecommend &&
         !app.secondNounNotRecommend &&
         !app.firstNounSynonym &&
-        !app.secondNounSynonym
+        !app.firstNounBroadSynonym &&
+        !app.secondNounSynonym &&
+        !app.secondNounBroadSynonym
       ) {
         app.storeCharacter();
       }
