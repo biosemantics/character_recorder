@@ -3164,10 +3164,23 @@ export default {
         }
         app.toRemoveBracketConfirmFlag = true;
       } else {
-        app.firstCharacter = app.trimInputString(app.firstCharacter);
-        app.lastCharacter = app.trimInputString(app.lastCharacter);
-        app.secondLastCharacter = app.trimInputString(app.secondLastCharacter);
-        app.checkStoreCharacter();
+        var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+
+        if (app.middleCharacter == 'between') {
+          tempWholeCharacter += ' and ' + app.secondLastCharacter;
+        }
+        if (app.standardCharacters.find(each => each.name == tempWholeCharacter)) {
+          alert(tempWholeCharacter + ' is already exists. Use the existing character in the select box.');
+          app.firstCharacter = '';
+          app.middleCharacter = '';
+          app.lastCharacter = '';
+          app.secondLastCharacter = '';
+        } else {
+          app.firstCharacter = app.trimInputString(app.firstCharacter);
+          app.lastCharacter = app.trimInputString(app.lastCharacter);
+          app.secondLastCharacter = app.trimInputString(app.secondLastCharacter);
+          app.checkStoreCharacter();
+        }
       }
     },
     async checkStoreCharacter() {
