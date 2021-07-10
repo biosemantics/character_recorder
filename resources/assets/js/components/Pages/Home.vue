@@ -30,15 +30,6 @@
                 </a>
               </div>
             </div>
-            <!-- <div class="row">
-                            <div class="col-md-12">
-                                <div style="max-width: 1000px; margin-left: auto; margin-right: auto;">
-                                    <h3><b>Set up your matrix: </b>
-                                    <span style="font-size: 20px;">select/create the characters you'd like to record in the matrix, then click on 'Go To Matrix'. You can add or remove characters after matrix is generated.</span>
-                                    </h3>
-                                </div>
-                            </div>
-                        </div> -->
           </div>
 
           <div class="row" v-if="showSetupArea == true">
@@ -86,8 +77,6 @@
                 <hr style="border-top: 2px solid; margin-top: 20px;">
                 <div class="margin-top-10 text-right">
                   <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Go To Matrix</a>
-                  <!-- <a class="btn btn-primary" v-on:click="loadMatrixDialog = true;"
-                                       style="width: 200px; ">Load Matrix Version</a> -->
                   <a
                     class="btn btn-primary"
                     v-on:click="collapsedFlag = true;showSetupArea=false;"
@@ -133,10 +122,6 @@
                         </a>
                       </i>
                     </div>
-                    <!--{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <a class="btn btn-add display-block"
-                                           v-on:click="removeUserCharacter(eachCharacter.id)"><span
-                                                class="glyphicon glyphicon-remove"></span></a>-->
                   </div>
                 </div>
                 <div class="margin-top-10"
@@ -167,27 +152,10 @@
                       </i>
                     </div>
                   </div>
-                  <!--<div v-for="eachCharacter in userCharacters"-->
-                  <!--v-if="eachCharacter.standard == 1 || !eachCharacter.username.includes(user.name)"-->
-                  <!--v-tooltip="eachCharacter.tooltip"-->
-                  <!--style="display: table; cursor: pointer;">-->
-                  <!--<b v-if="eachCharacter.standard_tag != previousCharacter.standard_tag">-->
-                  <!--{{ eachCharacter.standard_tag }} </b>-->
-
-                  <!--<div style="text-indent: 50px;"><i>{{ eachCharacter.name }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-                  <!--<a class="btn btn-add display-block"-->
-                  <!--v-on:click="removeStandardCharacter(eachCharacter.id)"-->
-                  <!--:set="previousCharacter=eachCharacter"-->
-                  <!--&gt;<span-->
-                  <!--class="glyphicon glyphicon-remove"></span></a></i></div>-->
-
-                  <!--</div>-->
                 </div>
                 <!-- repeat the buttoms here -->
                 <div v-if="userCharacters.length!=0" class="margin-top-10 text-right">
                   <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Go To Matrix</a>
-                  <!-- <a class="btn btn-primary" v-on:click="loadMatrixDialog = true;"
-                                       style="width: 200px; ">Load Matrix Version</a> -->
                   <a
                     class="btn btn-primary"
                     v-on:click="collapsedFlag = true;showSetupArea=false;"
@@ -240,7 +208,6 @@
             </div>
           </div>
         </div>
-        <!--<hr v-if="matrixShowFlag == true" style="margin-top: 40px; margin-bottom: 40px; border-top: 2px solid;">-->
         <div v-if="matrixShowFlag == true"
              style="border-bottom: 2px solid; width: 100%; margin-top: 40px;text-align:center;">
         </div>
@@ -263,9 +230,7 @@
         </div>
         <div style="padding-left: 15px; padding-right: 15px; display: inline-flex; width: 100%;"
              v-if="matrixShowFlag == true">
-          <!-- <a v-on:click="getIRIOfValues()"><span>Get IRI of values</span></a> -->
           <div v-bind:class="{'width-95per': descriptionFlag == false}" style="min-width: 70%;">
-            <!--<ul class="nav nav-tabs">-->
             <draggable
               :list="userTags"
               class="nav nav-tabs">
@@ -277,11 +242,7 @@
                 <div v-if="tagDeprecated[eachTag.tag_name] == 1"
                      style="position: absolute;top: 0px;right: 2px;background: #3097D1;padding:4px;box-sizing: border-box;border-radius: 100%;"></div>
               </li>
-              <!--<li v-for="eachTag in userTags" v-bind:class="{ active: currentTab == eachTag.tag_name }"><a-->
-              <!--data-toggle="tab" v-on:click="showTableForTab(eachTag.tag_name)">{{ eachTag.tag_name-->
-              <!--}}</a></li>-->
             </draggable>
-            <!--</ul>-->
             <div class="table-responsive">
               <table class="table table-bordered cr-table">
                 <thead>
@@ -511,14 +472,6 @@
           </div>
           <div style="border-left: 2px solid; margin-left: 5px;">
             <div style="padding-top: 100px;">
-              <!--<div>-->
-              <!--<a class="btn btn-primary" v-on:click="expandTable()"><span class="glyphicon glyphicon-chevron-right"></span></a>-->
-              <!--</div>-->
-              <!--<div style="margin-top: 5px;">-->
-              <!--<a class="btn btn-primary" v-on:click="expandDescription()"><span class="glyphicon glyphicon-chevron-left"></span></a>-->
-              <!--</div>-->
-              <!--<a class="btn btn-default" style="border: none;" v-on:click="expandDescription()"><span
-                                    class="glyphicon glyphicon-option-vertical" style="color: #1f648b;"></span></a>-->
               <a class="btn btn-default" style="border: none;"
                  v-tooltip="{ content:generateDescriptionTooltip, classes: 'standard-tooltip'}"
                  v-on:click="expandDescription()">
@@ -563,28 +516,28 @@
                               style="height: 26px; width: 100%;"
                               type="text"
                               v-on:focus="nounUndefined = false;
-                                                                        secondNounUndefined = false;
-                                                                        lastCharacterDefinition = '';
-                                                                        firstCharacterUndefined = false;
-                                                                        firstCharacterDefinition = '';
-                                                                        wholeCharacterUndefined=false;
-                                                                        wholeCharacterDefinition='';
-                                                                        firstNounDeprecated=false;
-                                                                        firstNounDeprecatedNotifyMessage='';
-                                                                        secondNounDeprecated=false;
-                                                                        secondNounDeprecatedNotifyMessage='';
-                                                                        firstNounNotRecommend=false;
-                                                                        firstNounNotRecommendNotifyMessage='';
-                                                                        secondNounNotRecommend=false;
-                                                                        secondNounNotRecommendNotifyMessage='';
-                                                                        firstNounSynonym=false;
-                                                                        firstNounSynonymNotifyMessage='';
-                                                                        firstNounBroadSynonym=false;
-                                                                        firstNounBroadSynonymNotifyMessage='';
-                                                                        secondNounSynonym=false;
-                                                                        secondNounSynonymNotifyMessage='';
-                                                                        secondNounBroadSynonym=false;
-                                                                        secondNounBroadSynonymNotifyMessage='';
+                                          secondNounUndefined = false;
+                                          lastCharacterDefinition = '';
+                                          firstCharacterUndefined = false;
+                                          firstCharacterDefinition = '';
+                                          wholeCharacterUndefined=false;
+                                          wholeCharacterDefinition='';
+                                          firstNounDeprecated=false;
+                                          firstNounDeprecatedNotifyMessage='';
+                                          secondNounDeprecated=false;
+                                          secondNounDeprecatedNotifyMessage='';
+                                          firstNounNotRecommend=false;
+                                          firstNounNotRecommendNotifyMessage='';
+                                          secondNounNotRecommend=false;
+                                          secondNounNotRecommendNotifyMessage='';
+                                          firstNounSynonym=false;
+                                          firstNounSynonymNotifyMessage='';
+                                          firstNounBroadSynonym=false;
+                                          firstNounBroadSynonymNotifyMessage='';
+                                          secondNounSynonym=false;
+                                          secondNounSynonymNotifyMessage='';
+                                          secondNounBroadSynonym=false;
+                                          secondNounBroadSynonymNotifyMessage='';
                                                                         "
                               list="first_characters"
                               placeholder="select or type"
@@ -601,13 +554,6 @@
                               <option value="Texture">Texture</option>
                               <option value="Growth form">Growth form</option>
                             </datalist>
-                            <!--<select v-model="firstCharacter" style="height: 26px;">-->
-                            <!--<option>Length</option>-->
-                            <!--<option>Width</option>-->
-                            <!--<option>Depth</option>-->
-                            <!--<option>Diameter</option>-->
-                            <!--<option>Distance</option>-->
-                            <!--</select>-->
                           </div>
                           <div class="col-md-3">
                             <select v-model="middleCharacter" style="height: 26px;">
@@ -619,28 +565,28 @@
                             <input
                               v-model="lastCharacter"
                               v-on:focus="nounUndefined = false;
-                                                                        secondNounUndefined = false;
-                                                                        lastCharacterDefinition = '';
-                                                                        firstCharacterUndefined = false;
-                                                                        firstCharacterDefinition = '';
-                                                                        wholeCharacterUndefined=false;
-                                                                        wholeCharacterDefinition='';
-                                                                        firstNounDeprecated=false;
-                                                                        firstNounDeprecatedNotifyMessage='';
-                                                                        secondNounDeprecated=false;
-                                                                        secondNounDeprecatedNotifyMessage='';
-                                                                        firstNounNotRecommend=false;
-                                                                        firstNounNotRecommendNotifyMessage='';
-                                                                        secondNounNotRecommend=false;
-                                                                        secondNounNotRecommendNotifyMessage='';
-                                                                        firstNounSynonym=false;
-                                                                        firstNounSynonymNotifyMessage='';
-                                                                        firstNounBroadSynonym=false;
-                                                                        firstNounBroadSynonymNotifyMessage='';
-                                                                        secondNounSynonym=false;
-                                                                        secondNounSynonymNotifyMessage='';
-                                                                        secondNounBroadSynonym=false;
-                                                                        secondNounBroadSynonymNotifyMessage='';
+                                          secondNounUndefined = false;
+                                          lastCharacterDefinition = '';
+                                          firstCharacterUndefined = false;
+                                          firstCharacterDefinition = '';
+                                          wholeCharacterUndefined=false;
+                                          wholeCharacterDefinition='';
+                                          firstNounDeprecated=false;
+                                          firstNounDeprecatedNotifyMessage='';
+                                          secondNounDeprecated=false;
+                                          secondNounDeprecatedNotifyMessage='';
+                                          firstNounNotRecommend=false;
+                                          firstNounNotRecommendNotifyMessage='';
+                                          secondNounNotRecommend=false;
+                                          secondNounNotRecommendNotifyMessage='';
+                                          firstNounSynonym=false;
+                                          firstNounSynonymNotifyMessage='';
+                                          firstNounBroadSynonym=false;
+                                          firstNounBroadSynonymNotifyMessage='';
+                                          secondNounSynonym=false;
+                                          secondNounSynonymNotifyMessage='';
+                                          secondNounBroadSynonym=false;
+                                          secondNounBroadSynonymNotifyMessage='';
                                                                         "
                               placeholder="enter a singular noun"
                             />
@@ -677,7 +623,6 @@
                             />
                           </div>
 
-                          <!--<input autofocus v-model="character.name" v-on:input="checkMsg"/>-->
                         </div>
                         <br>
                         <div class="row" v-if="firstNounDeprecated">
@@ -846,8 +791,6 @@
                                class="btn btn-primary">Save</a>
                             <a v-if="viewFlag == true" v-on:click="use(item)"
                                class="btn btn-primary">Use this</a>
-                            <!--<a v-if="viewFlag == true" v-on:click="enhance(item)"-->
-                            <!--class="btn btn-primary">Clone and enhance</a>-->
                             <a v-if="viewFlag == true" v-on:click="enhance(item)"
                                class="btn btn-primary">Modify and Use &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b
                               style="border: 1px solid #ffffff; background: #003366;"
@@ -1071,48 +1014,51 @@
                                  style="border-bottom: gray; padding: 2px; font-size: 11pt">
                               <hr v-if="index" style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
                               <span style="margin-left: 20px; margin-right: 50px">
-                                                                <a class="btn btn-primary"
-                                                                   v-on:click="selectExistDetails(eachDetails)"
-                                                                   style="padding-top: 3px; padding-bottom: 3px;">Use this</a>
-                                                            </span>
+                                  <a class="btn btn-primary"
+                                     v-on:click="selectExistDetails(eachDetails)"
+                                     style="padding-top: 3px; padding-bottom: 3px;">Use this</a>
+                              </span>
                               <b>
-                                                                <span>
-                                                                    {{ eachDetails.negation }}
-                                                                </span>
                                 <span>
-                                                                    {{ eachDetails.pre_constraint }}
-                                                                </span>
+                                    {{ eachDetails.negation }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.certainty_constraint }}
-                                                                </span>
+                                    {{ eachDetails.pre_constraint }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.degree_constraint }}
-                                                                </span>
+                                    {{ eachDetails.certainty_constraint }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.brightness }}
-                                                                </span>
+                                    {{ eachDetails.degree_constraint }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.reflectance }}
-                                                                </span>
+                                    {{ eachDetails.brightness }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.saturation }}
-                                                                </span>
+                                    {{ eachDetails.reflectance }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.colored }}
-                                                                </span>
+                                    {{ eachDetails.saturation }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.multi_colored }}
-                                                                </span>
+                                    {{ eachDetails.colored }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.post_constraint }}
-                                                                </span>
+                                    {{ eachDetails.multi_colored }}
+                                </span>
+                                <span>
+                                    {{ eachDetails.post_constraint }}
+                                </span>
                               </b>
                               <span>
-                                                                , usages = {{ eachDetails.usage_count }}
-                                                            </span>
+                                  , usages = {{ eachDetails.usage_count }}
+                              </span>
                               <span>
-                                                                , creator = {{ eachDetails.username }}
-                                                            </span>
+                                  , creator = {{ eachDetails.creator }}
+                              </span>
+                              <span>
+                                  , used by = {{ eachDetails.username }}
+                              </span>
                             </div>
                           </div>
 
@@ -1129,9 +1075,6 @@
                         </div>
                         <div>
                           <div style="display: inline-block;">
-                            <!-- <input v-on:focus="changeColorSection(currentColorValue, 'negation', $event)"
-                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                            v-model="currentColorValue.negation" placeholder=""> -->
                             <select style="width: 90px; height: 26px;"
                                     v-model="currentColorValue.negation"
                                     v-on:change="changeColorSection(currentNonColorValue, 'negation', $event)">
@@ -1277,10 +1220,6 @@
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
-<!--                                <span v-if="node.data.details[0].definition" @click="showDefinition(node, $event)"><img-->
-<!--                                  src="/chrecorder/public/images/icon-definition.png" style="width: 12px;"/></span>-->
-<!--                                <span v-if="node.text == 'brown'" @click="showPalette(node, $event)"><img-->
-<!--                                  src="/chrecorder/public/images/color-palette.png" style="width: 12px;"/></span>-->
                               </div>
                             </div>
                           </tree>
@@ -1320,15 +1259,6 @@
                                     }}): </label> {{
                                     eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                   }}
-                                  <!-- <a class="btn"
-                                                                    v-on:click="expandCommentSection(eachSynonym, currentColorValue.detailFlag)"><span
-                                                                            class="glyphicon glyphicon-comment"></span></a>
-                                                                    <div v-if="eachSynonym.commentFlag == true">
-                                                                        Do not like this term? improve or add definition for it:
-                                                                        <input
-                                                                                v-model="colorComment[currentColorValue.detailFlag]"
-                                                                                style="width: 100%;">
-                                                                    </div> -->
                                 </div>
                               </div>
                               <b><span>The term {{ currentColorValue[flag] }} you just entered has been deprecated because "{{
@@ -1350,15 +1280,6 @@
                                     }}): </label> {{
                                     eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                   }}
-                                  <!-- <a class="btn"
-                                                                    v-on:click="expandCommentSection(eachSynonym, currentColorValue.detailFlag)"><span
-                                                                            class="glyphicon glyphicon-comment"></span></a>
-                                                                    <div v-if="eachSynonym.commentFlag == true">
-                                                                        Do not like this term? improve or add definition for it:
-                                                                        <input
-                                                                                v-model="colorComment[currentColorValue.detailFlag]"
-                                                                                style="width: 100%;">
-                                                                    </div> -->
                                 </div>
                                 <input type="radio" id="user-defined"
                                        v-bind:value="defaultColorValue[flag]"
@@ -1402,11 +1323,6 @@
                               <div v-if="saveInProgress" class="ld ld-ring ld-spin"></div>
                               <div v-else>Save</div>
                             </a>
-                            &nbsp;&nbsp;
-                            <!-- <a class="btn btn-primary ok-btn"
-                                                        :disabled="saveColorButtonFlag"
-                                                        v-on:click="saveColorValue(true)">
-                                                            Save & New </a> -->
                             <a v-on:click="colorDetailsFlag = false;"
                                class="btn btn-danger"
                                style="width: 70px;"
@@ -1459,94 +1375,44 @@
                                  style="border-bottom: gray; padding: 2px; font-size: 11pt">
                               <hr v-if="index" style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
                               <span style="margin-left: 20px; margin-right: 50px">
-                                                                <a class="btn btn-primary"
-                                                                   style="padding-top: 3px; padding-bottom: 3px;"
-                                                                   v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
-                                                            </span>
+                                <a class="btn btn-primary"
+                                   style="padding-top: 3px; padding-bottom: 3px;"
+                                   v-on:click="selectExistNonColorDetails(eachDetails)">Use this</a>
+                              </span>
                               <b>
-                                                                <span>
-                                                                    {{ eachDetails.negation }}
-                                                                </span>
                                 <span>
-                                                                    {{ eachDetails.pre_constraint }}
-                                                                </span>
+                                  {{ eachDetails.negation }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.certainty_constraint }}
-                                                                </span>
+                                  {{ eachDetails.pre_constraint }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.degree_constraint }}
-                                                                </span>
+                                  {{ eachDetails.certainty_constraint }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.main_value }}
-                                                                </span>
+                                  {{ eachDetails.degree_constraint }}
+                                </span>
                                 <span>
-                                                                    {{ eachDetails.post_constraint }}
-                                                                </span>
+                                  {{ eachDetails.main_value }}
+                                </span>
+                                <span>
+                                  {{ eachDetails.post_constraint }}
+                                </span>
                               </b>
                               <span>
-                                                                , usages = {{ eachDetails.count }}
-                                                            </span>
+                                  , usages = {{ eachDetails.count }}
+                              </span>
                               <span>
-                                                                , creator = {{ eachDetails.username }}
-                                                            </span>
+                                  , creator = {{ eachDetails.creator }}
+                              </span>
+                              <span>
+                                  , used by = {{ eachDetails.username }}
+                              </span>
                             </div>
                           </div>
 
                         </div>
                       </div>
-                      <!-- <div v-if="nonColorDetails.length > 0"
-                                                style="border-radius: 5px; border: 1px solid; padding: 15px; margin-top: 10px;">
-                                                <div style="float: right;">
-                                                    <a class="btn btn-primary" v-if="currentNonColorValueExist == false"
-                                                    v-on:click="currentNonColorValueExist = true;">
-                                                        <span class="glyphicon glyphicon-chevron-down"></span>
-                                                    </a>
-                                                    <a class="btn btn-primary" v-if="currentNonColorValueExist == true"
-                                                    v-on:click="currentNonColorValueExist = false;">
-                                                        <span class="glyphicon glyphicon-chevron-up"></span>
-                                                    </a>
-                                                </div>
-                                                <div>
-                                                    <b>Current values</b>
-                                                </div>
-                                                <div v-for="(eachValue, index) in nonColorDetails"
-                                                    v-if="currentNonColorValueExist == true" class="row"
-                                                    style="margin-top: 5px;">
-                                                    <div class="col-md-6">
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachValue.negation != null">
-                                                            {{ eachValue.negation }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachValue.pre_constraint != null">
-                                                            {{ eachValue.pre_constraint }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachValue.certainty_constraint != null">
-                                                            {{ eachValue.certainty_constraint }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachValue.degree_constraint != null">
-                                                            {{ eachValue.degree_constraint }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachValue.main_value != null">
-                                                            {{ eachValue.main_value }}
-                                                        </div>
-                                                        <div style="display: inline-block;"
-                                                            v-if="eachValue.post_constraint != null">
-                                                            {{ eachValue.post_constraint }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <a class="btn btn-primary" style="padding: 3px 6px;"
-                                                        v-on:click="editEachNonColor(eachValue)">Edit</a>
-                                                        <a class="btn btn-primary" style="padding: 3px 6px;"
-                                                        v-on:click="removeEachNonColor(eachValue)">Remove</a>
-                                                    </div>
-                                                </div>
-                                            </div> -->
-
                     </div>
                     <div class="modal-body">
 
@@ -1556,9 +1422,6 @@
                         </div>
                         <div>
                           <div style="display: inline-block;">
-                            <!-- <input v-on:focus="changeNonColorSection(currentNonColorValue, 'negation', $event)"
-                                                            style="width: 90px; border:none; border-bottom: 1px solid; text-align:center;"
-                                                            v-model="currentNonColorValue.negation" placeholder=""> -->
                             <select style="width: 90px; height: 26px;"
                                     v-model="currentNonColorValue.negation"
                                     v-on:change="changeNonColorSection(currentNonColorValue, 'negation', $event)">
@@ -1636,18 +1499,8 @@
                             </h5>
                           </div>
                         </div>
-                        <!-- <div v-if="currentNonColorValue.detailFlag == 'negation'"
-                                                    style="margin-top: 10px;">
-                                                    <input type="radio" id="non-not" v-model="currentNonColorValue.negation"
-                                                        v-bind:value="'Not'"/> <label for="non-not">Not</label> <br/>
-                                                    <input type="radio" id="non-unselect-not"
-                                                        v-model="currentNonColorValue.negation"
-                                                        v-bind:value="''"/> <label for="non-unselect-not">Unselect
-                                                    Not</label>
-                                                </div> -->
                         <div v-if="(currentNonColorValue.detailFlag == 'main_value') && nonColorExistFlag"
                              style="margin-top: 10px;">
-                          <!--<input style="width: 300px;" v-model="nonColorSearchText" placeholder="Enter a term to filter the term tree"/>-->
                           <tree
                             :data="textureTreeData"
                             :options="treeOption"
@@ -1659,9 +1512,8 @@
                               <div class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
-                                      class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
-<!--                                <span v-if="node.data.details[0].definition" @click="showDefinition(node, $event)"><img-->
-<!--                                  src="/chrecorder/public/images/icon-definition.png" style="width: 12px;"/></span>-->
+                                      class="glyphicon glyphicon-picture" @click="showViewer(node, $event)">
+                                </span>
                               </div>
                             </div>
                           </tree>
@@ -1694,15 +1546,6 @@
                                     }}): </label> {{
                                     eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                   }}
-                                  <!-- <a class="btn"
-                                                                    v-on:click="expandCommentSection(eachSynonym, currentNonColorValue.detailFlag)"><span
-                                                                            class="glyphicon glyphicon-comment"></span></a>
-                                                                    <div v-if="eachSynonym.commentFlag == true">
-                                                                        Don't you like this term? improve or add definition for it:
-                                                                        <input
-                                                                                v-model="nonColorComment[currentNonColorValue.detailFlag]"
-                                                                                style="width: 100%;">
-                                                                    </div> -->
                                 </div>
                               </div>
                             </div>
@@ -1724,15 +1567,6 @@
                                   }}): </label> {{
                                   eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                 }}
-                                <!-- <a class="btn"
-                                                                v-on:click="expandCommentSection(eachSynonym, currentNonColorValue.detailFlag)"><span
-                                                                        class="glyphicon glyphicon-comment"></span></a>
-                                                                <div v-if="eachSynonym.commentFlag == true">
-                                                                    Don't you like this term? improve or add definition for it:
-                                                                    <input
-                                                                            v-model="nonColorComment[currentNonColorValue.detailFlag]"
-                                                                            style="width: 100%;">
-                                                                </div> -->
                               </div>
                             </div>
                             <div v-if="searchNonColorFlag != 2">
@@ -1740,10 +1574,6 @@
                                      v-bind:value="defaultNonColorValue"
                                      v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"
                                      v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
-                              <!--<input type="radio" id="non-user-defined"-->
-                              <!--v-bind:value="defaultNonColorValue + '(user defined)'"-->
-                              <!--v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, defaultNonColorValue)"-->
-                              <!--v-model="currentNonColorValue[currentNonColorValue.detailFlag]">-->
                               <label for="non-user-defined">Use my term '{{
                                   defaultNonColorValue
                                 }}'(please define the term, all input required):</label>
@@ -1766,20 +1596,23 @@
                           <div style="float: right; margin-right: 20px">
                             <a class="btn btn-primary ok-btn"
                                style="width: 70px;"
-                               v-bind:class="{disabled: saveNonColorButtonFlag ||
-                                                                                     saveInProgress ||
-                                                                                     (currentNonColorDeprecated && currentNonColorDeprecated['deprecate term'] == currentNonColorValue[currentNonColorValue.detailFlag])}"
+                               v-bind:class="{ disabled: saveNonColorButtonFlag ||
+                                               saveInProgress ||
+                                               (currentNonColorDeprecated &&
+                                               currentNonColorDeprecated['deprecate term'] == currentNonColorValue[currentNonColorValue.detailFlag]) }"
                                v-on:click="saveNonColorValue()"
                             >
                               <div v-if="saveInProgress" class="ld ld-ring ld-spin"></div>
                               <div v-else>Save</div>
                             </a>
-                            <!-- <a class="btn btn-primary ok-btn"
-                                                        :disabled="saveNonColorButtonFlag"
-                                                        v-on:click="saveNonColorValue(true)">
-                                                            Save & New </a> -->
-                            <a
-                              v-on:click="nonColorDetailsFlag = false;currentNonColorValue.main_value='';currentNonColorValue.negation = null;currentNonColorValue.pre_constraint = null;currentNonColorValue.certainty_constraint = null;currentNonColorValue.degree_constraint = null;currentNonColorValue.post_constraint = null;currentNonColorValue.confirmedFlag['main_value'] = false;"
+                            <a v-on:click="nonColorDetailsFlag = false;
+                                            currentNonColorValue.main_value='';
+                                            currentNonColorValue.negation = null;
+                                            currentNonColorValue.pre_constraint = null;
+                                            currentNonColorValue.certainty_constraint = null;
+                                            currentNonColorValue.degree_constraint = null;
+                                            currentNonColorValue.post_constraint = null;
+                                            currentNonColorValue.confirmedFlag['main_value'] = false;"
                               class="btn btn-danger"
                               style="width: 70px;"
                               v-bind:class="{disabled: saveInProgress}">
@@ -1912,23 +1745,41 @@
                         <span style="color:#636b6f;"
                               v-if="removeEachColorValue.negation && removeEachColorValue.negation != ''"> {{ removeEachColorValue.negation }}</span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.pre_constraint && removeEachColorValue.pre_constraint != ''"> {{ removeEachColorValue.pre_constraint }}</span>
+                              v-if="removeEachColorValue.pre_constraint && removeEachColorValue.pre_constraint != ''">
+                          {{ removeEachColorValue.pre_constraint }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.negation && removeEachColorValue.negation != ''"> {{ removeEachColorValue.negation }}</span>
+                              v-if="removeEachColorValue.negation && removeEachColorValue.negation != ''">
+                          {{ removeEachColorValue.negation }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.certainty_constraint && removeEachColorValue.certainty_constraint != ''"> {{ removeEachColorValue.certainty_constraint }}</span>
+                              v-if="removeEachColorValue.certainty_constraint && removeEachColorValue.certainty_constraint != ''">
+                          {{ removeEachColorValue.certainty_constraint }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.degree_constraint && removeEachColorValue.degree_constraint != ''"> {{ removeEachColorValue.degree_constraint }}</span>
+                              v-if="removeEachColorValue.degree_constraint && removeEachColorValue.degree_constraint != ''">
+                          {{ removeEachColorValue.degree_constraint }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.brightness && removeEachColorValue.brightness != ''"> {{ removeEachColorValue.brightness }}</span>
+                              v-if="removeEachColorValue.brightness && removeEachColorValue.brightness != ''">
+                          {{ removeEachColorValue.brightness }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.reflectance && removeEachColorValue.reflectance != ''"> {{ removeEachColorValue.reflectance }}</span>
+                              v-if="removeEachColorValue.reflectance && removeEachColorValue.reflectance != ''">
+                          {{ removeEachColorValue.reflectance }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.saturation && removeEachColorValue.saturation != ''"> {{ removeEachColorValue.saturation }}</span>
+                              v-if="removeEachColorValue.saturation && removeEachColorValue.saturation != ''">
+                          {{ removeEachColorValue.saturation }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.colored && removeEachColorValue.colored != ''"> {{ removeEachColorValue.colored }}</span>
+                              v-if="removeEachColorValue.colored && removeEachColorValue.colored != ''">
+                          {{ removeEachColorValue.colored }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachColorValue.multi_colored && removeEachColorValue.multi_colored != ''"> {{ removeEachColorValue.multi_colored }}</span>?
+                              v-if="removeEachColorValue.multi_colored && removeEachColorValue.multi_colored != ''">
+                          {{ removeEachColorValue.multi_colored }}
+                        </span>?
                       </b>
                     </div>
                   </div>
@@ -1962,15 +1813,25 @@
                         <span style="color:#636b6f;"
                               v-if="removeEachNonColorValue.negation && removeEachNonColorValue.negation != ''"> {{ removeEachNonColorValue.negation }}</span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachNonColorValue.pre_constraint && removeEachNonColorValue.pre_constraint != ''"> {{ removeEachNonColorValue.pre_constraint }}</span>
+                              v-if="removeEachNonColorValue.pre_constraint && removeEachNonColorValue.pre_constraint != ''">
+                          {{ removeEachNonColorValue.pre_constraint }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachNonColorValue.certainty_constraint && removeEachNonColorValue.certainty_constraint != ''"> {{ removeEachNonColorValue.certainty_constraint }}</span>
+                              v-if="removeEachNonColorValue.certainty_constraint && removeEachNonColorValue.certainty_constraint != ''">
+                          {{ removeEachNonColorValue.certainty_constraint }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachNonColorValue.degree_constraint && removeEachNonColorValue.degree_constraint != ''"> {{ removeEachNonColorValue.degree_constraint }}</span>
+                              v-if="removeEachNonColorValue.degree_constraint && removeEachNonColorValue.degree_constraint != ''">
+                          {{ removeEachNonColorValue.degree_constraint }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachNonColorValue.main_value && removeEachNonColorValue.main_value != ''"> {{ removeEachNonColorValue.main_value }}</span>
+                              v-if="removeEachNonColorValue.main_value && removeEachNonColorValue.main_value != ''">
+                          {{ removeEachNonColorValue.main_value }}
+                        </span>
                         <span style="color:#636b6f;"
-                              v-if="removeEachNonColorValue.post_constraint && removeEachNonColorValue.post_constraint != ''"> {{ removeEachNonColorValue.post_constraint }}</span>?
+                              v-if="removeEachNonColorValue.post_constraint && removeEachNonColorValue.post_constraint != ''">
+                          {{ removeEachNonColorValue.post_constraint }}
+                        </span>?
                       </b>
                     </div>
                   </div>
@@ -2188,7 +2049,6 @@
                     <div class="modal-body" style="min-height: 25vh;">
                       <div style="margin-top: 0px;">
                         <div style="border-bottom: gray; padding 2px; font-size: 11pt">
-                          <!-- <v-autocomplete placeholder="name the version" :items="showNamesList" :min-len="1" @update-items="updateItems" @item-selected="itemSelected"></v-autocomplete> -->
                           <list-select
                             :list="namesList"
                             optionValue="matrix_name"
@@ -2201,10 +2061,6 @@
                             will overwrite the current matrix
                           </div>
                         </div>
-                        <!-- <div style="border-bottom: gray; padding 2px; font-size: 11pt; margin-top:16px;">
-                                                    <div style="margin-left: 12px;margin-bottom: 4px;font-style: italic;"> Name as new version </div>
-                                                    <input v-model="currentName" placeholder="name this version" v-on:keyup="onChangeCurrentName" style="width: 100%;height: 37px;padding: 16px;"/>
-                                                </div> -->
                       </div>
                     </div>
                     <div class="modal-footer">
@@ -2764,7 +2620,8 @@ export default {
       toRemoveColorValueConfirmFlag: false,
       removeEachColorValue: null,
       toRemoveNonColorValueConfirmFlag: false,
-      removeEachNonColorValue: null
+      removeEachNonColorValue: null,
+      colorPaletteData: []
     }
   },
   components: {
@@ -2962,11 +2819,6 @@ export default {
       console.log('app.defaultCharacters', app.defaultCharacters);
       var selectedCharacter = app.defaultCharacters.find(ch => ch.id == selectedItem)
 
-      // if (!selectedCharacter) {
-      //     selectedCharacter = app.userCharacters.find(ch => ch.id == selectedItem);
-      // } else if (app.userCharacters.find(ch => ch.name == selectedCharacter.name)) {
-      //     selectedCharacter = app.userCharacters.find(ch => ch.name == selectedCharacter.name && ch.username == selectedCharacter.username);
-      // }
       app.editFlag = false;
       sessionStorage.setItem('editFlag', false);
       console.log("selectedCharacter", selectedCharacter);
@@ -3015,17 +2867,6 @@ export default {
         sessionStorage.setItem('edit_created_other', true);
         app.editCharacter(app.character);
 
-        // if (app.character.username.includes(app.user.name)) {
-        // //    app.viewFlag = false;
-        // //    sessionStorage.setItem('viewFlag', false);
-        // //    sessionStorage.setItem('edit_created_other', false);
-        //     app.editCharacter({character_id: app.character.id}, true);
-        // } else {
-        //     app.viewFlag = true;
-        //     sessionStorage.setItem('viewFlag', true);
-        //     sessionStorage.setItem('edit_created_other', true);
-        //     app.editCharacter(app.character);
-        // }
       }
       console.log('selectedCharacter', selectedCharacter);
     },
@@ -3145,10 +2986,8 @@ export default {
         sessionStorage.setItem('edit_created_other', !editFlag);
         sessionStorage.setItem('editFlag', editFlag);
         app.character = app.userCharacters.find(ch => ch.id == character.character_id);
-        //    app.character.standard = 0;
       } else {
         app.character = character;
-        //    app.character.standard = 0;
       }
 
       console.log('app.character.username', app.character.username);
@@ -3565,10 +3404,21 @@ export default {
                   } else {
                     if (tempBroadSynonyms.length > 0) {
                       app.firstNounBroadSynonym = true;
-                      app.firstNounBroadSynonymNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
-                      if (tempBroadSynonyms.length > 1) {
-                        for (var i = 1; i < tempBroadSynonyms.length; i++) {
-                          app.firstNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+
+                      var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
+
+                      if (app.middleCharacter == 'between') {
+                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                      }
+                      if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
+                        app.firstNounBroadSynonymNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
+
+                      } else {
+                        app.firstNounBroadSynonymNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                        if (tempBroadSynonyms.length > 1) {
+                          for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                            app.firstNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                          }
                         }
                       }
                       app.firstNounBroadSynonymNotifyMessage += "</b>.";
@@ -3688,10 +3538,20 @@ export default {
                     } else {
                       if (tempBroadSynonyms.length > 0) {
                         app.secondNounBroadSynonym = true;
-                        app.secondNounBroadSynonymNotifyMessage = "Term <b>" + app.secondLastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
-                        if (tempBroadSynonyms.length > 1) {
-                          for (var i = 1; i < tempBroadSynonyms.length; i++) {
-                            app.secondNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                        var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
+
+                        if (app.middleCharacter == 'between') {
+                          tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                        }
+                        if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
+                          app.secondNounBroadSynonymNotifyMessage = "Term <b>" + app.secondLastCharacter + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
+
+                        } else {
+                          app.secondNounBroadSynonymNotifyMessage = "Term <b>" + app.secondLastCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                          if (tempBroadSynonyms.length > 1) {
+                            for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                              app.secondNounBroadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                            }
                           }
                         }
                         app.secondNounBroadSynonymNotifyMessage += "</b>.";
@@ -4125,7 +3985,6 @@ export default {
     },
     showStandardCharacters() {
       var app = this;
-      // app.isLoading = true;
       app.standardShowFlag = !app.standardShowFlag;
       console.log('userCharacters', app.userCharacters);
       console.log('defaultCharacters', app.standardCollections);
@@ -4142,19 +4001,9 @@ export default {
       axios.post('/chrecorder/public/api/v1/character/add-standard', postCharacters)
         .then(function (resp) {
           console.log('addStandard resp', resp.data);
-          // app.userCharacters = resp.data.sort(function (a, b) {
-          //   if (a.name < b.name) {
-          //     return -1;
-          //   }
-          //   if (a.name > b.name) {
-          //     return 1;
-          //   }
-          //   return 0;
-          // });
           app.userCharacters = resp.data;
           app.isLoading = false;
           app.refreshUserCharacters();
-          // app.showTableForTab(app.currentTab);
         });
     },
     removeStandardCharacter(characterId) {
@@ -4218,7 +4067,6 @@ export default {
     },
     removeAllCharacters() {
       var app = this;
-      // app.isLoading = true;
       axios.post('/chrecorder/public/api/v1/character/remove-all')
         .then(function (resp) {
           app.isLoading = false;
@@ -4587,7 +4435,6 @@ export default {
               console.log('class error resp', resp);
             });
         }
-        //    });
       }
 
       const awaitTimerID = setInterval(function () {
@@ -4718,12 +4565,6 @@ export default {
           }
 
           if (checkFields) {
-            // if (app.checkHaveUnit(app.character.name)) {
-            //     app.confirmMethod = true;
-            // } else {
-            //     app.confirmTag = true;
-            // }
-
             app.confirmSave(app.metadataFlag);
 
           } else {
@@ -4748,14 +4589,11 @@ export default {
         selectedCharacter = app.userCharacters.find(ch => ch.id == characterId);
       }
       console.log('selectedCharacter.username', selectedCharacter.username);
-      //    selectedCharacter.username = selectedCharacter.username + ', ' + app.user.name;
-      //    app.characterUsername = selectedCharacter.username + ', ' + app.user.name;
       app.oldCharacter.method_from = selectedCharacter.method_from;
       app.oldCharacter.method_to = selectedCharacter.method_to;
       app.oldCharacter.method_include = selectedCharacter.method_include;
       app.oldCharacter.method_exclude = selectedCharacter.method_exclude;
       app.oldCharacter.method_where = selectedCharacter.method_where;
-      //    app.editFlag = true;
       selectedCharacter.creator = app.user.name + ' via CR';
       selectedCharacter.standard = 0;
       app.detailsFlag = false;
@@ -4811,8 +4649,6 @@ export default {
         .then(function (resp) {
           console.log('getCharacter', resp);
           var currentCharacters = resp.data.characters;
-          //    app.character.standard = 0;
-          //    app.character.username = app.characterUsername;
           app.character.name = app.character.name.toLowerCase();
           app.character.name = app.character.name.charAt(0).toUpperCase() + app.character.name.slice(1);
           if (currentCharacters.find(ch => ch.name.toLowerCase() == app.character.name.toLowerCase()
@@ -4952,7 +4788,6 @@ export default {
     },
     confirmCollapse() {
       var app = this;
-      //alert('');
       console.log('userTags', app.userTags);
       console.log('userCharacters', app.userCharacters);
       console.log('standardCharactersTags', app.standardCharactersTags);
@@ -4965,7 +4800,6 @@ export default {
     },
     generateMatrix() {
       var app = this;
-      // app.isLoading = true;
       if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
         var jsonMatrix = {
           'user_id': app.user.id,
@@ -5007,7 +4841,6 @@ export default {
     },
     confirmRemoveHeader() {
       var app = this;
-      // app.isLoading = true;
       axios.post('/chrecorder/public/api/v1/delete-header/' + app.toRemoveHeaderId)
         .then(function (resp) {
           console.log('delete header', resp.data);
@@ -5073,7 +4906,6 @@ export default {
                     }
                   }
                 }
-                //app.values = resp.data.values;
                 app.defaultCharacters = resp.data.defaultCharacters;
                 app.refreshDefaultCharacters();
                 app.refreshUserCharacters();
@@ -5088,7 +4920,6 @@ export default {
     },
     removeAllStandardCharacters() {
       var app = this;
-      // app.isLoading = true;
       axios.get('/chrecorder/public/api/v1/character/remove-all-standard')
         .then(function (resp) {
           app.removeAllStandardFlag = false;
@@ -5162,7 +4993,6 @@ export default {
         app.userCharacters[i].tooltip = src + app.userCharacters[i].tooltip;
 
 
-        // app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
       }
       for (var i = 0; i < app.userTags.length; i++) {
         console.log(app.userTags[i].tag_name);
@@ -5181,7 +5011,6 @@ export default {
     },
     showTableForTab(tagName) {
       var app = this;
-      // app.isLoading = true;
       if (!app.userTags.find(tag => tag.tag_name == tagName) && app.userTags.length > 0) {
         tagName = app.userTags[0].tag_name;
       }
@@ -5436,16 +5265,7 @@ export default {
       }
       app.defaultCharacters = tempDefaultCharacters;
       console.log('app.standardCharacters for refresh', app.standardCharacters);
-      // for (var index = 0; index < app.standardCharacters.length; index ++) {
-      //     app.getTooltipImage(app.standardCharacters[index].name, index);
-      // }
     },
-    // expandTable() {
-    //     var app = this;
-    //     if (app.descriptionFlag != -1) {
-    //         app.descriptionFlag--;
-    //     }
-    // },
     expandDescription() {
       var app = this;
       app.descriptionFlag = !app.descriptionFlag;
@@ -5526,10 +5346,6 @@ export default {
             if (app.checkHaveUnit(filteredCharacters[j].name)) {
               switch (filteredCharacters[j].summary) {
                 case "range-percentile":
-                  // if (filteredCharacters[j].name.startsWith('Distance')) {
-                  //     console.log("distance", filteredCharacters[j].name);
-                  //     app.descriptionText += filteredCharacters[j].name + ' ';
-                  // }
                   var tempRpArray = [];
                   for (var l = 0; l < tempValueArray.length; l++) {
                     if (tempValueArray[l] != null && tempValueArray[l] != '' && tempValueArray[l] != undefined) {
@@ -5548,24 +5364,6 @@ export default {
                   } else {
                     range = minValue + '-' + maxValue;
                   }
-                  // if (tempRpArray.length % 2 == 0) {
-                  //     minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1];
-                  //     maxPercentileValue = tempRpArray[tempRpArray.length / 2];
-                  // } else {
-                  //     if (tempRpArray.length == 1) {
-                  //         minPercentileValue = tempRpArray[0];
-                  //         maxPercentileValue = tempRpArray[0];
-                  //     } else {
-                  //         minPercentileValue = tempRpArray[tempRpArray.length / 2 - 1.5];
-                  //         maxPercentileValue = tempRpArray[tempRpArray.length / 2 + 0.5];
-                  //     }
-                  // }
-                  // if (minValue == maxValue) {
-                  //     app.descriptionText += minValue;
-                  // } else {
-                  //     app.descriptionText += '(' + minValue + '-)' + minPercentileValue + '-' + maxPercentileValue + '(-' + maxValue + ') ';
-                  //     // app.descriptionText += minPercentileValue + '-' + maxPercentileValue;
-                  // }
 
                   app.descriptionText += range;
 
@@ -7080,6 +6878,7 @@ export default {
             && array[i].multi_colored == result[j].multi_colored
             && array[i].post_constraint == result[j].post_constraint) {
             result[j].count = result[j].count + 1;
+
             if (array[i].usage_count > 0) {
               if (!result[j].username.split(', ').includes(array[i].username)) {
                 result[j].usage_count = result[j].usage_count + array[i].usage_count;
@@ -7091,6 +6890,7 @@ export default {
         }
         if (resultFlag) {
           array[i].count = 1;
+          array[i].creator = array[i].username;
           result.push(array[i]);
         }
       }
@@ -7423,15 +7223,6 @@ export default {
               app.colorDetailsFlag = true;
             }
           }
-          // setTimeout(() => {
-          //     console.log("v-if", (app.currentColorValue.detailFlag == 'brightness'
-          //     || app.currentColorValue.detailFlag == 'reflectance'
-          //     || app.currentColorValue.detailFlag == 'saturation'
-          //     || app.currentColorValue.detailFlag == 'colored'
-          //     || app.currentColorValue.detailFlag == 'multi_colored') && app.colorExistFlag);
-          //     console.log("app.colorExistFlag",app.colorExistFlag);
-          //     console.log("app.currentColorValue.detailFlag",app.currentColorValue.detailFlag);
-          // },300)
         }
       } else {
         color.detailFlag = flag;
@@ -7515,16 +7306,10 @@ export default {
       }
       searchText = searchText.replace(' ', '-');
 
-      // if (searchText == 'relationship'){
-      //     searchText = 'relational quality';
-      // }
       console.log('searchText', searchText);
       if (flag == 'negation') {
         event.target.placeholder = '';
       }
-      //    } else if (flag == 'main_value') {
-      //        event.target.placeholder = searchText[0];
-      //    }
 
       if (flag == 'main_value') {
 
@@ -7664,7 +7449,6 @@ export default {
 
       app.colorSynonyms[flag] = [];
 
-      //    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + color[flag])
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag])
         .then(async function (resp) {
           console.log(color[flag]);
@@ -7672,21 +7456,6 @@ export default {
           app.searchColor = resp.data.entries;
           if (app.searchColor.length == 0) {
             app.searchColorFlag = 0;
-            // for (var i = 0; i < arrayFlag.length; i++) {
-            //     if (arrayFlag[i] != flag) {
-            //         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag] + '&ancestorIRI=http://biosemantics.arizona.edu/ontologies/carex%23' + app.changeToSubClassName(arrayFlag[i]))
-            //             .then(function (resp) {
-            //                 if (resp.data.entries.length != 0) {
-            //                     var tempJson = {
-            //                         flag: arrayFlag[i],
-            //                         value: color[flag]
-            //                     };
-            //                     app.extraColors.push(tempJson);
-            //                 }
-            //             });
-
-            //     }
-            // }
             app.currentColorValue.confirmedFlag[flag] = true;
           } else if (app.searchColor.find(eachColor => eachColor.resultAnnotations.find(eachProperty => (eachProperty.property.endsWith('ynonym') && eachProperty.value == color[flag]) || eachColor.term == color[flag]))) {
             app.searchColorFlag = 1;
@@ -7704,8 +7473,6 @@ export default {
               }
               if (app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                 app.colorSynonyms[flag][i].definition = app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-                //var index = app.colorDetails.indexOf(color);
-                //app.colorDefinition[index][flag] = app.colorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
               } else {
                 var index = app.colorDetails.indexOf(color);
                 app.colorDefinition[flag] = null;
@@ -7727,7 +7494,6 @@ export default {
       app.nonColorSynonyms = [];
       app.colorExistFlag = false;
 
-      //    axios.get('http://shark.sbs.arizona.edu:8080/carex/search?user=' + app.user.name + '&term=' + nonColor[flag])
       console.log(nonColor[flag]);
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + nonColor[flag])
         .then(function (resp) {
@@ -7773,20 +7539,6 @@ export default {
               }
             }
           }
-
-          // else if (app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag])) {
-          //     app.searchNonColorFlag = 2;
-          //     app.exactNonColor = app.searchNonColor.find(eachValue => eachValue.term == nonColor[flag]);
-          //     if (app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-          //         app.exactNonColor.definition = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-          //         var index = app.nonColorDetails.indexOf(nonColor);
-          //         app.nonColorDefinition[flag] = app.exactNonColor.resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-          //         app.currentNonColorValue.confirmedFlag['main_value'] = true;
-          //     } else {
-          //         var index = app.nonColorDetails.indexOf(nonColor);
-          //         app.nonColorDefinition[flag] = null;
-          //     }
-          // }
           console.log('app.searchNonColorFlag', app.searchNonColorFlag);
         });
     },
@@ -8030,16 +7782,6 @@ export default {
       };
       app.extraColors = [];
       app.currentColorValue.detailsFlag = null;
-
-      // setTimeout(() => {
-      //     console.log("v-if", (app.currentColorValue.detailFlag == 'brightness'
-      //     || app.currentColorValue.detailFlag == 'reflectance'
-      //     || app.currentColorValue.detailFlag == 'saturation'
-      //     || app.currentColorValue.detailFlag == 'colored'
-      //     || app.currentColorValue.detailFlag == 'multi_colored') && app.colorExistFlag);
-      //     console.log("app.colorExistFlag",app.colorExistFlag);
-      //     console.log("app.currentColorValue.detailFlag",app.currentColorValue.detailFlag);
-      // },300)
     },
     confirmRemoveEachColor(color) {
       var app = this;
@@ -8069,14 +7811,8 @@ export default {
       app.currentNonColorValue.confirmedFlag = {
         'main_value': false
       };
-      // app.currentNonColorValue.confirmedFlag['main_value'] = false;
       app.currentNonColorValue.placeholderName = tempPlaceholderName;
       app.currentNonColorValue.detailsFlag = null;
-      // setTimeout(()=>{
-      //     console.log('v-if',(app.currentNonColorValue.detailFlag == 'main_value') && app.nonColorExistFlag);
-      //     console.log('app.currentNonColorValue.detailFlag',app.currentNonColorValue.detailFlag);
-      //     console.log('app.nonColorExistFlag',app.nonColorExistFlag);
-      // },300)
     },
     confirmRemoveEachNonColor(value) {
       var app = this;
@@ -8133,7 +7869,6 @@ export default {
       var app = this;
 
       app.currentColorValue[flag] = value;
-      //    app.currentColorValue[currentFlag] = value;
     },
     selectExistDetails(colorDetails) {
       var app = this;
@@ -8480,11 +8215,9 @@ export default {
       }
     },
     resetSystem() {
-      // window.location.reload();
       var app = this;
       axios.get("/chrecorder/public/api/v1/resetSystem")
         .then((resp) => {
-          // console.log(resp);
           alert("Click OK to reset the system");
           window.location.reload()
         });
@@ -8542,82 +8275,16 @@ export default {
         console.log('app.deprecatedTerms', app.deprecatedTerms);
       });
     console.log('standard_characters');
-    // await axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollectionOrder")
-    //   .then(function(resp) {
-    //
-    //   });
     await axios.get('/chrecorder/public/api/v1/standard_characters')
       .then(async function (resp) {
         console.log('standardCharacters', resp);
         app.defaultCharacters = resp.data;
         app.refreshDefaultCharacters();
       });
-        // app.defaultCharacters = resp.data.sort(function (a, b) {
-        //   if (a.name < b.name) {
-        //     return -1;
-        //   }
-        //   if (a.name > b.name) {
-        //     return 1;
-        //   }
-        //   return 0;
-        // });
-        //
-        // var toolTopIndex = 0;
-        // for (var i = 0; i < resp.data.length; i++) {
-        //   var temp = {};
-        //   temp.name = resp.data[i].name;
-        //   // if (resp.data[i].standard == 1) {
-        //   //   if (toolTopIndex % 12 == 0) {
-        //   //     app.standardCharactersTooltip += '<div class="row">';
-        //   //   }
-        //   //   app.standardCharactersTooltip += '<div class="col-md-1" style="padding:0 !important;">';
-        //   //   app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + resp.data[i].name + '</h6>';
-        //   //   app.standardCharactersTooltip += '</div>';
-        //   //   if (toolTopIndex % 12 == 11) {
-        //   //     app.standardCharactersTooltip += '</div>';
-        //   //   }
-        //   //   toolTopIndex++;
-        //   // }
-        //   temp.text = resp.data[i].name + ' by ' + resp.data[i].username + ' (' + resp.data[i].usage_count + ')';
-        //   temp.value = resp.data[i].id;
-        //   temp.tooltip = '';
-        //
-        //   if (resp.data[i].method_from != null && resp.data[i].method_from != '') {
-        //     temp.tooltip = temp.tooltip + 'From: ' + resp.data[i].method_from + ', ';
-        //   }
-        //   if (resp.data[i].method_to != null && resp.data[i].method_to != '') {
-        //     temp.tooltip = temp.tooltip + 'To: ' + resp.data[i].method_to + ', ';
-        //   }
-        //   if (resp.data[i].method_include != null && resp.data[i].method_include != '') {
-        //     temp.tooltip = temp.tooltip + 'Include: ' + resp.data[i].method_include + ', ';
-        //   }
-        //   if (resp.data[i].method_exclude != null && resp.data[i].method_exclude != '') {
-        //     temp.tooltip = temp.tooltip + 'Exclude: ' + resp.data[i].method_exclude + ', ';
-        //   }
-        //   if (resp.data[i].method_where != null && resp.data[i].method_where != '') {
-        //     temp.tooltip = temp.tooltip + 'Where: ' + resp.data[i].method_where;
-        //   }
-        //   // var definitionKey = temp.name.slice(0, temp.name.indexOf(' '));
-        //   // var definitionVar = app.definitionData.find(eachDefinition => eachDefinition.IRI == ('http://biosemantics.arizona.edu/ontologies/carex#' + (definitionKey == 'Color' ? 'coloration' : definitionKey.toLowerCase)));
-        //   // if (definitionVar) {
-        //   //     temp.tooltip += definitionKey + ' is defined as ' + definitionVar.definition;
-        //   // }
-        //   temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == resp.data[i].IRI);
-        //   app.standardCharacters.push(temp);
-        // }
     console.log('v1/character');
     axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
       .then(function (resp) {
         console.log('resp character', resp.data);
-        // app.userCharacters = resp.data.characters.sort(function (a, b) {
-        //   if (a.name < b.name) {
-        //     return -1;
-        //   }
-        //   if (a.name > b.name) {
-        //     return 1;
-        //   }
-        //   return 0;
-        // });
         app.userCharacters = resp.data.characters;
         app.headers = resp.data.headers;
         app.values = resp.data.values;
@@ -8651,15 +8318,6 @@ export default {
           }
         }
       });
-      // }).then(function () {
-      //   for (var i = 0; i < app.standardCharacters.length; i++) {
-      //     app.getTooltipImage(app.standardCharacters[i].name, i);
-      //   }
-      //   // console.log(app.userCharacters.length);
-      //   // for (var i = 0; i < app.userCharacters.length; i ++) {
-      //   //     app.getTooltipImageUserChracter(app.userCharacters[i].name, i);
-      //   // }
-      // });
 
     axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=quality')
       .then(function (resp) {
@@ -8727,13 +8385,10 @@ export default {
         console.log('matrixNames', resp);
         app.namesList = resp.data;
       });
-    // axios.get("/chrecorder/public/api/v1/getStandardTags")
-    //   .then((resp) => {
-    //     for (var i = 0; i < resp.data.length; i++) {
-    //       app.standardCharactersTags.push(resp.data[i].standard_tag);
-    //     }
-    //     console.log(app.standardCharactersTags);
-    //   });
+    axios.get("/color_palette.json").then(function (resp) {
+      console.log('colorPalette resp', resp);
+      app.colorPaletteData = resp.data;
+    });
     app.isLoading = false;
   },
   mounted() {

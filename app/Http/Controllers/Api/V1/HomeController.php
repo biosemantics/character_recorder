@@ -3035,7 +3035,7 @@ class HomeController extends Controller
                 'owner_name' => $username . '_ver_' . $matrixName,
                 'standard_tag' => $eachCharacter['standard_tag'],
                 'summary' => $eachCharacter['summary'],
-                'usage_count' => $eachCharacter['usage_count'],
+                'usage_count' => 0,
                 'order' => $eachCharacter['order'],
                 'show_flag' => $eachCharacter['show_flag'],
                 'created_at' => date("Y-m-d") . " " . date("H:i:s"),
@@ -3062,7 +3062,7 @@ class HomeController extends Controller
                     $eachCharacter['username'] == $eachNewCharacter['username'] &&
                     $eachCharacter['standard_tag'] == $eachNewCharacter['standard_tag'] &&
                     $eachCharacter['summary'] == $eachNewCharacter['summary'] &&
-                    $eachCharacter['usage_count'] == $eachNewCharacter['usage_count'] &&
+//                    $eachCharacter['usage_count'] == $eachNewCharacter['usage_count'] &&
                     $eachCharacter['order'] == $eachNewCharacter['order'] &&
                     $eachCharacter['show_flag'] == $eachNewCharacter['show_flag']) {
                     $characterIds[$eachCharacter['id']] = $eachNewCharacter['id'];
