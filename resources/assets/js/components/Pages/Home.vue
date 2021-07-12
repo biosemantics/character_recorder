@@ -2236,7 +2236,7 @@ import usage from '../Metadata/usage.vue';
 import history from '../Metadata/history.vue';
 import {mapState, mapGetters, mapMutations} from 'vuex';
 
-import {ModelSelect, ListSelect} from '../../libs/vue-search-select-lib'
+import {ModelSelect, ListSelect} from '../../libs/vue-search-select-lib';
 
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -3169,6 +3169,8 @@ export default {
         if (app.middleCharacter == 'between') {
           tempWholeCharacter += ' and ' + app.secondLastCharacter;
         }
+        tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+
         if (app.standardCharacters.find(each => each.name == tempWholeCharacter)) {
           alert(tempWholeCharacter + ' is already exists. Use the existing character in the select box.');
           app.firstCharacter = '';
@@ -3423,6 +3425,9 @@ export default {
                       if (app.middleCharacter == 'between') {
                         tempWholeCharacter += ' and ' + app.secondLastCharacter;
                       }
+
+                      tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+
                       if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
                         app.firstNounBroadSynonymNotifyMessage = "Term <b>" + app.lastCharacter + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
 
@@ -3556,6 +3561,9 @@ export default {
                         if (app.middleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.secondLastCharacter;
                         }
+
+                        tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+
                         if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
                           app.secondNounBroadSynonymNotifyMessage = "Term <b>" + app.secondLastCharacter + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
 
