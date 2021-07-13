@@ -7625,18 +7625,16 @@ export default {
     },
     onTreeNodeSelected(node) {
       var app = this;
-      if (!app.hasColorPalette(node.data.text)) {
-        app.colorDetailsFlag = false;
-        app.colorDetailsFlag = true;
-        if (node.parent != null) {
-          app.filterFlag = true;
-          app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
-          app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
-          app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
-          app.currentColorValue[app.currentColorValue.detailFlag] = node.data.text;
-        } else {
-          app.filterFlag = false;
-        }
+      app.colorDetailsFlag = false;
+      app.colorDetailsFlag = true;
+      if (node.parent != null) {
+        app.filterFlag = true;
+        app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
+        app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
+        app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
+        app.currentColorValue[app.currentColorValue.detailFlag] = node.data.text;
+      } else {
+        app.filterFlag = false;
       }
     },
     onTextureTreeNodeSelected(node) {
