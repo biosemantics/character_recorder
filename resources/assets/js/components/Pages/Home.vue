@@ -1214,7 +1214,7 @@
                             :filter="filterFlag?currentColorValue[currentColorValue.detailFlag]:null"
                             ref="colorTree"
                             @node:selected="onTreeNodeSelected"
-                            style="max-height: 300px;">
+                            style="max-height: 300px; min-height: 150px;">
                             <div slot-scope="{ node }" class="node-container">
                               <div class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
                                 {{ node.text }}
@@ -2219,12 +2219,9 @@
             <div class="modal-mask">
               <div class="modal-wrapper">
                 <div class="modal-container">
-                  <div class="modal-header">
-                    <b>Color Palette</b>
-                  </div>
-                  <div class="modal-body">
-                    <color-palette :paletteData="currentPaletteData" @selectedColor="paletteSelected" />
-                  </div>
+                  <color-palette :paletteData="currentPaletteData" :paletteKey="paletteKey" @selectedColor="paletteSelected" />
+
+
                   <div class="modal-footer">
                     <div class="row">
                       <div class="col-md-12">
@@ -2652,7 +2649,8 @@ export default {
       colorPaletteData: [],
       currentPaletteData: [],
       colorPalette: '',
-      colorPaletteFlag: false
+      colorPaletteFlag: false,
+      paletteKey: ''
     }
   },
   components: {
@@ -2673,6 +2671,7 @@ export default {
       var app = this;
       event.preventDefault();
       console.log('showPalette node', node);
+      app.paletteKey = node.data.text;
       app.currentPaletteData = app.colorPaletteData[node.data.text];
       app.colorPaletteFlag = true;
     },

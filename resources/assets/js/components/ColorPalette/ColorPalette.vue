@@ -1,9 +1,16 @@
 <template>
-  <div class="row">
-    <div v-for="(object, key) in colorData" class="col-md-2" style="text-align: center;">
-      {{ key }}
-      <div v-for="(color, index) in object" v-if="index % Math.floor(object.length / 10) === 0 && index < Math.floor(object.length / 10) * 10" class="color-cell" v-bind:style="{ 'background-color': 'rgb(' + color['Red'] + ',' + color['Green'] +',' + color['Blue'] + ')'}" v-on:click="selectColor(key, color)">
-<!--        <span />-->
+  <div>
+    <div class="modal-header">
+      <b>Color Palette for {{ paletteKey }}</b>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div v-for="(object, key) in colorData" class="col-md-2" style="text-align: center;">
+          {{ key }}
+          <div v-for="(color, index) in object" v-if="index % Math.floor(object.length / 10) === 0 && index < Math.floor(object.length / 10) * 10" class="color-cell" v-bind:style="{ 'background-color': 'rgb(' + color['Red'] + ',' + color['Green'] +',' + color['Blue'] + ')'}" v-on:click="selectColor(key, color)">
+            <!--        <span />-->
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -23,6 +30,12 @@ export default {
       type: Object,
       default () {
         return {}
+      }
+    },
+    paletteKey: {
+      type: String,
+      default() {
+        return '';
       }
     }
   },
