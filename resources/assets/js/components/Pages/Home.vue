@@ -1220,6 +1220,8 @@
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
+                                <span v-if="hasColorPalette(node.text)" @click="showPalette(node, $event)"><img
+                                  src="/images/color-palette.png" style="width: 12px;"/></span>
                               </div>
                             </div>
                           </tree>
@@ -2212,6 +2214,31 @@
             </div>
           </transition>
         </div>
+        <div v-if="colorPaletteFlag" @close="colorPaletteFlag = false">
+          <transition name="modal">
+            <div class="modal-mask">
+              <div class="modal-wrapper">
+                <div class="modal-container">
+                  <div class="modal-header">
+                    <b>Color Palette</b>
+                  </div>
+                  <div class="modal-body">
+                    <color-palette :paletteData="currentPaletteData" @selectedColor="paletteSelected" />
+                  </div>
+                  <div class="modal-footer">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <a class="btn btn-primary ok-btn"
+                           v-on:click="colorPaletteFlag=false">
+                          Cancel </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </transition>
+        </div>
       </form>
     </div>
     <viewer :images="images"
@@ -2237,6 +2264,7 @@ import history from '../Metadata/history.vue';
 import {mapState, mapGetters, mapMutations} from 'vuex';
 
 import {ModelSelect, ListSelect} from '../../libs/vue-search-select-lib';
+import ColorPalette from '../ColorPalette/ColorPalette.vue';
 
 import Loading from 'vue-loading-overlay';
 import 'vue-loading-overlay/dist/vue-loading.css';
@@ -2621,7 +2649,10 @@ export default {
       removeEachColorValue: null,
       toRemoveNonColorValueConfirmFlag: false,
       removeEachNonColorValue: null,
-      colorPaletteData: []
+      colorPaletteData: [],
+      currentPaletteData: [],
+      colorPalette: '',
+      colorPaletteFlag: false
     }
   },
   components: {
@@ -2629,6 +2660,7 @@ export default {
     ListSelect,
     draggable,
     Loading,
+    'color-palette': ColorPalette
   },
   methods: {
     showViewer(node, event) {
@@ -2641,6 +2673,16 @@ export default {
       var app = this;
       event.preventDefault();
       console.log('showPalette node', node);
+      app.currentPaletteData = app.colorPaletteData[node.data.text];
+      app.colorPaletteFlag = true;
+    },
+    hasColorPalette(nodeData) {
+      var app = this;
+      if (nodeData in app.colorPaletteData) {
+        return true;
+      } else {
+        return false;
+      }
     },
     showDefinition(node, event) {
       var app = this;
@@ -2702,6 +2744,19 @@ export default {
           break;
       }
       console.log('app.character after handle: ', app.character); // get the data after child dealing
+    },
+    paletteSelected(event) {
+      var app = this;
+      console.log('palette Selected', event);
+      app.colorPaletteFlag = false;
+      app.colorDetailsFlag = false;
+      app.colorDetailsFlag = true;
+      app.filterFlag = true;
+      app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
+      app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
+      app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
+      app.currentColorValue[app.currentColorValue.detailFlag] = event;
+
     },
     printSearchText(searchText) {
       var app = this;
@@ -6106,12 +6161,12 @@ export default {
         }
         app.currentTermForBracket += app.currentColorValue['reflectance'];
       }
-      if (app.currentColorValue['colored'] != undefined && (app.currentColorValue['colored'].indexOf('(') > -1 || app.currentColorValue['colored'].indexOf(')') > -1)) {
-        if (app.currentTermForBracket != '') {
-          app.currentTermForBracket += ', ';
-        }
-        app.currentTermForBracket += app.currentColorValue['colored'];
-      }
+      // if (app.currentColorValue['colored'] != undefined && (app.currentColorValue['colored'].indexOf('(') > -1 || app.currentColorValue['colored'].indexOf(')') > -1)) {
+      //   if (app.currentTermForBracket != '') {
+      //     app.currentTermForBracket += ', ';
+      //   }
+      //   app.currentTermForBracket += app.currentColorValue['colored'];
+      // }
       if (app.currentColorValue['multi_colored'] != undefined && (app.currentColorValue['multi_colored'].indexOf('(') > -1 || app.currentColorValue['multi_colored'].indexOf(')') > -1)) {
         if (app.currentTermForBracket != '') {
           app.currentTermForBracket += ', ';
@@ -7181,8 +7236,14 @@ export default {
           axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
             .then(async function (resp) {
               var resultData = {};
-              app.$store.state.colorTreeData = resp.data;
-              app.removeDeprecatedTerms(resp.data, resultData);
+              var tempColorData = resp.data;
+              for (var i = 0; i < tempColorData.children.length; i++) {
+                if (app.hasColorPalette(tempColorData.children[i].text)) {
+                  delete tempColorData.children[i]['children'];
+                }
+              }
+              app.$store.state.colorTreeData = tempColorData;
+              app.removeDeprecatedTerms(tempColorData, resultData);
               app.colTreeData[flag] = resultData;
               app.getImageFromColorTreeData(resultData);
 
@@ -7565,16 +7626,18 @@ export default {
     },
     onTreeNodeSelected(node) {
       var app = this;
-      app.colorDetailsFlag = false;
-      app.colorDetailsFlag = true;
-      if (node.parent != null) {
-        app.filterFlag = true;
-        app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
-        app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
-        app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
-        app.currentColorValue[app.currentColorValue.detailFlag] = node.data.text;
-      } else {
-        app.filterFlag = false;
+      if (!app.hasColorPalette(node.data.text)) {
+        app.colorDetailsFlag = false;
+        app.colorDetailsFlag = true;
+        if (node.parent != null) {
+          app.filterFlag = true;
+          app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
+          app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
+          app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
+          app.currentColorValue[app.currentColorValue.detailFlag] = node.data.text;
+        } else {
+          app.filterFlag = false;
+        }
       }
     },
     onTextureTreeNodeSelected(node) {
@@ -8408,7 +8471,25 @@ export default {
       });
     axios.get("/color_palette.json").then(function (resp) {
       console.log('colorPalette resp', resp);
-      app.colorPaletteData = resp.data;
+      var tempColorPalette = resp.data;
+      for (var i = 0; i < tempColorPalette.length; i++) {
+        var colors = tempColorPalette[i].color.split('-');
+        for (var j = 0; j < colors.length; j++) {
+          if (colors[j] in app.colorPaletteData) {
+            if ((tempColorPalette[i].brightness + ' ' + tempColorPalette[i].color) in app.colorPaletteData[colors[j]]) {
+              app.colorPaletteData[colors[j]][tempColorPalette[i].brightness + ' ' + tempColorPalette[i].color].push(tempColorPalette[i]);
+            } else {
+              app.colorPaletteData[colors[j]][tempColorPalette[i].brightness + ' ' + tempColorPalette[i].color] = [];
+              app.colorPaletteData[colors[j]][tempColorPalette[i].brightness + ' ' + tempColorPalette[i].color].push(tempColorPalette[i]);
+            }
+          } else {
+            app.colorPaletteData[colors[j]] = {};
+            app.colorPaletteData[colors[j]][tempColorPalette[i].brightness + ' ' + tempColorPalette[i].color] = [];
+            app.colorPaletteData[colors[j]][tempColorPalette[i].brightness + ' ' + tempColorPalette[i].color].push(tempColorPalette[i]);
+          }
+        }
+      }
+      console.log('app.colorPaletteData', app.colorPaletteData);
     });
     app.isLoading = false;
   },
