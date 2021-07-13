@@ -8469,7 +8469,7 @@ export default {
         console.log('matrixNames', resp);
         app.namesList = resp.data;
       });
-    axios.get("/color_palette.json").then(function (resp) {
+    axios.get("/chrecorder/public/color_palette.json").then(function (resp) {
       console.log('colorPalette resp', resp);
       var tempColorPalette = resp.data;
       for (var i = 0; i < tempColorPalette.length; i++) {
