@@ -624,6 +624,10 @@
                           </div>
 
                         </div>
+                        <div style="margin-top: 5px;">
+                          <input type="checkbox" id="numerical-flag" v-model="numericalFlag">
+                          <label for="numerical-flag">This is a numerical character</label>
+                        </div>
                         <br>
                         <div class="row" v-if="firstNounDeprecated">
                           <div class="col-md-12" v-html="firstNounDeprecatedNotifyMessage">
@@ -940,7 +944,7 @@
                       }}</i>.
                     </div>
                     <div v-if="!character.summary">
-                      Confirm "{{ character.name }} is a categorical character. <br/>If it is a numerical character,
+                      Confirm "{{ character.name }}" is a categorical character. <br/>If it is a numerical character,
                       click on Cancel, and select a summary function for it.
                     </div>
                     <div class="modal-footer">
@@ -2469,6 +2473,7 @@ export default {
         multiple: true,
         autoCheckChildren: false,
         parentSelect: false,
+        sort: true,
         filter: {
           matcher(query, node) {
             return node.data.text.startsWith(query);
@@ -2650,7 +2655,8 @@ export default {
       currentPaletteData: [],
       colorPalette: '',
       colorPaletteFlag: false,
-      paletteKey: ''
+      paletteKey: '',
+      numericalFlag: false
     }
   },
   components: {
@@ -2909,6 +2915,7 @@ export default {
 
         app.newCharacterFlag = true;
         app.viewFlag = false;
+        app.numericalFlag = false;
         sessionStorage.setItem('viewFlag', false);
         sessionStorage.setItem('edit_created_other', false);
       } else {
@@ -3133,7 +3140,7 @@ export default {
             break;
         }
       } else {
-        if (app.checkHaveUnit(app.character.name)) {
+        if (app.checkHaveUnit(app.character.name) || app.character.summary) {
           // Initializing the methodFieldData //
           app.methodFieldData.fromTerm = null;
           app.methodFieldData.fromId = null;
@@ -3779,6 +3786,7 @@ export default {
       app.character.standard = 0;
       app.character.creator = app.user.name + ' via CR';
       app.editFlag = false;
+      app.newCharacterFlag = false;
 
       if (app.checkHaveUnit(app.character.name)) {
         // Initializing the methodFieldData //
@@ -3822,7 +3830,6 @@ export default {
       }
 
       sessionStorage.setItem("characterName", app.character.name);
-      app.newCharacterFlag = false;
       app.detailsFlag = true;
     },
     cancelNewCharacter() {
@@ -4830,6 +4837,7 @@ export default {
 
                   app.enhanceFlag = false;
                   app.detailsFlag = false;
+                  app.numericalFlag = false;
                   app.showTableForTab(app.currentTab);
                 });
             } else {
@@ -4853,6 +4861,7 @@ export default {
 
 
                   app.detailsFlag = false;
+                  app.numericalFlag = false;
                   app.showTableForTab(app.currentTab);
                 });
             }
@@ -5351,6 +5360,7 @@ export default {
     checkHaveUnit(string) {
       var app = this;
 
+      var character = app.userCharacters.find(each => each.name === string);
       if (string.startsWith('Length of')
         || string.startsWith('Width of')
         || string.startsWith('Number of')
@@ -5358,8 +5368,16 @@ export default {
         || string.startsWith('Diameter of')
         || string.startsWith('Distance between')
         || string.startsWith('Distance of')
-        || string.startsWith('Count of')) {
+        || string.startsWith('Count of')
+        || app.numericalFlag === true
+        && app.newCharacterFlag == false) {
         return true;
+      } else if (character) {
+        if (character.summary) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
         return false;
       }
@@ -7207,6 +7225,24 @@ export default {
 
       }
     },
+    sortTreeData(treeData) {
+      var app = this;
+      for (var i = 0; i < treeData.length; i++) {
+        if (treeData[i].children) {
+          treeData[i].children = app.sortTreeData(treeData[i].children);
+        }
+      }
+      treeData.sort(function(a, b) {
+        if ( a.text < b.text ){
+          return -1;
+        }
+        if ( a.text > b.text ){
+          return 1;
+        }
+        return 0;
+      });
+      return treeData;
+    },
     changeColorSection(color, flag, event) {
       var app = this;
 
@@ -7240,6 +7276,9 @@ export default {
                 if (app.hasColorPalette(tempColorData.children[i].text)) {
                   delete tempColorData.children[i]['children'];
                 }
+              }
+              if (tempColorData.children) {
+                tempColorData.children = app.sortTreeData(tempColorData.children);
               }
               app.$store.state.colorTreeData = tempColorData;
               app.removeDeprecatedTerms(tempColorData, resultData);
@@ -7404,8 +7443,12 @@ export default {
           axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText.replace('-', '_'))
             .then(function (resp) {
               var resultData = {};
-              app.$store.state.colorTreeData = resp.data;
-              app.removeDeprecatedTerms(resp.data, resultData);
+              var tempNonColorData = resp.data;
+              if (tempNonColorData.children) {
+                tempNonColorData.children = app.sortTreeData(tempNonColorData.children);
+              }
+              app.$store.state.colorTreeData = tempNonColorData;
+              app.removeDeprecatedTerms(tempNonColorData, resultData);
               app.textureTreeData = resultData;
               app.getImageFromColorTreeData(app.textureTreeData);
 
@@ -8046,7 +8089,8 @@ export default {
       //console.log('row',row);
 
       var characterName = row.find(each => each.header_id == 1).value;
-      if (app.checkNumericalCharacter(characterName)) {
+      var currentCharacter = app.userCharacters.find(each => each.name == characterName);
+      if (currentCharacter.summary) {
         if (row.find(each => (each.header_id != 1 && each.value != null && each.value != ''))) {
           var sum = 0;
           var tempRpArray = [];
