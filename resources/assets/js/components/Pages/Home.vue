@@ -37,7 +37,7 @@
               <div v-if="matrixShowFlag == false"
                    style="max-width: 1000px; margin-left: auto; margin-right: auto;">
                 <h3><b>Set up your matrix: </b>
-                  <span style="font-size: 20px;">select/create the characters you'd like to record in the matrix, then click on 'Go To Matrix'. You can add or remove characters after matrix is generated.</span>
+                  <span style="font-size: 20px;">select/create the characters you'd like to record in the matrix, then click on 'Go To Matrix' to enter data. You can add or remove characters after matrix is generated.</span>
                 </h3>
               </div>
             </div>
@@ -298,7 +298,7 @@
                     </div>
                     <div>
                       <a class="btn btn-add"
-                         v-on:click="editCharacter(row[row.length - 1], true, false)"
+                         v-on:click="editCharacter(row[row.length - 1], true, true)"
                          style="line-height: 30px;">
                         <span class="glyphicon glyphicon-edit"></span>
                       </a>
@@ -553,6 +553,11 @@
                               <option value="Shape">Shape</option>
                               <option value="Texture">Texture</option>
                               <option value="Growth form">Growth form</option>
+                              <option value="Number">Number</option>
+                              <option value="Pubescence">Pubescence</option>
+                              <option value="Relative Position">Relative Position</option>
+                              <option value="Inflation">Inflation</option>
+                              <option value="Orientation">Orientation</option>
                             </datalist>
                           </div>
                           <div class="col-md-3">
@@ -680,7 +685,7 @@
                                                                       :placeholder="'enter the definition of ' + secondLastCharacter">
                           </div>
                         </div>
-                        <div class="row" v-if="wholeCharacterUndefined">
+                        <div class="row" v-if="(!firstCharacterUndefined && !nounUndefined) && wholeCharacterUndefined">
                           <div class="col-md-12">
                             What is
                             {{ firstCharacter + ' ' + middleCharacter + ' ' + lastCharacter + (middleCharacter == 'between' ? (' and ' + secondLastCharacter) : '') }}?
@@ -697,7 +702,7 @@
                                                                 !lastCharacter ||
                                                                 nounUndefined && !lastCharacterDefinition ||
                                                                 firstCharacterUndefined && !firstCharacterDefinition  && !firstNounBroadSynonym||
-                                                                wholeCharacterUndefined && !wholeCharacterDefinition ||
+                                                                (!firstCharacterUndefined && !nounUndefined) && wholeCharacterUndefined && !wholeCharacterDefinition ||
                                                                 middleCharacter=='between' && (!secondLastCharacter && !secondNounBroadSynonym || secondNounUndefined && !secondLastCharacterDefinition) ||
                                                                 firstNounDeprecated ||
                                                                 secondNounDeprecated ||
@@ -793,9 +798,9 @@
                                v-on:click="saveCharacter(metadataFlag)"
                                v-bind:class="{disabled: saveCharacterButtonFlag}"
                                class="btn btn-primary">Save</a>
-                            <a v-if="viewFlag == true" v-on:click="use(item)"
+                            <a v-if="viewFlag == true && editFlag == false" v-on:click="use(item)"
                                class="btn btn-primary">Use this</a>
-                            <a v-if="viewFlag == true" v-on:click="enhance(item)"
+                            <a v-if="viewFlag == true && editFlag == false" v-on:click="enhance(item)"
                                class="btn btn-primary">Modify and Use &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b
                               style="border: 1px solid #ffffff; background: #003366;"
                               title="Use this option when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>
@@ -918,7 +923,7 @@
                       </div>
                       <div class="modal-footer">
                         <a class="btn btn-primary ok-btn"
-                           v-on:click="tagConfirm()">
+                           v-on:click="confirmSave(metadataFlag)">
                           &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
                         <a v-on:click="cancelConfirmTag()" class="btn btn-danger">Cancel</a>
                       </div>
@@ -2117,7 +2122,7 @@
                         <div class="col-md-12">
                           <a class="btn btn-primary ok-btn"
                              v-bind:class="{disabled: ( loadVersion == null || loadVersion.matrix_name == '')}"
-                             v-on:click="loadMatrixConfirmDialog=true">
+                             v-on:click="selectMatrix()">
                             Load </a>
                           <a v-on:click="loadMatrixDialog=false"
                              class="btn btn-danger">Cancel</a>
@@ -3054,7 +3059,7 @@ export default {
       console.log('app.character.username', app.character.username);
       console.log('app.user.name', app.user.name);
       if (standardFlag || (editFlag && !app.character.owner_name.includes(app.user.name))) {
-        app.editFlag = false;
+        // app.editFlag = false;
         app.viewFlag = true;
         sessionStorage.setItem('viewFlag', true);
         sessionStorage.setItem('editFlag', editFlag);
@@ -4727,6 +4732,7 @@ export default {
       var app = this;
       var userId = sessionStorage.getItem("userId");
       app.confirmSummary = false;
+      app.confirmTag = false;
       axios.get("/chrecorder/public/api/v1/character/" + userId)
         .then(function (resp) {
           console.log('getCharacter', resp);
@@ -6370,6 +6376,33 @@ export default {
                           console.log('save api resp', resp);
                         });
                     });
+                  var subclassIRI = '';
+                  await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.userColorDefinition[flag].toLowerCase()).then(resp => {
+                    if (resp.data.entries.length > 0) {
+                      let methodEntry = resp.data.entries.filter(function (each) {
+                        return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                      })[0];
+                      if (methodEntry) {
+                        for (var j = 0; j < methodEntry.resultAnnotations.length; j++) {
+                          if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                            subclassIRI = methodEntry.resultAnnotations[j].value;
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  });
+                  requestBody = {
+                    "user": "",
+                    "ontology": "carex",
+                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + flag,
+                    "decisionExperts": app.user.name,
+                    "decisionDate": date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-',
+                    "subclassIRI": subclassIRI
+                  };
+                  await axios.post('http://shark.sbs.arizona.edu:8080/setSuperclass', requestBody).then(function(resp) {
+                    console.log('setSuperclass resp', resp.data);
+                  });
                 } else if (app.colorSynonyms[flag]) {
                   var synonym = app.colorSynonyms[flag].find(eachSynonym => eachSynonym.term == app.currentColorValue[flag]);
                   var date = new Date();
@@ -6449,12 +6482,14 @@ export default {
                 const requestBody = {
                   "user": "",
                   "ontology": "carex",
-                  "superclassIRI": superclassIRI,
+                  "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + flag,
                   "decisionExperts": app.user.name,
                   "decisionDate": date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-',
                   "subclassIRI": subclassIRI
                 };
-                await axios.post('http://shark.sbs.arizona.edu:8080/setSuperclass', requestBody);
+                await axios.post('http://shark.sbs.arizona.edu:8080/setSuperclass', requestBody).then(function(resp) {
+                  console.log('setSuperclass resp', resp.data);
+                });
               }
             }
           }
@@ -6750,6 +6785,31 @@ export default {
                       console.log('save api resp', resp);
                     });
                 });
+              var subclassIRI = '';
+              await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'].toLowerCase()).then(resp => {
+                if (resp.data.entries.length > 0) {
+                  let methodEntry = resp.data.entries.filter(function (each) {
+                    return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
+                  })[0];
+                  if (methodEntry) {
+                    for (var j = 0; j < methodEntry.resultAnnotations.length; j++) {
+                      if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                        subclassIRI = methodEntry.resultAnnotations[j].value;
+                        break;
+                      }
+                    }
+                  }
+                }
+              });
+              requestBody = {
+                "user": "",
+                "ontology": "carex",
+                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + searchText,
+                "decisionExperts": app.user.name,
+                "decisionDate": date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-',
+                "subclassIRI": subclassIRI
+              };
+              await axios.post('http://shark.sbs.arizona.edu:8080/setSuperclass', requestBody);
             } else if (app.searchNonColorFlag == 1 && postFlag == true) {
               console.log('a3');
               console.log('a5');
@@ -6779,6 +6839,7 @@ export default {
                       console.log('save api resp', resp);
                     });
                 });
+
             }
           }
 
@@ -6830,7 +6891,7 @@ export default {
               const requestBody = {
                 "user": "",
                 "ontology": "carex",
-                "superclassIRI": superclassIRI,
+                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + searchText,
                 "decisionExperts": app.user.name,
                 "decisionDate": date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-',
                 "subclassIRI": subclassIRI
@@ -7272,12 +7333,13 @@ export default {
             .then(async function (resp) {
               var resultData = {};
               var tempColorData = resp.data;
-              for (var i = 0; i < tempColorData.children.length; i++) {
-                if (app.hasColorPalette(tempColorData.children[i].text)) {
-                  delete tempColorData.children[i]['children'];
-                }
-              }
+
               if (tempColorData.children) {
+                for (var i = 0; i < tempColorData.children.length; i++) {
+                  if (app.hasColorPalette(tempColorData.children[i].text)) {
+                    delete tempColorData.children[i]['children'];
+                  }
+                }
                 tempColorData.children = app.sortTreeData(tempColorData.children);
               }
               app.$store.state.colorTreeData = tempColorData;
@@ -7533,7 +7595,7 @@ export default {
           searchFlag = 'colored';
           break;
         case 'multi_colored':
-          searchFlag = 'multi_colored';
+          searchFlag = 'multicolored';
           break;
         default:
           break;
@@ -8369,6 +8431,14 @@ export default {
         }
       }
       return;
+    },
+    selectMatrix() {
+      var app = this;
+      if (app.matrixShowFlag == true) {
+        app.loadMatrixConfirmDialog = true;
+      } else {
+        app.importMatrix();
+      }
     }
   },
   watch: {
