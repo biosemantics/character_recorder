@@ -240,7 +240,7 @@
                   {{ eachTag.tag_name }}
                 </a>
                 <div v-if="tagDeprecated[eachTag.tag_name] == 1"
-                     style="position: absolute;top: 0px;right: 2px;background: #3097D1;padding:4px;box-sizing: border-box;border-radius: 100%;"></div>
+                     style="position: absolute;top: 0px;right: 2px;background: rgb(218, 127, 56);padding:4px;box-sizing: border-box;border-radius: 100%;"></div>
               </li>
             </draggable>
             <div class="table-responsive">
@@ -6184,12 +6184,12 @@ export default {
         }
         app.currentTermForBracket += app.currentColorValue['reflectance'];
       }
-      // if (app.currentColorValue['colored'] != undefined && (app.currentColorValue['colored'].indexOf('(') > -1 || app.currentColorValue['colored'].indexOf(')') > -1)) {
-      //   if (app.currentTermForBracket != '') {
-      //     app.currentTermForBracket += ', ';
-      //   }
-      //   app.currentTermForBracket += app.currentColorValue['colored'];
-      // }
+      if (app.currentColorValue['colored'] != undefined && (app.currentColorValue['colored'].indexOf('(') > -1 || app.currentColorValue['colored'].indexOf(')') > -1)) {
+        if (app.currentTermForBracket != '') {
+          app.currentTermForBracket += ', ';
+        }
+        app.currentTermForBracket += app.currentColorValue['colored'];
+      }
       if (app.currentColorValue['multi_colored'] != undefined && (app.currentColorValue['multi_colored'].indexOf('(') > -1 || app.currentColorValue['multi_colored'].indexOf(')') > -1)) {
         if (app.currentTermForBracket != '') {
           app.currentTermForBracket += ', ';
@@ -6268,10 +6268,12 @@ export default {
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['colored']['replacement term'].toLowerCase())
             .then(function (resp) {
               console.log('search carex resp', resp.data);
-              app.currentColorDeprecatedParent['colored'] = resp.data.entries[0].parentTerm;
-              app.currentColorDeprecatedDefinition['colored'] = null;
-              if (resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-                app.currentColorDeprecatedDefinition['colored'] = resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+              if (resp.data.entries.length > 0) {
+                app.currentColorDeprecatedParent['colored'] = resp.data.entries[0].parentTerm;
+                app.currentColorDeprecatedDefinition['colored'] = null;
+                if (resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
+                  app.currentColorDeprecatedDefinition['colored'] = resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                }
               }
             });
         }
@@ -6330,6 +6332,9 @@ export default {
               postValue[key] = app.currentColorValue[key];
             }
           }
+          if (postValue['colored']) {
+            postValue['colored'] = postValue['colored'].split(' -')[0];
+          }
           for (var i = 0; i < app.colorFlags.length; i++) {
             const flag = app.colorFlags[i];
             if (!app.colTreeData[flag] || !app.searchTreeData(app.colTreeData[flag], app.currentColorValue[flag])) {
@@ -6355,7 +6360,7 @@ export default {
                     "user": app.sharedFlag ? '' : app.user.name,
                     "ontology": "carex",
                     "term": postValue[flag],
-                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + flag,
                     "definition": app.userColorDefinition[flag],
                     "elucidation": "",
                     "createdBy": app.user.name,
@@ -6410,7 +6415,7 @@ export default {
                     "user": app.sharedFlag ? '' : app.user.name,
                     "ontology": "carex",
                     "term": postValue[flag],
-                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + flag,
                     "definition": synonym.definition,
                     "elucidation": "",
                     "createdBy": app.user.name,
@@ -7655,7 +7660,7 @@ export default {
             console.log('app.colorSynonyms', app.colorSynonyms);
             for (var i = 0; i < app.colorSynonyms[flag].length; i++) {
               if (app.colorSynonyms[flag][i].term == color[flag]) {
-                app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' (' + flag + ')';
+                app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' -' + flag;
               }
               if (app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                 app.colorSynonyms[flag][i].definition = app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;

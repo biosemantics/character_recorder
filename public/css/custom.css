@@ -797,3 +797,6 @@ body {
     color: lightgrey;
     opacity: 1; /* Firefox */
 }
+.glyphicon-wrench {
+  color: rgb(218, 127, 56);
+}
