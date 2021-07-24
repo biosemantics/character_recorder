@@ -442,20 +442,28 @@
                                                         </span>
                           </a>
                         </div>
-                        <div v-for="ncv in allNonColorValues" v-if="ncv.value_id == value.id" style="text-align: left"
-                             :key="ncv.id"
-                             v-bind:style="{'font-weight': isNonColorDeprecated(ncv) >= 0 ? 'bold' : 'linear'}">
-                          {{ nonColorValueText(ncv) }}
-                          <a class="btn btn-add display-block" style="padding: 0px"
-                             v-on:click="onResolveNonColorValue(ncv)" v-if="isNonColorDeprecated(ncv) >= 0">
+                        <div v-for="ncv in allNonColorValues" style="text-align: left"
+                             :key="ncv.id">
+                          <span v-if="ncv.value_id == value.id"
+                                v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == ncv.main_value_IRI) >= 0 ? 'bold' : 'linear'}">
+                            {{ nonColorValueText(ncv) }}
+                                                        <a
+                                                          class="btn btn-add display-block"
+                                                          style="padding: 0px"
+                                                          v-on:click="onResolveNonColorValue(ncv)"
+                                                          v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == ncv.main_value_IRI) >= 0">
                                                         <span class="glyphicon glyphicon-wrench">
                                                         </span>
-                          </a>
-                          <a class="btn btn-add display-block" style="padding: 0px"
-                             v-on:click="confirmRemoveEachNonColor(ncv)">
+                                                      </a>
+                            <a class="btn btn-add display-block" style="padding: 0px"
+                               v-on:click="confirmRemoveEachNonColor(ncv)">
                                                         <span class="glyphicon glyphicon-remove">
                                                         </span>
-                          </a>
+                            </a>
+                          </span>
+
+
+
                         </div>
                         &nbsp;
                       </div>
@@ -1277,6 +1285,15 @@
                                 }}"</span></b><br/>
                               <i>If you want to dispute the deprecation, please go to the Vocabulary/Ontology Updates
                                 section(in "..." under your login name).</i>
+                              <div>
+                                <input type="radio" id="user-defined-color"
+                                       v-bind:value="deprecateColorValue[flag]"
+                                       v-on:change="selectUserDefinedTerm(currentColorValue, flag, deprecateColorValue[flag])"
+                                       v-model="currentColorValue[flag]">
+                                <label for="user-defined-color">Use my term '{{ deprecateColorValue[flag] }}'(as a
+                                  {{ changeFlagToLabel(flag) }}).</label>
+                              </div>
+
                             </div>
                             <div v-else>
                               <div style="margin-left:20px">
@@ -1322,12 +1339,12 @@
                             <a class="btn btn-primary ok-btn"
                                style="width: 70px;"
                                v-bind:class="{disabled: saveColorButtonFlag ||
-                                                                                     saveInProgress ||
-                                                                                    (currentColorDeprecated['brightness'] && currentColorDeprecated['brightness']['deprecate term'] == currentColorValue['brightness']) ||
-                                                                                    (currentColorDeprecated['saturation'] && currentColorDeprecated['saturation']['deprecate term'] == currentColorValue['saturation']) ||
-                                                                                    (currentColorDeprecated['reflectance'] && currentColorDeprecated['reflectance']['deprecate term'] == currentColorValue['reflectance']) ||
-                                                                                    (currentColorDeprecated['colored'] && currentColorDeprecated['colored']['deprecate term'] == currentColorValue['colored']) ||
-                                                                                    (currentColorDeprecated['multi_colored'] && currentColorDeprecated['multi_colored']['deprecate term'] == currentColorValue['multi_colored'])
+                                                                                     saveInProgress
+                                                                                    // (currentColorDeprecated['brightness'] && currentColorDeprecated['brightness']['deprecate term'] == currentColorValue['brightness']) ||
+                                                                                    // (currentColorDeprecated['saturation'] && currentColorDeprecated['saturation']['deprecate term'] == currentColorValue['saturation']) ||
+                                                                                    // (currentColorDeprecated['reflectance'] && currentColorDeprecated['reflectance']['deprecate term'] == currentColorValue['reflectance']) ||
+                                                                                    // (currentColorDeprecated['colored'] && (currentColorDeprecated['colored']['deprecate term'] == currentColorValue['colored'] || (userColorDefinition['colored'] && colorTaxon['colored'] && colorSampleText['colored']))) ||
+                                                                                    // (currentColorDeprecated['multi_colored'] && currentColorDeprecated['multi_colored']['deprecate term'] == currentColorValue['multi_colored'])
                                                             }"
                                v-on:click="saveColorValue()"
                             >
@@ -1565,6 +1582,14 @@
                               }}"</span></b><br/>
                             <i>If you want to dispute the deprecation, please go to the Vocabulary/Ontology Updates
                               section(in "..." under your login name).</i>
+                            <div>
+                              <input type="radio" id="user-defined-non-color"
+                                     v-bind:value="deprecateNonColorValue[currentNonColorValue.detailFlag]"
+                                     v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, deprecateNonColorValue[currentNonColorValue.detailFlag])"
+                                     v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
+                              <label for="user-defined-non-color">Use my term '{{ deprecateNonColorValue[currentNonColorValue.detailFlag] }}'(as a
+                                {{ currentNonColorValue.placeholderName }}).</label>
+                            </div>
                           </div>
 
                           <div v-else>
@@ -1608,9 +1633,10 @@
                             <a class="btn btn-primary ok-btn"
                                style="width: 70px;"
                                v-bind:class="{ disabled: saveNonColorButtonFlag ||
-                                               saveInProgress ||
-                                               (currentNonColorDeprecated &&
-                                               currentNonColorDeprecated['deprecate term'] == currentNonColorValue[currentNonColorValue.detailFlag]) }"
+                                               saveInProgress
+                                               // (currentNonColorDeprecated &&
+                                               // currentNonColorDeprecated['deprecate term'] == currentNonColorValue[currentNonColorValue.detailFlag])
+                               }"
                                v-on:click="saveNonColorValue()"
                             >
                               <div v-if="saveInProgress" class="ld ld-ring ld-spin"></div>
@@ -2661,7 +2687,9 @@ export default {
       colorPalette: '',
       colorPaletteFlag: false,
       paletteKey: '',
-      numericalFlag: false
+      numericalFlag: false,
+      deprecateColorValue: [],
+      deprecateNonColorValue: []
     }
   },
   components: {
@@ -5029,7 +5057,6 @@ export default {
     getDeprecatedValue() {
       var app = this;
       for (var i = 0; i < app.userTags.length; i++) {
-        console.log(app.userTags[i].tag_name);
         app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
       }
     },
@@ -6206,7 +6233,7 @@ export default {
       var comparedFlag = true;
       app.saveColorButtonFlag = true;
       console.log('app.currentColorValue1', app.currentColorValue);
-
+      console.log("app.colTreedata", app.colTreeData);
       app.originColorValue = app.currentColorValue;
 
       if (app.currentColorValue['brightness'] && app.currentColorValue.confirmedFlag['brightness'] == false && !app.colorSynonyms['brightness'] && !app.searchTreeData(app.colTreeData['brightness'], app.currentColorValue['brightness'])) {
@@ -6224,7 +6251,7 @@ export default {
               }
             });
         }
-        app.searchColorSelection(app.currentColorValue, 'brightness');
+        await app.searchColorSelection(app.currentColorValue, 'brightness');
       }
       if (app.currentColorValue['saturation'] && app.currentColorValue.confirmedFlag['saturation'] == false && !app.colorSynonyms['saturation'] && !app.searchTreeData(app.colTreeData['saturation'], app.currentColorValue['saturation'])) {
         comparedFlag = false;
@@ -6241,7 +6268,7 @@ export default {
               }
             });
         }
-        app.searchColorSelection(app.currentColorValue, 'saturation');
+        await app.searchColorSelection(app.currentColorValue, 'saturation');
       }
       if (app.currentColorValue['reflectance'] && app.currentColorValue.confirmedFlag['reflectance'] == false && !app.colorSynonyms['reflectance'] && !app.searchTreeData(app.colTreeData['reflectance'], app.currentColorValue['reflectance'])) {
         comparedFlag = false;
@@ -6258,9 +6285,10 @@ export default {
               }
             });
         }
-        app.searchColorSelection(app.currentColorValue, 'reflectance');
+        await app.searchColorSelection(app.currentColorValue, 'reflectance');
       }
       if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored'] && !app.searchTreeData(app.colTreeData['colored'], app.currentColorValue['colored'])) {
+      // if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored']) {
         comparedFlag = false;
         app.saveColorButtonFlag = false;
         app.currentColorDeprecated['colored'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['colored'].toLowerCase());
@@ -6277,7 +6305,7 @@ export default {
               }
             });
         }
-        app.searchColorSelection(app.currentColorValue, 'colored');
+        await app.searchColorSelection(app.currentColorValue, 'colored');
       }
       if (app.currentColorValue['multi_colored'] && app.currentColorValue.confirmedFlag['multi_colored'] == false && !app.colorSynonyms['multi_colored'] && !app.searchTreeData(app.colTreeData['multi_colored'], app.currentColorValue['multi_colored'])) {
         comparedFlag = false;
@@ -6294,7 +6322,7 @@ export default {
               }
             });
         }
-        app.searchColorSelection(app.currentColorValue, 'multi_colored');
+        await app.searchColorSelection(app.currentColorValue, 'multi_colored');
       }
 
       if (!comparedFlag) {
@@ -6703,6 +6731,19 @@ export default {
       console.log('app.currentNonColorValue.confirmedFlag', app.currentNonColorValue.confirmedFlag);
       console.log("app.currentNonColorValue['main_value']", app.currentNonColorValue['main_value']);
       console.log("app.currentNonColorValue.confirmedFlag['main_value']", app.currentNonColorValue.confirmedFlag['main_value']);
+      // if (app.currentColorDeprecated['colored'] && app.currentColorDeprecated['colored']['replacement term']) {
+      //   await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['colored']['replacement term'].toLowerCase())
+      //     .then(function (resp) {
+      //       console.log('search carex resp', resp.data);
+      //       if (resp.data.entries.length > 0) {
+      //         app.currentColorDeprecatedParent['colored'] = resp.data.entries[0].parentTerm;
+      //         app.currentColorDeprecatedDefinition['colored'] = null;
+      //         if (resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
+      //           app.currentColorDeprecatedDefinition['colored'] = resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+      //         }
+      //       }
+      //     });
+      // }
       if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false && !app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value)) {
         app.saveNonColorButtonFlag = false;
         app.currentNonColorDeprecated = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentNonColorValue['main_value'].toLowerCase());
@@ -6710,14 +6751,17 @@ export default {
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorDeprecated['replacement term'].toLowerCase())
             .then(function (resp) {
               console.log('search carex resp', resp.data);
-              app.currentNonColorDeprecatedParent = resp.data.entries[0].parentTerm;
-              app.currentNonColorDeprecatedDefinition = null;
-              if (resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-                app.currentNonColorDeprecatedDefinition = resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+              if (resp.data.entries.length) {
+                app.currentNonColorDeprecatedParent = resp.data.entries[0].parentTerm;
+                app.currentNonColorDeprecatedDefinition = null;
+                if (resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
+                  app.currentNonColorDeprecatedDefinition = resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
+                }
               }
             });
         }
-        app.searchNonColorSelection(app.currentNonColorValue, 'main_value');
+        console.log('searchNonColorSelection', app.currentNonColorValue);
+        await app.searchNonColorSelection(app.currentNonColorValue, 'main_value');
       } else {
         if ((app.currentNonColorValue.negation == 'undefined' || app.currentNonColorValue.negation == '' || app.currentNonColorValue.negation == null)
           && (app.currentNonColorValue.pre_constraint == 'undefined' || app.currentNonColorValue.pre_constraint == '' || app.currentNonColorValue.pre_constraint == null)
@@ -6916,18 +6960,27 @@ export default {
                         return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
                       })[0];
                       if (methodEntry) {
+                        console.log('methodEntry', methodEntry);
                         for (var j = 0; j < methodEntry.resultAnnotations.length; j++) {
                           if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                            for (var k = 0; k < resp.data.allNonColorValues.length; k++) {
+                              if (resp.data.allNonColorValues[k].id == resp.data.id) {
+                                resp.data.allNonColorValues[k].main_value_IRI = methodEntry.resultAnnotations[j].value;
+                                console.log('test67890');
+                              }
+                            }
                             axios.post("/chrecorder/public/api/v1/setNonColorValueIRI", {
                               id: resp.data.id,
                               main_value_IRI: methodEntry.resultAnnotations[j].value
                             });
+
                             break;
                           }
                         }
                       }
                     }
                   });
+                console.log('test12345');
                 app.saveNonColorButtonFlag = false;
                 app.values = resp.data.values;
                 app.preList = resp.data.preList;
@@ -7309,7 +7362,7 @@ export default {
       });
       return treeData;
     },
-    changeColorSection(color, flag, event) {
+    async changeColorSection(color, flag, event) {
       var app = this;
 
       app.colorSearchText = '';
@@ -7334,7 +7387,7 @@ export default {
         color.detailFlag = ' ';
         if (!app.colTreeData[flag]) {
           app.colorExistFlag = false;
-          axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
+          await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
             .then(async function (resp) {
               var resultData = {};
               var tempColorData = resp.data;
@@ -7456,8 +7509,8 @@ export default {
                   } else {
                     id = methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1);
                   }
-                  console.log(tData.text);
-                  console.log(('https://drive.google.com/uc?id=' + id));
+                  // console.log(tData.text);
+                  // console.log(('https://drive.google.com/uc?id=' + id));
                   tData.data["images"].push('https://drive.google.com/uc?id=' + id);
                 }
               }
@@ -7624,6 +7677,7 @@ export default {
     async searchColorSelection(color, flag) {
       var app = this;
       app.defaultColorValue[flag] = color[flag];
+      app.deprecateColorValue[flag] = color[flag];
       app.extraColors = [];
       var arrayFlag = [
         'brightness',
@@ -7681,6 +7735,7 @@ export default {
       var app = this;
       app.nonColorExistFlag = false;
       app.defaultNonColorValue = nonColor[flag];
+      app.deprecateNonColorValue[flag] = nonColor[flag];
       app.nonColorMainValue = nonColor[flag];
       app.nonColorSynonyms = [];
       app.colorExistFlag = false;
