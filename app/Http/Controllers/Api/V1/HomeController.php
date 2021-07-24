@@ -1661,8 +1661,8 @@ class HomeController extends Controller
     public function saveNonColorValue(Request $request)
     {
         $nonColorValues = $request->all();
-
         $nonColorDetails = NonColorDetails::where('id', '=', $request->input('id'))->first();
+        $id = 0;
         if ($request->input('id') && $nonColorDetails) {
             $nonColorDetails->value_id = $request->input('value_id');
             $nonColorDetails->negation = $request->input('negation');
@@ -1674,6 +1674,7 @@ class HomeController extends Controller
             $nonColorDetails->post_constraint = $request->input('post_constraint');
 
             $nonColorDetails->save();
+            $id = $request->input('id');
         } else {
             if (Value::where('id', '=', $request->input('value_id'))->first()->header_id != 1) {
                 $nonColorDetails = new NonColorDetails([
@@ -1688,6 +1689,8 @@ class HomeController extends Controller
                 ]);
 
                 $nonColorDetails->save();
+
+                $id = $nonColorDetails->id;
             }
         }
 
@@ -1716,6 +1719,7 @@ class HomeController extends Controller
         $returnNonColorDetails = NonColorDetails::where('value_id', '=', $request->input('value_id'))->get();
         $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
+            'id' => $id,
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
