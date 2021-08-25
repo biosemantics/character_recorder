@@ -1958,21 +1958,22 @@
                     <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                       <div style="margin-top: 10px; min-height: auto;" class="table-responsive">
                         <div style="margin-top: 0px;">
-                          <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                          <div style="border-bottom: gray; padding: 2px; font-size: 11pt">
                             <span style="width: 20%;">Deprecated Term:</span>
                             <b><span>{{ currentResolveItem['deprecate term'] }}</span></b>
                           </div>
-                          <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                          <div style="border-bottom: gray; padding: 2px; font-size: 11pt">
                             <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
                             <span style="width: 20%;">Deprecated Reason:</span>
                             <b><span>{{ currentResolveItem['deprecated reason'] }}</span></b>
                           </div>
                           <div
                             v-if="currentResolveItem['replacement term'] && currentResolveItem['replacement term'] != ''"
-                            style="border-bottom: gray; padding 2px; font-size: 11pt">
+                            style="border-bottom: gray; padding: 2px; font-size: 11pt">
                             <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
                             <span style="width: 20%;">Replacement Term:</span>
                             <b><span>{{ currentResolveItem['replacement term'] }}</span></b>
+                            <span>If you feel '{{ currentResolveItem['replacement term'] }}' should not be deprecated, you can <a v-on:click="handleDisputeTerm()">dispute the deprecation</a></span>
                           </div>
                           <div v-else>
                             <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
@@ -1988,7 +1989,6 @@
                     <div class="row">
                       <div class="col-md-12">
                         <a class="btn btn-primary ok-btn"
-                           v-bind:class="{disabled: currentResolveItem['replacement IRI'] == null || currentResolveItem['replacement IRI'] == ''}"
                            v-on:click="onAcceptResolveItem">
                           Accept Replacement Term</a>
                         <a v-on:click="resolveItemFlag=false"
@@ -2014,7 +2014,7 @@
                     </div>
                     <div class="modal-body">
                       <div style="margin-top: 0px;">
-                        <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                        <div style="border-bottom: gray; padding: 2px; font-size: 11pt">
                           <span style="width: 20%;">Deprecated Reason:</span>
                           <b><span>{{ currentResolveItem['deprecated reason'] }}</span></b>
                         </div>
@@ -2085,7 +2085,7 @@
                     </div>
                     <div class="modal-body" style="min-height: 25vh;">
                       <div style="margin-top: 0px;">
-                        <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                        <div style="border-bottom: gray; padding: 2px; font-size: 11pt">
                           <list-select
                             :list="namesList"
                             optionValue="matrix_name"
@@ -2130,7 +2130,7 @@
                     </div>
                     <div class="modal-body" style="min-height: 25vh;">
                       <div style="margin-top: 0px;">
-                        <div style="border-bottom: gray; padding 2px; font-size: 11pt">
+                        <div style="border-bottom: gray; padding: 2px; font-size: 11pt">
                           <list-select
                             :list="namesList"
                             optionValue="matrix_name"
@@ -2977,6 +2977,7 @@ export default {
       var app = this;
       app.resolveItemFlag = true;
       app.currentResolveItem = app.deprecatedTerms[resolveCharacter.deprecated];
+      console.log('currentResolveItem', app.currentResolveItem);
       app.currentResolveType = "character";
     },
     onResolveColor(index, resolveType) {
@@ -3001,6 +3002,9 @@ export default {
       postValue['deprecatedIRI'] = app.currentResolveItem['deprecated IRI'];
       postValue['replacementTerm'] = app.currentResolveItem['replacement term'];
       postValue['replacementIRI'] = app.currentResolveItem['replacement IRI'];
+      if (!postValue['replacementIRI']) {
+        postValue['replacementIRI'] = app.currentResolveItem['replacement term'].toLowerCase().replace(' ', '_');
+      }
       if (app.currentResolveType == "character") {
         axios.post('/chrecorder/public/api/v1/resolveCharacter', postValue)
           .then(function (resp) {
@@ -3096,7 +3100,9 @@ export default {
       app.item = app.character.id;
       sessionStorage.setItem("characterName", app.character.name);
 
+      console.log('enhanceFlag', enhanceFlag);
       if (enhanceFlag) {
+
         switch (app.metadataFlag) {
           case 'method':
             app.methodFieldData.fromTerm = null;
@@ -5396,7 +5402,6 @@ export default {
       var character = app.userCharacters.find(each => each.name === string);
       if (string.startsWith('Length of')
         || string.startsWith('Width of')
-        || string.startsWith('Number of')
         || string.startsWith('Depth of')
         || string.startsWith('Diameter of')
         || string.startsWith('Distance between')
@@ -5406,7 +5411,7 @@ export default {
         && app.newCharacterFlag == false) {
         return true;
       } else if (character) {
-        if (character.summary) {
+        if (character.summary && !string.startsWith('Number of')) {
           return true;
         } else {
           return false;
@@ -6211,12 +6216,12 @@ export default {
         }
         app.currentTermForBracket += app.currentColorValue['reflectance'];
       }
-      if (app.currentColorValue['colored'] != undefined && (app.currentColorValue['colored'].indexOf('(') > -1 || app.currentColorValue['colored'].indexOf(')') > -1)) {
-        if (app.currentTermForBracket != '') {
-          app.currentTermForBracket += ', ';
-        }
-        app.currentTermForBracket += app.currentColorValue['colored'];
-      }
+      // if (app.currentColorValue['colored'] != undefined && (app.currentColorValue['colored'].indexOf('(') > -1 || app.currentColorValue['colored'].indexOf(')') > -1)) {
+      //   if (app.currentTermForBracket != '') {
+      //     app.currentTermForBracket += ', ';
+      //   }
+      //   app.currentTermForBracket += app.currentColorValue['colored'];
+      // }
       if (app.currentColorValue['multi_colored'] != undefined && (app.currentColorValue['multi_colored'].indexOf('(') > -1 || app.currentColorValue['multi_colored'].indexOf(')') > -1)) {
         if (app.currentTermForBracket != '') {
           app.currentTermForBracket += ', ';
@@ -6370,13 +6375,13 @@ export default {
                 if (app.currentColorValue[flag] == app.defaultColorValue[flag] && app.currentColorValue[flag] != '' && app.currentColorValue[flag] != undefined && app.currentColorValue[flag] != null) {
                   if (app.colorSynonyms[flag]) {
                     if (!app.userColorDefinition[flag] || app.userColorDefinition[flag] == '') {
-                      alert('pease enter definition of ' + flag);
+                      alert('Please enter definition of ' + flag);
                       app.saveInProgress = false;
                       app.saveColorButtonFlag = false;
                       return;
                     }
                     if (app.colorSampleText[flag] == '' || !app.colorSampleText[flag]) {
-                      alert('pease enter sample sentence of ' + flag);
+                      alert('Please enter sample sentence of ' + flag);
                       app.saveColorButtonFlag = false;
                       app.saveInProgress = false;
                       return;
@@ -8640,7 +8645,7 @@ export default {
         console.log('matrixNames', resp);
         app.namesList = resp.data;
       });
-    axios.get("/chrecorder/public/color_palette.json").then(function (resp) {
+    axios.get("/color_palette.json").then(function (resp) {
       console.log('colorPalette resp', resp);
       var tempColorPalette = resp.data;
       for (var i = 0; i < tempColorPalette.length; i++) {
