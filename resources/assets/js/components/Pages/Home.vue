@@ -5407,8 +5407,8 @@ export default {
         || string.startsWith('Distance between')
         || string.startsWith('Distance of')
         || string.startsWith('Count of')
-        || app.numericalFlag === true
-        && app.newCharacterFlag == false) {
+        || (app.newCharacterFlag === true && app.numericalFlag === true &&!string.startsWith('Number of'))
+        && app.newCharacterFlag === false) {
         return true;
       } else if (character) {
         if (character.summary && !string.startsWith('Number of')) {
