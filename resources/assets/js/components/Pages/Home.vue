@@ -348,7 +348,7 @@
                   </td>
                   <template v-for="value in row" v-if="value.header_id != 1">
                     <td :key="value.id" v-on:click.self="focusedValue(value)" style="padding-left: 5px">
-                      <div v-if="checkHaveUnit(row.find(v => v.header_id == 1).value)" style="width: 80%; float:left">
+                      <div v-if="checkHaveUnit(row.find(v => v.header_id == 1).value) || row.find(v => v.header_id == 1).value.startsWith('Number ')" style="width: 80%; float:left">
                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
                                v-bind:style="{ 'background-color': row.findIndex(value => value.id == editingValueID) >= 0 ? '#f5f5f5' : 'white' }"
                                v-on:blur="saveItem($event, value)"/>
@@ -1251,7 +1251,7 @@
                              style="margin-top: 10px;">
                           <div v-for="(flag, colorFlagIndex) in colorFlags" v-if="colorSynonyms[flag]"
                                :key="colorFlagIndex">
-                            <big>{{ flag }} : {{ originColorValue[flag] }}</big>
+                            <strong>{{ flag }} : {{ originColorValue[flag] }}</strong>
                             <br>
                             <b>Did you mean?</b>
                             <div v-if="currentColorDeprecated[flag]">
@@ -1292,6 +1292,18 @@
                                        v-model="currentColorValue[flag]">
                                 <label for="user-defined-color">Use my term '{{ deprecateColorValue[flag] }}'(as a
                                   {{ changeFlagToLabel(flag) }}).</label>
+                                <div for="user-defined">
+                                  Definition: <input
+                                  v-model="userColorDefinition[flag]"
+                                  class="color-definition-input">
+                                  Used for Taxon:
+                                  <input v-model="colorTaxon[flag]"
+                                         class="color-definition-input">
+                                  Sample Sentence:
+                                  <input
+                                    v-model="colorSampleText[flag]"
+                                    class="color-definition-input" placeholder=""><br/>
+                                </div>
                               </div>
 
                             </div>
@@ -1589,6 +1601,17 @@
                                      v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
                               <label for="user-defined-non-color">Use my term '{{ deprecateNonColorValue[currentNonColorValue.detailFlag] }}'(as a
                                 {{ currentNonColorValue.placeholderName }}).</label>
+                              <div for="user-defined">
+                                Definition: <input
+                                v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
+                                class="non-color-input-definition">
+                                Taxon: <input
+                                v-model="nonColorTaxon[currentNonColorValue.detailFlag]"
+                                class="non-color-input-definition">
+                                Sample Sentence: <input
+                                v-model="nonColorSampleText[currentNonColorValue.detailFlag]"
+                                class="non-color-input-definition">
+                              </div>
                             </div>
                           </div>
 
@@ -2709,7 +2732,6 @@ export default {
     showPalette(node, event) {
       var app = this;
       event.preventDefault();
-      console.log('showPalette node', node);
       app.paletteKey = node.data.text;
       app.currentPaletteData = app.colorPaletteData[node.data.text];
       app.colorPaletteFlag = true;
@@ -2725,7 +2747,6 @@ export default {
     showDefinition(node, event) {
       var app = this;
       event.preventDefault();
-      console.log(node);
       if (node.data.details[0].definition) {
         app.treeNodeDefinitionTitle = 'Definition for ' + node.text;
         app.treeNodeDefinitionText = node.data.details[0].definition;
@@ -2739,12 +2760,10 @@ export default {
       $(this).addClass('hightlight').siblings().removeClass('highlight');
     },
     handleFcAfterDateBack(event) {
-      console.log('hadleFcAfterDateBack function inited');
       var app = this;
       app.updatedFlag = true;
       $('.center').addClass('back-yellow');
       $('.' + app.metadataFlag).addClass('back-median-green');
-      console.log("app.metadataFlag", app.metadataFlag);
       switch (app.metadataFlag) {
         case 'method':
           app.character.method_as = event[0];
@@ -2758,7 +2777,6 @@ export default {
           app.character.method_greenTick = event[10];
           app.parentData = event;
           app.methodUpdateFlag = true;
-          console.log("method return", event);
           break;
         case 'unit':
           app.character.unit = event;
@@ -2781,11 +2799,9 @@ export default {
         default:
           break;
       }
-      console.log('app.character after handle: ', app.character); // get the data after child dealing
     },
     paletteSelected(event) {
       var app = this;
-      console.log('palette Selected', event);
       app.colorPaletteFlag = false;
       app.colorDetailsFlag = false;
       app.colorDetailsFlag = true;
@@ -2813,7 +2829,6 @@ export default {
             if (methodEntry) {
               for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
                 if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
-                  console.log(methodEntry.resultAnnotations[i].value);
                   if (src == '') {
                     src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
                   }
@@ -2849,7 +2864,6 @@ export default {
             if (methodEntry) {
               for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
                 if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
-                  // console.log(methodEntry.resultAnnotations[i].value);
                   if (src == '') {
                     src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
                   }
@@ -2909,12 +2923,10 @@ export default {
     },
     onSelect(selectedItem) {
       var app = this;
-      console.log('app.defaultCharacters', app.defaultCharacters);
       var selectedCharacter = app.defaultCharacters.find(ch => ch.id == selectedItem)
 
       app.editFlag = false;
       sessionStorage.setItem('editFlag', false);
-      console.log("selectedCharacter", selectedCharacter);
       if (!selectedCharacter) {
         app.firstCharacter = '';
         app.middleCharacter = '';
@@ -2954,7 +2966,6 @@ export default {
       } else {
         app.character = selectedCharacter;
         app.item = selectedItem;
-        console.log('selectedCharacter.username', app.character.username.substr(app.character.username.length - app.user.name.length));
 
         app.viewFlag = true;
         sessionStorage.setItem('viewFlag', true);
@@ -2962,13 +2973,10 @@ export default {
         app.editCharacter(app.character);
 
       }
-      console.log('selectedCharacter', selectedCharacter);
     },
     onResolve(resolveItem) {
       var app = this;
       var selectedCharacter = app.defaultCharacters.find(ch => ch.id == resolveItem.value)
-      console.log(selectedCharacter);
-      console.log('resolveCharacter', resolveItem);
       app.resolveItemFlag = true;
       app.currentResolveItem = app.deprecatedTerms[resolveItem.deprecated];
       app.currentResolveType = "character";
@@ -2977,7 +2985,6 @@ export default {
       var app = this;
       app.resolveItemFlag = true;
       app.currentResolveItem = app.deprecatedTerms[resolveCharacter.deprecated];
-      console.log('currentResolveItem', app.currentResolveItem);
       app.currentResolveType = "character";
     },
     onResolveColor(index, resolveType) {
@@ -2988,7 +2995,6 @@ export default {
     },
     onResolveNonColorValue(ncv) {
       var app = this;
-      console.log(ncv);
       var index = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == ncv.main_value_IRI);
       app.currentResolveItem = app.deprecatedTerms[index];
       app.resolveItemFlag = true;
@@ -2996,8 +3002,6 @@ export default {
     },
     onAcceptResolveItem() {
       var app = this;
-      console.log(app.currentResolveType);
-      console.log(app.currentResolveItem);
       var postValue = {};
       postValue['deprecatedIRI'] = app.currentResolveItem['deprecated IRI'];
       postValue['replacementTerm'] = app.currentResolveItem['replacement term'];
@@ -3077,7 +3081,6 @@ export default {
     editCharacter(character, editFlag = false, standardFlag = false, enhanceFlag = false) {
       var app = this;
       app.editFlag = editFlag;
-      console.log('app.editFlag', app.editFlag);
       if (editFlag) {
         app.viewFlag = !editFlag;
         sessionStorage.setItem('viewFlag', !editFlag);
@@ -3088,8 +3091,6 @@ export default {
         app.character = character;
       }
 
-      console.log('app.character.username', app.character.username);
-      console.log('app.user.name', app.user.name);
       if (standardFlag || (editFlag && !app.character.owner_name.includes(app.user.name))) {
         // app.editFlag = false;
         app.viewFlag = true;
@@ -3100,7 +3101,6 @@ export default {
       app.item = app.character.id;
       sessionStorage.setItem("characterName", app.character.name);
 
-      console.log('enhanceFlag', enhanceFlag);
       if (enhanceFlag) {
 
         switch (app.metadataFlag) {
@@ -3244,7 +3244,6 @@ export default {
     },
     checkBracketConfirm() {
       var app = this;
-      console.log("check bracket");
       app.currentTermForBracket = '';
       if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1 || app.lastCharacter.indexOf('(') > -1 || app.lastCharacter.indexOf(')') > -1 || app.secondLastCharacter.indexOf('(') > -1 || app.secondLastCharacter.indexOf(')') > -1) {
         if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1) {
@@ -3302,16 +3301,13 @@ export default {
           "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
           "definitionSrc": app.user.name,
         };
-        console.log(requestBody);
         await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
           .then(function (resp) {
-            console.log('shark api class resp', resp);
             axios.post('http://shark.sbs.arizona.edu:8080/save', {
               user: app.sharedFlag ? '' : app.user.name,
               ontology: 'carex'
             })
               .then(function (resp) {
-                console.log('save api resp', resp);
                 app.firstCharacterUndefined = false;
               });
           });
@@ -3330,10 +3326,8 @@ export default {
           "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
           "definitionSrc": app.user.name,
         };
-        console.log(requestBody);
         await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
           .then(function (resp) {
-            console.log('shark api class resp', resp);
             axios.post('http://shark.sbs.arizona.edu:8080/save', {
               user: app.sharedFlag ? '' : app.user.name,
               ontology: 'carex'
@@ -3358,16 +3352,13 @@ export default {
           "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
           "definitionSrc": app.user.name,
         };
-        console.log(requestBody);
         await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
           .then(function (resp) {
-            console.log('shark api class resp', resp);
             axios.post('http://shark.sbs.arizona.edu:8080/save', {
               user: app.sharedFlag ? '' : app.user.name,
               ontology: 'carex'
             })
               .then(function (resp) {
-                console.log('save api resp', resp);
                 app.secondNounUndefined = false;
               });
           });
@@ -4009,7 +4000,6 @@ export default {
           }
 
           var orderList = JSON.parse(resp.data.replaceAll("'", '"'));
-          console.log('orderList', orderList);
 
 
           for (var i = 0; i < collectionList.length; i++) {
@@ -5013,7 +5003,7 @@ export default {
       var app = this;
       if (!isNaN(value.value)) {
         var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
-        if (app.checkHaveUnit(currentCharacter.name)) {
+        if (app.checkHaveUnit(currentCharacter.name) || currentCharacter.name.startsWith("Number ")) {
           axios.post('/chrecorder/public/api/v1/character/update', value)
             .then(function (resp) {
               console.log('saveItem', resp.data);
@@ -5118,7 +5108,6 @@ export default {
 
       }
       for (var i = 0; i < app.userTags.length; i++) {
-        console.log(app.userTags[i].tag_name);
         app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
       }
       app.characterUsername = app.user.name;
@@ -5153,7 +5142,6 @@ export default {
     isDeprecatedExistOnTab(tagName) {
       var app = this;
       var isDeprecated = 0;
-      console.log("isDeprecatedExist");
       for (var i = 0; i < app.userCharacters.length; i++) {
         if (app.userCharacters[i].standard_tag == tagName) {
           if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.userCharacters[i].IRI) >= 0) {
@@ -5387,7 +5375,6 @@ export default {
         }
       }
       app.defaultCharacters = tempDefaultCharacters;
-      console.log('app.standardCharacters for refresh', app.standardCharacters);
     },
     expandDescription() {
       var app = this;
@@ -6474,27 +6461,35 @@ export default {
             }
             if (app.currentColorDeprecated[flag]) {
               let parentTerm = "";
+              console.log('1', app.currentColorDeprecatedParent[flag], '<=>', flag);
               if (!app.currentColorDeprecatedParent[flag] || app.currentColorDeprecatedParent[flag] == null) {
+                console.log('2');
                 await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + postValue[flag].toLowerCase()).then(resp => {
                   if (resp.data.entries.length > 0) {
+                    console.log('3');
                     parentTerm = resp.data.entries[0].parentTerm;
                   }
                 });
               } else {
+                console.log('4');
                 parentTerm = app.currentColorDeprecatedParent[flag];
               }
               if (parentTerm.indexOf(app.changeToSubClassName(flag).replace('_', ' ')) < 0) {
+                console.log('5');
                 const date = new Date();
                 let superclassIRI = "";
                 let subclassIRI = "";
                 await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.changeToSubClassName(flag).toLowerCase()).then(resp => {
                   if (resp.data.entries.length > 0) {
+                    console.log('6');
                     let methodEntry = resp.data.entries.filter(function (each) {
                       return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
                     })[0];
                     if (methodEntry) {
+                      console.log('7');
                       for (var j = 0; j < methodEntry.resultAnnotations.length; j++) {
                         if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
+                          console.log('8');
                           superclassIRI = methodEntry.resultAnnotations[j].value;
                           break;
                         }
@@ -6504,10 +6499,12 @@ export default {
                 });
                 await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + (app.currentColorDeprecated[flag]['replacement term'] ? app.currentColorDeprecated[flag]['replacement term'].toLowerCase() : postValue[flag].toLowerCase())).then(resp => {
                   if (resp.data.entries.length > 0) {
+                    console.log('9');
                     let methodEntry = resp.data.entries.filter(function (each) {
                       return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
                     })[0];
                     if (methodEntry) {
+                      console.log('10');
                       for (var j = 0; j < methodEntry.resultAnnotations.length; j++) {
                         if (methodEntry.resultAnnotations[j].property == 'http://www.geneontology.org/formats/oboInOwl#id') {
                           subclassIRI = methodEntry.resultAnnotations[j].value;
@@ -6526,6 +6523,7 @@ export default {
                   "subclassIRI": subclassIRI
                 };
                 await axios.post('http://shark.sbs.arizona.edu:8080/setSuperclass', requestBody).then(function(resp) {
+                  console.log('11');
                   console.log('setSuperclass resp', resp.data);
                 });
               }
@@ -7205,9 +7203,8 @@ export default {
       console.log('test', value);
       var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
       app.currentCharacter = currentCharacter;
-      console.log('currentCharacter', currentCharacter.name)
 
-      if (!app.checkHaveUnit(currentCharacter.name)) {
+      if (!app.checkHaveUnit(currentCharacter.name) && !currentCharacter.name.startsWith("Number ")) {
         console.log('!checkHaveUnit');
         axios.get('/chrecorder/public/api/v1/get-constraint/' + currentCharacter.name)
           .then(function (resp) {
@@ -7799,7 +7796,7 @@ export default {
       app.colorDetailsFlag = true;
       if (node.parent != null) {
         app.filterFlag = true;
-        app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
+        // app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
         app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
         app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
         app.currentColorValue[app.currentColorValue.detailFlag] = node.data.text;
@@ -7813,7 +7810,7 @@ export default {
       app.nonColorDetailsFlag = true;
       if (node.parent != null) {
         app.filterFlag = true;
-        app.currentNonColorValue.confirmedFlag['main_value'] = true;
+        // app.currentNonColorValue.confirmedFlag['main_value'] = true;
         app.currentNonColorValue['main_value'] = app.currentNonColorValue['main_value'] + ';';
         app.currentNonColorValue['main_value'] = app.currentNonColorValue['main_value'].substring(0, app.currentNonColorValue['main_value'].length - 1);
         app.currentNonColorValue['main_value'] = node.data.text;
@@ -8217,7 +8214,7 @@ export default {
 
       var characterName = row.find(each => each.header_id == 1).value;
       var currentCharacter = app.userCharacters.find(each => each.name == characterName);
-      if (currentCharacter.summary) {
+      if (currentCharacter.summary || characterName.startsWith("Number ")) {
         if (row.find(each => (each.header_id != 1 && each.value != null && each.value != ''))) {
           var sum = 0;
           var tempRpArray = [];
@@ -8528,23 +8525,19 @@ export default {
         console.log("treeResult", app.treeResult);
         app.getDefinition(app.treeResult);
       });
-    console.log("definitnionData", app.definitionData);
     await axios.get("http://shark.sbs.arizona.edu:8080/carex/getDeprecatedClasses")
       .then(function (resp) {
         app.deprecatedTerms = resp.data['deprecated classes'];
         console.log('app.deprecatedTerms', app.deprecatedTerms);
       });
-    console.log('standard_characters');
     await axios.get('/chrecorder/public/api/v1/standard_characters')
       .then(async function (resp) {
         console.log('standardCharacters', resp);
         app.defaultCharacters = resp.data;
         app.refreshDefaultCharacters();
       });
-    console.log('v1/character');
     axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
       .then(function (resp) {
-        console.log('resp character', resp.data);
         app.userCharacters = resp.data.characters;
         app.headers = resp.data.headers;
         app.values = resp.data.values;
@@ -8581,7 +8574,6 @@ export default {
 
     axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=quality')
       .then(function (resp) {
-        console.log('colorationData', resp.data);
         var colorData = resp.data.children.find(ch => ch.text == "coloration").children[0].children;
         for (var i = 0; i < colorData.length; i++) {
           app.colorationData[colorData[i]['text']] = [];
@@ -8618,8 +8610,6 @@ export default {
             }
           }
         }
-        console.log('app.nonColorationData', app.nonColorationData);
-        //app.updateDescription();
       });
     axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id)
       .then(function (resp) {
@@ -8627,7 +8617,6 @@ export default {
         app.userTags = resp.data;
 
         for (var i = 0; i < app.userTags.length; i++) {
-          console.log(app.userTags[i].tag_name);
           app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
         }
 
@@ -8638,15 +8627,12 @@ export default {
             app.showTableForTab(app.userTags[0].tag_name);
           }
         }
-        console.log('userTags', app.userTags);
       });
     axios.get("/chrecorder/public/api/v1/getMatrixNames")
       .then((resp) => {
-        console.log('matrixNames', resp);
         app.namesList = resp.data;
       });
     axios.get("/color_palette.json").then(function (resp) {
-      console.log('colorPalette resp', resp);
       var tempColorPalette = resp.data;
       for (var i = 0; i < tempColorPalette.length; i++) {
         var colors = tempColorPalette[i].color.split('-');
@@ -8665,7 +8651,6 @@ export default {
           }
         }
       }
-      console.log('app.colorPaletteData', app.colorPaletteData);
     });
     app.isLoading = false;
   },
@@ -8676,8 +8661,6 @@ export default {
     sessionStorage.setItem('userId', app.user.id);
     app.deprecatedTagName = sessionStorage.getItem('depreCatedTagName');
     app.lastLoadMatrixName = sessionStorage.getItem('lastMatrixName');
-    console.log("Mounted");
-    console.log("app.deprecatedTagName", app.deprecatedTagName);
     sessionStorage.removeItem('depreCatedTagName');
   }
 }
