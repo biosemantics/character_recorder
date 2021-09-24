@@ -693,14 +693,14 @@
                                                                       :placeholder="'enter the definition of ' + secondLastCharacter">
                           </div>
                         </div>
-                        <div class="row" v-if="(!firstCharacterUndefined && !nounUndefined) && wholeCharacterUndefined">
-                          <div class="col-md-12">
-                            What is
-                            {{ firstCharacter + ' ' + middleCharacter + ' ' + lastCharacter + (middleCharacter == 'between' ? (' and ' + secondLastCharacter) : '') }}?
-                            <input v-model="wholeCharacterDefinition" style="width:100%"
-                                   :placeholder="'enter the definition of ' + firstCharacter + ' ' + middleCharacter + ' ' +  lastCharacter + (middleCharacter == 'between' ? (' and ' + secondLastCharacter) : ' ')">
-                          </div>
-                        </div>
+<!--                        <div class="row" v-if="(!firstCharacterUndefined && !nounUndefined) && wholeCharacterUndefined">-->
+<!--                          <div class="col-md-12">-->
+<!--                            What is-->
+<!--                            {{ firstCharacter + ' ' + middleCharacter + ' ' + lastCharacter + (middleCharacter == 'between' ? (' and ' + secondLastCharacter) : '') }}?-->
+<!--                            <input v-model="wholeCharacterDefinition" style="width:100%"-->
+<!--                                   :placeholder="'enter the definition of ' + firstCharacter + ' ' + middleCharacter + ' ' +  lastCharacter + (middleCharacter == 'between' ? (' and ' + secondLastCharacter) : ' ')">-->
+<!--                          </div>-->
+<!--                        </div>-->
                       </div>
                       <div class="modal-footer">
                         <a class="btn btn-primary ok-btn"
@@ -710,7 +710,6 @@
                                                                 !lastCharacter ||
                                                                 nounUndefined && !lastCharacterDefinition ||
                                                                 firstCharacterUndefined && !firstCharacterDefinition  && !firstNounBroadSynonym||
-                                                                (!firstCharacterUndefined && !nounUndefined) && wholeCharacterUndefined && !wholeCharacterDefinition ||
                                                                 middleCharacter=='between' && (!secondLastCharacter && !secondNounBroadSynonym || secondNounUndefined && !secondLastCharacterDefinition) ||
                                                                 firstNounDeprecated ||
                                                                 secondNounDeprecated ||
@@ -3681,9 +3680,9 @@ export default {
         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase().replaceAll(' ', '_'))
           .then(function (resp) {
             console.log('term 3 wholeCharacter?' + wholeCharacter, resp.data);
-            if (!resp.data.entries.length) {
-              app.wholeCharacterUndefined = true;
-            }
+            // if (!resp.data.entries.length) {
+            // app.wholeCharacterUndefined = true;
+            // }
           });
       }
 
@@ -3691,7 +3690,6 @@ export default {
         !app.firstCharacterUndefined &&
         !app.nounUndefined &&
         (app.middleCharacter != 'between' || !app.secondNounUndefined) &&
-        !app.wholeCharacterUndefined &&
         !app.firstNounDeprecated &&
         !app.secondNounDeprecated &&
         !app.firstNounNotRecommend &&
@@ -4636,7 +4634,7 @@ export default {
             app.showDetails('unit', app.metadataFlag);
           }
         }
-        app.saveCharacterButtonFlag = false;
+        // app.saveCharacterButtonFlag = false;
       }, 100)
     },
     use(characterId) {
@@ -4721,33 +4719,44 @@ export default {
     methodConfirm() {
       var app = this;
       app.confirmMethod = false;
-      app.confirmUnit = true;
+      app.saveCharacterButtonFlag = false;
+      if (app.character.unit) {
+        app.confirmUnit = true;
+      } else {
+        app.confirmTag = true;
+      }
     },
     cancelConfirmMethod() {
       var app = this;
+      app.saveCharacterButtonFlag = false;
       app.confirmMethod = false;
     },
     unitConfirm() {
       var app = this;
       app.confirmUnit = false;
       app.confirmTag = true;
+      app.saveCharacterButtonFlag = false;
     },
     cancelConfirmUnit() {
       var app = this;
       app.confirmUnit = false;
+      app.saveCharacterButtonFlag = false;
     },
     tagConfirm() {
       var app = this;
       app.confirmTag = false;
       app.confirmSummary = true;
+      app.saveCharacterButtonFlag = false;
     },
     cancelConfirmTag() {
       var app = this;
       app.confirmTag = false;
+      app.saveCharacterButtonFlag = false;
     },
     cancelConfirmSummary() {
       var app = this;
       app.confirmSummary = false;
+      app.saveCharacterButtonFlag = false;
     },
     checkUserTag(userTag) {
       var app = this;
@@ -4900,6 +4909,7 @@ export default {
 
         });
       console.log("app.character", app.character);
+      app.saveCharacterButtonFlag = false;
     },
     confirmCollapse() {
       var app = this;
