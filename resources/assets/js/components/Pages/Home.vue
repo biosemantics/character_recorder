@@ -305,7 +305,7 @@
                     </div>
                     <div class="btn-group">
                       <a
-                        v-if="checkHaveUnit(value.value) && !value.value.startsWith('Number of') && !value.value.startsWith('Ratio of')"
+                        v-if="checkHaveUnit(value.value) && value.unit"
                         class="btn btn-add dropdown-toggle"
                         style="line-height: 30px; color: red;"
                         data-toggle="dropdown">
@@ -2923,6 +2923,7 @@ export default {
     },
     onSelect(selectedItem) {
       var app = this;
+      console.log('selectedItem', selectedItem);
       var selectedCharacter = app.defaultCharacters.find(ch => ch.id == selectedItem)
 
       app.editFlag = false;
@@ -4608,7 +4609,7 @@ export default {
             checkFields = false;
           }
 
-          if (!app.character['unit']) {
+          if (!app.character['unit'] && !app.character.name.startsWith('Number of')) {
             checkFields = false;
           }
 
@@ -5394,7 +5395,7 @@ export default {
         || string.startsWith('Distance between')
         || string.startsWith('Distance of')
         || string.startsWith('Count of')
-        || (app.newCharacterFlag === true && app.numericalFlag === true &&!string.startsWith('Number of'))
+        || string.startsWith('Number of')
         && app.newCharacterFlag === false) {
         return true;
       } else if (character) {
