@@ -4634,7 +4634,7 @@ export default {
             app.showDetails('unit', app.metadataFlag);
           }
         }
-        // app.saveCharacterButtonFlag = false;
+        app.saveCharacterButtonFlag = false;
       }, 100)
     },
     use(characterId) {
