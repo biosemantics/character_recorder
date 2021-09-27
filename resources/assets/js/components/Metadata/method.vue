@@ -2,6 +2,13 @@
     <div class="row">
         <div class="col-md-12" style="font-size: 15px;">
             <b>1. {{method_description}}</b>
+            <b v-if="edit_created_other == false">
+              <div>
+                <b>
+                  Must fill at least one field below
+                </b>
+              </div>
+            </b>
             <br/>
         </div>
         <div class="col-md-12" v-if="!methodEntry">
@@ -16,7 +23,7 @@
                  v-if="noneMethod == false && each.property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation'"
                  class="col-md-6">
                  <!-- <label>{{ each.value.substring(1, each.value.length - 1) }}</label>
-                 <label>{{ each.value.indexOf('id=') < 0 ? 
+                 <label>{{ each.value.indexOf('id=') < 0 ?
                         each.value.slice(each.value.indexOf('file/d/') + 7, each.value.indexOf('/view?usp=')) :
                         each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1) }}</label> -->
                 <img class="img-method"
@@ -239,7 +246,7 @@
     import Vue from 'vue';
     import VTooltip from 'v-tooltip'
 
-    
+
     Vue.use(VTooltip);
     export default {
         data: function () {
