@@ -224,7 +224,7 @@
             </div>
             <div class="col-md-3">
               <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;"
-                 style="height: 27px; font-size: 12px; margin-top: 3px;">Name this matrix version</a>
+                 style="height: 27px; font-size: 12px; margin-top: 3px;" v-tooltip="'Give this matrix a name so you can load it in a future time'">Name this matrix</a>
             </div>
           </div>
         </div>
@@ -480,11 +480,11 @@
           </div>
           <div style="border-left: 2px solid; margin-left: 5px;">
             <div style="padding-top: 100px;">
-              <a class="btn btn-default" style="border: none;"
+              <a class="btn btn-primary" style="border: none;"
                  v-tooltip="{ content:generateDescriptionTooltip, classes: 'standard-tooltip'}"
                  v-on:click="expandDescription()">
                                 <span
-                                  style="color: #1f648b; font-weigth: bold; writing-mode: vertical-rl; text-orientation: upright; "
+                                  style="font-weight: bold; writing-mode: vertical-rl; text-orientation: upright; "
                                 >Generate Description</span>
               </a>
             </div>
@@ -2102,7 +2102,7 @@
                 <div class="modal-container" style="width: 600px;">
                   <div style="max-height:80vh; overflow-y: auto;">
                     <div class="modal-header">
-                      <b style="text-align: left">Name this matrix version for <span style="font-style: italic;">{{ taxonName }}</span></b>
+                      <b style="text-align: left">Name this matrix for <span style="font-style: italic;">{{ taxonName }}</span></b>
                       <br/>
                     </div>
                     <div class="modal-body" style="min-height: 25vh;">
@@ -2802,12 +2802,11 @@ export default {
     paletteSelected(event) {
       var app = this;
       app.colorPaletteFlag = false;
-      app.colorDetailsFlag = false;
       app.colorDetailsFlag = true;
       app.filterFlag = true;
       app.currentColorValue.confirmedFlag[app.currentColorValue.detailFlag] = true;
-      app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
-      app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
+      // app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag] + ';';
+      // app.currentColorValue[app.currentColorValue.detailFlag] = app.currentColorValue[app.currentColorValue.detailFlag].substring(0, app.currentColorValue[app.currentColorValue.detailFlag].length - 1);
       app.currentColorValue[app.currentColorValue.detailFlag] = event;
 
     },
@@ -2827,8 +2826,8 @@ export default {
             })[0];
             if (methodEntry) {
               for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
-                  if (src == '') {
+                if (methodEntry.resultAnnotations[i].property === 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                  if (src === '') {
                     src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
                   }
                   if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
@@ -3318,7 +3317,8 @@ export default {
         requestBody = {
           "user": app.sharedFlag ? '' : app.user.name,
           "ontology": "carex",
-          "term": app.lastCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
+          // "term": app.lastCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
+          "term": app.lastCharacter.toLowerCase().replace('-', '_'),
           "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
           "definition": app.lastCharacterDefinition,
           "elucidation": "",
@@ -3432,11 +3432,14 @@ export default {
             });
         }
       } else {
-        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
+        // await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
+        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase().replace('-', '_'))
           .then(async function (resp) {
+            console.log('app.lastCharacter', app.lastCharacter);
             console.log('term?' + app.lastCharacter, resp.data);
             var methodEntry = null;
             if (!resp.data.entries.length) {
+              console.log("++++++++++++++++++++");
               app.nounUndefined = true;
             } else {
               methodEntry = resp.data.entries.filter(function (each) {
@@ -3686,6 +3689,7 @@ export default {
           });
       }
 
+      console.log('')
       if (
         !app.firstCharacterUndefined &&
         !app.nounUndefined &&
