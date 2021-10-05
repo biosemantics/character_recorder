@@ -1319,6 +1319,11 @@
                                     }}): </label> {{
                                     eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                   }}
+                                  <div style="display: inline;" v-if="eachSynonym.resultAnnotations.find(each => each.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')">
+                                    <span v-for="(eachAnnotation, eachAnnotationIndex) in eachSynonym.resultAnnotations" v-if="eachAnnotation.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym'">
+                                      "{{eachAnnotation.value}}"
+                                    </span>
+                                  </div>
                                 </div>
                                 <input type="radio" id="user-defined"
                                        v-bind:value="defaultColorValue[flag]"
@@ -1625,6 +1630,11 @@
                                   }}): </label> {{
                                   eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                 }}
+                                <div style="display: inline;" v-if="eachSynonym.resultAnnotations.find(each => each.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')">
+                                    <span v-for="(eachAnnotation, eachAnnotationIndex) in eachSynonym.resultAnnotations" v-if="eachAnnotation.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym'">
+                                      "{{eachAnnotation.value}}"
+                                    </span>
+                                </div>
                               </div>
                             </div>
                             <div v-if="searchNonColorFlag != 2">
@@ -6331,6 +6341,7 @@ export default {
         }
         await app.searchColorSelection(app.currentColorValue, 'multi_colored');
       }
+      console.log('comparedFlag', comparedFlag);
 
       if (!comparedFlag) {
         app.colorExistFlag = false;
