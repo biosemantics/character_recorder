@@ -215,7 +215,7 @@
           <div class="row">
             <div class="col-md-3">
               <a class="btn btn-primary" v-on:click="resetSystem()"
-                 style="height: 27px; font-size: 12px; margin-top: 3px;" v-if="user.email == 'hong@test.com'">Reset
+                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-if="user.email == 'hong@test.com'">Reset
                 System</a>
             </div>
             <div class="col-md-6">
@@ -224,7 +224,7 @@
             </div>
             <div class="col-md-3">
               <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;"
-                 style="height: 27px; font-size: 12px; margin-top: 3px;" v-tooltip="'Give this matrix a name so you can load it in a future time'">Name this matrix</a>
+                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-tooltip="'Give this matrix a name so you can load it in a future time'">Name this matrix</a>
             </div>
           </div>
         </div>
@@ -357,7 +357,10 @@
                            v-on:click.self="focusedValue(value)">
                         <div v-for="cv in allColorValues" v-if="cv.value_id == value.id" style="text-align: left"
                              :key="cv.id">
-                          <!-- {{colorValueText(cv)}} -->
+<!--                           {{colorValueText(cv)}} -->
+                          <span v-if="cv.colored.includes('(') && cv.colored.includes(')')" :set="tempColor = cv.colored.split('(')[1].substring(0, cv.colored.split('(')[1].length - 1).split(', ')">
+                            <div v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-flex'}"/>
+                          </span>
                           <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{ cv.negation }} </span>
                           <span style="color:#636b6f;"
                                 v-if="cv.pre_constraint && cv.pre_constraint != ''">{{ cv.pre_constraint }} </span>
@@ -412,7 +415,7 @@
                             v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI) >= 0 ? 'bold' : 'linear'}"
                             style="color:#636b6f;"
                             v-if="cv.colored && cv.colored != ''">
-                                                        {{ cv.colored }}
+                                                        {{ cv.colored.split('(')[0] }}
                                                         <a
                                                           class="btn btn-add display-block"
                                                           style="padding: 0px"
@@ -1035,6 +1038,9 @@
                                      style="padding-top: 3px; padding-bottom: 3px;">Use this</a>
                               </span>
                               <b>
+                                <span v-if="eachDetails.colored.includes('(') && eachDetails.colored.includes(')')" :set="tempColor = eachDetails.colored.split('(')[1].substring(0, eachDetails.colored.split('(')[1].length - 1).split(', ')">
+                                  <div v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-flex'}"/>
+                                </span>
                                 <span>
                                     {{ eachDetails.negation }}
                                 </span>
@@ -1057,7 +1063,7 @@
                                     {{ eachDetails.saturation }}
                                 </span>
                                 <span>
-                                    {{ eachDetails.colored }}
+                                    {{ eachDetails.colored.split('(')[0] }}
                                 </span>
                                 <span>
                                     {{ eachDetails.multi_colored }}
@@ -1237,7 +1243,7 @@
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
                                 <span v-if="hasColorPalette(node.text)" @click="showPalette(node, $event)"><img
-                                  src="/chrecorder/public/images/color-palette.png" style="width: 12px;"/></span>
+                                  src="/images/color-palette.png" style="width: 12px;"/></span>
                               </div>
                             </div>
                           </tree>
