@@ -359,7 +359,7 @@
                              :key="cv.id">
 <!--                           {{colorValueText(cv)}} -->
                           <span v-if="cv.colored.includes('(') && cv.colored.includes(')')" :set="tempColor = cv.colored.split('(')[1].substring(0, cv.colored.split('(')[1].length - 1).split(', ')">
-                            <div v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-flex'}"/>
+                            <div v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-block'}"/>
                           </span>
                           <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{ cv.negation }} </span>
                           <span style="color:#636b6f;"
@@ -1326,6 +1326,7 @@
                                     eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                   }}
                                   <div style="display: inline;" v-if="eachSynonym.resultAnnotations.find(each => each.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')">
+                                    <b>Exact synonyms:</b>
                                     <span v-for="(eachAnnotation, eachAnnotationIndex) in eachSynonym.resultAnnotations" v-if="eachAnnotation.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym'">
                                       "{{eachAnnotation.value}}"
                                     </span>
@@ -1637,7 +1638,8 @@
                                   eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                 }}
                                 <div style="display: inline;" v-if="eachSynonym.resultAnnotations.find(each => each.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')">
-                                    <span v-for="(eachAnnotation, eachAnnotationIndex) in eachSynonym.resultAnnotations" v-if="eachAnnotation.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym'">
+                                  <b>Exact synonyms:</b>
+                                  <span v-for="(eachAnnotation, eachAnnotationIndex) in eachSynonym.resultAnnotations" v-if="eachAnnotation.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym'">
                                       "{{eachAnnotation.value}}"
                                     </span>
                                 </div>
@@ -5474,14 +5476,19 @@ export default {
             if (!currentCharacter.name.split(' of ')[1]) {
               currentCharacter.name = currentCharacter.name.replace(' between ', ' of ');
             }
-            var char_name = currentCharacter.name.split(' of ')[1].toLowerCase().split(' in ')[0];
-            const temp = char_name;
+            var char_name, temp;
+            if (currentCharacter.name.split(' of ')[1]) {
+              char_name = currentCharacter.name.split(' of ')[1].toLowerCase().split(' in ')[0];
+              temp = char_name;
+            }
             char_name = char_name.charAt(0).toUpperCase() + char_name.slice(1);
             if (char_name.toLowerCase() != currentCharacter.standard_tag.toLowerCase() && !char_names.find(ch => ch == char_name.toLowerCase())) {
               char_names.filter(ch => char_name.toLowerCase().includes(ch)).map(ch => {
                 char_name = char_name.split(' ').filter(sp => !ch.includes(sp.toLowerCase())).join(' ');
               });
-              char_names.push(temp);
+              if (temp) {
+                char_names.push(temp);
+              }
               var words = char_name.split(' ');
               words[words.length - 1] = app.convertPluralWord(words[words.length - 1]);
               char_name = words.join(' ');
@@ -5589,8 +5596,9 @@ export default {
                     }
                   }
                 }
-
-                var colorValues = app.allColorValues.filter(eachValue => checkValueIdArray.includes(eachValue.value_id));
+                var tempColorValues = app.allColorValues;
+                console.log('tempColorValues', tempColorValues);
+                var colorValues = tempColorValues.filter(eachValue => checkValueIdArray.includes(eachValue.value_id));
                 var objColorValues = {
                   'empty': []
                 };
@@ -5682,9 +5690,13 @@ export default {
                     }
                     if (colorValues[l].colored != null && colorValues[l].colored != '') {
                       if (colorValues[l].colored.endsWith(')')) {
-                        colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                        // colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                        // colorValues[l].colored = colorValues[l].colored.split('(');
+                        jsonColorValue.value += colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                      } else {
+                        jsonColorValue.value += colorValues[l].colored;
+
                       }
-                      jsonColorValue.value += colorValues[l].colored;
                     }
                     if (colorValues[l].multi_colored != null && colorValues[l].multi_colored != '') {
                       if (colorValues[l].multi_colored.endsWith(')')) {
@@ -5775,6 +5787,7 @@ export default {
                   console.log('countArray', countArray);
                   console.log('tempArraySorted', tempArraySorted);
                   tempArraySorted.sort((a, b) => a.eachCount > b.eachCount ? -1 : 1);
+                  console.log('++++++++++++');
                   var objByPercentage = {};
 
                   for (var l = 0; l < tempArraySorted.length; l++) {
@@ -7749,6 +7762,8 @@ export default {
             for (var i = 0; i < app.colorSynonyms[flag].length; i++) {
               if (app.colorSynonyms[flag][i].term == color[flag]) {
                 app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' -' + flag;
+              } else {
+                app.currentColorValue[flag] = app.colorSynonyms[flag][i].term;
               }
               if (app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                 app.colorSynonyms[flag][i].definition = app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
@@ -7757,7 +7772,6 @@ export default {
                 app.colorDefinition[flag] = null;
               }
             }
-            app.colorExistFlag = true;
             app.colorExistFlag = false;
           } else {
             app.searchColorFlag = 0;
@@ -7808,6 +7822,8 @@ export default {
                 } else {
                   app.defaultNonColorValue = app.defaultNonColorValue + ' (' + searchText + ')';
                 }
+              } else {
+                app.currentNonColorValue.main_value = app.nonColorSynonyms[i].term;
               }
               if (app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                 app.nonColorSynonyms[i].definition = app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
@@ -8161,11 +8177,17 @@ export default {
       app.currentColorValue.certainty_constraint = colorDetails.certainty_constraint;
       app.currentColorValue.degree_constraint = colorDetails.degree_constraint;
       app.currentColorValue.brightness = colorDetails.brightness;
+      app.currentColorValue.confirmedFlag['brightness'] = true;
       app.currentColorValue.saturation = colorDetails.saturation;
+      app.currentColorValue.confirmedFlag['saturation'] = true;
       app.currentColorValue.reflectance = colorDetails.reflectance;
+      app.currentColorValue.confirmedFlag['reflectance'] = true;
       app.currentColorValue.colored = colorDetails.colored;
+      app.currentColorValue.confirmedFlag['colored'] = true;
       app.currentColorValue.multi_colored = colorDetails.multi_colored;
+      app.currentColorValue.confirmedFlag['multi_colored'] = true;
       app.currentColorValue.post_constraint = colorDetails.post_constraint;
+
       app.colorDetailsFlag = true;
     },
     selectExistNonColorDetails(nonColorDetails) {
@@ -8691,9 +8713,9 @@ export default {
     app.user.name = app.user.email.split('@')[0];
     app.characterUsername = app.user.name;
     sessionStorage.setItem('userId', app.user.id);
-    app.deprecatedTagName = sessionStorage.getItem('depreCatedTagName');
+    app.deprecatedTagName = sessionStorage.getItem('deprecatedTagName');
     app.lastLoadMatrixName = sessionStorage.getItem('lastMatrixName');
-    sessionStorage.removeItem('depreCatedTagName');
+    sessionStorage.removeItem('deprecatedTagName');
   }
 }
 
