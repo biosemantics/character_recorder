@@ -1243,7 +1243,7 @@
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
                                 <span v-if="hasColorPalette(node.text)" @click="showPalette(node, $event)"><img
-                                  src="/images/color-palette.png" style="width: 12px;"/></span>
+                                  src="/chrecorder/public/images/color-palette.png" style="width: 12px;"/></span>
                               </div>
                             </div>
                           </tree>
