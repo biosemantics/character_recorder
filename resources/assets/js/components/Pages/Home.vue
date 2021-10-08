@@ -358,9 +358,12 @@
                         <div v-for="cv in allColorValues" v-if="cv.value_id == value.id" style="text-align: left"
                              :key="cv.id">
 <!--                           {{colorValueText(cv)}} -->
-                          <span v-if="cv.colored.includes('(') && cv.colored.includes(')')" :set="tempColor = cv.colored.split('(')[1].substring(0, cv.colored.split('(')[1].length - 1).split(', ')">
+                          <span v-if="cv.colored">
+                            <span v-if="cv.colored.includes('(') && cv.colored.includes(')')" :set="tempColor = cv.colored.split('(')[1].substring(0, cv.colored.split('(')[1].length - 1).split(', ')">
                             <div v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-block'}"/>
                           </span>
+                          </span>
+
                           <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{ cv.negation }} </span>
                           <span style="color:#636b6f;"
                                 v-if="cv.pre_constraint && cv.pre_constraint != ''">{{ cv.pre_constraint }} </span>
@@ -1093,7 +1096,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit Value</b>
+                          <b style="text-decoration: underline">Create/Edit Value</b><span style="color: red"> ("*" indicates a required field) </span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -1187,7 +1190,7 @@
                                    v-model="currentColorValue.colored"
                                    class="color-input">
                             <h5>
-                              color
+                              color <span style="color: red">*</span>
                             </h5>
                           </div>
                           <div style="display: inline-block;">
@@ -1238,7 +1241,7 @@
                             @node:selected="onTreeNodeSelected"
                             style="max-height: 300px; min-height: 150px;">
                             <div slot-scope="{ node }" class="node-container">
-                              <div class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
+                              <div v-bind:style="{ textDecoration: deprecatedTerms.findIndex(value => value['deprecate term'] == node.text) >= 0 ? 'line-through' : 'normal'}" class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
@@ -1469,7 +1472,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit Value</b>
+                          <b style="text-decoration: underline">Create/Edit Value</b> <span style="color: red">("*" indicates a required field)</span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -1533,7 +1536,7 @@
                                    v-model="currentNonColorValue.main_value"
                             >
                             <h5>
-                              {{ currentNonColorValue.placeholderName }}
+                              {{ currentNonColorValue.placeholderName }} <span style="color: red">*</span>
                             </h5>
                           </div>
                           <div style="display: inline-block;">
@@ -2126,14 +2129,20 @@
                     <div class="modal-body" style="min-height: 25vh;">
                       <div style="margin-top: 0px;">
                         <div style="border-bottom: gray; padding: 2px; font-size: 11pt">
-                          <list-select
-                            :list="namesList"
-                            optionValue="matrix_name"
-                            optionText="matrix_name"
-                            :selectedItem="currentVersion"
-                            @select="onSelectNameVersion"
-                          >
-                          </list-select>
+<!--                          <list-select-->
+<!--                            :list="namesList"-->
+<!--                            optionValue="matrix_name"-->
+<!--                            optionText="matrix_name"-->
+<!--                            :selectedItem="currentVersion"-->
+<!--                            @select="onSelectNameVersion"-->
+<!--                            @blur="onSelectNameVersion"-->
+<!--                          >-->
+<!--                          </list-select>-->
+                          <input style="width: 100%;" @change="onSelectMatrix()"
+                                 type="text" list="matrix_list" v-model="currentVersion"/>
+                          <datalist id="matrix_list" v-if="namesList.length > 0">
+                            <option v-for="(each, index) in namesList" :value="each.matrix_name" :key="index">{{ each.matrix_name }}</option>
+                          </datalist>
                           <div style="margin-left: 12px;margin-top: 4px;font-style: italic;"> Using an existing name
                             will overwrite the current matrix
                           </div>
@@ -2144,7 +2153,7 @@
                       <div class="row">
                         <div class="col-md-12">
                           <a class="btn btn-primary ok-btn"
-                             v-bind:class="{disabled: ((currentVersion == null || currentVersion.matrix_name == '') )}"
+                             v-bind:class="{disabled: (currentVersion == null )}"
                              v-on:click="nameMatrix">
                             Save </a>
                           <a v-on:click="nameMatrixDialog=false"
@@ -4947,37 +4956,43 @@ export default {
     },
     generateMatrix() {
       var app = this;
-      if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
-        var jsonMatrix = {
-          'user_id': app.user.id,
-          'column_count': app.columnCount,
-          'taxon': app.taxonName
-        };
-        app.oldUserTags = [];
-        axios.post('/chrecorder/public/api/v1/matrix-store', jsonMatrix)
-          .then(function (resp) {
-            app.isLoading = false;
-            console.log('resp storeMatrix', resp.data);
-            app.matrixShowFlag = true;
-            app.collapsedFlag = true;
-            app.showSetupArea = false;
-            app.userCharacters = resp.data.characters;
-            app.headers = resp.data.headers;
-            app.values = resp.data.values;
-            console.log('app.userTags', app.userTags);
-            axios.get('/chrecorder/public/api/v1/user-tag/' + app.user.id)
-              .then(function (resp) {
-                app.userTags = resp.data;
-                app.showTableForTab(app.currentTab);
-              });
-            app.refreshUserCharacters(true);
-
-            console.log('userCharacters', app.userCharacters);
-          });
-
-      } else {
+      console.log('app.userCharacters', app.userCharacters);
+      if (app.userCharacters.length === 0) {
         app.isLoading = false;
-        alert("You need to fill the taxon name and specimen count in the input box!")
+        alert("You need to select characters before you can go to matrix")
+      } else {
+        if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
+          var jsonMatrix = {
+            'user_id': app.user.id,
+            'column_count': app.columnCount,
+            'taxon': app.taxonName
+          };
+          app.oldUserTags = [];
+          axios.post('/chrecorder/public/api/v1/matrix-store', jsonMatrix)
+            .then(function (resp) {
+              app.isLoading = false;
+              console.log('resp storeMatrix', resp.data);
+              app.matrixShowFlag = true;
+              app.collapsedFlag = true;
+              app.showSetupArea = false;
+              app.userCharacters = resp.data.characters;
+              app.headers = resp.data.headers;
+              app.values = resp.data.values;
+              console.log('app.userTags', app.userTags);
+              axios.get('/chrecorder/public/api/v1/user-tag/' + app.user.id)
+                .then(function (resp) {
+                  app.userTags = resp.data;
+                  app.showTableForTab(app.currentTab);
+                });
+              app.refreshUserCharacters(true);
+
+              console.log('userCharacters', app.userCharacters);
+            });
+
+        } else {
+          app.isLoading = false;
+          alert("You need to fill the taxon name and specimen count in the input box!")
+        }
       }
 
     },
@@ -6575,10 +6590,12 @@ export default {
             }
           }
           console.log('postFlag', postFlag);
+          console.log('postValue', postValue);
           //    }
           if (postFlag == true) {
             axios.post('/chrecorder/public/api/v1/save-color-value', postValue)
               .then(async function (resp) {
+
                 if (postValue['brightness'] && postValue['brightness'] != '') {
                   await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + postValue['brightness'].toLowerCase().replace('-', ' ')).then(resultsp => {
                     if (resultsp.data.entries.length > 0) {
@@ -7107,11 +7124,19 @@ export default {
             && array[i].main_value == result[j].main_value
             && array[i].post_constraint == result[j].post_constraint) {
             result[j].count = result[j].count + 1;
+
+            if (array[i].usage_count > 0) {
+              if (!result[j].username.split(', ').includes(array[i].username)) {
+                result[j].usage_count = result[j].usage_count + array[i].usage_count;
+                result[j].username = result[j].username + ', ' + array[i].username;
+              }
+            }
             resultFlag = false;
           }
         }
         if (resultFlag) {
           array[i].count = 1;
+          array[i].creator = array[i].username;
           result.push(array[i]);
         }
       }
@@ -7121,7 +7146,6 @@ export default {
     },
     removeArrayDuplicates(array) {
       var result = [];
-
 
       for (var i = 0; i < array.length; i++) {
         var temp = array[i];
@@ -7157,6 +7181,7 @@ export default {
 
       return result;
     },
+
     removeDuplicates(arr) {
 
       const result = [];
@@ -7350,6 +7375,7 @@ export default {
               }
 
               console.log('resp.data.existNonColorDetails', resp.data.existNonColorDetails);
+              app.existColorDetails = app.removeArrayDuplicates(app.existColorDetails);
               app.existNonColorDetails = app.removeNonColorDuplicates(app.existNonColorDetails);
               if (app.nonColorDetails.length == 0) {
                 app.currentNonColorValueExist = false;
@@ -7938,6 +7964,10 @@ export default {
       console.log(item);
       app.currentName = "";
     },
+    onSelectMatrix() {
+      let app = this;
+      console.log('item', app.currentVersion);
+    },
     onChangeCurrentName(text) {
       var app = this;
       console.log("onChange current name", text);
@@ -7981,7 +8011,7 @@ export default {
     nameMatrix() {
       var app = this;
       app.isLoading = true;
-      var selectedMatrixName = app.currentVersion ? app.currentVersion.matrix_name : app.currentName;
+      var selectedMatrixName = app.currentVersion ? app.currentVersion : app.currentName;
       console.log("name", selectedMatrixName);
       console.log("user", app.user);
       var postValue = {};
