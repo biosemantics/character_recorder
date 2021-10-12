@@ -3411,7 +3411,7 @@ export default {
           "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
           "definitionSrc": app.user.name,
         };
-        console.log(requestBody);
+        console.log('1', requestBody);
         await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
           .then(function (resp) {
             console.log('shark api class resp', resp);
@@ -6060,7 +6060,7 @@ export default {
         app.descriptionText += '<br/>';
 
       }
-      app.descriptionText = app.descriptionText.replaceAll(' ;', ';').replaceAll(' .', '.');
+      app.descriptionText = app.descriptionText.replaceAll(' ;', ';').replaceAll(' .', '.').replaceAll(' ,', ',');
     },
     //get any percentile from an array
     getPercentile(data, percentile) {
