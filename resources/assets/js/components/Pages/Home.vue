@@ -1259,7 +1259,7 @@
                              style="margin-top: 10px;">
                           <div v-for="(flag, colorFlagIndex) in colorFlags" v-if="colorSynonyms[flag]"
                                :key="colorFlagIndex">
-                            <strong>{{ flag }} : {{ originColorValue[flag] }}</strong>
+                            <strong>{{ flag }} : {{ currentColorValue[flag] }}</strong>
                             <br>
                             <b>Did you mean?</b>
                             <div v-if="currentColorDeprecated[flag]">
@@ -1325,15 +1325,15 @@
                                          v-model="currentColorValue[flag]">
                                   <label v-bind:for="eachSynonym.term"> {{ eachSynonym.term }} ({{
                                       eachSynonym.parentTerm
-                                    }}): </label> {{
+                                    }}): </label>{{
                                     eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                   }}
-                                  <div style="display: inline;" v-if="eachSynonym.resultAnnotations.find(each => each.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')">
+                                  <span style="display: inline;" v-if="eachSynonym.resultAnnotations.find(each => each.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')">
                                     <b>Exact synonyms:</b>
                                     <span v-for="(eachAnnotation, eachAnnotationIndex) in eachSynonym.resultAnnotations" v-if="eachAnnotation.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym'">
                                       "{{eachAnnotation.value}}"
                                     </span>
-                                  </div>
+                                  </span>
                                 </div>
                                 <input type="radio" id="user-defined"
                                        v-bind:value="defaultColorValue[flag]"
@@ -1342,7 +1342,7 @@
                                 <label for="user-defined">Use my term '{{ defaultColorValue[flag] }}'(as a
                                   {{ changeFlagToLabel(flag) }}). Please
                                   define the term, all input required:</label>
-                                <div for="user-defined">
+                                <div>
                                   Definition: <input
                                   v-model="userColorDefinition[flag]"
                                   class="color-definition-input">
@@ -1640,12 +1640,12 @@
                                   }}): </label> {{
                                   eachSynonym.definition ? eachSynonym.definition : 'No definition'
                                 }}
-                                <div style="display: inline;" v-if="eachSynonym.resultAnnotations.find(each => each.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')">
+                                <span style="display: inline;" v-if="eachSynonym.resultAnnotations.find(each => each.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')">
                                   <b>Exact synonyms:</b>
                                   <span v-for="(eachAnnotation, eachAnnotationIndex) in eachSynonym.resultAnnotations" v-if="eachAnnotation.property === 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym'">
                                       "{{eachAnnotation.value}}"
                                     </span>
-                                </div>
+                                </span>
                               </div>
                             </div>
                             <div v-if="searchNonColorFlag != 2">
@@ -6419,6 +6419,8 @@ export default {
             const flag = app.colorFlags[i];
             if (!app.colTreeData[flag] || !app.searchTreeData(app.colTreeData[flag], app.currentColorValue[flag])) {
               if (!app.currentColorDeprecated[flag]) {
+                console.log('app.currentColorValue[flag]', app.currentColorValue[flag]);
+                console.log('app.defaultColorValue[flag]', app.defaultColorValue[flag]);
                 if (app.currentColorValue[flag] == app.defaultColorValue[flag] && app.currentColorValue[flag] != '' && app.currentColorValue[flag] != undefined && app.currentColorValue[flag] != null) {
                   if (app.colorSynonyms[flag]) {
                     if (!app.userColorDefinition[flag] || app.userColorDefinition[flag] == '') {
@@ -7786,10 +7788,11 @@ export default {
             console.log(flag);
             console.log('app.colorSynonyms', app.colorSynonyms);
             for (var i = 0; i < app.colorSynonyms[flag].length; i++) {
-              if (app.colorSynonyms[flag][i].term == color[flag]) {
+              console.log('colorSynonyms', app.colorSynonyms[flag][i].term);
+              console.log('color[flag]', color[flag]);
+              if (app.colorSynonyms[flag][i].term === color[flag]) {
                 app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' -' + flag;
-              } else {
-                app.currentColorValue[flag] = app.colorSynonyms[flag][i].term;
+                console.log('app.defaultColorValue[flag]', app.defaultColorValue[flag]);
               }
               if (app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                 app.colorSynonyms[flag][i].definition = app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
@@ -7798,6 +7801,8 @@ export default {
                 app.colorDefinition[flag] = null;
               }
             }
+            app.colorExistFlag = true;
+            setTimeout(() => {console.log("this is the test timeout")}, 100);
             app.colorExistFlag = false;
           } else {
             app.searchColorFlag = 0;
@@ -7848,8 +7853,6 @@ export default {
                 } else {
                   app.defaultNonColorValue = app.defaultNonColorValue + ' (' + searchText + ')';
                 }
-              } else {
-                app.currentNonColorValue.main_value = app.nonColorSynonyms[i].term;
               }
               if (app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                 app.nonColorSynonyms[i].definition = app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
