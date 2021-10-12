@@ -1259,7 +1259,7 @@
                              style="margin-top: 10px;">
                           <div v-for="(flag, colorFlagIndex) in colorFlags" v-if="colorSynonyms[flag]"
                                :key="colorFlagIndex">
-                            <strong>{{ flag }} : {{ currentColorValue[flag] }}</strong>
+                            <strong>{{ flag }} : {{ originColorValue[flag] }}</strong>
                             <br>
                             <b>Did you mean?</b>
                             <div v-if="currentColorDeprecated[flag]">
@@ -1322,6 +1322,7 @@
                                   <input type="radio" v-bind:id="eachSynonym.term"
                                          v-bind:value="eachSynonym.term"
                                          v-on:change="selectedSynonymForColor(flag)"
+                                         name="color-select"
                                          v-model="currentColorValue[flag]">
                                   <label v-bind:for="eachSynonym.term"> {{ eachSynonym.term }} ({{
                                       eachSynonym.parentTerm
@@ -1338,6 +1339,7 @@
                                 <input type="radio" id="user-defined"
                                        v-bind:value="defaultColorValue[flag]"
                                        v-on:change="selectUserDefinedTerm(currentColorValue, flag, defaultColorValue[flag])"
+                                       name="color-select"
                                        v-model="currentColorValue[flag]">
                                 <label for="user-defined">Use my term '{{ defaultColorValue[flag] }}'(as a
                                   {{ changeFlagToLabel(flag) }}). Please
@@ -6058,7 +6060,7 @@ export default {
         app.descriptionText += '<br/>';
 
       }
-
+      app.descriptionText = app.descriptionText.replaceAll(' ;', ';').replaceAll(' .', '.');
     },
     //get any percentile from an array
     getPercentile(data, percentile) {
