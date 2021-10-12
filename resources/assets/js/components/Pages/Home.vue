@@ -1565,7 +1565,7 @@
                             @node:selected="onTextureTreeNodeSelected"
                             style="max-height: 300px;">
                             <div slot-scope="{ node }" class="node-container">
-                              <div class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
+                              <div v-bind:style="{ textDecoration: deprecatedTerms.findIndex(value => value['deprecate term'] == node.text) >= 0 ? 'line-through' : 'normal'}" class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)">
@@ -7794,6 +7794,7 @@ export default {
               console.log('color[flag]', color[flag]);
               if (app.colorSynonyms[flag][i].term === color[flag]) {
                 app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' -' + flag;
+                app.currentColorValue[flag] = app.defaultColorValue[flag];
                 console.log('app.defaultColorValue[flag]', app.defaultColorValue[flag]);
               }
               if (app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
@@ -7957,6 +7958,7 @@ export default {
         app.currentNonColorValue.confirmedFlag[flag] = true;
       } else {
         app.currentColorValue.confirmedFlag[flag] = true;
+        app.currentColorValue[flag] = app.defaultColorValue[flag];
       }
 
       if (app.colorDetails.length == 1) {
