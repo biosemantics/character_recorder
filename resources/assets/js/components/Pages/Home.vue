@@ -1241,7 +1241,7 @@
                             @node:selected="onTreeNodeSelected"
                             style="max-height: 300px; min-height: 150px;">
                             <div slot-scope="{ node }" class="node-container">
-                              <div v-bind:style="{ textDecoration: deprecatedTerms.findIndex(value => value['deprecate term'] == node.text) >= 0 ? 'line-through' : 'normal'}" class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
+                              <div v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}" class="node-text" v-tooltip="node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
@@ -1565,7 +1565,7 @@
                             @node:selected="onTextureTreeNodeSelected"
                             style="max-height: 300px;">
                             <div slot-scope="{ node }" class="node-container">
-                              <div v-bind:style="{ textDecoration: deprecatedTerms.findIndex(value => value['deprecate term'] == node.text) >= 0 ? 'line-through' : 'normal'}" class="node-text" v-tooltip="node.data.details[0].definition ? node.data.details[0].definition : 'No Definition'">
+                              <div v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}" class="node-text" v-tooltip="node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)">
@@ -2775,11 +2775,14 @@ export default {
     showDefinition(node, event) {
       var app = this;
       event.preventDefault();
-      if (node.data.details[0].definition) {
-        app.treeNodeDefinitionTitle = 'Definition for ' + node.text;
-        app.treeNodeDefinitionText = node.data.details[0].definition;
-        app.treeNodeDefinitionDialog = true;
+      if (node.data.details) {
+        if (node.data.details[0].definition) {
+          app.treeNodeDefinitionTitle = 'Definition for ' + node.text;
+          app.treeNodeDefinitionText = node.data.details[0].definition;
+          app.treeNodeDefinitionDialog = true;
+        }
       }
+
     },
     inited(viewer) {
       this.$viewer = viewer;
@@ -7570,6 +7573,7 @@ export default {
       var app = this;
       var methodEntry = null;
       if (!tData) return;
+      console.log('tdata', tData);
       tData.data["images"] = [];
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
         .then(function (resp) {
@@ -7597,6 +7601,7 @@ export default {
         .catch(function (resp) {
           console.log('exp search resp error', resp);
         });
+
       for (let i = 0; tData.children && i < tData.children.length; i++) {
         app.getImageFromColorTreeData(tData.children[i]);
       }
@@ -7645,9 +7650,10 @@ export default {
                 tempNonColorData.children = app.sortTreeData(tempNonColorData.children);
               }
               app.$store.state.colorTreeData = tempNonColorData;
+              console.log('tempNonColorData', tempNonColorData);
               app.removeDeprecatedTerms(tempNonColorData, resultData);
               app.textureTreeData = resultData;
-              app.getImageFromColorTreeData(app.textureTreeData);
+              // app.getImageFromColorTreeData(app.textureTreeData);
 
               app.currentNonColorValue.detailFlag = flag;
               if (app.nonColorDetailsFlag) {
@@ -8572,7 +8578,7 @@ export default {
       var app = this;
       if (!treeData) return;
       if (treeData.data.details) {
-        if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == treeData.data.details[0].IRI) < 0) {
+        // if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == treeData.data.details[0].IRI) < 0) {
           resData["data"] = treeData.data;
           resData["text"] = treeData.text;
           if (treeData.children) {
@@ -8580,14 +8586,14 @@ export default {
             var t = 0;
             for (var i = 0; i < treeData.children.length; i++) {
               if (treeData.children[i].data && treeData.children[i].data.details) {
-                if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == treeData.children[i].data.details[0].IRI) < 0) {
+                // if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == treeData.children[i].data.details[0].IRI) < 0) {
                   resData["children"].push({});
                   app.removeDeprecatedTerms(treeData.children[i], resData["children"][t++]);
-                }
+                // }
               }
             }
           }
-        }
+        // }
       }
       return;
     },
