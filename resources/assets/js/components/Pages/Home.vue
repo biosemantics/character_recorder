@@ -7789,12 +7789,15 @@ export default {
             });
             console.log(flag);
             console.log('app.colorSynonyms', app.colorSynonyms);
+            if (app.colorSynonyms[flag].length > 0) {
+              app.currentColorValue[flag] = app.colorSynonyms[flag][0].term;
+            }
             for (var i = 0; i < app.colorSynonyms[flag].length; i++) {
               console.log('colorSynonyms', app.colorSynonyms[flag][i].term);
               console.log('color[flag]', color[flag]);
               if (app.colorSynonyms[flag][i].term === color[flag]) {
                 app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' -' + flag;
-                app.currentColorValue[flag] = app.defaultColorValue[flag];
+                // app.currentColorValue[flag] = app.defaultColorValue[flag];
                 console.log('app.defaultColorValue[flag]', app.defaultColorValue[flag]);
               }
               if (app.colorSynonyms[flag][i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
@@ -7837,6 +7840,9 @@ export default {
                 || (eachProperty.property.endsWith('hasExactSynonym') && eachProperty.value == nonColor[flag])) != null || eachValue.term == nonColor[flag];
 
             });
+            if (app.nonColorSynonyms.length > 0) {
+              app.currentNonColorValue['main_value'] = app.nonColorSynonyms[0].term;
+            }
             for (var i = 0; i < app.nonColorSynonyms.length; i++) {
               if (app.nonColorSynonyms[i].term == nonColor[flag]) {
                 var characterId = app.values.find(eachValue => eachValue.find(eachItem => eachItem.id == app.currentNonColorValue.value_id) != null)[0].character_id;
