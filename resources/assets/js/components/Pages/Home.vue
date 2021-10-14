@@ -813,10 +813,10 @@
                                class="btn btn-primary">Save</a>
                             <a v-if="viewFlag == true && editFlag == false" v-on:click="use(item)"
                                class="btn btn-primary">Use this</a>
-                            <a v-if="viewFlag == true && editFlag == false" v-on:click="enhance(item)"
-                               class="btn btn-primary">Modify and Use &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b
-                              style="border: 1px solid #ffffff; background: #003366;"
-                              title="Use this option when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>
+<!--                            <a v-if="viewFlag == true && editFlag == false" v-on:click="enhance(item)"-->
+<!--                               class="btn btn-primary">Modify and Use &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b-->
+<!--                              style="border: 1px solid #ffffff; background: #003366;"-->
+<!--                              title="Use this option when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>-->
                             <a v-on:click="cancelCharacter()"
                                class="btn btn-danger">Cancel</a>
                           </div>
@@ -1243,7 +1243,7 @@
                             <div slot-scope="{ node }" class="node-container">
                               <div v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}"
                                    class="node-text"
-                                   v-tooltip="deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase()) ? 'Deprecated Reason: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['deprecated reason'] + ' ' + (deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] ? 'Replacement Term: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] : '') : node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'"">
+                                   v-tooltip="deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase()) ? 'Deprecated Reason: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['deprecated reason'] + ' ' + (deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] ? 'Replacement Term: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] : '') : node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
@@ -2502,6 +2502,7 @@ export default {
         'https://drive.google.com/uc?id=15MsN-q-e9PPK7YXaYX1gQZiLNERCgl5r',
         'https://drive.google.com/uc?id=1wwG6N8X6Mlq5KZHVjtDTQnVOKKZ6wVUw'
       ],
+      originalColorTreeData: {},
       standardCollections: [],
       character: {},
       userCharacters: [],
@@ -6348,7 +6349,7 @@ export default {
         }
         await app.searchColorSelection(app.currentColorValue, 'reflectance');
       }
-      if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored'] && !app.searchTreeData(app.colTreeData['colored'], app.currentColorValue['colored'])) {
+      if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored'] && !app.searchTreeData(app.originalColorTreeData, app.currentColorValue['colored'])) {
       // if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored']) {
         comparedFlag = false;
         app.saveColorButtonFlag = false;
@@ -7476,7 +7477,6 @@ export default {
             .then(async function (resp) {
               var resultData = {};
               var tempColorData = resp.data;
-
               if (tempColorData.children) {
                 for (var i = 0; i < tempColorData.children.length; i++) {
                   if (app.hasColorPalette(tempColorData.children[i].text)) {
@@ -8639,6 +8639,14 @@ export default {
         console.log("treeResult", app.treeResult);
         app.getDefinition(app.treeResult);
       });
+    await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=colored')
+    .then(function(resp) {
+      let tempOriginalData = resp.data;
+      let originalResultData = {};
+      app.removeDeprecatedTerms(tempOriginalData, originalResultData);
+
+      app.originalColorTreeData = originalResultData;
+    });
     await axios.get("http://shark.sbs.arizona.edu:8080/carex/getDeprecatedClasses")
       .then(function (resp) {
         app.deprecatedTerms = resp.data['deprecated classes'];
