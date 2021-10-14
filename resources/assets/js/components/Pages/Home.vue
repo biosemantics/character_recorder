@@ -1241,7 +1241,9 @@
                             @node:selected="onTreeNodeSelected"
                             style="max-height: 300px; min-height: 150px;">
                             <div slot-scope="{ node }" class="node-container">
-                              <div v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}" class="node-text" v-tooltip="node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
+                              <div v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}"
+                                   class="node-text"
+                                   v-tooltip="deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase()) ? 'Deprecated Reason: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['deprecated reason'] + ' ' + (deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] ? 'Replacement Term: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] : '') : node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'"">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
@@ -1565,7 +1567,10 @@
                             @node:selected="onTextureTreeNodeSelected"
                             style="max-height: 300px;">
                             <div slot-scope="{ node }" class="node-container">
-                              <div v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}" class="node-text" v-tooltip="node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
+                              <div
+                                v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}"
+                                class="node-text"
+                                v-tooltip="deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase()) ? 'Deprecated Reason: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['deprecated reason'] + ' ' + (deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] ? 'Replacement Term: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] : '') : node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)">
@@ -7884,6 +7889,9 @@ export default {
     },
     onTreeNodeSelected(node) {
       var app = this;
+      if (app.deprecatedTerms.find(value => value['deprecate term'] === node.data.text.toLowerCase())) {
+        return;
+      }
       app.colorDetailsFlag = false;
       app.colorDetailsFlag = true;
       if (node.parent != null) {
@@ -7898,6 +7906,9 @@ export default {
     },
     onTextureTreeNodeSelected(node) {
       var app = this;
+      if (app.deprecatedTerms.find(value => value['deprecate term'] === node.data.text.toLowerCase())) {
+        return;
+      }
       app.nonColorDetailsFlag = false;
       app.nonColorDetailsFlag = true;
       if (node.parent != null) {
