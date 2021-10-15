@@ -680,6 +680,10 @@
                           <div class="col-md-12" v-html="secondNounBroadSynonymNotifyMessage">
                           </div>
                         </div>
+                        <div class="row" v-if="alreadyExistingCharacter">
+                          <div class="col-md-12" v-html="alreadyExistingCharacterNotifyMessage">
+                          </div>
+                        </div>
                         <div class="row" v-if="firstCharacterUndefined">
                           <div class="col-md-12">
                             What is {{ firstCharacter }}? <input v-model="firstCharacterDefinition" style="width:100%"
@@ -2721,6 +2725,8 @@ export default {
       secondNounSynonymNotifyMessage: '',
       secondNounBroadSynonym: false,
       secondNounBroadSynonymNotifyMessage: '',
+      alreadyExistingCharacter: false,
+      alreadyExistingCharacterNotifyMessage: '',
       showSetupArea: false,
       editingValueID: -1,
       confirmNewMatrixDialog: false,
@@ -2994,7 +3000,8 @@ export default {
         app.secondNounSynonymNotifyMessage = '';
         app.secondNounBroadSynonym = false;
         app.secondNounBroadSynonymNotifyMessage = '';
-
+        app.alreadyExistingCharacter = false;
+        app.alreadyExistingCharacterNotifyMessage = '';
         app.newCharacterFlag = true;
         app.viewFlag = false;
         app.numericalFlag = false;
@@ -3282,6 +3289,8 @@ export default {
     async checkBracketConfirm() {
       var app = this;
       app.currentTermForBracket = '';
+      app.alreadyExistingCharacterNotifyMessage = '';
+      app.alreadyExistingCharacter = false;
       if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1 || app.lastCharacter.indexOf('(') > -1 || app.lastCharacter.indexOf(')') > -1 || app.secondLastCharacter.indexOf('(') > -1 || app.secondLastCharacter.indexOf(')') > -1) {
         if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1) {
           app.currentTermForBracket += app.firstCharacter;
@@ -3309,11 +3318,12 @@ export default {
         tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
 
         if (app.standardCharacters.find(each => each.name == tempWholeCharacter)) {
-          alert(tempWholeCharacter + ' is already exists. Use the existing character in the select box.');
-          app.firstCharacter = '';
-          app.middleCharacter = '';
-          app.lastCharacter = '';
-          app.secondLastCharacter = '';
+          app.alreadyExistingCharacter = true;
+          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' is already exists. Use the existing character in the select box.'
+          // app.firstCharacter = '';
+          // app.middleCharacter = '';
+          // app.lastCharacter = '';
+          // app.secondLastCharacter = '';
         } else {
           let firstCharacterList = [];
           let lastCharacterList = [];
@@ -3369,7 +3379,30 @@ export default {
           }
           console.log('wholeCharacterList', wholeCharacterList);
           if (app.standardCharacters.find(each => wholeCharacterList.includes(each.name.toLowerCase()))) {
-            alert('Consider use "' + app.standardCharacters.find(each => wholeCharacterList.includes(each.name.toLowerCase())).name + '" in the select box');
+            app.alreadyExistingCharacter = true;
+            let existingCharacterName = app.standardCharacters.find(each => wholeCharacterList.includes(each.name.toLowerCase())).name;
+            if (existingCharacterName.split(' ' + app.middleCharacter + ' ')[0] !== app.firstCharacter) {
+              app.alreadyExistingCharacterNotifyMessage = app.firstCharacter.charAt(0).toUpperCase() + app.firstCharacter.slice(1)
+                + ' is a synonym of '
+                + existingCharacterName.split(' ' + app.middleCharacter + ' ')[0];
+            }
+            if (existingCharacterName.split(' ' + app.middleCharacter + ' ')[1] !== app.lastCharacter) {
+              app.alreadyExistingCharacterNotifyMessage += app.alreadyExistingCharacterNotifyMessage === ''
+                ? app.lastCharacter.charAt(0).toUpperCase() + app.lastCharacter.slice(1)
+                + ' is a synonym of '
+                + existingCharacterName.split(' ' + app.middleCharacter + ' ')[1] : ', ' + app.lastCharacter
+                + ' is a synonym of '
+                + existingCharacterName.split(' ' + app.middleCharacter + ' ')[1];
+            }
+            if (app.middleCharacter === 'between') {
+              if (existingCharacterName.split(' and ')[1] !== app.secondLastCharacter) {
+                app.alreadyExistingCharacterNotifyMessage += app.alreadyExistingCharacterNotifyMessage === '' ? '' : ', ';
+                app.alreadyExistingCharacterNotifyMessage += app.secondLastCharacter
+                  + ' is a synonym of '
+                  + existingCharacterName.split(' and ')[1]
+              }
+            }
+            app.alreadyExistingCharacterNotifyMessage += '. ' + 'Consider use <b>' + existingCharacterName + '</b> in the select box';
             return;
           } else {
             app.firstCharacter = app.trimInputString(app.firstCharacter);
@@ -3777,7 +3810,7 @@ export default {
         }
       }
 
-      if (!app.firstNounDeprecated && !app.secondNounDeprecated && !app.firstNounNotRecommend && !app.secondNounNotRecommend && !app.firstNounSynonym && !app.secondNounSynonym && !app.firstNounBroadSynonym && !app.secondNounBroadSynonym) {
+      if (!app.firstNounDeprecated && !app.secondNounDeprecated && !app.firstNounNotRecommend && !app.secondNounNotRecommend && !app.firstNounSynonym && !app.secondNounSynonym && !app.firstNounBroadSynonym && !app.secondNounBroadSynonym && !app.alreadyExistingCharacter) {
         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase().replaceAll(' ', '_'))
           .then(function (resp) {
             console.log('term 3 wholeCharacter?' + wholeCharacter, resp.data);
@@ -3799,7 +3832,8 @@ export default {
         !app.firstNounSynonym &&
         !app.firstNounBroadSynonym &&
         !app.secondNounSynonym &&
-        !app.secondNounBroadSynonym
+        !app.secondNounBroadSynonym &&
+        !app.alreadyExistingCharacter
       ) {
         app.storeCharacter();
       }
