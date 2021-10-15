@@ -7867,7 +7867,7 @@ export default {
               console.log('colorSynonyms', app.colorSynonyms[flag][i].term);
               console.log('color[flag]', color[flag]);
               if (app.colorSynonyms[flag][i].term === color[flag]) {
-                app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' -' + flag;
+                app.defaultColorValue[flag] = app.defaultColorValue[flag] + ' -user defined';
                 // app.currentColorValue[flag] = app.defaultColorValue[flag];
                 console.log('app.defaultColorValue[flag]', app.defaultColorValue[flag]);
               }
