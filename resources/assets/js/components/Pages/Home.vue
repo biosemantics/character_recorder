@@ -3279,7 +3279,7 @@ export default {
       inputString = inputString.replaceAll('      ', ' ').replaceAll('     ', ' ').replaceAll('    ', ' ').replaceAll('   ', ' ').replaceAll('  ', ' ');
       return inputString;
     },
-    checkBracketConfirm() {
+    async checkBracketConfirm() {
       var app = this;
       app.currentTermForBracket = '';
       if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1 || app.lastCharacter.indexOf('(') > -1 || app.lastCharacter.indexOf(')') > -1 || app.secondLastCharacter.indexOf('(') > -1 || app.secondLastCharacter.indexOf(')') > -1) {
@@ -3300,6 +3300,7 @@ export default {
         }
         app.toRemoveBracketConfirmFlag = true;
       } else {
+
         var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
 
         if (app.middleCharacter == 'between') {
@@ -3314,10 +3315,69 @@ export default {
           app.lastCharacter = '';
           app.secondLastCharacter = '';
         } else {
-          app.firstCharacter = app.trimInputString(app.firstCharacter);
-          app.lastCharacter = app.trimInputString(app.lastCharacter);
-          app.secondLastCharacter = app.trimInputString(app.secondLastCharacter);
-          app.checkStoreCharacter();
+          let firstCharacterList = [];
+          let lastCharacterList = [];
+          let secondLastCharacterList = [];
+          let wholeCharacterList = [];
+          let firstResp = await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.firstCharacter.toLowerCase());
+          for (let i = 0; i < firstResp.data.entries.length; i++) {
+            if (firstResp.data.entries[i].term !== app.firstCharacter.toLowerCase()) {
+              firstCharacterList.push(firstResp.data.entries[i].term)
+            }
+            let tempAnnotations = firstResp.data.entries[i].resultAnnotations.filter(each => each.property.endsWith('hasExactSynonym'));
+            for (let j = 0; j < tempAnnotations.length; j++) {
+              firstCharacterList.push(tempAnnotations[j].value);
+            }
+          }
+
+          let lastResp = await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase());
+          for (let i = 0; i < lastResp.data.entries.length; i++) {
+            if (lastResp.data.entries[i].term !== app.firstCharacter.toLowerCase()) {
+              lastCharacterList.push(lastResp.data.entries[i].term)
+            }
+            let tempAnnotations = lastResp.data.entries[i].resultAnnotations.filter(each => each.property.endsWith('hasExactSynonym'));
+            for (let j = 0; j < tempAnnotations.length; j++) {
+              lastCharacterList.push(tempAnnotations[j].value);
+            }
+          }
+
+          for (let i = 0; i < firstCharacterList.length; i++) {
+            for (let j = 0; j < lastCharacterList.length; j++) {
+              let tempCharacter = firstCharacterList[i] + ' ' + app.middleCharacter + ' ' + lastCharacterList[j];
+              wholeCharacterList.push(tempCharacter);
+            }
+          }
+
+          if (app.middleCharacter === 'between') {
+            let secondLastResp = await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.secondLastCharacter.toLowerCase());
+            for (let i = 0; i < secondLastResp.data.entries.length; i++) {
+              if (secondLastResp.data.entries[i].term !== app.firstCharacter.toLowerCase()) {
+                secondLastCharacterList.push(secondLastResp.data.entries[i].term)
+              }
+              let tempAnnotations = secondLastResp.data.entries[i].resultAnnotations.filter(each => each.property.endsWith('hasExactSynonym'));
+              for (let j = 0; j < tempAnnotations.length; j++) {
+                secondLastCharacterList.push(tempAnnotations[j].value);
+              }
+            }
+            let tempWholeCharacterList = wholeCharacterList;
+            wholeCharacterList = [];
+            for (let i = 0; i < secondLastCharacterList.length; i++) {
+              for (let j = 0; j < tempWholeCharacterList.length; j++) {
+                wholeCharacterList.push(tempWholeCharacterList[j] + ' and ' + secondLastCharacterList[i]);
+              }
+            }
+          }
+          console.log('wholeCharacterList', wholeCharacterList);
+          if (app.standardCharacters.find(each => wholeCharacterList.includes(each.name.toLowerCase()))) {
+            alert('Consider use "' + app.standardCharacters.find(each => wholeCharacterList.includes(each.name.toLowerCase())).name + '" in the select box');
+            return;
+          } else {
+            app.firstCharacter = app.trimInputString(app.firstCharacter);
+            app.lastCharacter = app.trimInputString(app.lastCharacter);
+            app.secondLastCharacter = app.trimInputString(app.secondLastCharacter);
+            await app.checkStoreCharacter();
+          }
+
         }
       }
     },
@@ -7578,7 +7638,6 @@ export default {
       var app = this;
       var methodEntry = null;
       if (!tData) return;
-      console.log('tdata', tData);
       tData.data["images"] = [];
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
         .then(function (resp) {
@@ -7764,6 +7823,7 @@ export default {
     },
     async searchColorSelection(color, flag) {
       var app = this;
+      color[flag] = color[flag].toLowerCase();
       app.defaultColorValue[flag] = color[flag];
       app.deprecateColorValue[flag] = color[flag];
       app.extraColors = [];
@@ -7782,7 +7842,7 @@ export default {
 
       app.colorSynonyms[flag] = [];
 
-      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag])
+      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag].toLowerCase())
         .then(async function (resp) {
           console.log(color[flag]);
           console.log('search carex resp', resp.data);
@@ -7829,6 +7889,7 @@ export default {
     },
     searchNonColorSelection(nonColor, flag) {
       var app = this;
+      nonColor[flag] = nonColor[flag].toLowerCase();
       app.nonColorExistFlag = false;
       app.defaultNonColorValue = nonColor[flag];
       app.deprecateNonColorValue[flag] = nonColor[flag];
