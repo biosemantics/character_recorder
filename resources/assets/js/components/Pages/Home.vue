@@ -6596,33 +6596,33 @@ export default {
                     console.log('setSuperclass resp', resp.data);
                   });
                 } else if (app.colorSynonyms[flag]) {
-                  var synonym = app.colorSynonyms[flag].find(eachSynonym => eachSynonym.term == app.currentColorValue[flag]);
-                  var date = new Date();
-                  requestBody = {
-                    "user": app.sharedFlag ? '' : app.user.name,
-                    "ontology": "carex",
-                    "term": postValue[flag],
-                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + flag,
-                    "definition": synonym.definition,
-                    "elucidation": "",
-                    "createdBy": app.user.name,
-                    "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                    "definitionSrc": app.user.name,
-                    "examples": app.colorSampleText['main_value'] + ", used in taxon " + app.colorTaxon['main_value'],
-                    "logicDefinition": "",
-                  };
-                  console.log(requestBody);
-                  await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-                    .then(function (resp) {
-                      console.log('shark api class resp', resp);
-                      axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                        user: app.sharedFlag ? '' : app.user.name,
-                        ontology: 'carex'
-                      })
-                        .then(function (resp) {
-                          console.log('save api resp', resp);
-                        });
-                    });
+                  // var synonym = app.colorSynonyms[flag].find(eachSynonym => eachSynonym.term == app.currentColorValue[flag]);
+                  // var date = new Date();
+                  // requestBody = {
+                  //   "user": app.sharedFlag ? '' : app.user.name,
+                  //   "ontology": "carex",
+                  //   "term": postValue[flag],
+                  //   "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + flag,
+                  //   "definition": synonym.definition,
+                  //   "elucidation": "",
+                  //   "createdBy": app.user.name,
+                  //   "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                  //   "definitionSrc": app.user.name,
+                  //   "examples": app.colorSampleText['main_value'] + ", used in taxon " + app.colorTaxon['main_value'],
+                  //   "logicDefinition": "",
+                  // };
+                  // console.log(requestBody);
+                  // await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+                  //   .then(function (resp) {
+                  //     console.log('shark api class resp', resp);
+                  //     axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                  //       user: app.sharedFlag ? '' : app.user.name,
+                  //       ontology: 'carex'
+                  //     })
+                  //       .then(function (resp) {
+                  //         console.log('save api resp', resp);
+                  //       });
+                  //   });
                 }
               }
             }
