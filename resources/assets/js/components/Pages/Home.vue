@@ -3878,7 +3878,7 @@ export default {
       if (txt != '') {
         txt = txt.slice(0, -1);
       }
-      return txt + '; ';
+      return txt + ' ';
     },
     nonColorValueCell(nonColorDetails) {
       var app = this;
@@ -3907,7 +3907,7 @@ export default {
       if (txt != '') {
         txt = txt.slice(0, -1);
       }
-      return txt + '; ';
+      return txt + ' ';
     },
     isColorDepreacted(ncv) {
 
