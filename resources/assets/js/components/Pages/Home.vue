@@ -254,7 +254,7 @@
                   <th style="line-height: 43px; text-align: center; background-color: lightgrey;">
                     Summary
                   </th>
-                  <th v-if="header.id != 1" v-for="header in headers"
+                  <th v-if="header.id != 1" v-for="header in headers.slice().reverse()"
                       style="min-width: 200px; background-color: lightgrey;">
                     <input class="th-input" style="background-color: lightgrey;" v-on:blur="saveHeader(header)"
                            v-model="header.header"/>
@@ -346,7 +346,7 @@
                   <td style="line-height: 43px; text-align: center;">
                     <div style="line-height: 21px;" v-html="calcSummary(row)"></div>
                   </td>
-                  <template v-for="value in row" v-if="value.header_id != 1">
+                  <template v-for="value in row.slice().reverse()" v-if="value.header_id != 1">
                     <td :key="value.id" v-on:click.self="focusedValue(value)" style="padding-left: 5px">
                       <div v-if="checkHaveUnit(row.find(v => v.header_id == 1).value) || row.find(v => v.header_id == 1).value.startsWith('Number ')" style="width: 80%; float:left">
                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
