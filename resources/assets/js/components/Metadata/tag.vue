@@ -4,7 +4,7 @@
       <b>3. Tag: Please provide a tag for "{{ character_name }}": </b>
     </div>
     <div class="col-md-12" style="font-size: 12px;">
-      You can change the tag later, but always select or type a meaningful tag for a character! For example, a group of
+      You can change the tag later, but always select or enter a meaningful tag for a character! For example, a group of
       characters about leaves should use the tag "Leaves".
       <br/>
     </div>
