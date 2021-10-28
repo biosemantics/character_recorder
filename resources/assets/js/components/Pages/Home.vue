@@ -554,7 +554,7 @@
                                           secondNounBroadSynonymNotifyMessage='';
                                                                         "
                               list="first_characters"
-                              placeholder="select or type"
+                              placeholder="enter value or select"
                               v-model="firstCharacter"
                             />
                             <datalist id="first_characters">
