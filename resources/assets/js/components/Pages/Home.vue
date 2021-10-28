@@ -473,7 +473,9 @@
                         </div>
                         &nbsp;
                       </div>
-                      <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
+                      <a style="width: 20%;" 
+                       v-tooltip="{ content:'<div>copy this value to cells in the current row</div>' }"
+                      v-on:click="copyValuesToOther(value)">
                         <img src="https://image.flaticon.com/icons/png/512/88/88026.png"
                              style="width: 20px;margin-top:10px;"/>
                       </a>
