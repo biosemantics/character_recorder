@@ -1,10 +1,10 @@
 <template>
   <div class="row">
     <div class="col-md-12" style="font-size: 15px;">
-      <b>3. Tag: Please choose a tag for "{{ character_name }}": </b>
+      <b>3. Tag: Please provide a tag for "{{ character_name }}": </b>
     </div>
     <div class="col-md-12" style="font-size: 12px;">
-      You can change the tag later, but always choose a meaningful tag for a character! For an example, a group of
+      You can change the tag later, but always use a meaningful tag for a character! For example, a group of
       characters about leaves should use the tag "Leaves".
       <br/>
     </div>
