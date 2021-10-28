@@ -24,7 +24,7 @@
                   class="btn btn-primary"
                   v-on:click="collapsedFlag = true;showSetupArea=false;"
                   style="width: 40px;"
-                  v-tooltip="{ content:'<div>Hide Setup buttons</div>' }"
+                  v-tooltip="{ content:'<div>Show Taxon</div>' }"
                 >
                   <span class="glyphicon glyphicon-chevron-up"></span>
                 </a>
@@ -200,7 +200,7 @@
                   class="btn btn-primary"
                   v-on:click="collapsedFlag = false;"
                   style="width: 40px;"
-                  v-tooltip="{ content:'<div>Show Setup buttons</div>' }"
+                  v-tooltip="{ content:'<div>Show Create/Load Buttons</div>' }"
                 >
                   <span class="glyphicon glyphicon-chevron-down"></span>
                 </a>
@@ -224,7 +224,7 @@
             </div>
             <div class="col-md-3">
               <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;"
-                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-tooltip="'Give this matrix a name so you can load it in a future time'">Name this matrix</a>
+                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-tooltip="'Give this matrix a name so you can load it in the future'">Name This Matrix</a>
             </div>
           </div>
         </div>
@@ -1725,7 +1725,7 @@
               <div class="modal-wrapper">
                 <div class="modal-container">
                   <div class="modal-header">
-                    <b>Confirm to overwrite?</b>
+                    <b>Copy value to other cells in a row</b>
                   </div>
                   <div class="modal-body">
                     <div>
