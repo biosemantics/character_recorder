@@ -3319,7 +3319,7 @@ export default {
 
         if (app.standardCharacters.find(each => each.name == tempWholeCharacter)) {
           app.alreadyExistingCharacter = true;
-          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' is already exists. Use the existing character in the select box.'
+          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' is already exists. Select the existing character in the Search/Create Character box.'
           // app.firstCharacter = '';
           // app.middleCharacter = '';
           // app.lastCharacter = '';
@@ -3402,7 +3402,7 @@ export default {
                   + existingCharacterName.split(' and ')[1]
               }
             }
-            app.alreadyExistingCharacterNotifyMessage += '. ' + 'Consider use <b>' + existingCharacterName + '</b> in the select box';
+            app.alreadyExistingCharacterNotifyMessage += '. ' + 'Consider select <b>' + existingCharacterName + '</b> in the Search/Create Character box';
             return;
           } else {
             app.firstCharacter = app.trimInputString(app.firstCharacter);
