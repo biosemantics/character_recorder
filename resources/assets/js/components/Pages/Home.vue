@@ -63,7 +63,7 @@
                         are they?) </b><br/> or</b>
                   </div>
                   <div class="col-md-12 margin-top-10">
-                    <b>Search/create other character:&nbsp;</b>
+                    <b>Search/create another character:&nbsp;</b>
                     <model-select :options="standardCharacters"
                                   v-model="item"
                                   placeholder="Search/create character here"
