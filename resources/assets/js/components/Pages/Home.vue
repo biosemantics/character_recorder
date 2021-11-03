@@ -77,14 +77,7 @@
                 <hr style="border-top: 2px solid; margin-top: 20px;">
                 <div class="margin-top-10 text-right">
                   <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Go To Matrix</a>
-                  <a
-                    class="btn btn-primary"
-                    v-on:click="collapsedFlag = true;showSetupArea=false;"
-                    style="width: 40px;"
-                    v-tooltip="{ content:'<div>Hide Setup buttons</div>' }"
-                  >
-                    <span class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
+
                 </div>
                 <div class="margin-top-10"
                      v-if="userCharacters.length > 0">
@@ -156,14 +149,7 @@
                 <!-- repeat the buttoms here -->
                 <div v-if="userCharacters.length!=0" class="margin-top-10 text-right">
                   <a class="btn btn-primary" v-on:click="generateMatrix()" style="width: 200px;">Go To Matrix</a>
-                  <a
-                    class="btn btn-primary"
-                    v-on:click="collapsedFlag = true;showSetupArea=false;"
-                    style="width: 40px;"
-                    v-tooltip="{ content:'<div>Hide Setup buttons</div>' }"
-                  >
-                    <span class="glyphicon glyphicon-chevron-up"></span>
-                  </a>
+
                 </div>
               </div>
             </div>
@@ -4804,7 +4790,9 @@ export default {
           }
 
           if (!app.character['unit'] && app.checkHaveUnit(app.character.name)) {
-            app.character.unit = 'cm';
+            if (!app.character.name.startsWith('Number') && !app.character.name.startsWith('Count')) {
+              app.character.unit = 'cm';
+            }
             if (!app.character['summary']) {
               app.character.summary = 'range-percentile';
             }
