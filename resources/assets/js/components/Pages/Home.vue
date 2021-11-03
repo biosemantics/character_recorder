@@ -24,7 +24,7 @@
                   class="btn btn-primary"
                   v-on:click="collapsedFlag = true;showSetupArea=false;"
                   style="width: 40px;"
-                  v-tooltip="{ content:'<div>Hide Setup buttons</div>' }"
+                  v-tooltip="{ content:'<div>Show Taxon</div>' }"
                 >
                   <span class="glyphicon glyphicon-chevron-up"></span>
                 </a>
@@ -63,7 +63,7 @@
                         are they?) </b><br/> or</b>
                   </div>
                   <div class="col-md-12 margin-top-10">
-                    <b>Search/create other character:&nbsp;</b>
+                    <b>Search/create another character:&nbsp;</b>
                     <model-select :options="standardCharacters"
                                   v-model="item"
                                   placeholder="Search/create character here"
@@ -186,7 +186,7 @@
                   class="btn btn-primary"
                   v-on:click="collapsedFlag = false;"
                   style="width: 40px;"
-                  v-tooltip="{ content:'<div>Show Setup buttons</div>' }"
+                  v-tooltip="{ content:'<div>Show Create/Load Buttons</div>' }"
                 >
                   <span class="glyphicon glyphicon-chevron-down"></span>
                 </a>
@@ -210,7 +210,7 @@
             </div>
             <div class="col-md-3">
               <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;"
-                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-tooltip="'Give this matrix a name so you can load it in a future time'">Name this matrix</a>
+                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-tooltip="'Give this matrix a name so you can load it in the future'">Name This Matrix</a>
             </div>
           </div>
         </div>
@@ -459,7 +459,9 @@
                         </div>
                         &nbsp;
                       </div>
-                      <a style="width: 20%;" v-on:click="copyValuesToOther(value)">
+                      <a style="width: 20%;" 
+                       v-tooltip="{ content:'<div>copy this value to cells in the current row</div>' }"
+                      v-on:click="copyValuesToOther(value)">
                         <img src="https://image.flaticon.com/icons/png/512/88/88026.png"
                              style="width: 20px;margin-top:10px;"/>
                       </a>
@@ -540,7 +542,7 @@
                                           secondNounBroadSynonymNotifyMessage='';
                                                                         "
                               list="first_characters"
-                              placeholder="select or type"
+                              placeholder="enter value or select"
                               v-model="firstCharacter"
                             />
                             <datalist id="first_characters">
@@ -1711,7 +1713,7 @@
               <div class="modal-wrapper">
                 <div class="modal-container">
                   <div class="modal-header">
-                    <b>Confirm to overwrite?</b>
+                    <b>Copy value to other cells in a row</b>
                   </div>
                   <div class="modal-body">
                     <div>
@@ -3305,7 +3307,7 @@ export default {
 
         if (app.standardCharacters.find(each => each.name == tempWholeCharacter)) {
           app.alreadyExistingCharacter = true;
-          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' is already exists. Use the existing character in the select box.'
+          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' is already exists. Select the existing character in the Search/Create Character box.'
           // app.firstCharacter = '';
           // app.middleCharacter = '';
           // app.lastCharacter = '';
@@ -3388,7 +3390,7 @@ export default {
                   + existingCharacterName.split(' and ')[1]
               }
             }
-            app.alreadyExistingCharacterNotifyMessage += '. ' + 'Consider use <b>' + existingCharacterName + '</b> in the select box';
+            app.alreadyExistingCharacterNotifyMessage += '. ' + 'Consider select <b>' + existingCharacterName + '</b> in the Search/Create Character box';
             return;
           } else {
             app.firstCharacter = app.trimInputString(app.firstCharacter);
