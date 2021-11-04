@@ -2677,7 +2677,7 @@ class HomeController extends Controller
         //the purposes of testing.
         $jsonArray = json_decode($jsonString, true);
 
-        if (array_key_exists($index, $array)) {
+        if (array_key_exists('IdList', $jsonArray)) {
             if (count($jsonArray['IdList'])) {
                 return $jsonArray['IdList']['Id'];
             } else {
