@@ -6266,50 +6266,17 @@ export default {
       await axios.post('/chrecorder/public/api/v1/export-description', {
         template: app.descriptionText,
         taxon: app.taxonName,
+        userCharacters: app.userCharacters,
+        values: app.values,
+        userTags: app.userTags,
+        headers: app.headers,
       })
         .then(function (resp) {
           console.log('resp', resp.data);
           if (resp.data.is_success == 1) {
-            let a = document.createElement('a');
-            a.href = resp.data.doc_url;
-            a.download = resp.data.doc_url.split('/')[resp.data.doc_url.split('/').length - 1];
-            a.click();
-            // window.location.href = resp.data.doc_url;
+            window.location.href = resp.data.doc_url;
           } else {
             alert('Error occurred while exporting data!');
-          }
-        });
-      await axios.post('/chrecorder/public/api/v1/export-description-csv',
-        {
-          userCharacters: app.userCharacters,
-          values: app.values,
-          userTags: app.userTags,
-          headers: app.headers,
-          taxon: app.taxonName
-        })
-        .then(function (resp) {
-          console.log('export-description-csv', resp.data);
-          if (resp.data.is_success == 1) {
-            let a = document.createElement('a');
-            a.href = resp.data.doc_url;
-            a.download = resp.data.doc_url.split('/')[resp.data.doc_url.split('/').length - 1];
-            a.click();
-            //
-            // window.location.href = resp.data.doc_url;
-          } else {
-            alert('Error occurred while exporting csv file!');
-          }
-        });
-      await axios.post('/chrecorder/public/api/v1/export-description-trig')
-        .then(function (resp) {
-          console.log('export-description-trig', resp.data);
-          if (resp.data.is_success == 1) {
-            let a = document.createElement('a');
-            a.href = resp.data.doc_url;
-            a.download = resp.data.doc_url.split('/')[resp.data.doc_url.split('/').length - 1];
-            a.click();
-          } else {
-            alert('Error occurred while exporting trig file!');
           }
         });
     },

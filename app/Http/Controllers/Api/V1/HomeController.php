@@ -21,6 +21,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
 
 use pietercolpaert\hardf\TriGWriter;
+use ZipArchive;
 
 function startsWith($string, $startString)
 {
@@ -1146,6 +1147,84 @@ class HomeController extends Controller
         $objWriter->save($fileName . '.docx');
 
 
+        $userCharacters = $request->input('userCharacters');
+        $headers = $request->input('headers');
+        $values = $request->input('values');
+        $userTags = $request->input('userTags');
+
+
+        $htmlString = '<table>';
+
+        if (count($headers) > 0) {
+            $htmlString .= '<tr><th>Character</th><th>Summary</th>';
+            foreach ($headers as $eachHeader) {
+                if ($eachHeader['header'] != 'Character') {
+                    $htmlString .= '<th>' . $eachHeader['header'] . '</th>';
+                }
+            }
+        }
+        foreach ($userTags as $eachTag) {
+
+            foreach ($userCharacters as $eachUserCharacter) {
+                if ($eachUserCharacter['standard_tag'] == $eachTag['tag_name']) {
+                    $htmlString .= '<tr>';
+                    foreach ($values as $eachRow) {
+                        if ($eachUserCharacter['id'] == $eachRow[0]['character_id']) {
+                            foreach ($eachRow as $eachValue) {
+                                if ($eachValue['header_id'] == 1) {
+                                    $htmlString .= '<td>' . $eachValue['value'] . '</td>';
+                                    if (substr($eachValue['value'], 0, 6) == 'Length') {
+                                        $htmlString .= '<td>' . $this->calcSummary($eachRow) . '</td>';
+                                    } else {
+                                        $htmlString .= '<td></td>';
+                                    }
+                                }
+                            }
+                            foreach ($eachRow as $eachValue) {
+                                if ($eachValue['header_id'] != 1) {
+                                    $htmlString .= '<td>' . $eachValue['value'] . '</td>';
+                                }
+                            }
+                        }
+                    }
+                    $htmlString .= '</tr>';
+                }
+
+            }
+        }
+
+        $htmlString = $htmlString . '</table>';
+
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+        $spreadsheet = $reader->loadFromString($htmlString);
+
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Csv');
+        $writer->save($fileName . '.csv');
+
+
+        $user = User::where('id', '=', Auth::id())->first();
+
+        $fileName = $user->taxon;
+        $file = fopen($fileName . ".trig", "w") or die("Unable to open file!");
+
+        $taxons = [];
+        $result = $this->getTrigDescription(Auth::id(), $taxons)['description'];
+
+        fwrite($file, $result);
+
+        fclose($file);
+
+
+        $zipper = new \Chumper\Zipper\Zipper;
+
+        $zipper->make($fileName . '.zip')->folder($fileName)->add(array(
+            $fileName . '.docx',
+            $fileName . '.csv',
+            $fileName . '.trig'
+        ));
+
+        $zipper->close();
+
         return array(
             'is_success' => 1,
             'doc_url' => '/chrecorder/public/' . $fileName . '.docx',
@@ -1450,28 +1529,9 @@ class HomeController extends Controller
                     $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
                     foreach ($existColorDetails as $eachColorDetails) {
                         $eachColorDetails['usage_count'] = 0;
-//                        $ownerCharacters = Character::where('name', '=', $eachCharacter['name'])->where('username', '=', $eachCharacter['username'])->where('owner_name', '=', $eachCharacter['owner_name'])->where('usage_count', '<>', 0)->get();
-//                        $ownerCharacters = Character::whereIn('id', Value::whereIn('id', ColorDetails::where('value_id', '=', $eachColorDetails['value_id'])
-//                            ->select('value_id')
-//                            ->get()
-//                            ->toArray())
-//                            ->select('character_id')
-//                            ->get()
-//                            ->toArray())
-//                            ->get();
                         $eachColorDetails['usage_count'] = Character::find(Value::find($eachColorDetails['value_id'])->character_id)->usage_count;
                         $eachColorDetails['username'] = Character::find(Value::find($eachColorDetails['value_id'])->character_id)->owner_name;
 
-//                        foreach ($ownerCharacters as $eachOwnCh) {
-//                            if (array_key_exists('username', $eachColorDetails)) {
-//                                $eachColorDetails['username'] = $eachColorDetails['username'] . ', ' . $eachOwnCh['owner_name'];
-//                            } else {
-//                                $eachColorDetails['username'] = $eachOwnCh['owner_name'];
-//                            }
-//                            $eachColorDetails['usage_count'] += $eachOwnCh['usage_count'];
-//                        }
-
-//                        $eachColorDetails['usage_count'] = Character::where('name', '=', $selectedCharacter['name'])->where('username', '=', $selectedCharacter['username'])->select(DB::raw('sum(usage_count) as total'))->first()->total;
                         array_push($existDetails, $eachColorDetails);
                     }
                 }
