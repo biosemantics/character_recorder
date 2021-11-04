@@ -1227,7 +1227,7 @@ class HomeController extends Controller
 
         return array(
             'is_success' => 1,
-            'doc_url' => '/chrecorder/public/' . $fileName . '.docx',
+            'doc_url' => '/chrecorder/public/' . $fileName . '.zip',
         );
     }
 
