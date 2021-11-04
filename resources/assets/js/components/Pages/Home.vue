@@ -459,7 +459,7 @@
                         </div>
                         &nbsp;
                       </div>
-                      <a style="width: 20%;" 
+                      <a style="width: 20%;"
                        v-tooltip="{ content:'<div>copy this value to cells in the current row</div>' }"
                       v-on:click="copyValuesToOther(value)">
                         <img src="https://image.flaticon.com/icons/png/512/88/88026.png"
@@ -6263,16 +6263,23 @@ export default {
     },
     async exportDescription() {
       var app = this;
-      await axios.post('/chrecorder/public/api/v1/export-description', {template: app.descriptionText, taxon: app.taxonName})
+      await axios.post('/chrecorder/public/api/v1/export-description', {
+        template: app.descriptionText,
+        taxon: app.taxonName,
+      })
         .then(function (resp) {
           console.log('resp', resp.data);
           if (resp.data.is_success == 1) {
-            window.location.href = resp.data.doc_url;
+            let a = document.createElement('a');
+            a.href = resp.data.doc_url;
+            a.download = resp.data.doc_url.split('/')[resp.data.doc_url.split('/').length - 1];
+            a.click();
+            // window.location.href = resp.data.doc_url;
           } else {
             alert('Error occurred while exporting data!');
           }
         });
-      axios.post('/chrecorder/public/api/v1/export-description-csv',
+      await axios.post('/chrecorder/public/api/v1/export-description-csv',
         {
           userCharacters: app.userCharacters,
           values: app.values,
@@ -6281,15 +6288,21 @@ export default {
           taxon: app.taxonName
         })
         .then(function (resp) {
+          console.log('export-description-csv', resp.data);
           if (resp.data.is_success == 1) {
-            window.location.href = resp.data.doc_url;
+            let a = document.createElement('a');
+            a.href = resp.data.doc_url;
+            a.download = resp.data.doc_url.split('/')[resp.data.doc_url.split('/').length - 1];
+            a.click();
+            //
+            // window.location.href = resp.data.doc_url;
           } else {
             alert('Error occurred while exporting csv file!');
           }
         });
-      axios.post('/chrecorder/public/api/v1/export-description-trig')
+      await axios.post('/chrecorder/public/api/v1/export-description-trig')
         .then(function (resp) {
-          console.log(resp.data);
+          console.log('export-description-trig', resp.data);
           if (resp.data.is_success == 1) {
             let a = document.createElement('a');
             a.href = resp.data.doc_url;
