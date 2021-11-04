@@ -2726,7 +2726,7 @@ class HomeController extends Controller
         }
 
 
-        $fileName = 'ontology/carex.ttl';
+        $fileName = '/ontology/carex.ttl';
 
         $read = file_get_contents($fileName);
 
