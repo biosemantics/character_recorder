@@ -234,7 +234,7 @@
                 <thead>
                 <tr>
                   <th
-                    style="min-width: 300px; height: 43px; line-height: 43px; text-align: center; background-color: lightgrey;">
+                    style="min-width: 300px; width: 500px; height: 43px; line-height: 43px; text-align: center; background-color: lightgrey;">
                     Character
                   </th>
                   <th style="line-height: 43px; text-align: center; background-color: lightgrey;">
@@ -256,10 +256,10 @@
                     v-if="userCharacters.find(ch => ch.id == row[0].character_id) && userCharacters.find(ch => ch.id == row[0].character_id).show_flag == true"
                     v-bind:class="{ active: row.findIndex(value => value.id == editingValueID) >= 0 }"
                     v-bind:style="{'background-color': row.findIndex(value => value.id == editingValueID) >= 0 ? '#f5f5f5' : 'white'}">
-                  <td v-if="value.header_id == 1"
+                  <th v-if="value.header_id == 1"
                       v-for="(value, index) in row"
-                      :key="index"
-                      style="cursor: pointer; display: flex; border-bottom:none">
+                      :key="index"  scope="row"
+                      style="cursor: pointer; display: flex; border-bottom:none; width: 500px; font-weight: normal;">
                     <div style="width: 30px;">
                       <div style="height: 22px; line-height: 22px;">
                                                 <span v-on:click="upUserValue(value.character_id)"
@@ -328,12 +328,12 @@
                       <a v-on:click="removeRowTable(value.character_id)" class="btn btn-add"><span
                         class="glyphicon glyphicon-remove"></span></a>
                     </div>
-                  </td>
-                  <td style="line-height: 43px; text-align: center;">
-                    <div style="line-height: 21px;" v-html="calcSummary(row)"></div>
-                  </td>
+                  </th>
+                  <th style="line-height: 43px; text-align: center; min-width: 100px; font-weight: normal;"  scope="row">
+                    <div style="line-height: 21px; border-top: 1px solid lightgrey;" v-html="calcSummary(row)"></div>
+                  </th>
                   <template v-for="value in row.slice().reverse()" v-if="value.header_id != 1">
-                    <td :key="value.id" v-on:click.self="focusedValue(value)" style="padding-left: 5px">
+                    <td :key="value.id" v-on:click.self="focusedValue(value)" style="padding-left: 5px;">
                       <div v-if="checkHaveUnit(row.find(v => v.header_id == 1).value) || row.find(v => v.header_id == 1).value.startsWith('Number ')" style="width: 80%; float:left">
                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
                                v-bind:style="{ 'background-color': row.findIndex(value => value.id == editingValueID) >= 0 ? '#f5f5f5' : 'white' }"
