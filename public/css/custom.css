@@ -806,13 +806,13 @@ body {
   position: sticky;
   top: -1px;
   z-index: 1;
+  border: 1px solid black;
 }
 
 .cr-table thead th {
   z-index: 3;
 }
 .cr-table th {
-  border: 1px solid black;
 }
 
 .cr-table td {
@@ -834,14 +834,14 @@ body {
 .cr-table th[scope=row]:first-child {
   left: 0;
   z-index: 2;
-  background: rgb(221, 221, 221);
+  background: #f0f0f0;
   border: 1px solid lightgrey;
 }
 
 .cr-table th[scope=row]:nth-child(2) {
   left: 499px;
   z-index: 2;
-  background: rgb(221, 221, 221);
+  background: #f0f0f0;
   border: 1px solid lightgrey;
 }
 
@@ -856,4 +856,10 @@ body {
 .cr-table tbody th {
   background: white;
 }
-.cr-table th { background: rgb(221, 221, 221); }
+/*.cr-table th { background: white; }*/
+
+.range-percentile {
+  z-index: 5;
+}
+
+

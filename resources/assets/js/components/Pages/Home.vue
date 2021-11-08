@@ -299,7 +299,7 @@
                         <span class="glyphicon glyphicon-chevron-down"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                       </a>
-                      <ul class="dropdown-menu" role="menu">
+                      <ul class="dropdown-menu change-unit" style="z-index: 5; position: sticky;" role="menu">
                         <li><a v-on:click="changeUnit(value.character_id, 'm')">m</a></li>
                         <li><a v-on:click="changeUnit(value.character_id, 'dm')">dm</a></li>
                         <li><a v-on:click="changeUnit(value.character_id, 'cm')">cm</a></li>
@@ -313,7 +313,7 @@
                         <span class="glyphicon glyphicon-chevron-down"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                       </a>
-                      <ul class="dropdown-menu" role="menu">
+                      <ul class="dropdown-menu" style="z-index: 5; position: sticky;" role="menu">
                         <li>
                           <a v-on:click="changeSummary(value.character_id, 'range-percentile')">range-percentile</a>
                         </li>
