@@ -753,6 +753,7 @@ a {
 
 body {
     font-size: 16px;
+    overflow-x: hidden;
 }
 
 .tooltip-inner {
@@ -770,7 +771,8 @@ body {
 }
 
 .table-responsive {
-    min-height: 600px;
+    min-height: 500px;
+  max-height: 600px;
 }
 
 .modal-body h5 {
@@ -800,3 +802,58 @@ body {
 .glyphicon-wrench {
   color: rgb(218, 127, 56);
 }
+.cr-table th {
+  position: sticky;
+  top: -1px;
+  z-index: 1;
+}
+
+.cr-table thead th {
+  z-index: 3;
+}
+.cr-table th {
+  border: 1px solid black;
+}
+
+.cr-table td {
+  border: 1px solid black;
+}
+
+.cr-table th:first-child {
+  left: 0;
+  top: -1px;
+  z-index: 4;
+}
+
+.cr-table th:nth-child(2) {
+  left: 500px;
+  top: -1px;
+  z-index: 4;
+}
+
+.cr-table th[scope=row]:first-child {
+  left: 0;
+  z-index: 2;
+  background: rgb(221, 221, 221);
+  border: 1px solid lightgrey;
+}
+
+.cr-table th[scope=row]:nth-child(2) {
+  left: 499px;
+  z-index: 2;
+  background: rgb(221, 221, 221);
+  border: 1px solid lightgrey;
+}
+
+/* (C) COSMETICS - NOT IMPORTANT */
+.cr-table th, .cr-table td {
+  /*font-size: 20px;*/
+  padding: 0;
+  text-align: left;
+  /*min-width: 100px;*/
+}
+
+.cr-table tbody th {
+  background: white;
+}
+.cr-table th { background: rgb(221, 221, 221); }
