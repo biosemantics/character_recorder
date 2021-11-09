@@ -12,7 +12,7 @@
               <div style="max-width: 1000px; margin-right: auto; margin-left: auto;">
                 <div class="col-md-2">
                   <a class="btn btn-primary"
-                     v-on:click="(userCharacters.length != 0 && headers.length > 1) ? confirmNewMatrixDialog = true : setNewValues()">Create
+                     v-on:click="createNewMatrix()">Create
                     New Matrix</a>
                 </div>
                 <div class="col-md-2">
@@ -840,7 +840,8 @@
                             like
                             to save for <i>{{ character.name }}</i>?
                           </div>
-                          <br>
+                          <br>                app.matrixSaved = false;
+
                           <div v-if="character.method_from">
                             <b>From:</b> {{ character.method_from }}
                           </div>
@@ -2740,7 +2741,8 @@ export default {
       paletteKey: '',
       numericalFlag: false,
       deprecateColorValue: [],
-      deprecateNonColorValue: []
+      deprecateNonColorValue: [],
+      matrixSaved: false
     }
   },
   components: {
@@ -5073,6 +5075,7 @@ export default {
               app.userCharacters = resp.data.characters;
               app.headers = resp.data.headers;
               app.values = resp.data.values;
+              app.matrixSaved = false;
               console.log('app.userTags', app.userTags);
               axios.get('/chrecorder/public/api/v1/user-tag/' + app.user.id)
                 .then(function (resp) {
@@ -5094,6 +5097,7 @@ export default {
     deleteHeader(headerId) {
       var app = this;
       app.toRemoveHeaderId = headerId;
+      app.matrixSaved = false;
       app.toRemoveHeaderConfirmFlag = true;
     },
     confirmRemoveHeader() {
@@ -5164,6 +5168,7 @@ export default {
                   }
                 }
                 app.defaultCharacters = resp.data.defaultCharacters;
+                app.matrixSaved = false;
                 app.refreshDefaultCharacters();
                 app.refreshUserCharacters();
                 app.showTableForTab(app.currentTab);
@@ -5340,6 +5345,7 @@ export default {
       var app = this;
 
       app.toRemoveCharacterId = characterId;
+      app.matrixSaved = false;
       app.toRemoveStandardConfirmFlag = true;
 
     },
@@ -6778,6 +6784,7 @@ export default {
                 app.saveInProgress = false;
                 app.preList = resp.data.preList;
                 app.postList = resp.data.postList;
+                app.matrixSaved = false;
 
                 if (newFlag == false) {
                   app.colorDetailsFlag = false;
@@ -6836,6 +6843,7 @@ export default {
           app.postList = resp.data.postList;
           app.allColorValues = resp.data.allColorValues;
           app.allNonColorValues = resp.data.allNonColorValues;
+          app.matrixSaved = false;
           app.getDeprecatedValue();
           app.colorDetailsFlag = false;
         });
@@ -7132,6 +7140,7 @@ export default {
                 app.allNonColorValues = resp.data.allNonColorValues;
                 app.currentNonColorValue.detailsFlag = null;
                 app.defaultCharacters = resp.data.defaultCharacters;
+                app.matrixSaved = false;
                 app.refreshDefaultCharacters();
                 app.getDeprecatedValue();
                 if (newFlag == false) {
@@ -7164,6 +7173,7 @@ export default {
           app.values = resp.data.values;
           app.preList = resp.data.preList;
           app.postList = resp.data.postList;
+          app.matrixSaved = false;
           app.getDeprecatedValue();
           app.nonColorDetailsFlag = false;
         });
@@ -8128,6 +8138,7 @@ export default {
             app.showNamesList = [];
             app.namesList = res.data.matrixNames;
             app.lastLoadMatrixName = selectedMatrixName;
+            app.matrixSaved = true;
             if (app.confirmNewMatrixDialog == true) {
               app.setNewValues();
             }
@@ -8142,6 +8153,7 @@ export default {
             app.currentName = '';
             app.showNamesList = [];
             app.lastLoadMatrixName = selectedMatrixName;
+            app.matrixSaved = true;
             if (app.confirmNewMatrixDialog == true) {
               app.setNewValues();
             }
@@ -8171,6 +8183,18 @@ export default {
           app.showSetupArea = true;
           app.matrixShowFlag = false;
         });
+    },
+    createNewMatrix() {
+      let app = this;
+      if (app.userCharacters.length !== 0 && app.headers.length > 1) {
+        if (app.matrixSaved === false) {
+          app.confirmNewMatrixDialog = true;
+        } else {
+          app.setNewValues();
+        }
+      } else {
+        app.setNewValues();
+      }
     },
     updateItems(text) {
       var app = this;
@@ -8842,12 +8866,14 @@ export default {
     app.isLoading = false;
   },
   mounted() {
+    console.log('mounted');
     var app = this;
     app.user.name = app.user.email.split('@')[0];
     app.characterUsername = app.user.name;
     sessionStorage.setItem('userId', app.user.id);
     app.deprecatedTagName = sessionStorage.getItem('deprecatedTagName');
     app.lastLoadMatrixName = sessionStorage.getItem('lastMatrixName');
+    app.matrixSaved = !!app.lastLoadMatrixName;
     sessionStorage.removeItem('deprecatedTagName');
   }
 }
