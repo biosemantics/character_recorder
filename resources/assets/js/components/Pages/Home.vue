@@ -8413,7 +8413,7 @@ export default {
     },
     calcSummary(row) {
       var app = this;
-      //console.log('row',row);
+      // console.log('row',row);
 
       var characterName = row.find(each => each.header_id == 1).value;
       var currentCharacter = app.userCharacters.find(each => each.name == characterName);
@@ -8442,7 +8442,20 @@ export default {
           } else {
             range = minValue + '-' + maxValue;
           }
-          return "mean=" + mean + "<br/>" + "range=" + range;
+
+          let median;
+
+          if (tempRpArray.length % 2 === 0) {
+            median = (parseFloat(tempRpArray[tempRpArray.length / 2 - 1]) + parseFloat(tempRpArray[tempRpArray.length / 2])) / 2;
+          } else {
+            median = tempRpArray[tempRpArray.length / 2 - 0.5];
+          }
+
+          if (currentCharacter.summary === 'median') {
+            return "median=" + median + "<br/>" + "range=" + range;
+          } else {
+            return "mean=" + mean + "<br/>" + "range=" + range;
+          }
         }
 
       }

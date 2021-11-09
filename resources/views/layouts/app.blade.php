@@ -137,6 +137,7 @@
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
+                                                      sessionStorage.removeItem('lastMatrixName');
                                                      document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
