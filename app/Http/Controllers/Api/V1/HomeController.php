@@ -228,7 +228,7 @@ class HomeController extends Controller
 
         $arrayCharacters = [];
 
-        $arrayCharacters = Character::where('owner_name', '=', $username)->get();
+        $arrayCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'asc')->get();
         $usageCounts = [];
         $usageCounts = Character::where('owner_name', '=', $username)->join('values', 'values.character_id', '=', 'characters.id')->where('header_id', '>=', 2)->where('value', '<>', '')->select('characters.id', DB::raw('count(values.id) as usageCount'))->groupBy('characters.id')->get();
 
