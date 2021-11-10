@@ -5382,7 +5382,6 @@ export default {
         });
     },
     upUserValue(valueId) {
-      console.log(valueId);
       var app = this;
       var showedCharacters = app.userCharacters.filter(ch => ch.show_flag == true);
       var index = showedCharacters.indexOf(showedCharacters.find(ch => ch.id == valueId));
@@ -5399,24 +5398,31 @@ export default {
       var app = this;
       const maxLength = showedCharacters.length;
       var secondIndex;
+      showedCharacters.sort((a, b) => a.order - b.order);
+      let existFlag = true;
       if ((directionFlag == true) && (valueIndex < maxLength - 1)) {
         secondIndex = valueIndex + 1;
       } else if ((directionFlag == false) && (valueIndex > 0)) {
         secondIndex = valueIndex - 1;
+      } else {
+        existFlag = false;
       }
-      axios.post('/chrecorder/public/api/v1/character/change-order', {
-        firstId: showedCharacters[valueIndex].id,
-        secondId: showedCharacters[secondIndex].id,
-      })
-        .then(function (resp) {
-          console.log('resp', resp);
-          app.isLoading = false;
-          app.values = resp.data.values;
-          app.userCharacters = resp.data.characters;
-          console.log('app.userCharacters', app.userCharacters);
-          app.refreshUserCharacters();
-          app.showTableForTab(app.currentTab);
-        });
+
+      if (existFlag) {
+        axios.post('/chrecorder/public/api/v1/character/change-order', {
+          firstId: showedCharacters[valueIndex].id,
+          secondId: showedCharacters[secondIndex].id,
+        })
+          .then(function (resp) {
+            console.log('resp', resp);
+            app.isLoading = false;
+            app.values = resp.data.values;
+            app.userCharacters = resp.data.characters;
+            console.log('app.userCharacters', app.userCharacters);
+            app.refreshUserCharacters();
+            app.showTableForTab(app.currentTab);
+          });
+      }
     },
     containsObject(obj, list) {
       for (var i = 0; i < list.length; i++) {
