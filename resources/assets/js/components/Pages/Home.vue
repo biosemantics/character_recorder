@@ -5636,21 +5636,9 @@ export default {
                   var maxValue = tempRpArray[tempRpArray.length - 1];
                   var range;
 
-                  let firstQu;
-                  let firstRank = (tempRpArray.length + 1) / 4;
-                  if (Math.floor(firstRank) == firstRank) {
-                    firstQu = tempRpArray[firstRank - 1];
-                  } else {
-                    firstQu = (tempRpArray[Math.ceil(firstRank) - 1] - tempRpArray[Math.floor(firstRank) - 1]) / 4 + parseFloat(tempRpArray[Math.floor(firstRank) - 1]);
-                  }
+                  let firstQu = app.quantile(tempRpArray, 0.25);
 
-                  let secondQu;
-                  let secondRank = (tempRpArray.length + 1) * 3 / 4;
-                  if (Math.floor(secondRank) == secondRank) {
-                    secondQu = tempRpArray[secondRank - 1];
-                  } else {
-                    secondQu = (tempRpArray[Math.ceil(secondRank) - 1] - tempRpArray[Math.floor(secondRank)] - 1) * 3 / 4 + parseFloat(tempRpArray[Math.floor(secondRank) - 1]);
-                  }
+                  let secondQu = app.quantile(tempRpArray, 0.75);
 
                   range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
                   //
@@ -8461,21 +8449,9 @@ export default {
 
           var range;
 
-          let firstQu;
-          let firstRank = (tempRpArray.length + 1) / 4;
-          if (Math.floor(firstRank) == firstRank) {
-            firstQu = tempRpArray[firstRank - 1];
-          } else {
-            firstQu = (tempRpArray[Math.ceil(firstRank) - 1] - tempRpArray[Math.floor(firstRank) - 1]) / 4 + parseFloat(tempRpArray[Math.floor(firstRank) - 1]);
-          }
+          let firstQu = app.quantile(tempRpArray, 0.25);
 
-          let secondQu;
-          let secondRank = (tempRpArray.length + 1) * 3 / 4;
-          if (Math.floor(secondRank) == secondRank) {
-            secondQu = tempRpArray[secondRank - 1];
-          } else {
-            secondQu = (tempRpArray[Math.ceil(secondRank) - 1] - tempRpArray[Math.floor(secondRank)] - 1) * 3 / 4 + parseFloat(tempRpArray[Math.floor(secondRank) - 1]);
-          }
+          let secondQu = app.quantile(tempRpArray, 0.75);
 
           range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
 
@@ -8504,6 +8480,17 @@ export default {
 
       }
       return ''
+    },
+    quantile(arr, q) {
+      const sorted = arr;
+      const pos = (sorted.length - 1) * q;
+      const base = Math.floor(pos);
+      const rest = pos - base;
+      if (sorted[base + 1] !== undefined) {
+        return parseFloat(sorted[base]) + rest * (parseFloat(sorted[base + 1]) - parseFloat(sorted[base]));
+      } else {
+        return parseFloat(sorted[base]);
+      }
     },
     getIRI() {
       var app = this;
