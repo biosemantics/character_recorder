@@ -5647,7 +5647,7 @@ export default {
                   let secondQu;
                   let secondRank = (tempRpArray.length + 1) * 3 / 4;
                   if (Math.floor(secondRank) == secondRank) {
-                    secondQu = tempRpArray[secondRank];
+                    secondQu = tempRpArray[secondRank - 1];
                   } else {
                     secondQu = (tempRpArray[Math.ceil(secondRank) - 1] - tempRpArray[Math.floor(secondRank)] - 1) * 3 / 4 + parseFloat(tempRpArray[Math.floor(secondRank) - 1]);
                   }
@@ -8472,7 +8472,7 @@ export default {
           let secondQu;
           let secondRank = (tempRpArray.length + 1) * 3 / 4;
           if (Math.floor(secondRank) == secondRank) {
-            secondQu = tempRpArray[secondRank];
+            secondQu = tempRpArray[secondRank - 1];
           } else {
             secondQu = (tempRpArray[Math.ceil(secondRank) - 1] - tempRpArray[Math.floor(secondRank)] - 1) * 3 / 4 + parseFloat(tempRpArray[Math.floor(secondRank) - 1]);
           }
