@@ -5635,7 +5635,25 @@ export default {
                   var minValue = tempRpArray[0];
                   var maxValue = tempRpArray[tempRpArray.length - 1];
                   var range;
-                  range = '(' + minValue + '-)' + tempRpArray[Math.floor((tempRpArray.length - 1) / 4)] + '-' + tempRpArray[Math.ceil((tempRpArray.length - 1) * 3 / 4)] + '(-' + maxValue + ')';
+
+                  let firstQu;
+                  let firstRank = (tempRpArray.length + 1) / 4;
+                  if (Math.floor(firstRank) == firstRank) {
+                    firstQu = tempRpArray[firstRank - 1];
+                  } else {
+                    firstQu = (tempRpArray[Math.ceil(firstRank) - 1] - tempRpArray[Math.floor(firstRank) - 1]) / 4 + parseFloat(tempRpArray[Math.floor(firstRank) - 1]);
+                  }
+
+                  let secondQu;
+                  let secondRank = (tempRpArray.length + 1) * 3 / 4;
+                  if (Math.floor(secondRank) == secondRank) {
+                    secondQu = tempRpArray[secondRank];
+                  } else {
+                    secondQu = (tempRpArray[Math.ceil(secondRank) - 1] - tempRpArray[Math.floor(secondRank)] - 1) * 3 / 4 + parseFloat(tempRpArray[Math.floor(secondRank) - 1]);
+                  }
+
+                  range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
+                  //
                   // if (tempRpArray.length >= 5) {
                   //   range = '(' + minValue + '-)' + tempRpArray[Math.floor((tempRpArray.length - 1) / 4)] + '-' + tempRpArray[Math.ceil((tempRpArray.length - 1) * 3 / 4)] + '(-' + maxValue + ')';
                   // } else if (tempRpArray.length == 1 || minValue == maxValue) {
@@ -8442,8 +8460,26 @@ export default {
           var maxValue = tempRpArray[tempRpArray.length - 1];
 
           var range;
-          range = '(' + minValue + '-)' + app.getPercentile(tempRpArray, 25) + '-' + app.getPercentile(tempRpArray, 75) + '(-' + maxValue + ')';
-          // if (tempRpArray.length >= 3) {
+
+          let firstQu;
+          let firstRank = (tempRpArray.length + 1) / 4;
+          if (Math.floor(firstRank) == firstRank) {
+            firstQu = tempRpArray[firstRank - 1];
+          } else {
+            firstQu = (tempRpArray[Math.ceil(firstRank) - 1] - tempRpArray[Math.floor(firstRank) - 1]) / 4 + parseFloat(tempRpArray[Math.floor(firstRank) - 1]);
+          }
+
+          let secondQu;
+          let secondRank = (tempRpArray.length + 1) * 3 / 4;
+          if (Math.floor(secondRank) == secondRank) {
+            secondQu = tempRpArray[secondRank];
+          } else {
+            secondQu = (tempRpArray[Math.ceil(secondRank) - 1] - tempRpArray[Math.floor(secondRank)] - 1) * 3 / 4 + parseFloat(tempRpArray[Math.floor(secondRank) - 1]);
+          }
+
+          range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
+
+          // if (tempRpArray.length >= 5) {
           //   range = '(' + minValue + '-)' + app.getPercentile(tempRpArray, 25) + '-' + app.getPercentile(tempRpArray, 75) + '(-' + maxValue + ')';
           // } else if (tempRpArray.length == 1 || minValue == maxValue) {
           //   range = minValue;
