@@ -5635,13 +5635,14 @@ export default {
                   var minValue = tempRpArray[0];
                   var maxValue = tempRpArray[tempRpArray.length - 1];
                   var range;
-                  if (tempRpArray.length >= 5) {
-                    range = '(' + minValue + '-)' + tempRpArray[Math.floor((tempRpArray.length - 1) / 4)] + '-' + tempRpArray[Math.ceil((tempRpArray.length - 1) * 3 / 4)] + '(-' + maxValue + ')';
-                  } else if (tempRpArray.length == 1 || minValue == maxValue) {
-                    range = minValue;
-                  } else {
-                    range = minValue + '-' + maxValue;
-                  }
+                  range = '(' + minValue + '-)' + tempRpArray[Math.floor((tempRpArray.length - 1) / 4)] + '-' + tempRpArray[Math.ceil((tempRpArray.length - 1) * 3 / 4)] + '(-' + maxValue + ')';
+                  // if (tempRpArray.length >= 5) {
+                  //   range = '(' + minValue + '-)' + tempRpArray[Math.floor((tempRpArray.length - 1) / 4)] + '-' + tempRpArray[Math.ceil((tempRpArray.length - 1) * 3 / 4)] + '(-' + maxValue + ')';
+                  // } else if (tempRpArray.length == 1 || minValue == maxValue) {
+                  //   range = minValue;
+                  // } else {
+                  //   range = minValue + '-' + maxValue;
+                  // }
 
                   app.descriptionText += range;
 
@@ -8441,13 +8442,14 @@ export default {
           var maxValue = tempRpArray[tempRpArray.length - 1];
 
           var range;
-          if (tempRpArray.length >= 5) {
-            range = '(' + minValue + '-)' + app.getPercentile(tempRpArray, 25) + '-' + app.getPercentile(tempRpArray, 75) + '(-' + maxValue + ')';
-          } else if (tempRpArray.length == 1 || minValue == maxValue) {
-            range = minValue;
-          } else {
-            range = minValue + '-' + maxValue;
-          }
+          range = '(' + minValue + '-)' + app.getPercentile(tempRpArray, 25) + '-' + app.getPercentile(tempRpArray, 75) + '(-' + maxValue + ')';
+          // if (tempRpArray.length >= 3) {
+          //   range = '(' + minValue + '-)' + app.getPercentile(tempRpArray, 25) + '-' + app.getPercentile(tempRpArray, 75) + '(-' + maxValue + ')';
+          // } else if (tempRpArray.length == 1 || minValue == maxValue) {
+          //   range = minValue;
+          // } else {
+          //   range = minValue + '-' + maxValue;
+          // }
 
           let median;
 
