@@ -3368,7 +3368,7 @@ export default {
 
         if (app.standardCharacters.find(each => each.name == tempWholeCharacter)) {
           app.alreadyExistingCharacter = true;
-          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' is already exists. Select the existing character in the Search/Create Character box.'
+          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' already exists. Select the existing character in the Search/Create Character box.'
           // app.firstCharacter = '';
           // app.middleCharacter = '';
           // app.lastCharacter = '';
