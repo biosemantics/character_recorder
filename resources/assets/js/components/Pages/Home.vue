@@ -521,7 +521,15 @@
                                           secondNounUndefined = false;
                                           lastCharacterDefinition = '';
                                           firstCharacterUndefined = false;
-                                          firstCharacterDefinition = '';
+                                          firstCharacterDefinition = ''
+                                          firstCharacterDeprecated = false;
+                                          firstCharacterDeprecatedNotifyMessage = '';
+                                          firstCharacterNotRecommend = false;
+                                          firstCharacterNotRecommendNotifyMessage = '';
+                                          firstCharacterSynonym = false;
+                                          firstCharacterSynonymNotifyMessage = '';
+                                          firstCharacterBroadSynonym = false;
+                                          firstCharacterBroadSynonymNotifyMessage = '';
                                           wholeCharacterUndefined=false;
                                           wholeCharacterDefinition='';
                                           firstNounDeprecated=false;
@@ -576,6 +584,14 @@
                                           lastCharacterDefinition = '';
                                           firstCharacterUndefined = false;
                                           firstCharacterDefinition = '';
+                                          firstCharacterDeprecated = false;
+                                          firstCharacterDeprecatedNotifyMessage = '';
+                                          firstCharacterNotRecommend = false;
+                                          firstCharacterNotRecommendNotifyMessage = '';
+                                          firstCharacterSynonym = false;
+                                          firstCharacterSynonymNotifyMessage = '';
+                                          firstCharacterBroadSynonym = false;
+                                          firstCharacterBroadSynonymNotifyMessage = '';
                                           wholeCharacterUndefined=false;
                                           wholeCharacterDefinition='';
                                           firstNounDeprecated=false;
@@ -603,29 +619,37 @@
                               v-if="middleCharacter=='between'"
                               v-model="secondLastCharacter"
                               v-on:focus="nounUndefined = false;
-                                                                        secondNounUndefined = false;
-                                                                        lastCharacterDefinition = '';
-                                                                        firstCharacterUndefined = false;
-                                                                        firstCharacterDefinition = '';
-                                                                        wholeCharacterUndefined=false;
-                                                                        wholeCharacterDefinition='';
-                                                                        firstNounDeprecated=false;
-                                                                        firstNounDeprecatedNotifyMessage='';
-                                                                        secondNounDeprecated=false;
-                                                                        secondNounDeprecatedNotifyMessage='';
-                                                                        firstNounNotRecommend=false;
-                                                                        firstNounNotRecommendNotifyMessage='';
-                                                                        secondNounNotRecommend=false;
-                                                                        secondNounNotRecommendNotifyMessage='';
-                                                                        firstNounSynonym=false;
-                                                                        firstNounSynonymNotifyMessage='';
-                                                                        firstNounBroadSynonym=false;
-                                                                        firstNounBroadSynonymNotifyMessage=''
-                                                                        secondNounSynonym=false;
-                                                                        secondNounSynonymNotifyMessage='';
-                                                                        secondNounBroadSynonym=false;
-                                                                        secondNounBroadSynonymNotifyMessage='';
-                                                                        "
+                                          secondNounUndefined = false;
+                                          lastCharacterDefinition = '';
+                                          firstCharacterUndefined = false;
+                                          firstCharacterDefinition = '';
+                                          firstCharacterDeprecated = false;
+                                          firstCharacterDeprecatedNotifyMessage = '';
+                                          firstCharacterNotRecommend = false;
+                                          firstCharacterNotRecommendNotifyMessage = '';
+                                          firstCharacterSynonym = false;
+                                          firstCharacterSynonymNotifyMessage = '';
+                                          firstCharacterBroadSynonym = false;
+                                          firstCharacterBroadSynonymNotifyMessage = '';
+                                          wholeCharacterUndefined=false;
+                                          wholeCharacterDefinition='';
+                                          firstNounDeprecated=false;
+                                          firstNounDeprecatedNotifyMessage='';
+                                          secondNounDeprecated=false;
+                                          secondNounDeprecatedNotifyMessage='';
+                                          firstNounNotRecommend=false;
+                                          firstNounNotRecommendNotifyMessage='';
+                                          secondNounNotRecommend=false;
+                                          secondNounNotRecommendNotifyMessage='';
+                                          firstNounSynonym=false;
+                                          firstNounSynonymNotifyMessage='';
+                                          firstNounBroadSynonym=false;
+                                          firstNounBroadSynonymNotifyMessage=''
+                                          secondNounSynonym=false;
+                                          secondNounSynonymNotifyMessage='';
+                                          secondNounBroadSynonym=false;
+                                          secondNounBroadSynonymNotifyMessage='';
+                                          "
                               placeholder="enter a singular noun"
                             />
                           </div>
@@ -636,6 +660,22 @@
                           <label for="numerical-flag">This is a numerical character</label>
                         </div>
                         <br>
+                        <div class="row" v-if="firstCharacterDeprecated">
+                          <div class="col-md-12" v-html="firstCharacterDeprecatedNotifyMessage">
+                          </div>
+                        </div>
+                        <div class="row" v-if="firstCharacterNotRecommend">
+                          <div class="col-md-12" v-html="firstCharacterDeprecatedNotifyMessage">
+                          </div>
+                        </div>
+                        <div class="row" v-if="firstCharacterSynonym">
+                          <div class="col-md-12" v-html="firstCharacterSynonymNotifyMessage">
+                          </div>
+                        </div>
+                        <div class="row" v-if="firstCharacterBroadSynonym">
+                          <div class="col-md-12" v-html="firstCharacterBroadSynonymNotifyMessage">
+                          </div>
+                        </div>
                         <div class="row" v-if="firstNounDeprecated">
                           <div class="col-md-12" v-html="firstNounDeprecatedNotifyMessage">
                           </div>
@@ -710,6 +750,10 @@
                                                                 firstCharacterUndefined && !firstCharacterDefinition  && !firstNounBroadSynonym||
                                                                 middleCharacter=='between' && (!secondLastCharacter && !secondNounBroadSynonym || secondNounUndefined && !secondLastCharacterDefinition) ||
                                                                 firstNounDeprecated ||
+                                                                firstCharacterDeprecated ||
+                                                                firstCharacterNotRecommend ||
+                                                                firstCharacterSynonym ||
+                                                                firstCharacterBroadSynonym ||
                                                                 secondNounDeprecated ||
                                                                 firstNounNotRecommend ||
                                                                 secondNounNotRecommend ||
@@ -2698,7 +2742,14 @@ export default {
       lastLoadMatrixName: '',
       treeResult: [],
       definitionData: [],
-      firstNounDeprecated: false,
+      firstCharacterDeprecated: false,
+      firstCharacterSynonym: false,
+      firstCharacterBroadSynonym: false,
+      firstCharacterNotRecommend: false,
+      firstCharacterDeprecatedNotifyMessage: '',
+      firstCharacterNotRecommendNotifyMessage: '',
+      firstCharacterSynonymNotifyMessage: '',
+      firstCharacterBroadSynonymNotifyMessage: '',
       secondNounDeprecated: false,
       firstNounDeprecatedNotifyMessage: '',
       secondNounDeprecatedNotifyMessage: '',
@@ -2974,6 +3025,14 @@ export default {
         app.firstCharacterDefinition = '';
         app.wholeCharacterDefinition = '';
 
+        app.firstCharacterDeprecated = false;
+        app.firstCharacterDeprecatedNotifyMessage = '';
+        app.firstCharacterNotRecommend = false;
+        app.firstCharacterNotRecommendNotifyMessage = '';
+        app.firstCharacterSynonym = false;
+        app.firstCharacterSynonymNotifyMessage = '';
+        app.firstCharacterBroadSynonym = false;
+        app.firstCharacterBroadSynonymNotifyMessage = '';
         app.firstNounDeprecated = false;
         app.firstNounDeprecatedNotifyMessage = '';
         app.secondNounDeprecated = false;
@@ -3526,6 +3585,140 @@ export default {
           }
         });
 
+      let firstCharacterDeprecatedValue = app.deprecatedTerms.find(value => value['deprecated term'] == app.firstCharacter.toLowerCase());
+
+      if (firstCharacterDeprecatedValue) {
+        app.firstCharacterDeprecated = true;
+        if (firstCharacterDeprecatedValue['replacement term']) {
+          let tempWholeCharacter = firstCharacterDeprecatedValue['replacement term'] + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+
+          if (app.middleCharacter === 'between') {
+            tempWholeCharacter += ' and ' + app.secondLastCharacter;
+          }
+
+          await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+            .then(function  (resp) {
+              console.log('term1' + tempWholeCharacter, resp.data);
+              if (resp.data.entries.length > 0) {
+                app.firstCharacterDeprecatedNotifyMessage = 'Term <b>' + app.firstCharacter + '</b> is replaced by <b>' +
+                  firstCharacterDeprecatedValue['replacement term'] +
+                  '</b>. Please cancel and use the existing character <b>' +
+                  tempWholeCharacter + '</b>.';
+              } else {
+                app.firstCharacterDeprecatedNotifyMessage = "Term <b>" + app.firstCharacter + "</b> is a deprecated term" +
+                  (firstCharacterDeprecatedValue['replacement term'] ?
+                    ", consider using <b>" + firstCharacterDeprecatedValue['replacement term'] + "</b>." :
+                    " because <b>" + firstCharacterDeprecatedValue['deprecated reason'] + "</b>. Please use another term.");
+              }
+            });
+        } else {
+
+        }
+      } else {
+        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.firstCharacter.toLowerCase().replace('-', '_'))
+          .then(async function (resp) {
+            var methodEntry = null;
+            if (!resp.data.entries.length) {
+              app.firstCharacterUndefined = true;
+            } else {
+              methodEntry = resp.data.entries.filter(function (each) {
+                return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
+              })[0];
+              if (methodEntry) {
+                for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                  if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
+                    if (methodEntry.resultAnnotations[i].value == app.firstCharacter.toLowerCase()) {
+                      app.firstCharacterNotRecommend = true;
+
+                      let tempWholeCharacter = methodEntry.term + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+
+                      if (app.middleCharacter == 'between') {
+                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                      }
+
+                      await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                        .then(function (resp) {
+                          if (resp.data.entries.length > 0) {
+                            app.firstCharacterNotRecommendNotifyMessage = "Term <b>" + app.firstCharacter + "</b> is replaced by <b>" +
+                              methodEntry.term +
+                              "</b>. Please cancel and use the existing character <b>" +
+                              tempWholeCharacter + "</b>.";
+                          } else {
+                            app.firstCharacterNotRecommendNotifyMessage = 'Term <b>' + app.firstCharacter + '</b> is a not recommended synonym of <b>' +
+                              methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                          }
+                        });
+                      break;
+                    }
+                  }
+                }
+              }
+              if (!app.firstCharacterNotRecommend) {
+                methodEntry = resp.data.entries.filter(function (each) {
+                  return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+                })[0];
+                if (methodEntry && methodEntry.term != app.firstCharacter.toLowerCase()) {
+                  var tempBroadSynonyms = resp.data.entries;
+                  for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                    if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
+                      if (methodEntry.resultAnnotations[i].value == app.firstCharacter.toLowerCase()) {
+                        app.firstCharacterSynonym = true;
+                        break;
+                      }
+                    }
+                  }
+                  if (app.firstCharacterSynonym == true) {
+
+                    let tempWholeCharacter = methodEntry.term + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+
+                    if (app.middleCharacter == 'between') {
+                      tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                    }
+
+                    await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                      .then(function (resp) {
+                        console.log('term tempWholeCharacter?' + tempWholeCharacter, resp.data);
+                        if (resp.data.entries.length > 0) {
+                          app.firstCharacterSynonymNotifyMessage = 'Term <b>' + app.firstCharacter + '</b> is replaced by <b>' +
+                            methodEntry.term +
+                            '</b>. Please cancel and use the existing character <b>' +
+                            tempWholeCharacter + '</b>.';
+                        } else {
+                          app.firstCharacterSynonymNotifyMessage = 'Term <b>' + app.firstCharacter + '</b> is an exact synonym of <b>' +
+                            methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                        }
+                      });
+                  } else {
+                    if (tempBroadSynonyms.length > 0) {
+                      app.firstCharacterBroadSynonym = true;
+
+                      var tempWholeCharacter = methodEntry.term + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+
+                      if (app.middleCharacter == 'between') {
+                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                      }
+
+                      tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+
+                      if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
+                        app.firstCharacterBroadSynonymNotifyMessage = "Term <b>" + app.firstCharacter + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
+
+                      } else {
+                        app.firstCharacterBroadSynonymNotifyMessage = "Term <b>" + app.firstCharacter + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                        if (tempBroadSynonyms.length > 1) {
+                          for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                            app.firstCharacterBroadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                          }
+                        }
+                      }
+                      app.firstCharacterBroadSynonymNotifyMessage += "</b>.";
+                    }
+                  }
+                }
+              }
+            }
+          });
+      }
       var nounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == app.lastCharacter.toLowerCase());
       if (nounDeprecatedValue) {
         app.firstNounDeprecated = true;
@@ -3800,19 +3993,23 @@ export default {
         }
       }
 
-      if (!app.firstNounDeprecated && !app.secondNounDeprecated && !app.firstNounNotRecommend && !app.secondNounNotRecommend && !app.firstNounSynonym && !app.secondNounSynonym && !app.firstNounBroadSynonym && !app.secondNounBroadSynonym && !app.alreadyExistingCharacter) {
-        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase().replaceAll(' ', '_'))
-          .then(function (resp) {
-            console.log('term 3 wholeCharacter?' + wholeCharacter, resp.data);
-            // if (!resp.data.entries.length) {
-            // app.wholeCharacterUndefined = true;
-            // }
-          });
-      }
+      // if (!app.firstCharacterDeprecated && !app.firstCharacterNotRecommend && !app.firstCharacterSynonym && !app.firstCharacterBroadSynonym && !app.firstNounDeprecated && !app.secondNounDeprecated && !app.firstNounNotRecommend && !app.secondNounNotRecommend && !app.firstNounSynonym && !app.secondNounSynonym && !app.firstNounBroadSynonym && !app.secondNounBroadSynonym && !app.alreadyExistingCharacter) {
+      //   await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase().replaceAll(' ', '_'))
+      //     .then(function (resp) {
+      //       console.log('term 3 wholeCharacter?' + wholeCharacter, resp.data);
+      //       // if (!resp.data.entries.length) {
+      //       // app.wholeCharacterUndefined = true;
+      //       // }
+      //     });
+      // }
 
       console.log('')
       if (
         !app.firstCharacterUndefined &&
+        !app.firstCharacterDeprecated &&
+        !app.firstCharacterNotRecommend &&
+        !app.firstCharacterSynonym &&
+        !app.firstCharacterBroadSynonym &&
         !app.nounUndefined &&
         (app.middleCharacter != 'between' || !app.secondNounUndefined) &&
         !app.firstNounDeprecated &&
