@@ -509,7 +509,7 @@
                         Input the character name in the input box and click OK.
                       </div>
                       <div class="modal-body">
-                        <b>Form character name:</b>
+                        <b>Form character name:</b>If a character is not in the dropdown, type the character in the first box to use it. 
                         <br>
                         <br>
                         <div class="row">
@@ -3368,7 +3368,7 @@ export default {
 
         if (app.standardCharacters.find(each => each.name == tempWholeCharacter)) {
           app.alreadyExistingCharacter = true;
-          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' is already exists. Select the existing character in the Search/Create Character box.'
+          app.alreadyExistingCharacterNotifyMessage = tempWholeCharacter + ' already exists. Select the existing character in the Search/Create Character box.'
           // app.firstCharacter = '';
           // app.middleCharacter = '';
           // app.lastCharacter = '';
