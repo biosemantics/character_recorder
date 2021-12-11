@@ -749,11 +749,11 @@
                                                                 nounUndefined && !lastCharacterDefinition ||
                                                                 firstCharacterUndefined && !firstCharacterDefinition  && !firstNounBroadSynonym||
                                                                 middleCharacter=='between' && (!secondLastCharacter && !secondNounBroadSynonym || secondNounUndefined && !secondLastCharacterDefinition) ||
-                                                                firstNounDeprecated ||
                                                                 firstCharacterDeprecated ||
                                                                 firstCharacterNotRecommend ||
                                                                 firstCharacterSynonym ||
                                                                 firstCharacterBroadSynonym ||
+                                                                firstNounDeprecated ||
                                                                 secondNounDeprecated ||
                                                                 firstNounNotRecommend ||
                                                                 secondNounNotRecommend ||
@@ -3721,7 +3721,6 @@ export default {
       }
       var nounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == app.lastCharacter.toLowerCase());
       if (nounDeprecatedValue) {
-        app.firstNounDeprecated = true;
         if (nounDeprecatedValue['replacement term']) {
           let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + nounDeprecatedValue['replacement term'];
 
@@ -3730,8 +3729,10 @@ export default {
           }
 
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-            .then(function (resp) {
-              console.log('term1' + tempWholeCharacter, resp.data);
+            .then(async function (resp) {
+              console.log('term2' + tempWholeCharacter, resp.data);
+              app.firstNounDeprecated = true;
+
               if (resp.data.entries.length > 0) {
                 app.firstNounDeprecatedNotifyMessage = 'Term <b>' + app.lastCharacter + '</b> is replaced by <b>' +
                   nounDeprecatedValue['replacement term'] +
@@ -3743,6 +3744,10 @@ export default {
                     ", consider using <b>" + nounDeprecatedValue['replacement term'] + "</b>." :
                     " because <b>" + nounDeprecatedValue['deprecated reason'] + "</b>. Please use another term.");
               }
+              console.log('firstNounDeprecated', app.firstNounDeprecated);
+              app.numericalFlag = !app.numericalFlag;
+              app.numericalFlag = !app.numericalFlag;
+
             });
         }
       } else {
@@ -3750,7 +3755,7 @@ export default {
         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.lastCharacter.toLowerCase().replace('-', '_'))
           .then(async function (resp) {
             console.log('app.lastCharacter', app.lastCharacter);
-            console.log('term?' + app.lastCharacter, resp.data);
+            console.log('term1?' + app.lastCharacter, resp.data);
             var methodEntry = null;
             if (!resp.data.entries.length) {
               console.log("++++++++++++++++++++");
@@ -4003,7 +4008,6 @@ export default {
       //     });
       // }
 
-      console.log('')
       if (
         !app.firstCharacterUndefined &&
         !app.firstCharacterDeprecated &&
