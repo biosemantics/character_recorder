@@ -509,7 +509,7 @@
                         Input the character name in the input box and click OK.
                       </div>
                       <div class="modal-body">
-                        <b>Form character name:</b>If a character is not in the dropdown, type the character in the first box to use it. 
+                        <b>Form character name:</b>If a character is not in the dropdown, type the character in the first box to use it.
                         <br>
                         <br>
                         <div class="row">
@@ -3764,15 +3764,30 @@ export default {
               methodEntry = resp.data.entries.filter(function (each) {
                 return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
               })[0];
+              let exactSynonyms = resp.data.entries.filter(function (each) {
+                return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+              })[0].resultAnnotations.filter((each) => each.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");
+              console.log('exactSynonyms', exactSynonyms);
+              if (exactSynonyms) {
+                for (let i = 0; i < exactSynonyms.length; i++) {
+                  let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + exactSynonyms[i].value;
+                  if (app.standardCharacters.find(each => each.name.toLowerCase() === tempWholeCharacter.toLowerCase())) {
+                    console.log('!!!!!!!!!!');
+                    app.alreadyExistingCharacter = true;
+                    app.alreadyExistingCharacterNotifyMessage = '<b>'+tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.slice(1) + '</b> already exists. Select the existing character in the Search/Create Character box.'
+                    break;
+                  }
+                }
+              }
               if (methodEntry) {
                 for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                  if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
-                    if (methodEntry.resultAnnotations[i].value == app.lastCharacter.toLowerCase()) {
+                  if (methodEntry.resultAnnotations[i].property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
+                    if (methodEntry.resultAnnotations[i].value === app.lastCharacter.toLowerCase()) {
                       app.firstNounNotRecommend = true;
 
                       let tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
 
-                      if (app.middleCharacter == 'between') {
+                      if (app.middleCharacter === 'between') {
                         tempWholeCharacter += ' and ' + app.secondLastCharacter;
                       }
 
@@ -3794,7 +3809,7 @@ export default {
                   }
                 }
               }
-              if (!app.firstNounNotRecommend) {
+              if (!app.firstNounNotRecommend && !app.alreadyExistingCharacter) {
                 methodEntry = resp.data.entries.filter(function (each) {
                   return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
                 })[0];
