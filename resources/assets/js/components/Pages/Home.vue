@@ -3764,9 +3764,13 @@ export default {
               methodEntry = resp.data.entries.filter(function (each) {
                 return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
               })[0];
-              let exactSynonyms = resp.data.entries.filter(function (each) {
-                return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
-              })[0].resultAnnotations.filter((each) => each.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");
+              let exactSynonyms = null;
+              let res = resp.data.entries.filter(function (each) {
+              return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+              });
+              
+              if(res[0]){ exactSynonyms = res[0].resultAnnotations.filter((each) => each.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");}
+              
               console.log('exactSynonyms', exactSynonyms);
               if (exactSynonyms) {
                 for (let i = 0; i < exactSynonyms.length; i++) {
