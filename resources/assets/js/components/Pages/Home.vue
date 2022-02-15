@@ -5860,13 +5860,13 @@ export default {
                   var maxValue = tempRpArray[tempRpArray.length - 1];
                   var range;
 
-                  let firstQu = app.quantile(tempRpArray, 0.25);
 
-                  let secondQu = app.quantile(tempRpArray, 0.75);
 
                   //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
                   //
                   if (tempRpArray.length >= 10) {
+                    let firstQu = app.quantile(tempRpArray, 0.25);
+                    let secondQu = app.quantile(tempRpArray, 0.75);
                     range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
                   } else {
                      range = minValue + '-' + maxValue;
@@ -8671,13 +8671,13 @@ export default {
 
           var range;
 
-          let firstQu = app.quantile(tempRpArray, 0.25);
 
-          let secondQu = app.quantile(tempRpArray, 0.75);
 
           //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
 
           if (tempRpArray.length >= 10) {
+             let firstQu = app.quantile(tempRpArray, 0.25);
+             let secondQu = app.quantile(tempRpArray, 0.75);
              range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
           // } else if (tempRpArray.length == 1 || minValue == maxValue) {
           //   range = minValue;
