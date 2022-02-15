@@ -5867,7 +5867,7 @@ export default {
                   //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
                   //
                   if (tempRpArray.length >= 10) {
-                    range = '(' + minValue + '-)' + app.getPercentile(tempRpArray, 25) + '-' + app.getPercentile(tempRpArray, 75) + '(-' + maxValue + ')';
+                    range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
                   } else {
                      range = minValue + '-' + maxValue;
                   }
