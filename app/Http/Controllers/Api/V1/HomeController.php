@@ -1024,8 +1024,34 @@ class HomeController extends Controller
             foreach ($values as $value) {
                 if ($value->value) {
                     switch ($oldUnit) {
+                        case "μm":
+                            switch ($request->input('unit')) {
+                                case "mm":
+                                    $value->value = round((float)$value->value / 1000, 2);
+                                    $value->save();
+                                    break;
+                                case "cm":
+                                    $value->value = round((float)$value->value / 10000, 2);
+                                    $value->save();
+                                    break;
+                                case "dm":
+                                    $value->value = round((float)$value->value / 100000, 2);
+                                    $value->save();
+                                    break;
+                                case "m":
+                                    $value->value = round((float)$value->value / 1000000, 2);
+                                    $value->save();
+                                    break;
+                                default:
+                                    break;
+                            }
+                            break;
                         case "mm":
                             switch ($request->input('unit')) {
+                                case "μm":
+                                    $value->value = round((float)$value->value * 1000, 2);
+                                    $value->save();
+                                    break;
                                 case "cm":
                                     $value->value = round((float)$value->value / 10, 2);
                                     $value->save();
@@ -1044,6 +1070,10 @@ class HomeController extends Controller
                             break;
                         case "cm":
                             switch ($request->input('unit')) {
+                                case "μm":
+                                    $value->value = round((float)$value->value * 10000, 2);
+                                    $value->save();
+                                    break;
                                 case "mm":
                                     $value->value = round((float)$value->value * 10, 2);
                                     $value->save();
@@ -1062,6 +1092,10 @@ class HomeController extends Controller
                             break;
                         case "dm":
                             switch ($request->input('unit')) {
+                                case "μm":
+                                    $value->value = round((float)$value->value * 100000, 2);
+                                    $value->save();
+                                    break;
                                 case "mm":
                                     $value->value = round((float)$value->value * 100, 2);
                                     $value->save();
@@ -1080,6 +1114,10 @@ class HomeController extends Controller
                             break;
                         case "m":
                             switch ($request->input('unit')) {
+                                case "μm":
+                                    $value->value = round((float)$value->value * 1000000, 2);
+                                    $value->save();
+                                    break;
                                 case "mm":
                                     $value->value = round((float)$value->value * 1000, 2);
                                     $value->save();
