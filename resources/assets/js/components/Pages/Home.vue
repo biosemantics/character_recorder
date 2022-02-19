@@ -4314,6 +4314,7 @@ export default {
       return result;
     },
     getStandardCollections() {
+      console.log('getStandardCollections');
       var app = this;
       app.standardCollections = [];
       var order = 0;
@@ -7808,13 +7809,13 @@ export default {
               if (color.id) {
                 app.colorDetailId = color.id;
                 //    color.detailFlag = flag;
-                app.colorDetails.find(eachColor => eachColor.id == app.colorDetailId).detailFlag = flag;
+                app.colorDetails.find(eachColor => eachColor.id === app.colorDetailId).detailFlag = flag;
                 for (var i = 0; i < app.colorDetails.length; i++) {
-                  if (app.colorDetails[i].id == color.id) {
+                  if (app.colorDetails[i].id === color.id) {
                     app.colorDetails[i].detailFlag = flag;
                     app.colorDetails[i][flag] = app.colorDetails[i][flag] + ';';
                     app.colorDetails[i][flag] = app.colorDetails[i][flag].substring(0, app.colorDetails[i][flag].length - 1);
-                    if (app.colorDetails[i][flag] == 'null' || app.colorDetails[i][flag] == null) {
+                    if (app.colorDetails[i][flag] === 'null' || app.colorDetails[i][flag] == null) {
                       app.colorDetails[i][flag] = '';
                     }
                   }
@@ -7952,6 +7953,7 @@ export default {
           axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText.replace('-', '_'))
             .then(function (resp) {
               var resultData = {};
+              console.log('resp.data', resp.data);
               var tempNonColorData = resp.data;
               if (tempNonColorData.children) {
                 tempNonColorData.children = app.sortTreeData(tempNonColorData.children);
@@ -7960,7 +7962,7 @@ export default {
               console.log('tempNonColorData', tempNonColorData);
               app.removeDeprecatedTerms(tempNonColorData, resultData);
               app.textureTreeData = resultData;
-              // app.getImageFromColorTreeData(app.textureTreeData);
+              app.getImageFromColorTreeData(app.textureTreeData);
 
               app.currentNonColorValue.detailFlag = flag;
               if (app.nonColorDetailsFlag) {
@@ -8979,6 +8981,7 @@ export default {
   },
   async created() {
     var app = this;
+    console.log('created');
     app.generateDescriptionTooltip = '<div>Click this button to generate a textual description of the taxon based on the matrix. Use up/down arrow in the matrix to adjust the order of the characters shown in the text</div>';
     app.isLoading = true;
     app.getStandardCollections();
