@@ -9,6 +9,7 @@
                 <option value="dm">dm</option>
                 <option value="cm">cm</option>
                 <option value="mm">mm</option>
+                <option value="μm">μm</option>
             </select>
             <div v-if="viewFlag == true" style="border: 1px solid grey;">
                 {{ childData ? childData : '&nbsp;' }}

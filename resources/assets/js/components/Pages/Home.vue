@@ -304,6 +304,10 @@
                         <li><a v-on:click="changeUnit(value.character_id, 'dm')">dm</a></li>
                         <li><a v-on:click="changeUnit(value.character_id, 'cm')">cm</a></li>
                         <li><a v-on:click="changeUnit(value.character_id, 'mm')">mm</a></li>
+                        <li><a v-on:click="changeUnit(value.character_id, 'μm')">μm</a></li>
+                        
+                        
+                        
                       </ul>
                     </div>
                     <div v-if="checkHaveUnit(value.value)" class="btn-group">
@@ -3764,9 +3768,13 @@ export default {
               methodEntry = resp.data.entries.filter(function (each) {
                 return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
               })[0];
-              let exactSynonyms = resp.data.entries.filter(function (each) {
-                return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
-              })[0].resultAnnotations.filter((each) => each.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");
+              let exactSynonyms = null;
+              let res = resp.data.entries.filter(function (each) {
+              return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+              });
+              
+              if(res[0]){ exactSynonyms = res[0].resultAnnotations.filter((each) => each.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");}
+              
               console.log('exactSynonyms', exactSynonyms);
               if (exactSynonyms) {
                 for (let i = 0; i < exactSynonyms.length; i++) {
@@ -5853,19 +5861,17 @@ export default {
                   var maxValue = tempRpArray[tempRpArray.length - 1];
                   var range;
 
-                  let firstQu = app.quantile(tempRpArray, 0.25);
 
-                  let secondQu = app.quantile(tempRpArray, 0.75);
 
-                  range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
+                  //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
                   //
-                  // if (tempRpArray.length >= 5) {
-                  //   range = '(' + minValue + '-)' + tempRpArray[Math.floor((tempRpArray.length - 1) / 4)] + '-' + tempRpArray[Math.ceil((tempRpArray.length - 1) * 3 / 4)] + '(-' + maxValue + ')';
-                  // } else if (tempRpArray.length == 1 || minValue == maxValue) {
-                  //   range = minValue;
-                  // } else {
-                  //   range = minValue + '-' + maxValue;
-                  // }
+                  if (tempRpArray.length >= 10) {
+                    let firstQu = app.quantile(tempRpArray, 0.25);
+                    let secondQu = app.quantile(tempRpArray, 0.75);
+                    range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
+                  } else {
+                     range = minValue + '-' + maxValue;
+                  }
 
                   app.descriptionText += range;
 
@@ -8667,19 +8673,19 @@ export default {
 
           var range;
 
-          let firstQu = app.quantile(tempRpArray, 0.25);
 
-          let secondQu = app.quantile(tempRpArray, 0.75);
 
-          range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
+          //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
 
-          // if (tempRpArray.length >= 5) {
-          //   range = '(' + minValue + '-)' + app.getPercentile(tempRpArray, 25) + '-' + app.getPercentile(tempRpArray, 75) + '(-' + maxValue + ')';
+          if (tempRpArray.length >= 10) {
+             let firstQu = app.quantile(tempRpArray, 0.25);
+             let secondQu = app.quantile(tempRpArray, 0.75);
+             range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
           // } else if (tempRpArray.length == 1 || minValue == maxValue) {
           //   range = minValue;
-          // } else {
-          //   range = minValue + '-' + maxValue;
-          // }
+           } else {
+             range = minValue + '-' + maxValue;
+           }
 
           let median;
 
