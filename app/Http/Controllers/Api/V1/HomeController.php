@@ -81,16 +81,48 @@ class HomeController extends Controller
 
     public function getHeaders()
     {
-        return Header::where('user_id', Auth::id())
+        $headers = Header::where('user_id', Auth::id())
             ->orWhere('user_id', NULL)
-            ->orderBy('header', 'desc')->get();
+            ->orderBy('header', 'desc')->get()->toArray();
+
+        $beforeResult = array();
+        foreach ($headers as $header) {
+            array_push($beforeResult, $header['header']);
+        }
+        natsort($beforeResult);
+        $result = array();
+        foreach ($beforeResult as $eachResult) {
+            foreach ($headers as $header) {
+                if ($eachResult == $header['header']) {
+                    array_push($result, $header);
+                }
+            }
+        }
+
+        return array_reverse($result, false);
     }
 
-    public function getHeaders1($userID)
+    public function getHeadersByUserId($userID)
     {
-        return Header::where('user_id', $userID)
+        $headers = Header::where('user_id', $userID)
             ->orWhere('user_id', NULL)
-            ->orderBy('header', 'desc')->get();
+            ->orderBy('header', 'desc')->get()->toArray();
+
+        $beforeResult = array();
+        foreach ($headers as $header) {
+            array_push($beforeResult, $header['header']);
+        }
+        natsort($beforeResult);
+        $result = array();
+        foreach ($beforeResult as $eachResult) {
+            foreach ($headers as $header) {
+                if ($eachResult == $header['header']) {
+                    array_push($result, $header);
+                }
+            }
+        }
+
+        return array_reverse($result, false);
     }
 
     public function getAllDetails()
@@ -113,7 +145,7 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $allCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
-        $headers = $this->getHeaders1($userID);
+        $headers = $this->getHeadersByUserId($userID);
         $values = Value::join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->select('values.id as id', 'values.character_id as character_id', 'values.header_id as header_id', 'values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
         $colorDetails = ColorDetails::join('values', 'values.id', '=', 'color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
         $nonColorDetails = NonColorDetails::join('values', 'values.id', '=', 'non_color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
@@ -126,7 +158,7 @@ class HomeController extends Controller
         $char_count = 0;
         $i = 0;
         foreach ($headers as $header) {
-            $header_id[$header->id] = $i;
+            $header_id[$header['id']] = $i;
             $i = $i + 1;
         }
         foreach ($allCharacters as $ac) {
@@ -547,7 +579,7 @@ class HomeController extends Controller
                 while ($flag) {
                     $flag = false;
                     foreach ($headers as $header) {
-                        if ($header->header == 'Sample' . $sampleNum) {
+                        if ($header['header'] == 'Sample' . $sampleNum) {
                             $sampleNum = $sampleNum + 1;
                             $flag = true;
                         }
@@ -2545,7 +2577,7 @@ class HomeController extends Controller
             "format" => "trig" //Other possible values: n-quads, trig or turtle
         ]);
 
-        $headers = $this->getHeaders1($userID);
+        $headers = $this->getHeadersByUserId($userID);
         $values = $this->getValuesByCharacter1($userID);
         $colDetails = $this->getColorDetailsById($userID);
         $nonColDetails = $this->getNonColorDetailsById($userID);
@@ -2555,8 +2587,8 @@ class HomeController extends Controller
         $index = 1;
         for ($i = $headers->count() - 1; $i >= 0; $i--) {
             $header = $headers[$i];
-            if ($header->id != 1) {
-                $writer->addPrefix($specimenName . $index++, "http://biosemantics.arizona.edu/kb/" . str_replace(' ', '/', strtolower($user->taxon)) . "/" . str_replace(' ', '_', $header->header) . "#");
+            if ($header['id'] != 1) {
+                $writer->addPrefix($specimenName . $index++, "http://biosemantics.arizona.edu/kb/" . str_replace(' ', '/', strtolower($user->taxon)) . "/" . str_replace(' ', '_', $header['header']) . "#");
             }
         }
 
@@ -2567,7 +2599,7 @@ class HomeController extends Controller
         for ($i = $headers->count() - 1; $i >= 0; $i--) {
             $types = [];
             $header = $headers[$i];
-            if ($header->id == 1) {
+            if ($header['id'] == 1) {
                 continue;
             }
 
@@ -2575,7 +2607,7 @@ class HomeController extends Controller
 
             $sampleName = "kb:" . str_replace(' ', '', ucwords(strtolower($user->taxon))) . str_replace(' ', '_', $header->header);
             $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
-            $writer->addTriple($sampleName, "rdf:label", "\"" . $header->header . " for " . $user->taxon . "\"", $graph);
+            $writer->addTriple($sampleName, "rdf:label", "\"" . $header['header'] . " for " . $user->taxon . "\"", $graph);
             $writer->addTriple($sampleName, "rdf:id", "\"some_Unique_ID_4_This_Sample\"", $graph);
             $writer->addTriple($sampleName, "iao:is_about", "ncbi:txid$txid", $graph);
             $writer->addTriple($sampleName, ":specimen_of", ":" . str_replace(' ', '_', ucwords(strtolower($user->taxon))), $graph);
@@ -2583,7 +2615,7 @@ class HomeController extends Controller
 
             foreach ($values as $character) {
                 foreach ($character as $sample) {
-                    if ($sample->value != '' && $sample->value != null && $sample->header_id == $header->id) {
+                    if ($sample->value != '' && $sample->value != null && $sample->header_id == $header['id']) {
                         $charName = str_replace('-', '_', str_replace(' ', '_', strtolower($characterName[$sample->character_id])));
                         if (strpos($charName, '_between_') !== false) {
                             $charName = str_replace('_between_', '_of_', $charName);
