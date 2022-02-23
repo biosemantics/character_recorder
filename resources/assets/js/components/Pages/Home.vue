@@ -2119,13 +2119,17 @@
                           placeholder="Example Sentence"
                           style="margin-top:10px; border-radius: 5px; border: 1px solid; padding: 15px; width: 100%;"
                           rows="3" v-model="disputeExampleSentence"></textarea>
+                        <textarea
+                          placeholder="Applicable taxa, list one or more taxa separated by semicolon."
+                          style="margin-top:10px; border-radius: 5px; border: 1px solid; padding: 15px; width: 100%;"
+                          rows="3" v-model="applicableTaxa"></textarea>
                       </div>
                     </div>
                     <div class="modal-footer">
                       <div class="row">
                         <div class="col-md-12">
                           <a class="btn btn-primary ok-btn"
-                             v-bind:class="{disabled: disputeMessage === '' || disputeNewDefinition === '' || disputeExampleSentence === ''}"
+                             v-bind:class="{disabled: disputeMessage === '' || disputeNewDefinition === '' || disputeExampleSentence === '' || applicableTaxa === ''}"
                              v-on:click="onDisputeTerm">
                             Dispute </a>
                           <a v-on:click="messageDialogFlag=false"
@@ -2743,6 +2747,7 @@ export default {
       disputeMessage: '',
       disputeNewDefinition: '',
       disputeExampleSentence: '',
+      applicableTaxa: '',
       nameMatrixDialog: false,
       loadMatrixDialog: false,
       namesList: [],
@@ -7134,7 +7139,6 @@ export default {
         app.saveNonColorButtonFlag = false;
         app.currentNonColorDeprecated = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentNonColorValue['main_value'].toLowerCase());
         console.log('currentNonColorDeprecated', app.currentNonColorDeprecated);
-        console.log('replacement term', app.currentNonColorDeprecated['replacement term']);
         if (app.currentNonColorDeprecated && app.currentNonColorDeprecated['replacement term']) {
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorDeprecated['replacement term'].toLowerCase())
             .then(function (resp) {
@@ -8915,6 +8919,7 @@ export default {
       app.disputeMessage = "";
       app.disputeNewDefinition = "";
       app.disputeExampleSentence = "";
+      app.applicableTaxa = "";
       app.resolveItemFlag = false;
     },
     onDisputeTerm() {
@@ -8929,7 +8934,8 @@ export default {
         'IRI': app.currentResolveItem['deprecated IRI'],
         'deprecated_reason': app.currentResolveItem['deprecated reason'],
         'new_definition': app.disputeNewDefinition,
-        'example_sentence': app.disputeExampleSentence
+        'example_sentence': app.disputeExampleSentence,
+        'taxa': app.applicableTaxa
       };
       console.log(postValue);
       axios.post('/chrecorder/public/send-mail', postValue);
@@ -8937,6 +8943,7 @@ export default {
       app.disputeMessage = "";
       app.disputeNewDefinition = "";
       app.disputeExampleSentence = "";
+      app.applicableTaxa = "";
     },
     getDefinition(data) {
       var app = this;

@@ -138,6 +138,7 @@ class HomeController extends Controller
             'disputed_reason' => $request->input('message'),
             'new_definition' => $request->input('new_definition'),
             'example_sentence' => $request->input('example_sentence'),
+            'taxa' => $request->input('taxa'),
         ]);
 
         $dispute->save();

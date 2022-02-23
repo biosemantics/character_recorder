@@ -178,13 +178,17 @@
                       placeholder="Example Sentence"
                       style="margin-top:10px; border-radius: 5px; border: 1px solid; padding: 15px; width: 100%;"
                       rows="3" v-model="disputeExampleSentence"></textarea>
+                    <textarea
+                      placeholder="Applicable taxa, list one or more taxa separated by semicolon."
+                      style="margin-top:10px; border-radius: 5px; border: 1px solid; padding: 15px; width: 100%;"
+                      rows="3" v-model="applicableTaxa"></textarea>
                   </div>
                 </div>
                 <div class="modal-footer">
                   <div class="row">
                     <div class="col-md-12">
                       <a class="btn btn-primary ok-btn"
-                         v-bind:class="{disabled: disputeMessage === '' || disputeNewDefinition === '' || disputeExampleSentence === ''}"
+                         v-bind:class="{disabled: disputeMessage === '' || disputeNewDefinition === '' || disputeExampleSentence === '' || applicableTaxa === ''}"
                          v-on:click="onDisputeTerm">
                         Dispute </a>
                       <a v-on:click="messageDialogFlag=false"
@@ -241,6 +245,7 @@ export default {
       disputeMessage: '',
       disputeNewDefinition: '',
       disputeExampleSentence: '',
+      applicableTaxa: '',
       deprecatedIRI: '',
       promptText: ''
     }
@@ -361,6 +366,7 @@ export default {
       app.disputeMessage = "";
       app.disputeNewDefinition = "";
       app.disputeExampleSentence = "";
+      app.applicableTaxa = "";
       app.movedNote = "";
       app.newDefinition = "";
       app.exampleUsage = "";
@@ -377,6 +383,7 @@ export default {
       app.disputeMessage = "";
       app.disputeNewDefinition = "";
       app.disputeExampleSentence = "";
+      app.applicableTaxa = "";
       app.deprecatedReason = "";
       app.replacementTerm = "";
       app.newDefinition = "";
@@ -414,7 +421,8 @@ export default {
         'IRI': app.deprecatedIRI,
         'deprecated_reason': app.deprecatedReason,
         'new_definition': app.disputeNewDefinition,
-        'example_sentence': app.disputeExampleSentence
+        'example_sentence': app.disputeExampleSentence,
+        'taxa': app.applicableTaxa
       };
       console.log(postValue);
       axios.post('/chrecorder/public/send-mail', postValue);
