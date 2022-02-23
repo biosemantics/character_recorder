@@ -305,9 +305,9 @@
                         <li><a v-on:click="changeUnit(value.character_id, 'cm')">cm</a></li>
                         <li><a v-on:click="changeUnit(value.character_id, 'mm')">mm</a></li>
                         <li><a v-on:click="changeUnit(value.character_id, 'μm')">μm</a></li>
-                        
-                        
-                        
+
+
+
                       </ul>
                     </div>
                     <div v-if="checkHaveUnit(value.value)" class="btn-group">
@@ -1331,31 +1331,30 @@
                                   }}
                                 </div>
                               </div>
-                              <b><span>The term {{ currentColorValue[flag] }} you just entered has been deprecated because "{{
+                              <b><span>The term {{ currentColorDeprecated[flag]['deprecate term'] }} you just entered has been deprecated because "{{
                                   currentColorDeprecated[flag]['deprecated reason']
                                 }}"</span></b><br/>
-                              <i>If you want to dispute the deprecation, please go to the Vocabulary/Ontology Updates
-                                section(in "..." under your login name).</i>
-                              <div>
-                                <input type="radio" id="user-defined-color"
-                                       v-bind:value="deprecateColorValue[flag]"
-                                       v-on:change="selectUserDefinedTerm(currentColorValue, flag, deprecateColorValue[flag])"
-                                       v-model="currentColorValue[flag]">
-                                <label for="user-defined-color">Use my term '{{ deprecateColorValue[flag] }}'(as a
-                                  {{ changeFlagToLabel(flag) }}).</label>
-                                <div for="user-defined">
-                                  Definition: <input
-                                  v-model="userColorDefinition[flag]"
-                                  class="color-definition-input">
-                                  Used for Taxon:
-                                  <input v-model="colorTaxon[flag]"
-                                         class="color-definition-input">
-                                  Sample Sentence:
-                                  <input
-                                    v-model="colorSampleText[flag]"
-                                    class="color-definition-input" placeholder=""><br/>
-                                </div>
-                              </div>
+                              <i>If you want to dispute the deprecation, <a v-on:click="handleDisputeTerm(currentColorDeprecated[flag])">Dispute</a>. <b>Dispute</b> will be reviewed by domain experts</i>
+<!--                              <div>-->
+<!--                                <input type="radio" id="user-defined-color"-->
+<!--                                       v-bind:value="deprecateColorValue[flag]"-->
+<!--                                       v-on:change="selectUserDefinedTerm(currentColorValue, flag, deprecateColorValue[flag])"-->
+<!--                                       v-model="currentColorValue[flag]">-->
+<!--                                <label for="user-defined-color">Use my term '{{ deprecateColorValue[flag] }}'(as a-->
+<!--                                  {{ changeFlagToLabel(flag) }}).</label>-->
+<!--                                <div for="user-defined">-->
+<!--                                  Definition: <input-->
+<!--                                  v-model="userColorDefinition[flag]"-->
+<!--                                  class="color-definition-input">-->
+<!--                                  Used for Taxon:-->
+<!--                                  <input v-model="colorTaxon[flag]"-->
+<!--                                         class="color-definition-input">-->
+<!--                                  Sample Sentence:-->
+<!--                                  <input-->
+<!--                                    v-model="colorSampleText[flag]"-->
+<!--                                    class="color-definition-input" placeholder=""><br/>-->
+<!--                                </div>-->
+<!--                              </div>-->
 
                             </div>
                             <div v-else>
@@ -1651,30 +1650,29 @@
                                 </div>
                               </div>
                             </div>
-                            <b><span>The term {{ currentNonColorValue[currentNonColorValue.detailFlag] }} you just entered has been deprecated because "{{
+                            <b><span>The term {{ currentNonColorDeprecated['deprecate term'] }} you just entered has been deprecated because "{{
                                 currentNonColorDeprecated['deprecated reason']
                               }}"</span></b><br/>
-                            <i>If you want to dispute the deprecation, please go to the Vocabulary/Ontology Updates
-                              section(in "..." under your login name).</i>
-                            <div>
-                              <input type="radio" id="user-defined-non-color"
-                                     v-bind:value="deprecateNonColorValue[currentNonColorValue.detailFlag]"
-                                     v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, deprecateNonColorValue[currentNonColorValue.detailFlag])"
-                                     v-model="currentNonColorValue[currentNonColorValue.detailFlag]">
-                              <label for="user-defined-non-color">Use my term '{{ deprecateNonColorValue[currentNonColorValue.detailFlag] }}'(as a
-                                {{ currentNonColorValue.placeholderName }}).</label>
-                              <div for="user-defined">
-                                Definition: <input
-                                v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
-                                class="non-color-input-definition">
-                                Taxon: <input
-                                v-model="nonColorTaxon[currentNonColorValue.detailFlag]"
-                                class="non-color-input-definition">
-                                Sample Sentence: <input
-                                v-model="nonColorSampleText[currentNonColorValue.detailFlag]"
-                                class="non-color-input-definition">
-                              </div>
-                            </div>
+                            <i>If you want to dispute the deprecation, <a v-on:click="handleDisputeTerm(currentNonColorDeprecated)">Dispute</a>. <b>Dispute</b> will be reviewed by domain experts</i>
+<!--                            <div>-->
+<!--                              <input type="radio" id="user-defined-non-color"-->
+<!--                                     v-bind:value="deprecateNonColorValue[currentNonColorValue.detailFlag]"-->
+<!--                                     v-on:change="selectUserDefinedTerm(currentNonColorValue, currentNonColorValue.detailFlag, deprecateNonColorValue[currentNonColorValue.detailFlag])"-->
+<!--                                     v-model="currentNonColorValue[currentNonColorValue.detailFlag]">-->
+<!--                              <label for="user-defined-non-color">Use my term '{{ deprecateNonColorValue[currentNonColorValue.detailFlag] }}'(as a-->
+<!--                                {{ currentNonColorValue.placeholderName }}).</label>-->
+<!--                              <div for="user-defined">-->
+<!--                                Definition: <input-->
+<!--                                v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"-->
+<!--                                class="non-color-input-definition">-->
+<!--                                Taxon: <input-->
+<!--                                v-model="nonColorTaxon[currentNonColorValue.detailFlag]"-->
+<!--                                class="non-color-input-definition">-->
+<!--                                Sample Sentence: <input-->
+<!--                                v-model="nonColorSampleText[currentNonColorValue.detailFlag]"-->
+<!--                                class="non-color-input-definition">-->
+<!--                              </div>-->
+<!--                            </div>-->
                           </div>
 
                           <div v-else>
@@ -2112,13 +2110,22 @@
                         <textarea
                           placeholder="To dispute the deprecation decision on the term, please provide your reason(s) as detailed as possible"
                           style="margin-top:10px; border-radius: 5px; border: 1px solid; padding: 15px; width: 100%;"
-                          rows="8" v-model="disputeMessage"></textarea></div>
+                          rows="3" v-model="disputeMessage"></textarea>
+                        <textarea
+                          placeholder="Proposed New Definition"
+                          style="margin-top:10px; border-radius: 5px; border: 1px solid; padding: 15px; width: 100%;"
+                          rows="3" v-model="disputeNewDefinition"></textarea>
+                        <textarea
+                          placeholder="Example Sentence"
+                          style="margin-top:10px; border-radius: 5px; border: 1px solid; padding: 15px; width: 100%;"
+                          rows="3" v-model="disputeExampleSentence"></textarea>
+                      </div>
                     </div>
                     <div class="modal-footer">
                       <div class="row">
                         <div class="col-md-12">
                           <a class="btn btn-primary ok-btn"
-                             v-bind:class="{disabled: disputeMessage == ''}"
+                             v-bind:class="{disabled: disputeMessage === '' || disputeNewDefinition === '' || disputeExampleSentence === ''}"
                              v-on:click="onDisputeTerm">
                             Dispute </a>
                           <a v-on:click="messageDialogFlag=false"
@@ -2734,6 +2741,8 @@ export default {
       messageDialogFlag: false,
       disputedTerm: '',
       disputeMessage: '',
+      disputeNewDefinition: '',
+      disputeExampleSentence: '',
       nameMatrixDialog: false,
       loadMatrixDialog: false,
       namesList: [],
@@ -2781,7 +2790,7 @@ export default {
       currentNonColorDeprecated: null,
       currentNonColorDeprecatedDefinition: null,
       currentNonColorDeprecatedParent: null,
-      currentColorDeprecated: [],
+      currentColorDeprecated: {},
       currentColorDeprecatedDefinition: [],
       currentColorDeprecatedParent: [],
       saveInProgress: false,
@@ -3772,9 +3781,9 @@ export default {
               let res = resp.data.entries.filter(function (each) {
               return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
               });
-              
+
               if(res[0]){ exactSynonyms = res[0].resultAnnotations.filter((each) => each.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym");}
-              
+
               console.log('exactSynonyms', exactSynonyms);
               if (exactSynonyms) {
                 for (let i = 0; i < exactSynonyms.length; i++) {
@@ -6667,6 +6676,7 @@ export default {
               if (resp.data.entries.length > 0) {
                 app.currentColorDeprecatedParent['colored'] = resp.data.entries[0].parentTerm;
                 app.currentColorDeprecatedDefinition['colored'] = null;
+                app.currentColorValue['colored'] = app.currentColorDeprecated['colored']['replacement term'];
                 if (resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
                   app.currentColorDeprecatedDefinition['colored'] = resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
                 }
@@ -6674,6 +6684,7 @@ export default {
             });
         }
         await app.searchColorSelection(app.currentColorValue, 'colored');
+        console.log('colorSynonyms', app.colorSynonyms);
       }
       if (app.currentColorValue['multi_colored'] && app.currentColorValue.confirmedFlag['multi_colored'] == false && !app.colorSynonyms['multi_colored'] && !app.searchTreeData(app.colTreeData['multi_colored'], app.currentColorValue['multi_colored'])) {
         comparedFlag = false;
@@ -7117,22 +7128,13 @@ export default {
       console.log('app.currentNonColorValue.confirmedFlag', app.currentNonColorValue.confirmedFlag);
       console.log("app.currentNonColorValue['main_value']", app.currentNonColorValue['main_value']);
       console.log("app.currentNonColorValue.confirmedFlag['main_value']", app.currentNonColorValue.confirmedFlag['main_value']);
-      // if (app.currentColorDeprecated['colored'] && app.currentColorDeprecated['colored']['replacement term']) {
-      //   await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['colored']['replacement term'].toLowerCase())
-      //     .then(function (resp) {
-      //       console.log('search carex resp', resp.data);
-      //       if (resp.data.entries.length > 0) {
-      //         app.currentColorDeprecatedParent['colored'] = resp.data.entries[0].parentTerm;
-      //         app.currentColorDeprecatedDefinition['colored'] = null;
-      //         if (resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
-      //           app.currentColorDeprecatedDefinition['colored'] = resp.data.entries[0].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115')).value;
-      //         }
-      //       }
-      //     });
-      // }
-      if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false && !app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value)) {
+
+      // if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false && !app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value)) {
+      if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false) {
         app.saveNonColorButtonFlag = false;
         app.currentNonColorDeprecated = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentNonColorValue['main_value'].toLowerCase());
+        console.log('currentNonColorDeprecated', app.currentNonColorDeprecated);
+        console.log('replacement term', app.currentNonColorDeprecated['replacement term']);
         if (app.currentNonColorDeprecated && app.currentNonColorDeprecated['replacement term']) {
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorDeprecated['replacement term'].toLowerCase())
             .then(function (resp) {
@@ -7393,7 +7395,14 @@ export default {
                   app.userNonColorDefinition = {};
                   app.currentNonColorValue.taxon = app.taxonName;
                 }
-              });
+              }).then(() => {
+              axios.post('/chrecorder/public/api/v1/getAllDetails')
+                .then(function (respNonColor) {
+                  console.log('respNonColor', respNonColor);
+                  app.allNonColorValues = respNonColor.data.nonColorValues;
+                  app.getDeprecatedValue();
+                })
+            });
           } else {
             app.saveNonColorButtonFlag = false;
             $('.non-color-input-definition').css('border', '1px solid red');
@@ -8086,17 +8095,17 @@ export default {
         'multi_colored'
       ];
 
-      if (app.searchTreeData(app.colTreeData[flag], color[flag])) {
-        app.currentColorValue.confirmedFlag[flag] = true;
-        return;
-      }
+      // if (app.searchTreeData(app.colTreeData[flag], color[flag])) {
+      //   app.currentColorValue.confirmedFlag[flag] = true;
+      //   return;
+      // }
 
       app.colorSynonyms[flag] = [];
 
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + color[flag].toLowerCase())
         .then(async function (resp) {
           console.log(color[flag]);
-          console.log('search carex resp', resp.data);
+          console.log('search carex resp in searchColorSelection', resp.data);
           app.searchColor = resp.data.entries;
           if (app.searchColor.length == 0) {
             app.searchColorFlag = 0;
@@ -8896,11 +8905,16 @@ export default {
         }
       }
     },
-    handleDisputeTerm() {
+    handleDisputeTerm(deprecatedTerm = null) {
       var app = this;
+      if (deprecatedTerm != null) {
+        app.currentResolveItem = deprecatedTerm;
+      }
       app.messageDialogFlag = true;
       app.disputedTerm = app.currentResolveItem['deprecate term']
       app.disputeMessage = "";
+      app.disputeNewDefinition = "";
+      app.disputeExampleSentence = "";
       app.resolveItemFlag = false;
     },
     onDisputeTerm() {
@@ -8909,12 +8923,20 @@ export default {
         'name': app.user.name,
         'email': app.user.email,
         'subject': 'Dispute ' + app.disputedTerm + ' in Carex Ontology',
-        'message': app.disputeMessage
+        'message': app.disputeMessage,
+        'label': app.disputedTerm,
+        'definition': 'not provided',
+        'IRI': app.currentResolveItem['deprecated IRI'],
+        'deprecated_reason': app.currentResolveItem['deprecated reason'],
+        'new_definition': app.disputeNewDefinition,
+        'example_sentence': app.disputeExampleSentence
       };
       console.log(postValue);
       axios.post('/chrecorder/public/send-mail', postValue);
       app.messageDialogFlag = false;
       app.disputeMessage = "";
+      app.disputeNewDefinition = "";
+      app.disputeExampleSentence = "";
     },
     getDefinition(data) {
       var app = this;

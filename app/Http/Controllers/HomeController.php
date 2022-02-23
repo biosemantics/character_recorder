@@ -8,9 +8,12 @@ use App\ColorDetails;
 use App\NonColorDetails;
 use App\Value;
 use App\User;
+use App\Dispute;
 
+use Auth;
 use DB;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -53,7 +56,7 @@ class HomeController extends Controller
                     } else {
                         $resultList[$name] = 1;
                     }
-                } 
+                }
                 else {
                     $valueDetail = NonColorDetails::where('value_id', '=', $eachValue->id)->first();
                     if ($valueDetail) {
@@ -83,7 +86,7 @@ class HomeController extends Controller
         //         }
         //     }
         // }
-        
+
         // foreach($standardCharacters as $sc){
         //     if (!$sc->usage_count){
         //         $sc->usage_count = 0;
@@ -123,13 +126,29 @@ class HomeController extends Controller
     }
 
     public function sendMail(Request $request) {
+        $user = User::where('id', '=', Auth::id())->first();
+        $username = explode('@', $user['email'])[0];
+
+        $dispute = new Dispute([
+            'label' => $request->input('label'),
+            'definition' => $request->input('definition'),
+            'IRI' => $request->input('IRI'),
+            'deprecated_reason' => $request->input('deprecated_reason'),
+            'disputed_by' => $username,
+            'disputed_reason' => $request->input('message'),
+            'new_definition' => $request->input('new_definition'),
+            'example_sentence' => $request->input('example_sentence'),
+        ]);
+
+        $dispute->save();
+
         $details = [
             'title' => $request->input('subject'),
             'body' => $request->input('message'),
             'name' => $request->input('name'),
             'email' => $request->input('email')
         ];
-       
+
         \Mail::to('hongcui@email.arizona.edu')->send(new \App\Mail\MailController($details));
     }
 
