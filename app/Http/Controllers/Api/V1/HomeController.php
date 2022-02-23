@@ -2585,7 +2585,7 @@ class HomeController extends Controller
 
 
         $index = 1;
-        for ($i = $headers->count() - 1; $i >= 0; $i--) {
+        for ($i = count($headers) - 1; $i >= 0; $i--) {
             $header = $headers[$i];
             if ($header['id'] != 1) {
                 $writer->addPrefix($specimenName . $index++, "http://biosemantics.arizona.edu/kb/" . str_replace(' ', '/', strtolower($user->taxon)) . "/" . str_replace(' ', '_', $header['header']) . "#");
@@ -2596,7 +2596,7 @@ class HomeController extends Controller
 
         $index = 0;
         $partNames = [];
-        for ($i = $headers->count() - 1; $i >= 0; $i--) {
+        for ($i = count($headers) - 1; $i >= 0; $i--) {
             $types = [];
             $header = $headers[$i];
             if ($header['id'] == 1) {
