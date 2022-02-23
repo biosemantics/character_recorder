@@ -2605,7 +2605,7 @@ class HomeController extends Controller
 
             $index++;
 
-            $sampleName = "kb:" . str_replace(' ', '', ucwords(strtolower($user->taxon))) . str_replace(' ', '_', $header->header);
+            $sampleName = "kb:" . str_replace(' ', '', ucwords(strtolower($user->taxon))) . str_replace(' ', '_', $header['header']);
             $a = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type";
             $writer->addTriple($sampleName, "rdf:label", "\"" . $header['header'] . " for " . $user->taxon . "\"", $graph);
             $writer->addTriple($sampleName, "rdf:id", "\"some_Unique_ID_4_This_Sample\"", $graph);
