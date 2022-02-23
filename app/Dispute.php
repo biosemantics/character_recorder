@@ -16,6 +16,7 @@ class Dispute extends Model
         'disputed_reason',
         'new_definition',
         'example_sentence',
+        'taxa',
     ];
     //
 }
