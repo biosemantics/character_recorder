@@ -6669,7 +6669,7 @@ export default {
         }
         await app.searchColorSelection(app.currentColorValue, 'reflectance');
       }
-      if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored'] && (!app.searchTreeData(app.originalColorTreeData, app.currentColorValue['colored'])) || app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['colored'].toLowerCase())) {
+      if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored'] && (!app.searchTreeData(app.originalColorTreeData, app.currentColorValue['colored'])) && !app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['colored'].toLowerCase())) {
       // if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored']) {
         comparedFlag = false;
         app.saveColorButtonFlag = false;
@@ -7135,7 +7135,7 @@ export default {
       console.log("app.currentNonColorValue.confirmedFlag['main_value']", app.currentNonColorValue.confirmedFlag['main_value']);
 
       // if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false && !app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value)) {
-      if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false && (!app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value) || app.deprecatedTerms.find(value => value['deprecate term'] == app.currentNonColorValue['main_value'].toLowerCase()))) {
+      if (app.currentNonColorValue['main_value'] && app.currentNonColorValue.confirmedFlag['main_value'] == false && (!app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value) && !app.deprecatedTerms.find(value => value['deprecate term'] == app.currentNonColorValue['main_value'].toLowerCase()))) {
         app.saveNonColorButtonFlag = false;
         app.currentNonColorDeprecated = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentNonColorValue['main_value'].toLowerCase());
         console.log('currentNonColorDeprecated', app.currentNonColorDeprecated);
