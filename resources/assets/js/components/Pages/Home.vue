@@ -2811,7 +2811,8 @@ export default {
       numericalFlag: false,
       deprecateColorValue: [],
       deprecateNonColorValue: [],
-      matrixSaved: false
+      matrixSaved: false,
+      toReviewedTerms: []
     }
   },
   components: {
@@ -6775,7 +6776,7 @@ export default {
                     "user": app.sharedFlag ? '' : app.user.name,
                     "ontology": "carex",
                     "term": postValue[flag],
-                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#" + flag,
+                    "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
                     "definition": app.userColorDefinition[flag],
                     "elucidation": "",
                     "createdBy": app.user.name,
@@ -7901,6 +7902,7 @@ export default {
       var app = this;
       var methodEntry = null;
       if (!tData) return;
+      // if (!tData.data) return;
       tData.data["images"] = [];
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
         .then(function (resp) {
@@ -8974,22 +8976,24 @@ export default {
     removeDeprecatedTerms(treeData, resData) {
       var app = this;
       if (!treeData) return;
-      if (treeData.data.details) {
+      if (treeData.data.details && !app.toReviewedTerms.includes(treeData.text)) {
         // if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == treeData.data.details[0].IRI) < 0) {
-          resData["data"] = treeData.data;
-          resData["text"] = treeData.text;
-          if (treeData.children) {
-            resData["children"] = [];
-            var t = 0;
-            for (var i = 0; i < treeData.children.length; i++) {
-              if (treeData.children[i].data && treeData.children[i].data.details) {
-                // if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == treeData.children[i].data.details[0].IRI) < 0) {
-                  resData["children"].push({});
-                  app.removeDeprecatedTerms(treeData.children[i], resData["children"][t++]);
-                // }
-              }
+        resData["data"] = treeData.data;
+        resData["text"] = treeData.text;
+        if (treeData.children) {
+          resData["children"] = [];
+          var t = 0;
+          for (var i = 0; i < treeData.children.length; i++) {
+            if (treeData.children[i].data && treeData.children[i].data.details && !app.toReviewedTerms.includes(treeData.children[i].text)) {
+            // if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == treeData.children[i].data.details[0].IRI) < 0) {
+              resData["children"].push({});
+              app.removeDeprecatedTerms(treeData.children[i], resData["children"][t++]);
+              
+            // }
             }
           }
+        }
+          
         // }
       }
       return;
@@ -9025,6 +9029,14 @@ export default {
         app.treeResult = resp.data;
         console.log("treeResult", app.treeResult);
         app.getDefinition(app.treeResult);
+      });
+    await axios.get("http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=toreview")
+      .then(function (resp) {
+        console.log('toreviewed', resp.data);
+        let data = resp.data.children;
+        for (let i = 0; i < data.length; i++) {
+          app.toReviewedTerms.push(data[i].text);
+        }
       });
     await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=colored')
     .then(function(resp) {
