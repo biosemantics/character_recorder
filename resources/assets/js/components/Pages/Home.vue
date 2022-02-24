@@ -6795,6 +6795,7 @@ export default {
                       })
                         .then(function (resp) {
                           console.log('save api resp', resp);
+                          app.toReviewedTerms.push(postValue[flag]);
                         });
                     });
                   var subclassIRI = '';
@@ -7225,6 +7226,7 @@ export default {
                   })
                     .then(function (resp) {
                       console.log('save api resp', resp);
+                      app.toReviewedTerms.push(postValue['main_value']);
                     });
                 });
               var subclassIRI = '';
@@ -7279,6 +7281,7 @@ export default {
                   })
                     .then(function (resp) {
                       console.log('save api resp', resp);
+                      app.toReviewedTerms.push(postValue['main_value']);
                     });
                 });
 
@@ -8347,6 +8350,7 @@ export default {
           console.log('importMatrix resp', res);
           app.userCharacters = res.data.characters;
           app.headers = res.data.headers;
+          app.columnCount = app.headers.length - 1;
           app.values = res.data.values;
           app.userTags = res.data.tags;
           app.allColorValues = res.data.allColorValues;
@@ -8355,7 +8359,7 @@ export default {
           app.showTableForTab(app.currentTab);
           app.matrixShowFlag = true;
           app.lastLoadMatrixName = app.loadVersion.matrix_name;
-          sessionStorage.setItem('lastMatrixName', app.loadVersion.matrix_name);
+          // sessionStorage.setItem('lastMatrixName', app.loadVersion.matrix_name);
           app.isLoading = false;
           app.collapsedFlag = true;
           app.showSetupArea = true;
@@ -9152,6 +9156,9 @@ export default {
     axios.get("/chrecorder/public/api/v1/getMatrixNames")
       .then((resp) => {
         app.namesList = resp.data;
+        if (resp.data.length > 0) {
+          app.lastLoadMatrixName = resp.data[0]['matrix_name'];
+        }
       });
     axios.get("/chrecorder/public/color_palette.json").then(function (resp) {
       var tempColorPalette = resp.data;
@@ -9182,7 +9189,7 @@ export default {
     app.characterUsername = app.user.name;
     sessionStorage.setItem('userId', app.user.id);
     app.deprecatedTagName = sessionStorage.getItem('deprecatedTagName');
-    app.lastLoadMatrixName = sessionStorage.getItem('lastMatrixName');
+    // app.lastLoadMatrixName = sessionStorage.getItem('lastMatrixName');
     app.matrixSaved = !!app.lastLoadMatrixName;
     sessionStorage.removeItem('deprecatedTagName');
   }
