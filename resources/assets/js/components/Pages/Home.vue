@@ -564,6 +564,7 @@
                               <option value="Diameter">Diameter</option>
                               <option value="Distance">Distance</option>
                               <option value="Color">Color</option>
+                              <option value="Presence">Presence</option>
                               <option value="Shape">Shape</option>
                               <option value="Texture">Texture</option>
                               <option value="Growth form">Growth form</option>
@@ -6231,6 +6232,9 @@ export default {
                 var arraySortedNonColor = [];
                 var cloneSortedNonColor = [];
                 for (var l = 0; l < nonColorValues.length; l++) {
+                  if (app.nonColorType === 'presence' && nonColorValues[l].main_value === 'not applicable') {
+                    break;
+                  }
                   if (nonColorValues[l].post_constraint != null && nonColorValues[l].post_constraint != '') {
                     if (!(nonColorValues[l].post_constraint in objNonColorValues)) {
                       objNonColorValues[nonColorValues[l].post_constraint] = [];
@@ -7346,7 +7350,6 @@ export default {
           }
 
           if (postFlag == true) {
-            console.log('a6');
             axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
               .then(async function (resp) {
                 await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'])
