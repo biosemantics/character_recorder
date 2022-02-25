@@ -233,9 +233,10 @@
               <table class="table table-bordered cr-table">
                 <thead>
                 <tr>
-                  <th
-                    style="min-width: 300px; width: 500px; height: 43px; line-height: 43px; text-align: center; background-color: lightgrey;">
-                    Character
+                  <th style="width: 500px;">
+                    <div style="width: 500px; border-right: 2px solid #f0f0f0; min-width: 300px; height: 43px; line-height: 43px; text-align: center; background-color: lightgrey;">
+                      Character
+                    </div>
                   </th>
                   <th style="line-height: 43px; text-align: center; background-color: lightgrey;">
                     Summary
@@ -259,8 +260,9 @@
                   <th v-if="value.header_id == 1"
                       v-for="(value, index) in row"
                       :key="index"  scope="row"
-                      style="cursor: pointer; display: flex; border-bottom:none; width: 500px; font-weight: normal;">
-                    <div style="width: 30px;">
+                      style="cursor: pointer; border-bottom:none; font-weight: normal;">
+                    <div style="display: flex; width: 500px; border-right: 2px solid lightgrey;">
+                      <div style="width: 30px;">
                       <div style="height: 22px; line-height: 22px;">
                                                 <span v-on:click="upUserValue(value.character_id)"
                                                       class="glyphicon glyphicon-chevron-up"></span>
@@ -331,6 +333,7 @@
                     <div style="margin-left: 5px; line-height: 44px;">
                       <a v-on:click="removeRowTable(value.character_id)" class="btn btn-add"><span
                         class="glyphicon glyphicon-remove"></span></a>
+                    </div>
                     </div>
                   </th>
                   <th style="line-height: 43px; text-align: center; min-width: 100px; font-weight: normal;"  scope="row">
@@ -5812,6 +5815,16 @@ export default {
       }
       return word;
     },
+    moveArrayItemToNewIndex(arr, old_index, new_index) {
+      if (new_index >= arr.length) {
+          var k = new_index - arr.length + 1;
+          while (k--) {
+              arr.push(undefined);
+          }
+      }
+      arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+      return arr; 
+    },
     updateDescription() {
       var app = this;
 
@@ -5823,6 +5836,10 @@ export default {
         var filteredCharacters = app.userCharacters.filter(function (eachCharacter) {
           return eachCharacter.standard_tag == app.userTags[i].tag_name;
         });
+        let presenceIndex = filteredCharacters.findIndex(each => each.name.startsWith('Presence'))
+        if (presenceIndex) {
+          filteredCharacters = app.moveArrayItemToNewIndex(filteredCharacters, presenceIndex, 0);
+        }
         for (var j = 0; j < filteredCharacters.length; j++) {
           var filteredValues = app.values.filter(function (eachValue) {
             return eachValue[0].character_id == filteredCharacters[j].id;
@@ -5834,7 +5851,6 @@ export default {
             }
           }
           if (app.checkValueArray(tempValueArray)) {
-
             var currentCharacter = app.userCharacters.find(ch => ch.id == filteredValues[0].character_id);
             if (!currentCharacter.name.split(' of ')[1]) {
               currentCharacter.name = currentCharacter.name.replace(' between ', ' of ');
