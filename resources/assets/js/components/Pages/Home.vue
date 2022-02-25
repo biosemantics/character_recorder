@@ -9069,6 +9069,7 @@ export default {
         app.userCharacters = resp.data.characters;
         app.headers = resp.data.headers;
         app.values = resp.data.values;
+        app.lastLoadMatrixName = resp.data.lastMatrix;
         console.log('headers', app.headers);
         console.log('values', app.values);
         app.allColorValues = resp.data.allColorValues;
@@ -9159,9 +9160,6 @@ export default {
     axios.get("/chrecorder/public/api/v1/getMatrixNames")
       .then((resp) => {
         app.namesList = resp.data;
-        if (resp.data.length > 0) {
-          app.lastLoadMatrixName = resp.data[0]['matrix_name'];
-        }
       });
     axios.get("/chrecorder/public/color_palette.json").then(function (resp) {
       var tempColorPalette = resp.data;

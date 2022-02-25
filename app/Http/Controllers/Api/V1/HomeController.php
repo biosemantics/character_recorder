@@ -480,76 +480,33 @@ class HomeController extends Controller
 
     public function getCharacter(Request $request, $userId)
     {
-    //     $matrixNames = $this->getMatrixNames();
-    //     if ($matrixNames->count() > 0) {
-    //         $matrixName = $matrixNames[0]['matrixname'];
-    //         $user = User::where('id', '=', Auth::id())->first();
-    //         $username = explode('@', $user['email'])[0];
-    //         $versionUser = User::where('email', '=', $username . '_ver_' . $matrixName . '@email.com')->first();
-    
-    //         Matrix::where('user_id', '=', $user['id'])->update(['user_id' => $versionUser['id']]);
-    //         User::where('id', '=', $user['id'])->delete();
-    //         Character::where('owner_name', '=', $username)->delete();
-    
-    //         Matrix::where([['user_id', '=', $versionUser['id']], ['matrix_name', '=', $matrixName]])->delete();
-    
-    //         User::where('id', '=', $versionUser['id'])->update([
-    //             'id' => $user['id'],
-    //             'email' => $user['email'],
-    //             'password' => $user['password'],
-    //             'remember_token' => $user['remember_token'],
-    // //            'taxon' => $user['taxon']
-    //         ]);
-    //         Character::where('owner_name', '=', $username . '_ver_' . $matrixName)->update(['owner_name' => $username]);
-    
-    //         $this->nameMatrixFunc($matrixName);
-    
-    //         $returnHeaders = $this->getHeaders();
-    //         $returnValues = $this->getValuesByCharacter();
-    //         $returnCharacters = $this->getArrayCharacters();
-    //         $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
-    //         $returnAllDetailValues = $this->getAllDetails();
-    
-    //         $data = [
-    //             'headers' => $returnHeaders,
-    //             'characters' => $returnCharacters,
-    //             'values' => $returnValues,
-    //             'allColorValues' => $returnAllDetailValues['colorValues'],
-    //             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
-    //             'tags' => $returnUserTags,
-    //             'taxon' => $versionUser['taxon']
-    //         ];
-    
-    //         return $data;
-    //     } else {
-            $user = User::where('id', '=', $userId)->first();
-            $username = explode('@', $user['email'])[0];
-    
-    
-            $returnHeaders = [];
-            $returnValues = [];
-            $returnCharacters = [];
-            $returnTaxon = '';
-            $returnAllDetailValues = ['colorValues' => [], 'nonColorValues' => []];
-    
-            $returnHeaders = $this->getHeaders();
-            $returnValues = $this->getValuesByCharacter();
-            $returnCharacters = $this->getArrayCharacters();
-            $returnTaxon = $user->taxon;
-            $returnAllDetailValues = $this->getAllDetails();
-    
-            $data = [
-                'headers' => $returnHeaders,
-                'characters' => $returnCharacters,
-                'values' => $returnValues,
-                'allColorValues' => $returnAllDetailValues['colorValues'],
-                'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
-                'taxon' => $returnTaxon
-            ];
-    
-            return $data;
-        // }
-        
+        $user = User::where('id', '=', $userId)->first();
+        $username = explode('@', $user['email'])[0];
+
+
+        $returnHeaders = [];
+        $returnValues = [];
+        $returnCharacters = [];
+        $returnTaxon = '';
+        $returnAllDetailValues = ['colorValues' => [], 'nonColorValues' => []];
+
+        $returnHeaders = $this->getHeaders();
+        $returnValues = $this->getValuesByCharacter();
+        $returnCharacters = $this->getArrayCharacters();
+        $returnTaxon = $user->taxon;
+        $returnAllDetailValues = $this->getAllDetails();
+
+        $data = [
+            'headers' => $returnHeaders,
+            'characters' => $returnCharacters,
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'taxon' => $returnTaxon,
+            'lastMatrix' => $user['last_matrix']
+        ];
+
+        return $data;
     }
 
     public function deleteCharacter(Request $request, $userId, $characterId)
@@ -3387,6 +3344,7 @@ class HomeController extends Controller
     {
         $matrixName = $request->input('matrixname');
         $data = $this->nameMatrixFunc($matrixName);
+        User::where('id', '=', Auth::id())->update(['last_matrix' => $matrixName]);
         return $data;
     }
 
@@ -3408,6 +3366,7 @@ class HomeController extends Controller
             'email' => $user['email'],
             'password' => $user['password'],
             'remember_token' => $user['remember_token'],
+            'last_matrix'  => $matrixName
 //            'taxon' => $user['taxon']
         ]);
         Character::where('owner_name', '=', $username . '_ver_' . $matrixName)->update(['owner_name' => $username]);
@@ -3436,6 +3395,7 @@ class HomeController extends Controller
     public function overwriteMatrix(Request $request)
     {
         $matrixName = $request->input('matrixname');
+        User::where('id', '=', Auth::id())->update(['last_matrix' => $matrixName]);
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
         $versionUser = User::where('email', '=', $username . '_ver_' . $matrixName . '@email.com')->first();
