@@ -288,7 +288,7 @@
                       <a class="btn btn-add"
                          v-on:click="editCharacter(row[row.length - 1], true, true)"
                          style="line-height: 30px;">
-                        <span class="glyphicon glyphicon-edit"></span>
+                        <span class="glyphicon glyphicon-eye-open"></span>
                       </a>
                     </div>
                     <div class="btn-group">
@@ -307,9 +307,6 @@
                         <li><a v-on:click="changeUnit(value.character_id, 'cm')">cm</a></li>
                         <li><a v-on:click="changeUnit(value.character_id, 'mm')">mm</a></li>
                         <li><a v-on:click="changeUnit(value.character_id, 'μm')">μm</a></li>
-
-
-
                       </ul>
                     </div>
                     <div v-if="checkHaveUnit(value.value)" class="btn-group">
@@ -5823,7 +5820,7 @@ export default {
           }
       }
       arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-      return arr; 
+      return arr;
     },
     updateDescription() {
       var app = this;
@@ -9011,12 +9008,12 @@ export default {
             // if (app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == treeData.children[i].data.details[0].IRI) < 0) {
               resData["children"].push({});
               app.removeDeprecatedTerms(treeData.children[i], resData["children"][t++]);
-              
+
             // }
             }
           }
         }
-          
+
         // }
       }
       return;
