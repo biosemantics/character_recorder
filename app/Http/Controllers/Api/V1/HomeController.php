@@ -309,9 +309,9 @@ class HomeController extends Controller
 
         $standardCharacters = Character::where('standard', '=', 1)->get()->toArray();
         $stdUserCharacters = Character::where('standard', '=', 0)->whereRaw('username NOT LIKE CONCAT("%", owner_name)')->get()->toArray();
-        foreach ($stdUserCharacters as $key=>$value) {
-            $stdUserCharacters[$key]['standard'] = 1;
-        }
+//        foreach ($stdUserCharacters as $key=>$value) {
+//            $stdUserCharacters[$key]['standard'] = 1;
+//        }
         $userCharacters = Character::where('standard', '=', 0)
             ->whereRaw('username LIKE CONCAT("%", owner_name)')
             ->get();
