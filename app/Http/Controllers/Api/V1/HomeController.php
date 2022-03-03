@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Auth;
 use App\StandardCharacter;
+use App\DefaultCharacter;
 use App\Character;
 use App\UserTag;
 use App\User;
@@ -308,31 +309,34 @@ class HomeController extends Controller
 //        $standardCharacters = $standardCharacters->toArray();
 
         $standardCharacters = Character::where('standard', '=', 1)->get()->toArray();
-        $stdUserCharacters = Character::where('standard', '=', 0)->whereRaw('username NOT LIKE CONCAT("%", owner_name)')->get()->toArray();
-        foreach ($stdUserCharacters as $key=>$value) {
-            $stdUserCharacters[$key]['standard'] = 1;
-        }
+//        $stdUserCharacters = Character::where('standard', '=', 0)->whereRaw('username NOT LIKE CONCAT("%", owner_name)')->get()->toArray();
+//        foreach ($stdUserCharacters as $key=>$value) {
+//            $stdUserCharacters[$key]['standard'] = 1;
+//        }
+
+        $dfCharacters = DefaultCharacter::all();
         $userCharacters = Character::where('standard', '=', 0)
             ->whereRaw('username LIKE CONCAT("%", owner_name)')
             ->get();
 //        $userUsages = DB::table('characters as B')->join('characters as A', 'A.name', '=', 'B.name')->where('A.standard','=', 0)->where('A.username','=','B.username')->whereRaw('A.username like concat("%", A.owner_name)')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
-        $userUsages = DB::select(DB::raw('SELECT A.id AS id, SUM(B.usage_count) AS usage_count
-                                    FROM characters AS A
-                                    INNER JOIN characters AS B ON A.name = B.name
-                                    WHERE A.username = B.username AND A.standard = 0 AND A.username LIKE CONCAT("%", A.owner_name)
-                                    GROUP BY A.id'));
+        $userUsages = DB::select(DB::raw('SELECT A.name AS name, SUM(B.usage_count) AS usage_count
+                                    FROM default_characters AS A
+                                    INNER JOIN characters AS B ON A.name COLLATE utf8mb4_general_ci = B.name
+                                    WHERE A.username = B.username
+                                    GROUP BY A.name'));
 //        $userUsages = DB::table('characters as A')->join('characters as B', 'A.name', '=', 'B.name')->select('A.id as id',DB::raw('sum(B.usage_count) as usage_count'))->groupBy('A.id')->get();
         foreach ($userUsages as $uu) {
-            foreach ($userCharacters as $uc) {
-                if ($uc->id == $uu->id) {
+            foreach ($dfCharacters as $uc) {
+                if ($uc->name == $uu->name) {
                     $uc->usage_count = $uu->usage_count;
                     break;
                 }
             }
         }
         $userCharacters = $userCharacters->toArray();
-        $standardCharacters = array_merge($standardCharacters, $stdUserCharacters);
-        $defaultCharacters = array_merge($standardCharacters, $userCharacters);
+        $dfCharacters = $dfCharacters->toArray();
+//        $standardCharacters = array_merge($standardCharacters, $stdUserCharacters);
+        $defaultCharacters = array_merge($standardCharacters, $dfCharacters);
 
         return $defaultCharacters;
     }
@@ -513,6 +517,10 @@ class HomeController extends Controller
     {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
+        $character = Character::where('id', '=', $characterId)->first();
+        if (Character::where('name', '=', $character->name)->count() < 2) {
+            DefaultCharacter::where('name', '=', $character->name)->delete();
+        }
         if (Character::where('standard_tag', '=', Character::where('id', '=', $characterId)->first()->standard_tag)
                 ->where('owner_name', '=', $username)
                 ->count() < 2) {
@@ -522,7 +530,7 @@ class HomeController extends Controller
         }
 
 
-        $character = Character::where('id', '=', $characterId)->delete();
+        Character::where('id', '=', $characterId)->delete();
         if (Value::where('character_id', '=', $characterId)->first()) {
             Value::where('character_id', '=', $characterId)->delete();
         }
@@ -735,6 +743,30 @@ class HomeController extends Controller
 
         $character->save();
 
+        if (DefaultCharacter::where('name', '=', $request->input('name'))->count() == 0) {
+            $defaultCharacter = new DefaultCharacter([
+                'name' => $request->input('name'),
+                'IRI' => $request->input('IRI'),
+                'parent_term' => $request->input('parent_term'),
+                'method_from' => $request->input('method_from'),
+                'method_to' => $request->input('method_to'),
+                'method_include' => $request->input('method_include'),
+                'method_exclude' => $request->input('method_exclude'),
+                'method_where' => $request->input('method_where'),
+                'method_as' => $request->input('method_as'),
+                'unit' => $request->input('unit'),
+                'standard' => $request->input('standard'),
+                'creator' => $request->input('creator'),
+                'username' => $request->input('username'),
+                'owner_name' => $username,
+                'usage_count' => 0,
+                'show_flag' => $request->input('show_flag'),
+                'standard_tag' => $request->input('standard_tag'),
+                'summary' => $request->input('summary'),
+            ]);
+
+            $defaultCharacter->save();
+        }
         $character->order = $character->id;
         $character->save();
 
