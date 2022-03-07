@@ -349,15 +349,16 @@
                              :key="cv.id">
 <!--                           {{colorValueText(cv)}} -->
                           <span v-if="cv.colored">
-                            <span v-if="cv.colored.includes('(') && cv.colored.includes(')')" :set="tempColor = cv.colored.split('(')[1].substring(0, cv.colored.split('(')[1].length - 1).split(', ')">
-                            <div v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-block'}"/>
+                            <span v-if="cv.colored.includes('(') && cv.colored.includes(')')"
+                                  :set="tempColor = cv.colored.split('(')[1].substring(0, cv.colored.split('(')[1].length - 1).split(', ')">
+                            <div
+                              v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-block'}"/>
                           </span>
                           </span>
 
                           <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{ cv.negation }} </span>
                           <span style="color:#636b6f;"
                                 v-if="cv.pre_constraint && cv.pre_constraint != ''">{{ cv.pre_constraint }} </span>
-                          <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{ cv.negation }} </span>
                           <span style="color:#636b6f;" v-if="cv.certainty_constraint && cv.certainty_constraint != ''">{{ cv.certainty_constraint }} </span>
                           <span style="color:#636b6f;"
                                 v-if="cv.degree_constraint && cv.degree_constraint != ''">{{ cv.degree_constraint }} </span>
@@ -432,6 +433,7 @@
                                                             </span>
                                                         </a>
                                                     </span>
+                          <span style="color:#636b6f;" v-if="cv.post_constraint && cv.post_constraint != ''">{{ cv.post_constraint }} </span>
                           <a class="btn btn-add display-block" style="padding: 0px"
                              v-on:click="confirmRemoveEachColor(cv)">
                                                         <span class="glyphicon glyphicon-remove">
@@ -1285,7 +1287,7 @@
                             <div slot-scope="{ node }" class="node-container">
                               <div v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}"
                                    class="node-text"
-                                   v-tooltip="deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase()) ? 'Deprecated Reason: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['deprecated reason'] + ' ' + (deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] ? 'Replacement Term: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] : '') : node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
+                                   v-tooltip="deprecatedTerms.find(value => value['deprecate term'] === ( node.text ? node.text.toLowerCase() : 'No Definition')) ? 'Deprecated Reason: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['deprecated reason'] + ' ' + (deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] ? 'Replacement Term: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] : '') : node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)"></span>
@@ -1611,7 +1613,7 @@
                               <div
                                 v-bind:style="{ textDecoration: node.data.details ? node.data.details[0].deprecated ? 'line-through' : 'normal' : 'normal'}"
                                 class="node-text"
-                                v-tooltip="deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase()) ? 'Deprecated Reason: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['deprecated reason'] + ' ' + (deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] ? 'Replacement Term: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] : '') : node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
+                                v-tooltip="deprecatedTerms.find(value => value['deprecate term'] === ( node.text ? node.text.toLowerCase() : 'No Definition')) ? 'Deprecated Reason: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['deprecated reason'] + ' ' + (deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] ? 'Replacement Term: ' + deprecatedTerms.find(value => value['deprecate term'] === node.text.toLowerCase())['replacement term'] : '') : node.data.details ? node.data.details[0].definition ? node.data.details[0].definition : 'No Definition' : 'No Definition'">
                                 {{ node.text }}
                                 <span v-if="node.data.images && node.data.images.length != 0"
                                       class="glyphicon glyphicon-picture" @click="showViewer(node, $event)">
@@ -2617,7 +2619,7 @@ export default {
         sort: true,
         filter: {
           matcher(query, node) {
-            return node.data.text.startsWith(query);
+            return node.data.text ? node.data.text.startsWith(query) : '';
           },
           showChildren: true
         }
@@ -5833,8 +5835,8 @@ export default {
         var filteredCharacters = app.userCharacters.filter(function (eachCharacter) {
           return eachCharacter.standard_tag == app.userTags[i].tag_name;
         });
-        let presenceIndex = filteredCharacters.findIndex(each => each.name.startsWith('Presence'))
-        if (presenceIndex) {
+        let presenceIndex = filteredCharacters.findIndex(each => each.name.startsWith('Presence'));
+        if (presenceIndex > 0) {
           filteredCharacters = app.moveArrayItemToNewIndex(filteredCharacters, presenceIndex, 0);
         }
         for (var j = 0; j < filteredCharacters.length; j++) {
@@ -6024,9 +6026,11 @@ export default {
                     }
                     if (colorValues[l].colored != null && colorValues[l].colored != '') {
                       if (colorValues[l].colored.endsWith(')')) {
-                        colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                        jsonColorValue.value += colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                        // colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                      } else {
+                        jsonColorValue.value += colorValues[l].colored;
                       }
-                      jsonColorValue.value += colorValues[l].colored;
                     }
                     if (colorValues[l].multi_colored != null && colorValues[l].multi_colored != '') {
                       if (colorValues[l].multi_colored.endsWith(')')) {
@@ -7198,7 +7202,7 @@ export default {
           postValue['certainty_constraint'] = app.currentNonColorValue.certainty_constraint;
           postValue['degree_constraint'] = app.currentNonColorValue.degree_constraint;
           postValue['post_constraint'] = app.currentNonColorValue.post_constraint;
-          postValue['main_value'] = app.currentNonColorValue.main_value;
+          postValue['main_value'] = app.currentNonColorValue.main_value.split(' -')[0];
           var requestBody = {};
           if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '' && !app.currentNonColorDeprecated && !app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value)) {
             console.log('a1');
@@ -7219,7 +7223,7 @@ export default {
                 }
               }
 
-              postValue['main_value'] = app.currentNonColorValue['main_value'];
+              // postValue['main_value'] = app.currentNonColorValue['main_value'].split(' -')[0];
               var date = new Date();
               requestBody = {
                 "user": app.sharedFlag ? '' : app.user.name,
@@ -7247,7 +7251,7 @@ export default {
                     });
                 });
               var subclassIRI = '';
-              await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'].toLowerCase()).then(resp => {
+              await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + postValue['main_value'].toLowerCase()).then(resp => {
                 if (resp.data.entries.length > 0) {
                   let methodEntry = resp.data.entries.filter(function (each) {
                     return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#id") == true;
@@ -7274,7 +7278,7 @@ export default {
             } else if (app.searchNonColorFlag == 1 && postFlag == true) {
               console.log('a3');
               console.log('a5');
-              var synonym = app.nonColorSynonyms.find(eachSynonym => eachSynonym.term == app.currentNonColorValue['main_value']);
+              var synonym = app.nonColorSynonyms.find(eachSynonym => eachSynonym.term == postValue['main_value']);
               var date = new Date();
               requestBody = {
                 "user": app.sharedFlag ? '' : app.user.name,
@@ -7308,7 +7312,7 @@ export default {
           if (app.currentNonColorDeprecated) {
             let parentTerm = "";
             if (!app.currentNonColorDeprecatedParent || app.currentNonColorDeprecatedParent == null) {
-              await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'].toLowerCase()).then(resp => {
+              await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + postValue['main_value'].toLowerCase()).then(resp => {
                 if (resp.data.entries.length > 0) {
                   parentTerm = resp.data.entries[0].parentTerm;
                 }
@@ -7365,7 +7369,7 @@ export default {
           if (postFlag == true) {
             axios.post('/chrecorder/public/api/v1/save-non-color-value', postValue)
               .then(async function (resp) {
-                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorValue['main_value'])
+                await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + postValue['main_value'])
                   .then(function (resultsp) {
                     if (resultsp.data.entries.length > 0) {
                       let methodEntry = resultsp.data.entries.filter(function (each) {
@@ -7809,7 +7813,17 @@ export default {
         app.currentColorDeprecatedDefinition[app.colorFlags[index]] = null;
         app.currentColorDeprecatedParent[app.colorFlags[index]] = null;
         app.colorSynonyms[app.colorFlags[index]] = undefined;
-        app.currentColorValue.confirmedFlag[app.colorFlags[index]] = false;
+        if (app.colorFlags[index] === 'colored') {
+          console.log('****************', app.currentColorValue[app.colorFlags[index]]);
+          // if (app.colorFlags[index] === 'colored' && !app.currentColorValue[app.colorFlags[index]].includes(' (')) {
+          //   app.currentColorValue.confirmedFlag[app.colorFlags[index]] = false;
+          // }
+          // else {
+          //   app.currentColorValue.confirmedFlag[app.colorFlags[index]] = false;
+          // }
+        } else {
+          app.currentColorValue.confirmedFlag[app.colorFlags[index]] = false;
+        }
       }
 
       if (app.checkHaveColorValueSet(flag)) {
@@ -7921,7 +7935,7 @@ export default {
       var app = this;
       var methodEntry = null;
       if (!tData) return;
-      // if (!tData.data) return;
+      if (!tData.data) return;
       tData.data["images"] = [];
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
         .then(function (resp) {
@@ -8001,6 +8015,7 @@ export default {
               app.$store.state.colorTreeData = tempNonColorData;
               console.log('tempNonColorData', tempNonColorData);
               app.removeDeprecatedTerms(tempNonColorData, resultData);
+              console.log('resultData', resultData);
               app.textureTreeData = resultData;
               app.getImageFromColorTreeData(app.textureTreeData);
 
@@ -8217,7 +8232,7 @@ export default {
                     app.defaultNonColorValue = app.currentNonColorDeprecated['replacement term'];
                   }
                 } else {
-                  app.defaultNonColorValue = app.defaultNonColorValue + ' (' + searchText + ')';
+                  app.defaultNonColorValue = app.defaultNonColorValue + ' -user defined';
                 }
               }
               if (app.nonColorSynonyms[i].resultAnnotations.find(eachProperty => eachProperty.property.endsWith('IAO_0000115'))) {
@@ -8231,10 +8246,12 @@ export default {
             }
           }
           console.log('app.searchNonColorFlag', app.searchNonColorFlag);
+          // app.saveNonColorValue();
         });
     },
     onTreeNodeSelected(node) {
       var app = this;
+      console.log('node', node);
       if (app.deprecatedTerms.find(value => value['deprecate term'] === node.data.text.toLowerCase())) {
         return;
       }

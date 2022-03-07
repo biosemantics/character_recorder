@@ -411,22 +411,28 @@ export default {
     },
     onDisputeTerm() {
       var app = this;
-      var postValue = {
-        'name': app.user.name,
-        'email': app.user.email,
-        'subject': 'Dispute ' + app.disputedTerm + ' in Carex Ontology',
-        'message': app.disputeMessage,
-        'label': app.disputedTerm,
-        'definition': 'not provided',
-        'IRI': app.deprecatedIRI,
-        'deprecated_reason': app.deprecatedReason,
-        'new_definition': app.disputeNewDefinition,
-        'example_sentence': app.disputeExampleSentence,
-        'taxa': app.applicableTaxa
-      };
-      console.log(postValue);
-      axios.post('/chrecorder/public/send-mail', postValue);
-      app.messageDialogFlag = false;
+      axios.get("http://shark.sbs.arizona.edu:8080/carex/search?term=" + app.disputedTerm)
+        .then(function (resp) {
+          let definition = resp.data.entries.filter(function (each) {
+            return each.resultAnnotations.some(e => e.property === "http://purl.obolibrary.org/obo/IAO_0000115") == true;
+          })[0];
+          var postValue = {
+            'name': app.user.name,
+            'email': app.user.email,
+            'subject': 'Dispute ' + app.disputedTerm + ' in Carex Ontology',
+            'message': app.disputeMessage,
+            'label': app.disputedTerm,
+            'definition': definition ? definition.resultAnnotations.find(each => each.property === "http://purl.obolibrary.org/obo/IAO_0000115").value : 'not provided',
+            'IRI': app.deprecatedIRI,
+            'deprecated_reason': app.deprecatedReason,
+            'new_definition': app.disputeNewDefinition,
+            'example_sentence': app.disputeExampleSentence,
+            'taxa': app.applicableTaxa
+          };
+          console.log(postValue);
+          axios.post('/chrecorder/public/send-mail', postValue);
+          app.messageDialogFlag = false;
+        });
 
     }
   },
