@@ -1085,8 +1085,10 @@
                                      style="padding-top: 3px; padding-bottom: 3px;">Use this</a>
                               </span>
                               <b>
-                                <span v-if="eachDetails.colored.includes('(') && eachDetails.colored.includes(')')" :set="tempColor = eachDetails.colored.split('(')[1].substring(0, eachDetails.colored.split('(')[1].length - 1).split(', ')">
+                                <span v-if="eachDetails.colored">
+                                  <span v-if="eachDetails.colored.includes('(') && eachDetails.colored.includes(')')" :set="tempColor = eachDetails.colored.split('(')[1].substring(0, eachDetails.colored.split('(')[1].length - 1).split(', ')">
                                   <div v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-flex'}"/>
+                                </span>
                                 </span>
                                 <span>
                                     {{ eachDetails.negation }}
@@ -6599,6 +6601,12 @@ export default {
         return;
       }
 
+      console.log('app.currentColorValue[colored]', app.currentColorValue['colored']);
+
+      if (app.currentColorValue['colored'] === undefined || app.currentColorValue['colored'] === '') {
+        return;
+      }
+
       app.currentTermForBracket = '';
       if (app.currentColorValue['brightness'] != undefined && (app.currentColorValue['brightness'].indexOf('(') > -1 || app.currentColorValue['brightness'].indexOf(')') > -1)) {
         app.currentTermForBracket = app.currentColorValue['brightness'];
@@ -6691,7 +6699,7 @@ export default {
         }
         await app.searchColorSelection(app.currentColorValue, 'reflectance');
       }
-      if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored'] && (!app.searchTreeData(app.originalColorTreeData, app.currentColorValue['colored'])) || app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['colored'].toLowerCase())) {
+      if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored'] && (!app.searchTreeData(app.originalColorTreeData, app.currentColorValue['colored'])) || app.deprecatedTerms.find(value => value['deprecate term'] == (app.currentColorValue['colored'] ? app.currentColorValue['colored'].toLowerCase() : ''))) {
       // if (app.currentColorValue['colored'] && app.currentColorValue.confirmedFlag['colored'] == false && !app.colorSynonyms['colored']) {
         comparedFlag = false;
         app.saveColorButtonFlag = false;
