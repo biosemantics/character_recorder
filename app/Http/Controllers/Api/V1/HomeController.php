@@ -3502,6 +3502,7 @@ class HomeController extends Controller
         Matrix::whereraw('1')->delete();
         UserTag::whereraw('1')->delete();
         User::where('password', '')->delete();
+        User::where('id', '=', Auth::id())->update(['last_matrix' => '']);
     }
 
     public function updateStandardCharacter()
