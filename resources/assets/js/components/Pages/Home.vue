@@ -5469,7 +5469,7 @@ export default {
           app.userCharacters[i].tooltip += 'Where: ' + app.userCharacters[i].method_where;
         }
         var definitionKey = app.userCharacters[i].name.slice(0, app.userCharacters[i].name.indexOf(' '));
-        var definitionVar = app.definitionData.find(eachDefinition => eachDefinition.IRI == ('http://biosemantics.arizona.edu/ontologies/carex#' + (definitionKey == 'Color' ? 'coloration' : definitionKey.toLowerCase())));
+        var definitionVar = app.definitionData.find(eachDefinition => eachDefinition.IRI == ('http://biosemantics.arizona.edu/ontologies/carex#' + (definitionKey == 'Color' ? 'color' : definitionKey.toLowerCase())));
         if (definitionVar) {
           if (app.userCharacters[i].tooltip != '') {
             app.userCharacters[i].tooltip += '<br/>';
@@ -9144,7 +9144,7 @@ export default {
 
     axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=quality')
       .then(function (resp) {
-        var colorData = resp.data.children.find(ch => ch.text == "coloration").children[0].children;
+        var colorData = resp.data.children.find(ch => ch.text == "color").children[0].children;
         for (var i = 0; i < colorData.length; i++) {
           app.colorationData[colorData[i]['text']] = [];
           app.colorationData[colorData[i]['text']].push(colorData[i]['text']);
@@ -9157,7 +9157,7 @@ export default {
 
         var qualityData = resp.data.children;
         for (var i = 0; i < qualityData.length; i++) {
-          if (qualityData[i].text == 'coloration') {
+          if (qualityData[i].text == 'color') {
             continue;
           }
           app.nonColorationData[qualityData[i]['text']] = {};
