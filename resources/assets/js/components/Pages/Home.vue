@@ -6008,6 +6008,12 @@ export default {
                     if (colorValues[l].pre_constraint != null && colorValues[l].pre_constraint != '') {
                       jsonColorValue.value += colorValues[l].pre_constraint + ' ';
                     }
+                    if (colorValues[l].certainty_constraint != null && colorValues[l].certainty_constraint != '') {
+                      jsonColorValue.value += colorValues[l].certainty_constraint + ' ';
+                    }
+                    if (colorValues[l].degree_constraint != null && colorValues[l].degree_constraint != '') {
+                      jsonColorValue.value += colorValues[l].degree_constraint + ' ';
+                    }
                     if (colorValues[l].brightness != null && colorValues[l].brightness != '') {
                       if (colorValues[l].brightness.endsWith(')')) {
                         colorValues[l].brightness = colorValues[l].brightness.slice(0, colorValues[l].brightness.indexOf('('));
@@ -6056,6 +6062,12 @@ export default {
                     }
                     if (colorValues[l].pre_constraint != null && colorValues[l].pre_constraint != '') {
                       jsonColorValue.value += colorValues[l].pre_constraint + ' ';
+                    }
+                    if (colorValues[l].certainty_constraint != null && colorValues[l].certainty_constraint != '') {
+                      jsonColorValue.value += colorValues[l].certainty_constraint + ' ';
+                    }
+                    if (colorValues[l].degree_constraint != null && colorValues[l].degree_constraint != '') {
+                      jsonColorValue.value += colorValues[l].degree_constraint + ' ';
                     }
                     if (colorValues[l].brightness != null && colorValues[l].brightness != '') {
                       if (colorValues[l].brightness.endsWith(')')) {
@@ -6269,6 +6281,9 @@ export default {
                     if (nonColorValues[l].pre_constraint != null && nonColorValues[l].pre_constraint != '') {
                       jsonNonColorValue.value += nonColorValues[l].pre_constraint + ' ';
                     }
+                    if (nonColorValues[l].certainty_constraint != null && nonColorValues[l].certainty_constraint != '') {
+                      jsonNonColorValue.value += nonColorValues[l].certainty_constraint + ' ';
+                    }
                     if (nonColorValues[l].degree_constraint != null && nonColorValues[l].degree_constraint != '') {
                       jsonNonColorValue.value += nonColorValues[l].degree_constraint + ' ';
                     }
@@ -6292,6 +6307,9 @@ export default {
                     }
                     if (nonColorValues[l].pre_constraint != null && nonColorValues[l].pre_constraint != '') {
                       jsonNonColorValue.value += nonColorValues[l].pre_constraint + ' ';
+                    }
+                    if (nonColorValues[l].certainty_constraint != null && nonColorValues[l].certainty_constraint != '') {
+                      jsonNonColorValue.value += nonColorValues[l].certainty_constraint + ' ';
                     }
                     if (nonColorValues[l].degree_constraint != null && nonColorValues[l].degree_constraint != '') {
                       jsonNonColorValue.value += nonColorValues[l].degree_constraint + ' ';
@@ -8996,12 +9014,13 @@ export default {
       var app = this;
       if (data.data.details) {
         for (var i = 0; i < data.data.details.length; i++) {
-          if (data.data.details[i].IRI && data.data.details[i].definition) {
-            app.definitionData.push({
-              'IRI': data.data.details[i].IRI,
-              'definition': data.data.details[i].definition
-            });
-          }
+          app.definitionData.push(data.data.details[i]);
+          // if (data.data.details[i].IRI && data.data.details[i].definition) {
+          //   app.definitionData.push({
+          //     'IRI': data.data.details[i].IRI,
+          //     'definition': data.data.details[i].definition
+          //   });
+          // }
         }
       }
       if (data.children) {
