@@ -9079,9 +9079,12 @@ export default {
       .then(function (resp) {
         console.log('toreviewed', resp.data);
         let data = resp.data.children;
-        for (let i = 0; i < data.length; i++) {
-          app.toReviewedTerms.push(data[i].text);
+        if (data) {
+          for (let i = 0; i < data.length; i++) {
+            app.toReviewedTerms.push(data[i].text);
+          }
         }
+
       });
     await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=colored')
     .then(function(resp) {
