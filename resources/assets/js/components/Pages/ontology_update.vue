@@ -135,18 +135,21 @@
                 <div class="modal-body">
                   <div style="margin-top: 0px;">
                     <div v-if="deprecatedReason != ''" style="border-bottom: gray; padding: 2px; font-size: 11pt">
-                      <span style="width: 20%;">Deprecated Reason:</span>
+                      <span style="width: 20%;">Why was  <font
+                    style="color: orange; font-style: italic">{{ disputedTerm }}</font>deprecated:</span>
                       <b><span>{{ deprecatedReason }}</span></b>
                     </div>
                     <div v-if="currentTermType == 1">
                       <div v-if="replacementTerm != ''" style="border-bottom: gray; padding: 2px; font-size: 11pt">
-                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
-                        <span style="width: 20%;">Replacement Term:</span>
+                       <!-- <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;"> -->
+                        <span style="width: 20%;">Replacement term:</span>
                         <b><span>{{ replacementTerm }}</span></b>
                       </div>
                       <div v-else style="border-bottom: gray; padding: 2px; font-size: 11pt">
-                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
+                       
                         <span style="width: 20%;">No replacement term was provided.</span>
+                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;"> 
+                        <br/>
                       </div>
                     </div>
                     <div v-if="movedNote != ''" style="border-bottom: gray; padding: 2px; font-size: 11pt">
