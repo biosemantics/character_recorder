@@ -3,8 +3,8 @@
     <center>
       <div>
         <h3>
-          Ontology Update:
-          {{ currentTermType == 1 ? 'Deprecated terms' : (currentTermType == 2 ? 'Terms with new superclass' : 'Terms with new definition') }}
+          Ontology Updates:
+          {{ currentTermType == 1 ? 'Deprecated Terms' : (currentTermType == 2 ? 'Terms with New Superclass' : 'Terms with New Definition') }}
         </h3>
       </div>
       <div>
@@ -17,9 +17,9 @@
             <a v-on:click="handleDeprecatedterm()" class="btn btn-primary" :class="{active: currentTermType == 1}"
                style="width: 100%; margin: 10px">Deprecated Terms</a><br>
             <a v-on:click="handleNewSuperclass()" class="btn btn-primary" :class="{active: currentTermType == 2}"
-               style="width: 100%; margin: 10px">Terms with new superclass</a><br>
+               style="width: 100%; margin: 10px">Terms with New Superclass</a><br>
             <a v-on:click="handleNewDefinition()" class="btn btn-primary" :class="{active: currentTermType == 3}"
-               style="width: 100%; margin: 10px">Terms with new definition</a><br>
+               style="width: 100%; margin: 10px">Terms with New Definition</a><br>
           </div>
           <div class="col-md-8">
             <div v-if="currentTermType == 1" style="margin-left: 15px; width: 100%;">
