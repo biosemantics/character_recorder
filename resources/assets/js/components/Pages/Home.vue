@@ -1142,7 +1142,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit Value</b><span> ("*" indicates a required field) </span>
+                          <b style="text-decoration: underline">Create/Edit Value</b><span> (<span style="color: red">"*"</span> indicates a required field) </span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -1521,7 +1521,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit Value</b> <span>("*" indicates a required field)</span>
+                          <b style="text-decoration: underline">Create/Edit Value</b> <span>(<span style="color: red">"*"</span> indicates a required field)</span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
