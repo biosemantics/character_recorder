@@ -891,7 +891,7 @@
                             like
                             to save for <i>{{ character.name }}</i>?
                           </div>
-                          <br>                app.matrixSaved = false;
+                          <br>               
 
                           <div v-if="character.method_from">
                             <b>From:</b> {{ character.method_from }}
