@@ -1336,10 +1336,10 @@
                                   }}
                                 </div>
                               </div>
-                              <b><span>The term {{ currentColorDeprecated[flag]['deprecate term'] }} you just entered has been deprecated because "{{
+                              <b><span>The term "{{ currentColorDeprecated[flag]['deprecate term'] }}" you entered has been deprecated because "{{
                                   currentColorDeprecated[flag]['deprecated reason']
                                 }}"</span></b><br/>
-                              <i>If you want to dispute the deprecation, <a v-on:click="handleDisputeTerm(currentColorDeprecated[flag])">Dispute</a>. <b>Dispute</b> will be reviewed by domain experts</i>
+                              <i>If you want to dispute the deprecation, click on <a v-on:click="handleDisputeTerm(currentColorDeprecated[flag])">Dispute</a>. Disputes will be reviewed by domain experts</i>
 <!--                              <div>-->
 <!--                                <input type="radio" id="user-defined-color"-->
 <!--                                       v-bind:value="deprecateColorValue[flag]"-->
