@@ -2069,7 +2069,7 @@
                             <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
                             <span style="width: 20%;">Replacement Term:</span>
                             <b><span>{{ currentResolveItem['replacement term'] }}</span></b>
-                            <span>If you feel '{{ currentResolveItem['replacement term'] }}' should not be deprecated, you can <a v-on:click="handleDisputeTerm()">dispute the deprecation</a></span>
+                            <span>If you feel {{ currentResolveItem['deprecate term'] }}' should not be deprecated, you can <a v-on:click="handleDisputeTerm()">dispute the deprecation</a></span>
                           </div>
                           <div v-else>
                             <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
