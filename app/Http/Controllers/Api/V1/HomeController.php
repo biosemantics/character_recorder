@@ -1303,7 +1303,14 @@ class HomeController extends Controller
                                 if ($eachValue['header_id'] == 1) {
                                     $htmlString .= '<td>' . $eachValue['value'] . '</td>';
                                     $htmlString .= '<td>' . $eachUserCharacter['unit'] . '</td>';
-                                    if (substr($eachValue['value'], 0, 6) == 'Length') {
+                                    if (substr($eachValue['value'], 0, 6) == 'Length' ||
+                                        substr($eachValue['value'], 0, 5) == 'Width' ||
+                                        substr($eachValue['value'], 0, 5) == 'Depth' ||
+                                        substr($eachValue['value'], 0, 8) == 'Diameter' ||
+                                        substr($eachValue['value'], 0, 5) == 'Count' ||
+                                        substr($eachValue['value'], 0, 8) == 'Distance' ||
+                                        substr($eachValue['value'], 0, 6) == 'Number' ||
+                                        substr($eachValue['value'], 0, 5) == 'Ratio') {
                                         $htmlString .= '<td>' . $this->calcSummary($eachRow) . '</td>';
                                     } else {
                                         $htmlString .= '<td></td>';
@@ -1357,7 +1364,7 @@ class HomeController extends Controller
 
         return array(
             'is_success' => 1,
-            'doc_url' => '/chrecorder/public/' . $fileName . '.zip',
+            'doc_url' => '/' . $fileName . '.zip',
         );
     }
 
@@ -1647,23 +1654,13 @@ class HomeController extends Controller
         $existDetails = [];
 
         foreach ($characterList as $eachCharacter) {
-            $tempFlag = false;
-            foreach ($users as $eachUser) {
-                if (substr($eachUser->email, 0, strlen($eachCharacter['owner_name']) + 1) == $eachCharacter['owner_name'] . '@') {
-                    $tempFlag = true;
-                }
-            }
-            if ($tempFlag) {
-                $values = Value::where('character_id', '=', $eachCharacter['id'])->get();
-                foreach ($values as $eachValue) {
-                    $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
-                    foreach ($existColorDetails as $eachColorDetails) {
-                        $eachColorDetails['usage_count'] = 0;
-                        $eachColorDetails['usage_count'] = Character::find(Value::find($eachColorDetails['value_id'])->character_id)->usage_count;
-                        $eachColorDetails['username'] = Character::find(Value::find($eachColorDetails['value_id'])->character_id)->owner_name;
+            $values = Value::where('character_id', '=', $eachCharacter['id'])->get();
+            foreach ($values as $eachValue) {
+                $existColorDetails = ColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
+                foreach ($existColorDetails as $eachColorDetails) {
+                    $eachColorDetails['username'] = $eachCharacter['owner_name'];
 
-                        array_push($existDetails, $eachColorDetails);
-                    }
+                    array_push($existDetails, $eachColorDetails);
                 }
             }
         }
@@ -1719,20 +1716,23 @@ class HomeController extends Controller
         }
 
         $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
-        $characterValues = Value::where('character_id', '=', $character->id)->get()->toArray();
+        $character->usage_count = 1;
+        $character->save();
 
-        $tempCount = 0;
+//        $characterValues = Value::where('character_id', '=', $character->id)->get()->toArray();
+//
+//        $tempCount = 0;
 
-        foreach ($characterValues as $eachValue) {
-            if (ColorDetails::where('value_id', '=', $eachValue['id'])->count() == 1) {
-                $tempCount++;
-            }
-        }
+//        foreach ($characterValues as $eachValue) {
+//            if (ColorDetails::where('value_id', '=', $eachValue['id'])->count() == 1) {
+//                $tempCount++;
+//            }
+//        }
 
-        if ($tempCount == 1) {
-            $character->usage_count = $character->usage_count + 1;
-            $character->save();
-        }
+//        if ($tempCount == 1) {
+//            $character->usage_count = $character->usage_count + 1;
+//            $character->save();
+//        }
 
         $returnColorDetails = ColorDetails::where('value_id', '=', $request->input('value_id'))->get();
 //        $characters = Character::where('name', '=', $characterName)->get();
@@ -1820,20 +1820,12 @@ class HomeController extends Controller
         $existDetails = [];
 
         foreach ($characterList as $eachCharacter) {
-            $tempFlag = false;
-            foreach ($users as $eachUser) {
-                if (substr($eachUser->email, 0, strlen($eachCharacter['owner_name']) + 1) == $eachCharacter['owner_name'] . '@') {
-                    $tempFlag = true;
-                }
-            }
-            if ($tempFlag) {
-                $values = Value::where('character_id', '=', $eachCharacter['id'])->get();
-                foreach ($values as $eachValue) {
-                    $existNonColorDetails = NonColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
-                    foreach ($existNonColorDetails as $eachNonColorDetails) {
-                        $eachNonColorDetails['username'] = $eachCharacter['owner_name'];
-                        array_push($existDetails, $eachNonColorDetails);
-                    }
+            $values = Value::where('character_id', '=', $eachCharacter['id'])->get();
+            foreach ($values as $eachValue) {
+                $existNonColorDetails = NonColorDetails::where('value_id', '=', $eachValue->id)->get()->toArray();
+                foreach ($existNonColorDetails as $eachNonColorDetails) {
+                    $eachNonColorDetails['username'] = $eachCharacter['owner_name'];
+                    array_push($existDetails, $eachNonColorDetails);
                 }
             }
         }
@@ -1885,20 +1877,23 @@ class HomeController extends Controller
         }
 
         $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
-        $characterValues = Value::where('character_id', '=', $character->id)->get()->toArray();
+        $character->usage_count = 1;
+        $character->save();
 
-        $tempCount = 0;
+//        $characterValues = Value::where('character_id', '=', $character->id)->get()->toArray();
+//
+//        $tempCount = 0;
 
-        foreach ($characterValues as $eachValue) {
-            if (NonColorDetails::where('value_id', '=', $eachValue['id'])->first()) {
-                $tempCount++;
-            }
-        }
-
-        if ($tempCount == 1) {
-            $character->usage_count = $character->usage_count + 1;
-            $character->save();
-        }
+//        foreach ($characterValues as $eachValue) {
+//            if (NonColorDetails::where('value_id', '=', $eachValue['id'])->first()) {
+//                $tempCount++;
+//            }
+//        }
+//
+//        if ($tempCount == 1) {
+//            $character->usage_count = $character->usage_count + 1;
+//            $character->save();
+//        }
 
 //        $characters = Character::where('name', '=', $characterName)->get();
 
@@ -2018,6 +2013,23 @@ class HomeController extends Controller
     {
         $valueId = $request->input('value_id');
 
+        $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
+
+        $characterValues = Value::where('character_id', '=', $character->id)->get()->toArray();
+
+        $tempCount = 0;
+
+        foreach ($characterValues as $eachValue) {
+            if (ColorDetails::where('value_id', '=', $eachValue['id'])->count() > 0) {
+                $tempCount++;
+            }
+        }
+
+        if ($tempCount == 0) {
+            $character->usage_count = 0;
+            $character->save();
+        }
+
         ColorDetails::where('value_id', '=', $valueId)->delete();
 
         $returnValues = $this->getValuesByCharacter();
@@ -2042,11 +2054,11 @@ class HomeController extends Controller
         $eachColorDetails = ColorDetails::find($request->input('id'));
         if ($eachColorDetails) {
             $eachColorDetails->delete();
-            $characterValues = Value::where('id', '=', $request->input('value_id'))->get();
             $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
+            $characterValues = Value::where('character_id', '=', $character->id)->get();
             $tempCount = 0;
             foreach ($characterValues as $eachValue) {
-                if (ColorDetails::where('value_id', '=', $eachValue->id)->first()) {
+                if (ColorDetails::where('value_id', '=', $eachValue->id)->count() > 0) {
                     $tempCount++;
                 }
             }
@@ -2085,19 +2097,17 @@ class HomeController extends Controller
 
         if ($eachNonColorDetails) {
             $eachNonColorDetails->delete();
-            $characterValues = Value::where('id', '=', $request->input('value_id'))->get();
             $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
+            $characterValues = Value::where('character_id', '=', $character->id)->get();
             $tempCount = 0;
             foreach ($characterValues as $eachValue) {
-                if (NonColorDetails::where('value_id', '=', $eachValue->id)->first()) {
+                if (NonColorDetails::where('value_id', '=', $eachValue->id)->count() > 0) {
                     $tempCount++;
                 }
             }
             if ($tempCount == 0) {
-                if ($character->usage_count > 0) {
-                    $character->usage_count = $character->usage_count - 1;
-                    $character->save();
-                }
+                $character->usage_count = 0;
+                $character->save();
             }
         }
         $returnValues = $this->getValuesByCharacter();
@@ -2125,6 +2135,23 @@ class HomeController extends Controller
     public function removeNonColorValue(Request $request)
     {
         $valueId = $request->input('value_id');
+
+        $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
+
+        $characterValues = Value::where('character_id', '=', $character->id)->get()->toArray();
+
+        $tempCount = 0;
+
+        foreach ($characterValues as $eachValue) {
+            if (NonColorDetails::where('value_id', '=', $eachValue['id'])->count() > 0) {
+                $tempCount++;
+            }
+        }
+
+        if ($tempCount == 0) {
+            $character->usage_count = 0;
+            $character->save();
+        }
 
         NonColorDetails::where('value_id', '=', $valueId)->delete();
 
@@ -3495,6 +3522,8 @@ class HomeController extends Controller
 
     public function resetSystem(Request $request)
     {
+        $user = User::where('id', '=', Auth::id())->first();
+        $username = explode('@', $user['email'])[0];
         Character::whereraw('1')->delete();
         ColorDetails::whereraw('1')->delete();
         NonColorDetails::whereraw('1')->delete();
@@ -3503,6 +3532,7 @@ class HomeController extends Controller
         UserTag::whereraw('1')->delete();
         User::where('password', '')->delete();
         User::where('id', '=', Auth::id())->update(['last_matrix' => '']);
+        DefaultCharacter::whereRaw('1')->delete();
     }
 
     public function updateStandardCharacter()
@@ -3545,7 +3575,7 @@ class HomeController extends Controller
                     'created_at' => null,
                     'updated_at' => null,
                     'username' => null,
-                    'usage_count' => null,
+                    'usage_count' => 0,
                     'show_flag' => 1,
                 ];
                 foreach ($character['resultAnnotations'] as $property) {

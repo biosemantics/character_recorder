@@ -891,8 +891,7 @@
                             like
                             to save for <i>{{ character.name }}</i>?
                           </div>
-                          <br>                app.matrixSaved = false;
-
+                          <br>
                           <div v-if="character.method_from">
                             <b>From:</b> {{ character.method_from }}
                           </div>
@@ -1122,7 +1121,7 @@
                                 </span>
                               </b>
                               <span>
-                                  , usages = {{ eachDetails.usage_count }}
+                                  , usages = {{ eachDetails.count }}
                               </span>
                               <span>
                                   , creator = {{ eachDetails.creator }}
@@ -1392,16 +1391,38 @@
                                   {{ changeFlagToLabel(flag) }}). Please
                                   define the term, all input required:</label>
                                 <div>
-                                  Definition: <input
-                                  v-model="userColorDefinition[flag]"
-                                  class="color-definition-input">
-                                  Used for Taxon:
-                                  <input v-model="colorTaxon[flag]"
-                                         class="color-definition-input">
-                                  Sample Sentence:
-                                  <input
-                                    v-model="colorSampleText[flag]"
-                                    class="color-definition-input" placeholder=""><br/>
+                                  <div class="row">
+                                    <div class="col-md-2">
+                                      Definition:
+                                    </div>
+                                    <div class="col-md-10">
+                                      <input
+                                        v-model="userColorDefinition[flag]"
+                                        style="width: 100%"
+                                        class="color-definition-input">
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-2">
+                                      Sample Sentence:
+                                    </div>
+                                    <div class="col-md-10">
+                                      <input
+                                        v-model="colorSampleText[flag]"
+                                        style="width: 100%"
+                                        class="color-definition-input" placeholder="">
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-md-2">
+                                      Used for Taxon:
+                                    </div>
+                                    <div class="col-md-10">
+                                      <input v-model="colorTaxon[flag]"
+                                             class="color-definition-input">
+                                    </div>
+                                  </div>
+                                  <br/>
                                 </div>
                               </div>
                             </div>
@@ -1708,15 +1729,39 @@
                                   defaultNonColorValue
                                 }}'(please define the term, all input required):</label>
                               <div for="user-defined">
-                                Definition: <input
-                                v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
-                                class="non-color-input-definition">
-                                Taxon: <input
-                                v-model="nonColorTaxon[currentNonColorValue.detailFlag]"
-                                class="non-color-input-definition">
-                                Sample Sentence: <input
-                                v-model="nonColorSampleText[currentNonColorValue.detailFlag]"
-                                class="non-color-input-definition">
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    Definition:
+                                  </div>
+                                  <div class="col-md-10">
+                                    <input
+                                      v-model="userNonColorDefinition[currentNonColorValue.detailFlag]"
+                                      style="width: 100%"
+                                      class="non-color-input-definition">
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    Sample Sentence:
+                                  </div>
+                                  <div class="col-md-10">
+                                    <input
+                                      v-model="nonColorSampleText[currentNonColorValue.detailFlag]"
+                                      style="width: 100%"
+                                      class="non-color-input-definition">
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    Taxon:
+                                  </div>
+                                  <div class="col-md-10">
+                                    <input
+                                      v-model="nonColorTaxon[currentNonColorValue.detailFlag]"
+                                      class="non-color-input-definition">
+                                  </div>
+                                </div>
+                                <br/>
                               </div>
                             </div>
                           </div>
@@ -3297,6 +3342,7 @@ export default {
         }
       } else {
         if (app.checkHaveUnit(app.character.name) || app.character.summary) {
+          console.log('app.character', app.character);
           // Initializing the methodFieldData //
           app.methodFieldData.fromTerm = null;
           app.methodFieldData.fromId = null;
@@ -5795,7 +5841,8 @@ export default {
         || string.startsWith('Distance of')
         || string.startsWith('Count of')
         || string.startsWith('Number of')
-        && app.newCharacterFlag === false) {
+        || app.numericalFlag === true
+        && app.newCharacterFlag == false) {
         return true;
       } else if (character) {
         if (character.summary && !string.startsWith('Number of')) {
@@ -6033,12 +6080,12 @@ export default {
                       jsonColorValue.value += colorValues[l].saturation + ' ';
                     }
                     if (colorValues[l].colored != null && colorValues[l].colored != '') {
-                      if (colorValues[l].colored.endsWith(')')) {
-                        jsonColorValue.value += colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
-                        // colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
-                      } else {
+                      // if (colorValues[l].colored.endsWith(')')) {
+                      //   jsonColorValue.value += colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                      //   // colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                      // } else {
                         jsonColorValue.value += colorValues[l].colored;
-                      }
+                      // }
                     }
                     if (colorValues[l].multi_colored != null && colorValues[l].multi_colored != '') {
                       if (colorValues[l].multi_colored.endsWith(')')) {
@@ -6091,7 +6138,8 @@ export default {
                       if (colorValues[l].colored.endsWith(')')) {
                         // colorValues[l].colored = colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
                         // colorValues[l].colored = colorValues[l].colored.split('(');
-                        jsonColorValue.value += colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                        // jsonColorValue.value += colorValues[l].colored.slice(0, colorValues[l].colored.indexOf('('));
+                        jsonColorValue.value += colorValues[l].colored;
                       } else {
                         jsonColorValue.value += colorValues[l].colored;
 
