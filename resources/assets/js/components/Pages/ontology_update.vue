@@ -3,8 +3,8 @@
     <center>
       <div>
         <h3>
-          Ontology Update:
-          {{ currentTermType == 1 ? 'Deprecated terms' : (currentTermType == 2 ? 'Terms with new superclass' : 'Terms with new definition') }}
+          Ontology Updates:
+          {{ currentTermType == 1 ? 'Deprecated Terms' : (currentTermType == 2 ? 'Terms with New Superclass' : 'Terms with New Definition') }}
         </h3>
       </div>
       <div>
@@ -17,9 +17,9 @@
             <a v-on:click="handleDeprecatedterm()" class="btn btn-primary" :class="{active: currentTermType == 1}"
                style="width: 100%; margin: 10px">Deprecated Terms</a><br>
             <a v-on:click="handleNewSuperclass()" class="btn btn-primary" :class="{active: currentTermType == 2}"
-               style="width: 100%; margin: 10px">Terms with new superclass</a><br>
+               style="width: 100%; margin: 10px">Terms with New Superclass</a><br>
             <a v-on:click="handleNewDefinition()" class="btn btn-primary" :class="{active: currentTermType == 3}"
-               style="width: 100%; margin: 10px">Terms with new definition</a><br>
+               style="width: 100%; margin: 10px">Terms with New Definition</a><br>
           </div>
           <div class="col-md-8">
             <div v-if="currentTermType == 1" style="margin-left: 15px; width: 100%;">
@@ -135,18 +135,21 @@
                 <div class="modal-body">
                   <div style="margin-top: 0px;">
                     <div v-if="deprecatedReason != ''" style="border-bottom: gray; padding: 2px; font-size: 11pt">
-                      <span style="width: 20%;">Deprecated Reason:</span>
+                      <span style="width: 20%;">Why was  <font
+                    style="color: orange; font-style: italic">{{ disputedTerm }}</font>deprecated:</span>
                       <b><span>{{ deprecatedReason }}</span></b>
                     </div>
                     <div v-if="currentTermType == 1">
                       <div v-if="replacementTerm != ''" style="border-bottom: gray; padding: 2px; font-size: 11pt">
-                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
-                        <span style="width: 20%;">Replacement Term:</span>
+                       <!-- <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;"> -->
+                        <span style="width: 20%;">Replacement term:</span>
                         <b><span>{{ replacementTerm }}</span></b>
                       </div>
                       <div v-else style="border-bottom: gray; padding: 2px; font-size: 11pt">
-                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
+                       
                         <span style="width: 20%;">No replacement term was provided.</span>
+                        <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;"> 
+                        <br/>
                       </div>
                     </div>
                     <div v-if="movedNote != ''" style="border-bottom: gray; padding: 2px; font-size: 11pt">

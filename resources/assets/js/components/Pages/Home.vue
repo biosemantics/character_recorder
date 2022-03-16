@@ -1141,7 +1141,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit Value</b><span> ("*" indicates a required field) </span>
+                          <b style="text-decoration: underline">Create/Edit Value</b><span> (<span style="color: red">"*"</span> indicates a required field) </span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -1335,10 +1335,11 @@
                                   }}
                                 </div>
                               </div>
-                              <b><span>The term {{ currentColorDeprecated[flag]['deprecate term'] }} you just entered has been deprecated because "{{
+                              <br/>
+                              <b><span>The term "{{ currentColorDeprecated[flag]['deprecate term'] }}" you entered has been deprecated because "{{
                                   currentColorDeprecated[flag]['deprecated reason']
                                 }}"</span></b><br/>
-                              <i>If you want to dispute the deprecation, <a v-on:click="handleDisputeTerm(currentColorDeprecated[flag])">Dispute</a>. <b>Dispute</b> will be reviewed by domain experts</i>
+                              <i>If you want to dispute the deprecation, click on <a v-on:click="handleDisputeTerm(currentColorDeprecated[flag])">Dispute</a>. Disputes will be reviewed by domain experts</i>
 <!--                              <div>-->
 <!--                                <input type="radio" id="user-defined-color"-->
 <!--                                       v-bind:value="deprecateColorValue[flag]"-->
@@ -1542,7 +1543,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit Value</b> <span>("*" indicates a required field)</span>
+                          <b style="text-decoration: underline">Create/Edit Value</b> <span>(<span style="color: red">"*"</span> indicates a required field)</span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -1676,10 +1677,11 @@
                                 </div>
                               </div>
                             </div>
-                            <b><span>The term {{ currentNonColorDeprecated['deprecate term'] }} you just entered has been deprecated because "{{
+                            <br/>
+                            <b><span>The term "{{ currentNonColorDeprecated['deprecate term'] }}" you entered has been deprecated because "{{
                                 currentNonColorDeprecated['deprecated reason']
                               }}"</span></b><br/>
-                            <i>If you want to dispute the deprecation, <a v-on:click="handleDisputeTerm(currentNonColorDeprecated)">Dispute</a>. <b>Dispute</b> will be reviewed by domain experts</i>
+                            <i>If you want to dispute the deprecation, click on <a v-on:click="handleDisputeTerm(currentNonColorDeprecated)">Dispute</a>. Dispute will be reviewed by domain experts</i>
 <!--                            <div>-->
 <!--                              <input type="radio" id="user-defined-non-color"-->
 <!--                                     v-bind:value="deprecateNonColorValue[currentNonColorValue.detailFlag]"-->
@@ -2112,7 +2114,7 @@
                             <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
                             <span style="width: 20%;">Replacement Term:</span>
                             <b><span>{{ currentResolveItem['replacement term'] }}</span></b>
-                            <span>If you feel '{{ currentResolveItem['replacement term'] }}' should not be deprecated, you can <a v-on:click="handleDisputeTerm()">dispute the deprecation</a></span>
+                            <span>If you feel {{ currentResolveItem['deprecate term'] }}' should not be deprecated, you can <a v-on:click="handleDisputeTerm()">dispute the deprecation</a></span>
                           </div>
                           <div v-else>
                             <hr style="margin-top: 8px; margin-bottom: 8px; border-top-color: #ddd;">
