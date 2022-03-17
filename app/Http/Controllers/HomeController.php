@@ -35,12 +35,12 @@ class HomeController extends Controller
 
     public function leaderBoard()
     {
-        $allValues = Value::join('headers', 'headers.id', '=', 'header_id')->join('users', 'users.id', '=', 'headers.user_id')->where('users.password', '!=', '')->select('values.value as value', 'values.header_id as header_id', 'values.id as id', 'users.email as email')->get();
+        $allValues = Value::join('headers', 'headers.id', '=', 'header_id')->join('users', 'users.id', '=', 'headers.user_id')->select('values.value as value', 'values.header_id as header_id', 'values.id as id', 'users.email as email')->get();
         $resultList = [];
         $allUsers = User::where('password', '!=', '')->get();
 
         foreach ($allValues as $eachValue) {
-            $name = explode('@', $eachValue->email)[0];
+            $name = explode('_ver_', explode('@', $eachValue->email)[0])[0];
             if ($eachValue->header_id != 1
                 && $eachValue->value != null) {
                 if (array_key_exists($name, $resultList)) {

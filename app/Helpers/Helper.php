@@ -86,13 +86,14 @@ if (!function_exists('getTopUser')) {
                             break;
                         }
                     }
-                    if ($currentUser['password'] != '') {
-                        if (array_key_exists($character->owner_name, $resultList)) {
-                            $resultList[$character->owner_name] = $resultList[$character->owner_name] + 1;
+                    $currentUserName = explode('_ver_', $character->owner_name)[0];
+//                    if ($currentUser['password'] != '') {
+                        if (array_key_exists($currentUserName, $resultList)) {
+                            $resultList[$currentUserName] = $resultList[$currentUserName] + 1;
                         } else {
-                            $resultList[$character->owner_name] = 1;
+                            $resultList[$currentUserName] = 1;
                         }
-                    }
+//                    }
                 } else {
                     $valueDetail = ColorDetails::where('value_id', '=', $eachValue->id)->first();
                     if ($valueDetail) {
@@ -104,13 +105,14 @@ if (!function_exists('getTopUser')) {
                                 break;
                             }
                         }
-                        if ($currentUser['password'] != '') {
-                            if (array_key_exists($character->owner_name, $resultList)) {
-                                $resultList[$character->owner_name] = $resultList[$character->owner_name] + 1;
+                        $currentUserName = explode('_ver_', $character->owner_name)[0];
+//                        if ($currentUser['password'] != '') {
+                            if (array_key_exists($currentUserName, $resultList)) {
+                                $resultList[$currentUserName] = $resultList[$currentUserName] + 1;
                             } else {
-                                $resultList[$character->owner_name] = 1;
+                                $resultList[$currentUserName] = 1;
                             }
-                        }
+//                        }
                     } else {
                         $valueDetail = NonColorDetails::where('value_id', '=', $eachValue->id)->first();
                         if ($valueDetail) {
@@ -122,13 +124,14 @@ if (!function_exists('getTopUser')) {
                                     break;
                                 }
                             }
-                            if ($currentUser['password'] != '') {
-                                if (array_key_exists($character->owner_name, $resultList)) {
-                                    $resultList[$character->owner_name] = $resultList[$character->owner_name] + 1;
+                            $currentUserName = explode('_ver_', $character->owner_name)[0];
+//                            if ($currentUser['password'] != '') {
+                                if (array_key_exists($currentUserName, $resultList)) {
+                                    $resultList[$currentUserName] = $resultList[$currentUserName] + 1;
                                 } else {
-                                    $resultList[$character->owner_name] = 1;
+                                    $resultList[$currentUserName] = 1;
                                 }
-                            }
+//                            }
                         }
                     }
                 }

@@ -1124,9 +1124,6 @@
                                   , usages = {{ eachDetails.count }}
                               </span>
                               <span>
-                                  , creator = {{ eachDetails.creator }}
-                              </span>
-                              <span>
                                   , used by = {{ eachDetails.username }}
                               </span>
                             </div>
@@ -1526,9 +1523,6 @@
                               </b>
                               <span>
                                   , usages = {{ eachDetails.count }}
-                              </span>
-                              <span>
-                                  , creator = {{ eachDetails.creator }}
                               </span>
                               <span>
                                   , used by = {{ eachDetails.username }}
@@ -7559,14 +7553,21 @@ export default {
             && array[i].degree_constraint == result[j].degree_constraint
             && array[i].main_value == result[j].main_value
             && array[i].post_constraint == result[j].post_constraint) {
+            // console.log('result[j]', result[j]);
+            // console.log('array[i]', array[i]);
+            // console.log('lastLoadMatrixName', app.lastLoadMatrixName);
             result[j].count = result[j].count + 1;
 
-            if (array[i].usage_count > 0) {
-              if (!result[j].username.split(', ').includes(array[i].username)) {
-                result[j].usage_count = result[j].usage_count + array[i].usage_count;
-                result[j].username = result[j].username + ', ' + array[i].username;
-              }
+            if (!result[j].username.split(', ').includes(array[i].username.split('_ver_')[0])) {
+              result[j].username = result[j].username + ', ' + array[i].username.split('_ver_')[0];
             }
+
+            // if (array[i].usage_count > 0) {
+            //   if (!result[j].username.split(', ').includes(array[i].username)) {
+            //     result[j].usage_count = result[j].usage_count + array[i].usage_count;
+            //     result[j].username = result[j].username + ', ' + array[i].username;
+            //   }
+            // }
             resultFlag = false;
           }
         }
@@ -7597,14 +7598,16 @@ export default {
             && array[i].colored == result[j].colored
             && array[i].multi_colored == result[j].multi_colored
             && array[i].post_constraint == result[j].post_constraint) {
+            // console.log('result[j]', result[j]);
             result[j].count = result[j].count + 1;
 
-            if (array[i].usage_count > 0) {
-              if (!result[j].username.split(', ').includes(array[i].username)) {
-                result[j].usage_count = result[j].usage_count + array[i].usage_count;
-                result[j].username = result[j].username + ', ' + array[i].username;
-              }
+
+            // if (array[i].usage_count > 0) {
+            if (!result[j].username.split(', ').includes(array[i].username.split('_ver_')[0])) {
+              // result[j].usage_count = result[j].usage_count + array[i].usage_count;
+              result[j].username = result[j].username + ', ' + array[i].username.split('_ver_')[0];
             }
+            // }
             resultFlag = false;
           }
         }
