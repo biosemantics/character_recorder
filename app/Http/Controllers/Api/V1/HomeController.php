@@ -2063,10 +2063,8 @@ class HomeController extends Controller
                 }
             }
             if ($tempCount == 0) {
-                if ($character->usage_count > 0) {
-                    $character->usage_count = $character->usage_count - 1;
-                    $character->save();
-                }
+                $character->usage_count = 0;
+                $character->save();
             }
         }
 
@@ -3442,6 +3440,14 @@ class HomeController extends Controller
 
         Matrix::where('user_id', '=', $user['id'])->update(['user_id' => $versionUser['id']]);
         User::where('id', '=', $user['id'])->delete();
+        $oldCharacterList = Character::where('owner_name', '=', $username)->get();
+        foreach ($oldCharacterList as $eachOldCharacter) {
+            $valueList = Value::where('character_id', '=', $eachOldCharacter->id)->get();
+            foreach ($valueList as $eachValue) {
+                NonColorDetails::where('value_id', '=', $eachValue->id)->delete();
+            }
+            Value::where('character_id', '=', $eachOldCharacter->id)->delete();
+        }
         Character::where('owner_name', '=', $username)->delete();
 
         Matrix::where([['user_id', '=', $versionUser['id']], ['matrix_name', '=', $matrixName]])->delete();
@@ -3455,6 +3461,23 @@ class HomeController extends Controller
 //            'taxon' => $user['taxon']
         ]);
         Character::where('owner_name', '=', $username . '_ver_' . $matrixName)->update(['owner_name' => $username]);
+
+        $characterList = Character::where('owner_name', '=', $username)->get()->toArray();
+
+        foreach ($characterList as $eachCharacter) {
+            $characterValues = Value::where('character_id', '=', $eachCharacter['id'])->get();
+            $tempCount = 0;
+            foreach ($characterValues as $eachValue) {
+                if (ColorDetails::where('value_id', '=', $eachValue->id)->count() > 0 || NonColorDetails::where('value_id', '=', $eachValue->id)->count() > 0) {
+                    $tempCount++;
+                }
+            }
+            if ($tempCount > 0) {
+                Character::where('id', '=', $eachCharacter['id'])->update(['usage_count' => 1]);
+            }
+        }
+
+
 
         $this->nameMatrixFunc($matrixName);
 
