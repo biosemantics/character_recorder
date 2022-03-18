@@ -474,7 +474,7 @@ class HomeController extends Controller
                 'method_where' => $request->input('method_where'),
                 'method_as' => $request->input('method_as'),
                 'unit' => $request->input('unit'),
-                'standard' => $request->input('standard'),
+                'standard' => 0,
                 'creator' => $request->input('creator'),
                 'username' => $request->input('username'),
                 'owner_name' => $username,
@@ -781,7 +781,7 @@ class HomeController extends Controller
                 'method_where' => $request->input('method_where'),
                 'method_as' => $request->input('method_as'),
                 'unit' => $request->input('unit'),
-                'standard' => $request->input('standard'),
+                'standard' => 0,
                 'creator' => $request->input('creator'),
                 'username' => $request->input('username'),
                 'owner_name' => $username,
@@ -3687,6 +3687,7 @@ class HomeController extends Controller
     public function newMatrix()
     {
         $user = User::where('id', '=', Auth::id())->first();
+        $user->update(['last_matrix' => '']);
         $username = explode('@', $user['email'])[0];
 
         Character::where('owner_name', '=', $username)->delete();

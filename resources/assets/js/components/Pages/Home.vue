@@ -5723,12 +5723,15 @@ export default {
       var app = this;
       var tempDefaultCharacters = [];
       app.standardCharacters = [];
+      console.log('app.defaultCharacters', app.defaultCharacters);
       for (var i = 0; i < app.standardCollections.length; i++) {
         var temp = {};
         var defChs = app.defaultCharacters.filter(eachCh => eachCh.standard == 1 && eachCh.name == app.standardCollections[i].name && eachCh.username == app.standardCollections[i].username);
         app.standardCollections[i].usage_count = 0;
         for (var j = 0; j < defChs.length; j++) {
-          app.standardCollections[i].usage_count += defChs[j].usage_count;
+          console.log('j:', j);
+          console.log('defChs[j]', defChs[j]);
+          app.standardCollections[i].usage_count += parseInt(defChs[j].usage_count);
         }
 
         temp.name = app.standardCollections[i].name;
@@ -5816,6 +5819,7 @@ export default {
           }
         }
       }
+      console.log('app.standardCharacters', app.standardCharacters);
       app.defaultCharacters = tempDefaultCharacters;
     },
     expandDescription() {
