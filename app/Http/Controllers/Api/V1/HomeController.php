@@ -863,14 +863,10 @@ class HomeController extends Controller
             ->where('value', '<>', null)
             ->where('value', '<>', $character->name)
             ->count();
-        if ($valueCount == 1) {
-            if ($oldValue == null || $oldValue == '') {
-                $character->usage_count = $character->usage_count + 1;
-            }
-        } else if ($valueCount < 1) {
-            if ($character->usage_count > 0) {
-                $character->usage_count = $character->usage_count - 1;
-            }
+        if ($valueCount > 0) {
+            $character->usage_count = 1;
+        } else ($valueCount < 1) {
+            $character->usage_count = 0;
         }
         $character->save();
 
