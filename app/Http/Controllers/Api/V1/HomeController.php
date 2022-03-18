@@ -3255,7 +3255,7 @@ class HomeController extends Controller
                 'owner_name' => $username . '_ver_' . $matrixName,
                 'standard_tag' => $eachCharacter['standard_tag'],
                 'summary' => $eachCharacter['summary'],
-                'usage_count' => 0,
+                'usage_count' => $eachCharacter['summary'],
                 'order' => $eachCharacter['order'],
                 'show_flag' => $eachCharacter['show_flag'],
                 'created_at' => date("Y-m-d") . " " . date("H:i:s"),
