@@ -8244,7 +8244,16 @@ export default {
             console.log(flag);
             console.log('app.colorSynonyms', app.colorSynonyms);
             if (app.colorSynonyms[flag].length > 0) {
-              app.currentColorValue[flag] = app.colorSynonyms[flag][0].term;
+              let tempFlag = false;
+              for (let i = 0; i < app.colorSynonyms[flag].length; i++) {
+                if (app.colorSynonyms[flag][i].parentTerm !== 'toreview') {
+                  app.currentColorValue[flag] = app.colorSynonyms[flag][i].term;
+                  tempFlag = true;
+                }
+              }
+              if (!tempFlag) {
+                app.currentColorValue[flag] = app.colorSynonyms[flag][0].term;
+              }
             }
             for (var i = 0; i < app.colorSynonyms[flag].length; i++) {
               console.log('colorSynonyms', app.colorSynonyms[flag][i].term);
@@ -8296,7 +8305,16 @@ export default {
 
             });
             if (app.nonColorSynonyms.length > 0) {
-              app.currentNonColorValue['main_value'] = app.nonColorSynonyms[0].term;
+              let tempFlag = false;
+              for (let i = 0; i < app.nonColorSynonyms.length; i++) {
+                if (app.nonColorSynonyms[i].parentTerm !== 'toreview') {
+                  app.currentNonColorValue['main_value'] = app.nonColorSynonyms[i].term;
+                  tempFlag = true;
+                }
+              }
+              if (!tempFlag) {
+                app.currentNonColorValue['main_value'] = app.nonColorSynonyms[0].term;
+              }
             }
             for (var i = 0; i < app.nonColorSynonyms.length; i++) {
               if (app.nonColorSynonyms[i].term == nonColor[flag]) {
