@@ -865,7 +865,7 @@ class HomeController extends Controller
             ->count();
         if ($valueCount > 0) {
             $character->usage_count = 1;
-        } else ($valueCount < 1) {
+        } else {
             $character->usage_count = 0;
         }
         $character->save();
