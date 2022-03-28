@@ -730,32 +730,34 @@ class HomeController extends Controller
 
         $character->save();
 
-//        if (DefaultCharacter::where('name', '=', $request->input('name'))->count() == 0) {
-//            $defaultCharacter = new DefaultCharacter([
-//                'name' => $request->input('name'),
-//                'IRI' => $request->input('IRI'),
-//                'parent_term' => $request->input('parent_term'),
-//                'method_from' => $request->input('method_from'),
-//                'method_to' => $request->input('method_to'),
-//                'method_include' => $request->input('method_include'),
-//                'method_exclude' => $request->input('method_exclude'),
-//                'method_where' => $request->input('method_where'),
-//                'method_as' => $request->input('method_as'),
-//                'unit' => $request->input('unit'),
-//                'standard' => 0,
-//                'creator' => $request->input('creator'),
-//                'username' => $request->input('username'),
-//                'owner_name' => $username,
-//                'usage_count' => 0,
-//                'show_flag' => $request->input('show_flag'),
-//                'standard_tag' => $request->input('standard_tag'),
-//                'summary' => $request->input('summary'),
-//            ]);
-//
-//            $defaultCharacter->save();
-//        }
+
         $character->order = $character->id;
         $character->save();
+
+        if (DefaultCharacter::where('name', '=', $request->input('name'))->count() == 0) {
+            $defaultCharacter = new DefaultCharacter([
+                'name' => $request->input('name'),
+                'IRI' => $request->input('IRI'),
+                'parent_term' => $request->input('parent_term'),
+                'method_from' => $request->input('method_from'),
+                'method_to' => $request->input('method_to'),
+                'method_include' => $request->input('method_include'),
+                'method_exclude' => $request->input('method_exclude'),
+                'method_where' => $request->input('method_where'),
+                'method_as' => $request->input('method_as'),
+                'unit' => $request->input('unit'),
+                'standard' => 0,
+                'creator' => $request->input('creator'),
+                'username' => $request->input('username'),
+                'owner_name' => $username,
+                'usage_count' => 0,
+                'show_flag' => $request->input('show_flag'),
+                'standard_tag' => $request->input('standard_tag'),
+                'summary' => $request->input('summary'),
+            ]);
+
+            $defaultCharacter->save();
+        }
 
         $headers = Header::where('user_id', '=', Auth::id())->get();
 
