@@ -6719,6 +6719,10 @@ export default {
         app.saveColorButtonFlag = false;
         app.currentColorDeprecated['brightness'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['brightness'].toLowerCase());
         if (app.currentColorDeprecated['brightness'] && app.currentColorDeprecated['brightness']['replacement term']) {
+          if (app.currentColorDeprecated['brightness']['replacement term'].startsWith('Consider ')) {
+            alert(app.currentColorDeprecated['brightness']['replacement term']);
+            return;
+          }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['brightness']['replacement term'].toLowerCase())
             .then(function (resp) {
               console.log('search carex resp', resp.data);
@@ -6736,6 +6740,10 @@ export default {
         app.saveColorButtonFlag = false;
         app.currentColorDeprecated['saturation'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['saturation'].toLowerCase());
         if (app.currentColorDeprecated['saturation'] && app.currentColorDeprecated['saturation']['replacement term']) {
+          if (app.currentColorDeprecated['saturation']['replacement term'].startsWith('Consider ')) {
+            alert(app.currentColorDeprecated['saturation']['replacement term']);
+            return;
+          }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['saturation']['replacement term'].toLowerCase())
             .then(function (resp) {
               console.log('search carex resp', resp.data);
@@ -6753,6 +6761,10 @@ export default {
         app.saveColorButtonFlag = false;
         app.currentColorDeprecated['reflectance'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['reflectance'].toLowerCase());
         if (app.currentColorDeprecated['reflectance'] && app.currentColorDeprecated['reflectance']['replacement term']) {
+          if (app.currentColorDeprecated['reflectance']['replacement term'].startsWith('Consider ')) {
+            alert(app.currentColorDeprecated['reflectance']['replacement term']);
+            return;
+          }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['reflectance']['replacement term'].toLowerCase())
             .then(function (resp) {
               console.log('search carex resp', resp.data);
@@ -6771,6 +6783,10 @@ export default {
         app.saveColorButtonFlag = false;
         app.currentColorDeprecated['colored'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['colored'].toLowerCase());
         if (app.currentColorDeprecated['colored'] && app.currentColorDeprecated['colored']['replacement term']) {
+          if (app.currentColorDeprecated['colored']['replacement term'].startsWith('Consider ')) {
+            alert(app.currentColorDeprecated['colored']['replacement term']);
+            return;
+          }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['colored']['replacement term'].toLowerCase())
             .then(function (resp) {
               console.log('search carex resp', resp.data);
@@ -6792,6 +6808,10 @@ export default {
         app.saveColorButtonFlag = false;
         app.currentColorDeprecated['multi_colored'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['multi_colored'].toLowerCase());
         if (app.currentColorDeprecated['multi_colored'] && app.currentColorDeprecated['multi_colored']['replacement term']) {
+          if (app.currentColorDeprecated['multi_colored']['replacement term'].startsWith('Consider ')) {
+            alert(app.currentColorDeprecated['multi_colored']['replacement term']);
+            return;
+          }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['multi_colored']['replacement term'].toLowerCase())
             .then(function (resp) {
               console.log('search carex resp', resp.data);
@@ -7237,6 +7257,10 @@ export default {
         app.currentNonColorDeprecated = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentNonColorValue['main_value'].toLowerCase());
         console.log('currentNonColorDeprecated', app.currentNonColorDeprecated);
         if (app.currentNonColorDeprecated && app.currentNonColorDeprecated['replacement term']) {
+          if (app.currentNonColorDeprecated['replacement term'].startsWith('Consider ')) {
+            alert(app.currentNonColorDeprecated['replacement term']);
+            return;
+          }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorDeprecated['replacement term'].toLowerCase())
             .then(function (resp) {
               console.log('search carex resp', resp.data);
