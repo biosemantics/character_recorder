@@ -19,8 +19,9 @@ class MyEvent implements ShouldBroadcast
 
     public $topUser;
     public $leaderBoard;
+    public $detailData;
 
-    public function __construct()
+    public function __construct($detailData = null)
     {
         $beforeOneWeek = date('Y-m-d h:m:s', strtotime('-7 days'));
 
@@ -175,6 +176,8 @@ class MyEvent implements ShouldBroadcast
         $this->topUser = $result;
 
         $this->leaderBoard = $resultList;
+
+        $this->detailData = $detailData;
     }
 
     public function broadcastOn()

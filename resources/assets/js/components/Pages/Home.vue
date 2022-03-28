@@ -9328,6 +9328,14 @@ export default {
     // app.lastLoadMatrixName = sessionStorage.getItem('lastMatrixName');
     app.matrixSaved = !!app.lastLoadMatrixName;
     sessionStorage.removeItem('deprecatedTagName');
+    let detailChannel = window.Echo.channel('my-channel');
+    detailChannel.listen('.my-event', function(data) {
+      // $('#top-user').text(data['topUser']);
+      console.log('broadcast - data', data);
+      app.defaultCharacters = data['detailData'];
+      app.refreshDefaultCharacters();
+      app.refreshUserCharacters();
+    });
   }
 }
 
