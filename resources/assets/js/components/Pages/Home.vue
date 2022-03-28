@@ -9332,9 +9332,11 @@ export default {
     detailChannel.listen('.my-event', function(data) {
       // $('#top-user').text(data['topUser']);
       console.log('broadcast - data', data);
-      app.defaultCharacters = data['detailData'];
-      app.refreshDefaultCharacters();
-      app.refreshUserCharacters();
+      axios.get('/chrecorder/public/api/v1/standard_characters').then(function(resp) {
+        app.defaultCharacters = resp.data;
+        app.refreshDefaultCharacters();
+      });
+
     });
   }
 }

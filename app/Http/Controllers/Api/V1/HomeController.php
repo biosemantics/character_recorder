@@ -463,7 +463,7 @@ class HomeController extends Controller
             'defaultCharacters' => $returnDefaultCharacters
         ];
 
-        event(new MyEvent($returnDefaultCharacters));
+        event(new MyEvent());
 
         return $data;
 
@@ -791,7 +791,7 @@ class HomeController extends Controller
             'defaultCharacters' => $returnDefaultCharacters,
         ];
 
-        event(new MyEvent($returnDefaultCharacters));
+        event(new MyEvent());
 
         return $data;
     }
