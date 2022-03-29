@@ -1272,7 +1272,7 @@
                                                 || currentColorValue.detailFlag == 'reflectance'
                                                 || currentColorValue.detailFlag == 'saturation'
                                                 || currentColorValue.detailFlag == 'colored'
-                                                || currentColorValue.detailFlag == 'multi_colored') && colorExistFlag"
+                                                || currentColorValue.detailFlag == 'multi_colored') && colorExistFlag && !deprecatedTermsFlag"
                              style="margin-top: 10px;">
                           <!--<input style="width: 300px;" v-model="colorSearchText" placeholder="Enter a term to filter the term tree"/>-->
                           <tree
@@ -1426,6 +1426,15 @@
                             </div>
                           </div>
 
+                        </div>
+                        <div v-if="deprecatedTermsFlag === true" style="margin-top: 30px">
+                          <b><span>The term "{{ deprecatedTermsMessage['deprecate term'] }}" you entered has been deprecated because "{{
+                              deprecatedTermsMessage['deprecated reason']
+                            }}"</span></b><br/>
+                          <b>
+                            <span>{{ deprecatedTermsMessage['replacement term'] }}</span>
+                          </b><br/>
+                          <i>If you want to dispute the deprecation, click on <a v-on:click="handleDisputeTerm(deprecatedTermsMessage)">Dispute</a>. Disputes will be reviewed by domain experts</i>
                         </div>
 
                         <div class="row">
@@ -1618,7 +1627,7 @@
                             </h5>
                           </div>
                         </div>
-                        <div v-if="(currentNonColorValue.detailFlag == 'main_value') && nonColorExistFlag"
+                        <div v-if="(currentNonColorValue.detailFlag == 'main_value') && nonColorExistFlag && !deprecatedTermsFlag"
                              style="margin-top: 10px;">
                           <tree
                             :data="textureTreeData"
@@ -1761,6 +1770,16 @@
                               </div>
                             </div>
                           </div>
+                        </div>
+
+                        <div v-if="deprecatedTermsFlag === true" style="margin-top: 30px;">
+                          <b><span>The term "{{ deprecatedTermsMessage['deprecate term'] }}" you entered has been deprecated because "{{
+                              deprecatedTermsMessage['deprecated reason']
+                            }}"</span></b><br/>
+                          <b>
+                            <span>{{ deprecatedTermsMessage['replacement term'] }}</span>
+                          </b><br/>
+                          <i>If you want to dispute the deprecation, click on <a v-on:click="handleDisputeTerm(deprecatedTermsMessage)">Dispute</a>. Disputes will be reviewed by domain experts</i>
                         </div>
 
                         <div class="row">
@@ -2463,7 +2482,6 @@ import 'viewerjs/dist/viewer.css';
 import Viewer from 'v-viewer';
 import Autocomplete from 'v-autocomplete';
 import './autocomplete.css';
-
 // import {runTest, Character, ColorQuality} from '../../LeafColors';
 
 let Color = {
@@ -2578,7 +2596,6 @@ Vue.use(Viewer, {
   }
 });
 Vue.use(Autocomplete);
-
 
 export default {
   props: [
@@ -2858,7 +2875,9 @@ export default {
       deprecateColorValue: [],
       deprecateNonColorValue: [],
       matrixSaved: false,
-      toReviewedTerms: []
+      toReviewedTerms: [],
+      deprecatedTermsMessage: '',
+      deprecatedTermsFlag: false,
     }
   },
   components: {
@@ -6720,7 +6739,8 @@ export default {
         app.currentColorDeprecated['brightness'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['brightness'].toLowerCase());
         if (app.currentColorDeprecated['brightness'] && app.currentColorDeprecated['brightness']['replacement term']) {
           if (app.currentColorDeprecated['brightness']['replacement term'].startsWith('Consider ')) {
-            alert(app.currentColorDeprecated['brightness']['replacement term']);
+            app.deprecatedTermsMessage = app.currentColorDeprecated['brightness'];
+            app.deprecatedTermsFlag = true;
             return;
           }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['brightness']['replacement term'].toLowerCase())
@@ -6741,7 +6761,8 @@ export default {
         app.currentColorDeprecated['saturation'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['saturation'].toLowerCase());
         if (app.currentColorDeprecated['saturation'] && app.currentColorDeprecated['saturation']['replacement term']) {
           if (app.currentColorDeprecated['saturation']['replacement term'].startsWith('Consider ')) {
-            alert(app.currentColorDeprecated['saturation']['replacement term']);
+            app.deprecatedTermsMessage = app.currentColorDeprecated['saturation'];
+            app.deprecatedTermsFlag = true;
             return;
           }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['saturation']['replacement term'].toLowerCase())
@@ -6762,7 +6783,8 @@ export default {
         app.currentColorDeprecated['reflectance'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['reflectance'].toLowerCase());
         if (app.currentColorDeprecated['reflectance'] && app.currentColorDeprecated['reflectance']['replacement term']) {
           if (app.currentColorDeprecated['reflectance']['replacement term'].startsWith('Consider ')) {
-            alert(app.currentColorDeprecated['reflectance']['replacement term']);
+            app.deprecatedTermsMessage = app.currentColorDeprecated['reflectance'];
+            app.deprecatedTermsFlag = true;
             return;
           }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['reflectance']['replacement term'].toLowerCase())
@@ -6784,7 +6806,8 @@ export default {
         app.currentColorDeprecated['colored'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['colored'].toLowerCase());
         if (app.currentColorDeprecated['colored'] && app.currentColorDeprecated['colored']['replacement term']) {
           if (app.currentColorDeprecated['colored']['replacement term'].startsWith('Consider ')) {
-            alert(app.currentColorDeprecated['colored']['replacement term']);
+            app.deprecatedTermsMessage = app.currentColorDeprecated['colored'];
+            app.deprecatedTermsFlag = true;
             return;
           }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['colored']['replacement term'].toLowerCase())
@@ -6809,7 +6832,8 @@ export default {
         app.currentColorDeprecated['multi_colored'] = app.deprecatedTerms.find(value => value['deprecate term'] == app.currentColorValue['multi_colored'].toLowerCase());
         if (app.currentColorDeprecated['multi_colored'] && app.currentColorDeprecated['multi_colored']['replacement term']) {
           if (app.currentColorDeprecated['multi_colored']['replacement term'].startsWith('Consider ')) {
-            alert(app.currentColorDeprecated['multi_colored']['replacement term']);
+            app.deprecatedTermsMessage = app.currentColorDeprecated['multi_colored'];
+            app.deprecatedTermsFlag = true;
             return;
           }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentColorDeprecated['multi_colored']['replacement term'].toLowerCase())
@@ -7258,7 +7282,8 @@ export default {
         console.log('currentNonColorDeprecated', app.currentNonColorDeprecated);
         if (app.currentNonColorDeprecated && app.currentNonColorDeprecated['replacement term']) {
           if (app.currentNonColorDeprecated['replacement term'].startsWith('Consider ')) {
-            alert(app.currentNonColorDeprecated['replacement term']);
+            app.deprecatedTermsMessage = app.currentNonColorDeprecated;
+            app.deprecatedTermsFlag = true;
             return;
           }
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.currentNonColorDeprecated['replacement term'].toLowerCase())
@@ -7696,6 +7721,8 @@ export default {
     focusedValue(value) {
       var app = this;
       app.editingValueID = value.id;
+      app.deprecatedTermsMessage = '';
+      app.deprecatedTermsFlag = false;
 
       app.currentColorValue = {
         confirmedFlag: {
