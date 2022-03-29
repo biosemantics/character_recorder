@@ -6682,6 +6682,8 @@ export default {
     },
     async saveColorValue(newFlag = false) {
       var app = this;
+      app.deprecatedTermsFlag = false;
+      app.deprecatedTermsMessage = '';
       if (app.saveColorButtonFlag) {
         return;
       }
@@ -7243,6 +7245,8 @@ export default {
     },
     async saveNonColorValue(newFlag = false) {
       var app = this;
+      app.deprecatedTermsFlag = false;
+      app.deprecatedTermsMessage = '';
       if (app.saveNonColorButtonFlag) {
         return;
       }
