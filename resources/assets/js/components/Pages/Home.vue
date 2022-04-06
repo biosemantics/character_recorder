@@ -4489,7 +4489,7 @@ export default {
                   || tempCharacter.name.startsWith('Diameter of')
                   || tempCharacter.name.startsWith('Count of')
                   || tempCharacter.name.startsWith('Distance between')) {
-                  tempCharacter.unit = 'cm';
+                  tempCharacter.unit = 'mm';
                   tempCharacter.summary = 'range-percentile';
                 } else if (tempCharacter.name.startsWith('Number of')
                   || tempCharacter.name.startsWith('Ratio of')) {
