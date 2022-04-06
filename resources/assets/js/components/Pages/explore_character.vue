@@ -510,7 +510,7 @@
                 bSearching: false,
                 characterData: [],
                 structureTreeData: null,
-                unit: 'cm',
+                unit: 'mm',
                 value1: 0,
                 value2: 0,
                 compare1: '>',
