@@ -5101,7 +5101,7 @@ export default {
 
           if (!app.character['unit'] && app.checkHaveUnit(app.character.name)) {
             if (!app.character.name.startsWith('Number') && !app.character.name.startsWith('Count')) {
-              app.character.unit = 'cm';
+              app.character.unit = 'mm';
             }
             if (!app.character['summary']) {
               app.character.summary = 'range-percentile';
