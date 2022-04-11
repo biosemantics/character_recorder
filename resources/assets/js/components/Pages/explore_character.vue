@@ -509,7 +509,7 @@
                 characterType: '',
                 bSearching: false,
                 characterData: [],
-                structureTreeData: null,
+                // structureTreeData: null,
                 unit: 'cm',
                 value1: 0,
                 value2: 0,
@@ -1246,7 +1246,7 @@
                         :specimen_of ?taxon.
                     }`;
             app.api(query, data => {
-                console.log(data);
+                console.log('taxonData on mounted', data);
                 data.results.bindings.forEach((val) => {
                     var taxonValue = val.taxon.value.split('#', 2);
                     app.taxonData.push(taxonValue[1]);
