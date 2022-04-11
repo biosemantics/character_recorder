@@ -17,16 +17,16 @@
     <link href="{{ asset('css/ldbtn.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/loading.min.css') }}" rel="stylesheet">
     <!-- Hotjar Tracking Code for shark.sbs.arizona.edu/chrecorder/public -->
-    <script>
-        (function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            h._hjSettings={hjid:1699692,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-    </script>
+{{--    <script>--}}
+{{--        (function(h,o,t,j,a,r){--}}
+{{--            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};--}}
+{{--            h._hjSettings={hjid:1699692,hjsv:6};--}}
+{{--            a=o.getElementsByTagName('head')[0];--}}
+{{--            r=o.createElement('script');r.async=1;--}}
+{{--            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;--}}
+{{--            a.appendChild(r);--}}
+{{--        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');--}}
+{{--    </script>--}}
     <style>
         html, body {
             background-color: #fff;
