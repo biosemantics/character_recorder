@@ -4489,7 +4489,7 @@ export default {
                   || tempCharacter.name.startsWith('Diameter of')
                   || tempCharacter.name.startsWith('Count of')
                   || tempCharacter.name.startsWith('Distance between')) {
-                  tempCharacter.unit = 'cm';
+                  tempCharacter.unit = 'mm';
                   tempCharacter.summary = 'range-percentile';
                 } else if (tempCharacter.name.startsWith('Number of')
                   || tempCharacter.name.startsWith('Ratio of')) {
@@ -5101,7 +5101,7 @@ export default {
 
           if (!app.character['unit'] && app.checkHaveUnit(app.character.name)) {
             if (!app.character.name.startsWith('Number') && !app.character.name.startsWith('Count')) {
-              app.character.unit = 'cm';
+              app.character.unit = 'mm';
             }
             if (!app.character['summary']) {
               app.character.summary = 'range-percentile';
