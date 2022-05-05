@@ -18,7 +18,7 @@
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
-
+Route::get('/get_top_user', 'ActivityLogController@getTopUser');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/leader-board', 'HomeController@leaderBoard')->name('home');
 Route::get('/explore-character', 'HomeController@exploreCharacter')->name('home');

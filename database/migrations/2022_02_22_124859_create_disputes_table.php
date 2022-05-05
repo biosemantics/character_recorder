@@ -20,7 +20,7 @@ class CreateDisputesTable extends Migration
             $table->string('IRI');
             $table->string('deprecated_reason');
             $table->string('disputed_by');
-            $table->string('deprecated_reason');
+            //$table->string('deprecated_reason');
             $table->string('new_definition');
             $table->string('example_sentence');
             $table->timestamps();

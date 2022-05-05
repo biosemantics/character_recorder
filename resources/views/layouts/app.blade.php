@@ -155,7 +155,7 @@
                         <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
                             <div style="height: 34px;padding-top: 10px;">
                                 <img src="{{ asset('images/crown.png') }}" style="display: inline"/>
-                                <div class="explore" style="font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
+                                <div class="explore" id="top_user" style="font-family: Arial; display: inline; vertical-align: bottom">fetching data...</div>
                             </div>
                         </a>
                     </div>
@@ -229,4 +229,14 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}?v=2019_04_25"></script>
 </body>
+<script> 
+$(document).ready(function(){
+    $.ajax({
+        url: "get_top_user", 
+        success: function(result){
+        console.log(result);
+        $('#top_user').text(result)
+    }});
+});
+</script>
 </html>
