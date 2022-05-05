@@ -234,7 +234,6 @@ $(document).ready(function(){
     $.ajax({
         url: "get_top_user", 
         success: function(result){
-        console.log(result);
         $('#top_user').text(result)
     }});
 });
