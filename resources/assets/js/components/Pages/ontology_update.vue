@@ -433,7 +433,7 @@ export default {
             'taxa': app.applicableTaxa
           };
           console.log(postValue);
-          axios.post('/chrecorder/public/send-mail', postValue);
+          axios.post('send-mail', postValue);
           app.messageDialogFlag = false;
         });
 
@@ -442,7 +442,7 @@ export default {
   watch: {},
   async created() {
     var app = this;
-    await axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
+    await axios.get("api/v1/character/" + app.user.id)
       .then(function (resp) {
         console.log('resp character', resp.data);
         app.userCharacters = resp.data.characters;
@@ -451,7 +451,7 @@ export default {
         app.allColorValues = resp.data.allColorValues;
         app.allNonColorValues = resp.data.allNonColorValues;
       });
-    await axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id)
+    await axios.get("api/v1/user-tag/" + app.user.id)
       .then(function (resp) {
         app.userTags = resp.data;
         console.log('userTags', app.userTags);

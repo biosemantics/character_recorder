@@ -1216,18 +1216,18 @@
             app.user.name = app.user.email.split('@')[0];
             sessionStorage.setItem('userId', app.user.id);
 
-            axios.post('/chrecorder/public/api/v1/get-default-constraint').then(function(resp){
+            axios.post('api/v1/get-default-constraint').then(function(resp){
                 app.preList = resp.data.preList;
                 app.postList = resp.data.postList;
                 console.log(app.preList);
                 console.log(app.postList);
             });
-            // axios.get('/chrecorder/public/api/v1/getTaxons').then(function(resp){
+            // axios.get('api/v1/getTaxons').then(function(resp){
             //     console.log(resp);
             //     app.taxonData = resp.data.taxons;
             // });
 
-            axios.get('/chrecorder/public/api/v1/getUsers').then(function(resp){
+            axios.get('api/v1/getUsers').then(function(resp){
                 console.log(resp);
                 app.usersData = resp.data;
             });

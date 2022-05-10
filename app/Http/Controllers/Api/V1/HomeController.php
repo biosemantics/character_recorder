@@ -1325,7 +1325,7 @@ class HomeController extends Controller
 
         return array(
             'is_success' => 1,
-            'doc_url' => '/chrecorder/public/' . $fileName . '.zip',
+            'doc_url' => config('constants.root_path') . $fileName . '.zip',
         );
     }
 
@@ -1388,7 +1388,7 @@ class HomeController extends Controller
 
         return array(
             'is_success' => 1,
-            'doc_url' => '/chrecorder/public/' . $fileName . '.csv',
+            'doc_url' => config('constants.root_path') . $fileName . '.csv',
         );
     }
 
@@ -2755,7 +2755,7 @@ class HomeController extends Controller
 
         return array(
             'is_success' => 1,
-            'doc_url' => '/chrecorder/public/' . $fileName . '.trig',
+            'doc_url' => config('constants.root_path') . $fileName . '.trig',
         );
     }
 
@@ -2842,7 +2842,7 @@ class HomeController extends Controller
         }
 
 
-        $fileName = 'http://shark.sbs.arizona.edu/chrecorder/public/ontology/carex.ttl';
+        $fileName = 'http://shark.sbs.arizona.edu'.config('constants.root_path').'ontology/carex.ttl';
 
         $read = file_get_contents($fileName);
 
