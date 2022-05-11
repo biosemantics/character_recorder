@@ -1926,41 +1926,47 @@ class HomeController extends Controller
 
     public function getDefaultConstraint1()
     {
-        $characters = Character::all();
+        // get the id of values whose has relation with characters
+        $values =   DB::table('characters')
+                        ->leftJoin('values', 'values.character_id', '=', 'characters.id')
+                        ->where('values.header_id','<>',1)
+                        ->orderBy('values.id','ASC')
+                        ->pluck('values.id');
 
         $preList = ['longitudinally'];
         $postList = ['when young'];
-        foreach ($characters as $eachCharacter) {
-            $values = Value::where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
-            foreach ($values as $eachValue) {
-                $details = ColorDetails::where('value_id', '=', $eachValue->id)->get();
-                foreach ($details as $each) {
-                    if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
-                        if (!in_array($each->pre_constraint, $preList)) {
-                            array_push($preList, $each->pre_constraint);
+        if(count($values) > 0) { 
+           $colors_details =  ColorDetails::whereIn('value_id',$values)->get();
+           $non_colors_details =  NonColorDetails::whereIn('value_id',$values)->get();  
+            if(count($colors_details) > 0){
+                foreach ($colors_details as $eachColor) {
+                    if ($eachColor->pre_constraint != null && $eachColor->pre_constraint != '' && $eachColor->pre_constraint != 'undefined' && $eachColor->pre_constraint != 'null') {
+                        if (!in_array($eachColor->pre_constraint, $preList)) {
+                            array_push($preList, $eachColor->pre_constraint);
                         }
                     }
-                    if ($each->post_constraint != null && $each->post_constraint != '' && $each->post_constraint != 'undefined' && $each->post_constraint != 'null') {
-                        if (!in_array($each->post_constraint, $postList)) {
-                            array_push($postList, $each->post_constraint);
-                        }
-                    }
-                }
-                $details = NonColorDetails::where('value_id', '=', $eachValue->id)->get();
-                foreach ($details as $each) {
-                    if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
-                        if (!in_array($each->pre_constraint, $preList)) {
-                            array_push($preList, $each->pre_constraint);
-                        }
-                    }
-                    if ($each->post_constraint != null && $each->post_constraint != '' && $each->post_constraint != 'undefined' && $each->post_constraint != 'null') {
-                        if (!in_array($each->post_constraint, $postList)) {
-                            array_push($postList, $each->post_constraint);
+                    if ($eachColor->post_constraint != null && $eachColor->post_constraint != '' && $eachColor->post_constraint != 'undefined' && $eachColor->post_constraint != 'null') {
+                        if (!in_array($eachColor->post_constraint, $postList)) {
+                            array_push($postList, $eachColor->post_constraint);
                         }
                     }
                 }
             }
-        }
+            if(count($non_colors_details) > 0){
+                foreach ($non_colors_details as $eachNonColor) {
+                    if ($eachNonColor->pre_constraint != null && $eachNonColor->pre_constraint != '' && $eachNonColor->pre_constraint != 'undefined' && $eachNonColor->pre_constraint != 'null') {
+                        if (!in_array($eachNonColor->pre_constraint, $preList)) {
+                            array_push($preList, $eachNonColor->pre_constraint);
+                        }
+                    }
+                    if ($eachNonColor->post_constraint != null && $eachNonColor->post_constraint != '' && $eachNonColor->post_constraint != 'undefined' && $eachNonColor->post_constraint != 'null') {
+                        if (!in_array($eachNonColor->post_constraint, $postList)) {
+                            array_push($postList, $eachNonColor->post_constraint);
+                        }
+                    }
+                }
+            } 
+        } 
 
         $data = [
             'preList' => $preList,

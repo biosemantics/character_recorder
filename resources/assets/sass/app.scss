@@ -16,8 +16,13 @@ div.dropdown div.item:first-child {
 .character-modal .modal-footer { border-top: none; }
 @media screen and (min-width: 767px ){
     .character-modal .modal-container {
-        width: 540px !important;
+        max-width: 80% !important;
+        margin:0 auto;
+        display: inline-block;
+        width: auto;
+        text-align:left;
     }
+    .character-modal .modal-wrapper{text-align:center;}
 }
 .tooltip {
     &.standard-tooltip {
@@ -34,4 +39,42 @@ div.dropdown div.item:first-child {
 
 .highlight {
   background-color: #eee;
+}
+
+.width-100 {
+  width: 100%;
+}
+
+.custom-flex {
+  display: flex;
+  padding: 0 17px;
+}
+
+.custom-character-field {
+    margin-right: 20px;
+}
+
+.custom-character-field:last-child {
+    margin-right: 0px;
+}
+
+@media (max-width: 1024px) {
+  .character-modal .modal-container {
+    width: 95% !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .custom-flex {
+    flex-direction: column;
+  }
+
+  .character-modal .modal-container {
+    width: 100% !important;
+  }
+
+  .custom-character-field {
+    margin-bottom: 15px;
+    margin-right: 0px !important; 
+  }
 }
