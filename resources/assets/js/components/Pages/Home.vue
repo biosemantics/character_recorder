@@ -4211,7 +4211,7 @@ export default {
             }else {
               tempWholeCharacter += ' ' + app.fourthCharacter;
             }
-            if(app.middleCharacter == 'between') {
+            if(app.secondMiddleCharacter == 'between') {
               tempWholeCharacter += ' and ' + app.fifthCharacter;
             }
           }
@@ -4265,7 +4265,7 @@ export default {
                         }else {
                           tempWholeCharacter += ' ' + app.fourthCharacter;
                         }
-                        if(app.middleCharacter == 'between') {
+                        if(app.secondMiddleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.fifthCharacter;
                         }
                       }  
@@ -4320,7 +4320,7 @@ export default {
                       }else {
                         tempWholeCharacter += ' ' + app.fourthCharacter;
                       }
-                      if(app.middleCharacter == 'between') {
+                      if(app.secondMiddleCharacter == 'between') {
                         tempWholeCharacter += ' and ' + app.fifthCharacter;
                       }
                     }  
@@ -4359,7 +4359,7 @@ export default {
                         }else {
                           tempWholeCharacter += ' ' + app.fourthCharacter;
                         }
-                        if(app.middleCharacter == 'between') {
+                        if(app.secondMiddleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.fifthCharacter;
                         }
                       }  
@@ -4405,7 +4405,7 @@ export default {
             }else {
               tempWholeCharacter += ' ' + app.fourthCharacter;
             }
-            if(app.middleCharacter == 'between') {
+            if(app.secondMiddleCharacter == 'between') {
               tempWholeCharacter += ' and ' + app.fifthCharacter;
             }
           }  
@@ -4494,7 +4494,7 @@ export default {
                         }else {
                           tempWholeCharacter += ' ' + app.fourthCharacter;
                         }
-                        if(app.middleCharacter == 'between') {
+                        if(app.secondMiddleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.fifthCharacter;
                         }
                       } 
@@ -4550,7 +4550,7 @@ export default {
                       }else {
                         tempWholeCharacter += ' ' + app.fourthCharacter;
                       }
-                      if(app.middleCharacter == 'between') {
+                      if(app.secondMiddleCharacter == 'between') {
                         tempWholeCharacter += ' and ' + app.fifthCharacter;
                       }
                     }  
@@ -4589,7 +4589,7 @@ export default {
                         }else {
                           tempWholeCharacter += ' ' + app.fourthCharacter;
                         }
-                        if(app.middleCharacter == 'between') {
+                        if(app.secondMiddleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.fifthCharacter;
                         }
                       }  
@@ -4638,7 +4638,7 @@ export default {
               }else {
                 tempWholeCharacter += ' ' + app.fourthCharacter;
               }
-              if(app.middleCharacter == 'between') {
+              if(app.secondMiddleCharacter == 'between') {
                 tempWholeCharacter += ' and ' + app.fifthCharacter;
               }
             }  
@@ -4698,7 +4698,7 @@ export default {
                       }else {
                         tempWholeCharacter += ' ' + app.fourthCharacter;
                       }
-                      if(app.middleCharacter == 'between') {
+                      if(app.secondMiddleCharacter == 'between') {
                         tempWholeCharacter += ' and ' + app.fifthCharacter;
                       }
                     }  
@@ -4751,7 +4751,7 @@ export default {
                         }else {
                           tempWholeCharacter += ' ' + app.fourthCharacter;
                         }
-                        if(app.middleCharacter == 'between') {
+                        if(app.secondMiddleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.fifthCharacter;
                         }
                       }  
@@ -4785,7 +4785,7 @@ export default {
                           }else {
                             tempWholeCharacter += ' ' + app.fourthCharacter;
                           }
-                          if(app.middleCharacter == 'between') {
+                          if(app.secondMiddleCharacter == 'between') {
                             tempWholeCharacter += ' and ' + app.fifthCharacter;
                           }
                         }  
@@ -4834,7 +4834,7 @@ export default {
             }else {
               tempWholeCharacter += ' ' + nounDeprecatedValue['replacement term'];
             }
-            if(app.middleCharacter == 'between') {
+            if(app.secondMiddleCharacter == 'between') {
               tempWholeCharacter += ' and ' + app.fifthCharacter;
             }
           }  
@@ -4903,9 +4903,9 @@ export default {
                     }else {
                       tempWholeCharacter += ' ' + exactSynonyms[i].value;
                     }
-                    /*if(app.middleCharacter == 'between') {
+                    if(app.secondMiddleCharacter == 'between') {
                       tempWholeCharacter += ' and ' + app.fifthCharacter;
-                    }*/
+                    }
                   }  
 
                   if (app.standardCharacters.find(each => each.name.toLowerCase() === tempWholeCharacter.toLowerCase())) {
@@ -4939,7 +4939,7 @@ export default {
                         }else {
                           tempWholeCharacter += ' ' + methodEntry.term;
                         }
-                        if(app.middleCharacter == 'between') {
+                        if(app.secondMiddleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.fifthCharacter;
                         }
                       } 
@@ -4995,7 +4995,7 @@ export default {
                       }else {
                         tempWholeCharacter += ' ' + methodEntry.term;
                       }
-                      if(app.middleCharacter == 'between') {
+                      if(app.secondMiddleCharacter == 'between') {
                         tempWholeCharacter += ' and ' + app.fifthCharacter;
                       }
                     }  
@@ -5034,7 +5034,7 @@ export default {
                         }else {
                           tempWholeCharacter += ' ' + methodEntry.term;
                         }
-                        if(app.middleCharacter == 'between') {
+                        if(app.secondMiddleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.fifthCharacter;
                         }
                       }  
@@ -5083,7 +5083,7 @@ export default {
               }else {
                 tempWholeCharacter += ' ' + app.fourthCharacter;
               }
-              if(app.middleCharacter == 'between') {
+              if(app.secondMiddleCharacter == 'between') {
                 tempWholeCharacter += ' and ' + secondNounDeprecatedValue['replacement term'];
               }
             }  
@@ -5143,7 +5143,7 @@ export default {
                       }else {
                         tempWholeCharacter += ' ' + app.fourthCharacter;
                       }
-                      if(app.middleCharacter == 'between') {
+                      if(app.secondMiddleCharacter == 'between') {
                         tempWholeCharacter += ' and ' + methodEntry.term;
                       }
                     }  
@@ -5196,7 +5196,7 @@ export default {
                         }else {
                           tempWholeCharacter += ' ' + app.fourthCharacter;
                         }
-                        if(app.middleCharacter == 'between') {
+                        if(app.secondMiddleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + methodEntry.term;
                         }
                       }  
@@ -5234,7 +5234,7 @@ export default {
                           }else {
                             tempWholeCharacter += ' ' + app.fourthCharacter;
                           }
-                          if(app.middleCharacter == 'between') {
+                          if(app.secondMiddleCharacter == 'between') {
                             tempWholeCharacter += ' and ' + methodEntry.term;
                           }
                         }  
@@ -5406,7 +5406,7 @@ export default {
         }else {
           app.character.name += ' ' + app.fourthCharacter;
         }
-        if(app.middleCharacter == 'between') {
+        if(app.secondMiddleCharacter == 'between') {
           app.character.name += ' and ' + app.fifthCharacter;
         }
       }  
