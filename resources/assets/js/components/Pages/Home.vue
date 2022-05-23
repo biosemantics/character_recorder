@@ -6468,6 +6468,7 @@ export default {
             }
 
             if (app.matrixShowFlag) {
+              app.isLoading = true;
               axios.post('api/v1/character/add-character', app.character)
                 .then(function (resp) {
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
@@ -6502,6 +6503,7 @@ export default {
                   app.enhanceFlag = false;
                   app.detailsFlag = false;
                   app.numericalFlag = false;
+                  app.isLoading = false;
                   app.showTableForTab(app.currentTab);
                 });
             } else {
