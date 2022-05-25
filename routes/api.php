@@ -73,6 +73,7 @@ Route::group([
         Route::post('update-unit',                      ['as' => 'update_unit',                 'uses' => 'HomeController@updateUnit']);
         Route::post('update-summary',                   ['as' => 'update_summary',              'uses' => 'HomeController@updateSummary']);
         Route::post('delete/{userId}/{characterId}',    ['as' => 'delete_character',            'uses' => 'HomeController@deleteCharacter']);
+        Route::post('multiple_delete',    ['as' => 'multiple_delete', 'uses' => 'HomeController@multipleDeleteCharacter']);
         Route::post('add-standard',                     ['as' => 'add_standard_character',      'uses' => 'HomeController@addStandardCharacter']);
         Route::get('remove-all-standard',               ['as' => 'remove_all_standard',         'uses' => 'HomeController@removeAllStandard']);
         Route::post('remove-all',                       ['as' => 'remove_all',                  'uses' => 'HomeController@removeAll']);

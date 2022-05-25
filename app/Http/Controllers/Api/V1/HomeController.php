@@ -556,6 +556,64 @@ class HomeController extends Controller
 
         return $data;
     }
+    
+    // delete non select values during add matrix
+    public function multipleDeleteCharacter(Request $request)
+    {
+        $ids = $request->all();
+        if(!empty($ids)) {
+            $user = User::where('id', '=', Auth::id())->first();
+            $username = explode('@', $user['email'])[0];
+            $characters = Character::whereIn('id', $ids)->get();
+            foreach ($characters as $key => $character) {
+                if (Character::where('name', '=', $character->name)->count() < 2) {
+                    DefaultCharacter::where('name', '=', $character->name)->delete();
+                }
+                if (Character::where('standard_tag', '=', Character::where('id', '=', $character->id)->first()->standard_tag)
+                        ->where('owner_name', '=', $username)
+                        ->count() < 2) {
+                    UserTag::where('tag_name', '=', Character::where('id', '=', $character->id)->first()->standard_tag)
+                        ->where('user_id', '=', Auth::id())
+                        ->delete();
+                }
+                Character::where('id', '=', $character->id)->delete();
+                if (Value::where('character_id', '=', $character->id)->first()) {
+                    Value::where('character_id', '=', $character->id)->delete();
+                }
+            }
+
+            $characters = Character::where('owner_name', '=', $username)->get();
+
+            $usedCharacters = Character::where('owner_name', '=', $username)->get();
+            foreach ($usedCharacters as $usedCharacter) {
+                $usedCharacter->username = str_replace($username . ', ', '', $usedCharacter->username);
+                $usedCharacter->save();
+            }
+
+            if (!Character::where('owner_name', '=', $username)->first()) {
+                Header::where('user_id', '=', Auth::id())->delete();
+            }
+        }
+        
+
+        $defaultCharacters = $this->getDefaultCharacters();
+        $returnHeaders = $this->getHeaders();
+        $returnValues = $this->getValuesByCharacter();
+        $returnCharacters = $this->getArrayCharacters();
+        $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
+        $returnAllDetailValues = $this->getAllDetails();
+        $data = [
+            'headers' => $returnHeaders,
+            'characters' => $returnCharacters,
+            'values' => $returnValues,
+            'allColorValues' => $returnAllDetailValues['colorValues'],
+            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+            'userTags' => $returnUserTags,
+            'defaultCharacters' => $defaultCharacters
+        ];
+
+        return $data;
+    }
 
     public function storeMatrix(Request $request)
     {

@@ -99,6 +99,7 @@
                     <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag">
                       {{ eachCharacter.standard_tag }} </b>
                     <div style="margin-left: 50px;">
+                      <input type="checkbox" :id="'character_id'+eachCharacter.id"  name="use_character" v-model="eachCharacter.use_character"> 
                       <i
                         v-bind:style="{color:(eachCharacter.parent_term && eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{
                           eachCharacter.name
@@ -106,13 +107,14 @@
                         <a style="margin-left: 45px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                           <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench"></span>
                         </a>
-                        <a v-on:click="removeStandardCharacter(eachCharacter.id)"
+                       <!--  <a v-on:click="removeStandardCharacter(eachCharacter.id)"
                            :set="previousUserCharacter=eachCharacter"
                            style="margin-left: 5px;"
                         >
                                                     <span class="glyphicon glyphicon-remove">
                                                     </span>
-                        </a>
+                        </a>  -->                           
+                                                   
                       </i>
                     </div>
                   </div>
@@ -132,6 +134,7 @@
                          :key="index"
                          v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)"
                          v-tooltip="eachCharacter.tooltip" style="margin-left: 50px;">
+                      <input type="checkbox" :id="'character_id'+eachCharacter.id"  name="use_character" v-model="eachCharacter.use_character">
                       <i
                         v-bind:style="{color:(eachCharacter.parent_term && eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{
                           eachCharacter.name
@@ -139,9 +142,10 @@
                         <a style="margin-left: 35px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                           <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench"></span>
                         </a>
-                        <a style="margin-left: 5px;" v-on:click="removeStandardCharacter(eachCharacter.id)">
+                        <!-- <a style="margin-left: 5px;" v-on:click="removeStandardCharacter(eachCharacter.id)">
                           <span class="glyphicon glyphicon-remove"></span>
-                        </a>
+                        </a> -->
+                        
                       </i>
                     </div>
                   </div>
@@ -1110,7 +1114,7 @@
 <!--                            <a v-if="viewFlag == true && editFlag == false" v-on:click="enhance(item)"-->
 <!--                               class="btn btn-primary">Modify and Use &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b-->
 <!--                              style="border: 1px solid #ffffff; background: #003366;"-->
-<!--                              title="Use this option when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>-->
+<!--                              title="Use thisoption when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>-->
                             <a v-on:click="cancelCharacter()"
                                class="btn btn-danger">Cancel</a>
                           </div>
@@ -3158,6 +3162,7 @@ export default {
       toReviewedTerms: [],
       deprecatedTermsMessage: '',
       deprecatedTermsFlag: false,
+      checkCharacters: 0,
     }
   },
   components: {
@@ -5744,8 +5749,15 @@ export default {
       app.toRemoveCharacterId = characterId;
       app.toRemoveStandardConfirmFlag = true;
     },
+    removeSelectedCharacter(index,characterId) {
+      var app = this;
+      console.log('characterId', characterId);
+      console.log('index', index);
+      app.userCharacters[index]['use_character']= 0;
+    },
     confirmRemoveCharacter() {
       var app = this;
+      console.log('confirmRemoveCharacter');
 
       axios.post("api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
         .then(function (resp) {
@@ -5769,6 +5781,7 @@ export default {
 
     },
     removeUserCharacter(characterId) {
+      console.log('removeUserCharacter');
       var app = this;
       var oldUserTag = app.userCharacters.find(ch => ch.id == characterId).standard_tag;
       axios.post("api/v1/character/delete/" + app.user.id + "/" + characterId)
@@ -6507,6 +6520,7 @@ export default {
                   app.showTableForTab(app.currentTab);
                 });
             } else {
+              app.isLoading = true;
               axios.post("api/v1/character/create", app.character)
                 .then(function (resp) {
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
@@ -6524,8 +6538,7 @@ export default {
                   app.refreshUserCharacters();
                   app.defaultCharacters = resp.data.defaultCharacters;
                   app.refreshDefaultCharacters();
-
-
+                  app.isLoading = false;
                   app.detailsFlag = false;
                   app.numericalFlag = false;
                   app.showTableForTab(app.currentTab);
@@ -6551,46 +6564,78 @@ export default {
     },
     generateMatrix() {
       var app = this;
-      console.log('app.userCharacters', app.userCharacters);
-      if (app.userCharacters.length === 0) {
-        app.isLoading = false;
-        alert("You need to select characters before you can go to matrix")
-      } else {
-        if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
-          var jsonMatrix = {
-            'user_id': app.user.id,
-            'column_count': app.columnCount,
-            'taxon': app.taxonName
-          };
-          app.oldUserTags = [];
-          axios.post('api/v1/matrix-store', jsonMatrix)
-            .then(function (resp) {
-              app.isLoading = false;
-              console.log('resp storeMatrix', resp.data);
-              app.matrixShowFlag = true;
-              app.collapsedFlag = true;
-              app.showSetupArea = false;
-              app.userCharacters = resp.data.characters;
-              app.headers = resp.data.headers;
-              app.values = resp.data.values;
-              app.matrixSaved = false;
-              console.log('app.userTags', app.userTags);
-              axios.get('api/v1/user-tag/' + app.user.id)
-                .then(function (resp) {
-                  app.userTags = resp.data;
-                  app.showTableForTab(app.currentTab);
-                });
-              app.refreshUserCharacters(true);
-
-              console.log('userCharacters', app.userCharacters);
-            });
-
-        } else {
-          app.isLoading = false;
-          alert("You need to fill the taxon name and specimen count in the input box!")
-        }
+      var ids = [];
+      var addIds = [];
+      if(app.userCharacters.length > 0) {
+        $.each(app.userCharacters, function (i, item) {
+            if(item.use_character == undefined || item.use_character == 0 || item.use_character == '' || item.use_character == null) {
+              ids.push(item.id);
+            }else {
+              addIds.push(item.id);
+            }
+        }); 
       }
+      if(addIds.length > 0) {
+        var app = this;
+        app.isLoading = true;
+        axios.post("api/v1/character/multiple_delete", ids)
+          .then(function (resp) {
+            app.userCharacters = resp.data.characters;
+            app.headers = resp.data.headers;
+            app.values = resp.data.values;
+            app.defaultCharacters = resp.data.defaultCharacters;
+            if (app.userCharacters.length == 0) {
+              app.matrixShowFlag = false;
+            }
+            app.refreshUserCharacters();
+            app.refreshDefaultCharacters();
+            if (app.userTags.length != resp.data.userTags.length && !resp.data.userTags.find(ch => ch == app.currentTab)) {
+              app.userTags = resp.data.userTags;
+              if (app.userTags[0]) app.showTableForTab(app.userTags[0].tag_name);
+            } else app.showTableForTab(app.currentTab);
 
+            if (app.userCharacters.length === 0) {
+              app.isLoading = false;
+              alert("You need to select characters before you can go to matrix");
+              return false;
+            } else {
+              app.isLoading = true;
+              if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
+                var jsonMatrix = {
+                  'user_id': app.user.id,
+                  'column_count': app.columnCount,
+                  'taxon': app.taxonName
+                };
+                app.oldUserTags = [];
+                axios.post('api/v1/matrix-store', jsonMatrix)
+                  .then(function (resp) {
+                    app.matrixShowFlag = true;
+                    app.collapsedFlag = true;
+                    app.showSetupArea = false;
+                    app.userCharacters = resp.data.characters;
+                    app.headers = resp.data.headers;
+                    app.values = resp.data.values;
+                    app.matrixSaved = false;
+                    axios.get('api/v1/user-tag/' + app.user.id)
+                      .then(function (resp) {
+                        app.userTags = resp.data;
+                        app.showTableForTab(app.currentTab);
+                      });
+                    app.refreshUserCharacters(true);
+                    app.isLoading = false;
+                  });
+
+              } else {
+                app.isLoading = false;
+                alert("You need to fill the taxon name and specimen count in the input box!")
+                return false;
+              }
+            }
+        });
+      }else{
+        alert('You need to select characters before you can go to matrix.');
+        return false;
+      }   
     },
     deleteHeader(headerId) {
       var app = this;
@@ -6680,6 +6725,7 @@ export default {
     },
     removeAllStandardCharacters() {
       var app = this;
+      app.isLoading = true;
       axios.get('api/v1/character/remove-all-standard')
         .then(function (resp) {
           app.removeAllStandardFlag = false;
@@ -6694,6 +6740,7 @@ export default {
           console.log('delTags', resp.data.delTags);
           app.refreshUserCharacters();
           app.showTableForTab(app.currentTab);
+          app.isLoading = false;
         });
     },
     getDeprecatedValue() {
@@ -6706,6 +6753,7 @@ export default {
       var app = this;
       for (var i = 0; i < app.userCharacters.length; i++) {
         app.userCharacters[i].tooltip = '';
+        app.userCharacters[i].use_character = 0;
         if (app.userCharacters[i].method_from != null && app.userCharacters[i].method_from != '') {
           app.userCharacters[i].tooltip = app.userCharacters[i].tooltip + 'From: ' + app.userCharacters[i].method_from + ', ';
         }
@@ -6757,6 +6805,7 @@ export default {
         app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
       }
       app.characterUsername = app.user.name;
+      console.log(app.userCharacters);
     },
     tagOrder(tag) {
       var app = this;
