@@ -559,27 +559,7 @@
                                             secondNounSynonymNotifyMessage='';
                                             secondNounBroadSynonym=false;
                                             secondNounBroadSynonymNotifyMessage='';
-                                            fourthNounUndefined = false;
-                                            fifthNounUndefined = false;
-                                            fourthCharacterDefinition = '';
-                                            fifthCharacterDefinition = '';
-                                            fourthNounDeprecated=false;
-                                            fourthNounDeprecatedNotifyMessage='';
-                                            fifthNounDeprecated=false;
-                                            fifthNounDeprecatedNotifyMessage='';
-                                            fourthNounNotRecommend=false;
-                                            fourthNounNotRecommendNotifyMessage='';
-                                            fifthNounNotRecommend=false;
-                                            fifthNounNotRecommendNotifyMessage='';
-                                            fourthNounSynonym=false;
-                                            fourthNounSynonymNotifyMessage='';
-                                            fourthNounBroadSynonym=false;
-                                            fourthNounBroadSynonymNotifyMessage=''
-                                            fifthNounSynonym=false;
-                                            fifthNounSynonymNotifyMessage='';
-                                            fifthNounBroadSynonym=false;
-                                            fifthNounBroadSynonymNotifyMessage='';
-                                                                          "
+                                            "
                                 list="first_characters"
                                 placeholder="enter value or select"
                                 v-model="firstCharacter"
@@ -610,15 +590,37 @@
                             </div>
                             <div class="custom-character-field">
                               <select v-model="thirdCharacter" style="height: 26px;" class="width-100">
-                                <option>Longest</option>
-                                <option>Widest</option>
-                                <option>Shorest</option>
+                                <optgroup label="Dimension">
+                                  <option value="longest">longest</option>
+                                  <option value="widest">widest</option>
+                                  <option value="shorest">shorest</option>
+                                  <option value="narrowest">narrowest</option>
+                                </optgroup> 
+                                <optgroup label="Position">
+                                  <option value="anterior">anterior</option>
+                                  <option value="posterior">posterior</option>
+                                  <option value="abaxial">abaxial</option>
+                                  <option value="adaxial">adaxial</option>
+                                  <option value="proximal">proximal</option>
+                                  <option value="distal">distal</option>
+                                  <option value="distallmost">distallmost</option>
+                                  <option value="lateral">lateral</option>
+                                  <option value="medial">medial</option>
+                                  <option value="inner">inner</option>
+                                  <option value="outer">outer</option>
+                                  <option value="terminal">terminal</option>
+                                </optgroup> 
+                                <optgroup label="Prominence">
+                                  <option value="distinct">distinct</option>
+                                  <option value="total">total</option>
+                                </optgroup>
                               </select>
                             </div>
                             <div class="custom-character-field">
                               <input
                                 class="width-100"
                                 v-model="lastCharacter"
+                                style='height: 26px;'
                                 v-on:focus="nounUndefined = false;
                                             secondNounUndefined = false;
                                             lastCharacterDefinition = '';
@@ -650,26 +652,6 @@
                                             secondNounSynonymNotifyMessage='';
                                             secondNounBroadSynonym=false;
                                             secondNounBroadSynonymNotifyMessage='';
-                                            fourthNounUndefined = false;
-                                            fifthNounUndefined = false;
-                                            fourthCharacterDefinition = '';
-                                            fifthCharacterDefinition = '';
-                                            fourthNounDeprecated=false;
-                                            fourthNounDeprecatedNotifyMessage='';
-                                            fifthNounDeprecated=false;
-                                            fifthNounDeprecatedNotifyMessage='';
-                                            fourthNounNotRecommend=false;
-                                            fourthNounNotRecommendNotifyMessage='';
-                                            fifthNounNotRecommend=false;
-                                            fifthNounNotRecommendNotifyMessage='';
-                                            fourthNounSynonym=false;
-                                            fourthNounSynonymNotifyMessage='';
-                                            fourthNounBroadSynonym=false;
-                                            fourthNounBroadSynonymNotifyMessage=''
-                                            fifthNounSynonym=false;
-                                            fifthNounSynonymNotifyMessage='';
-                                            fifthNounBroadSynonym=false;
-                                            fifthNounBroadSynonymNotifyMessage='';
                                             "
                                 placeholder="enter a singular noun"
                               />
@@ -679,6 +661,7 @@
                                 class="width-100"
                                 v-if="middleCharacter=='between'"
                                 v-model="secondLastCharacter"
+                                style="height: 26px;"
                                 v-on:focus="nounUndefined = false;
                                             secondNounUndefined = false;
                                             lastCharacterDefinition = '';
@@ -710,31 +693,11 @@
                                             secondNounSynonymNotifyMessage='';
                                             secondNounBroadSynonym=false;
                                             secondNounBroadSynonymNotifyMessage='';
-                                            fourthNounUndefined = false;
-                                            fifthNounUndefined = false;
-                                            fourthCharacterDefinition = '';
-                                            fifthCharacterDefinition = '';
-                                            fourthNounDeprecated=false;
-                                            fourthNounDeprecatedNotifyMessage='';
-                                            fifthNounDeprecated=false;
-                                            fifthNounDeprecatedNotifyMessage='';
-                                            fourthNounNotRecommend=false;
-                                            fourthNounNotRecommendNotifyMessage='';
-                                            fifthNounNotRecommend=false;
-                                            fifthNounNotRecommendNotifyMessage='';
-                                            fourthNounSynonym=false;
-                                            fourthNounSynonymNotifyMessage='';
-                                            fourthNounBroadSynonym=false;
-                                            fourthNounBroadSynonymNotifyMessage=''
-                                            fifthNounSynonym=false;
-                                            fifthNounSynonymNotifyMessage='';
-                                            fifthNounBroadSynonym=false;
-                                            fifthNounBroadSynonymNotifyMessage='';
                                             "
                                 placeholder="enter a singular noun"
                               />
                             </div>
-                            <div class="custom-character-field">
+                            <!-- <div class="custom-character-field">
                               <select v-model="secondMiddleCharacter" style="height: 26px;" class="width-100">
                                 <option>of</option>
                                 <option>between</option>
@@ -844,31 +807,75 @@
                                             secondNounSynonymNotifyMessage='';
                                             secondNounBroadSynonym=false;
                                             secondNounBroadSynonymNotifyMessage='';
-                                            fourthNounUndefined = false;
-                                            fifthNounUndefined = false;
-                                            fourthCharacterDefinition = '';
-                                            fifthCharacterDefinition = '';
-                                            fourthNounDeprecated=false;
-                                            fourthNounDeprecatedNotifyMessage='';
-                                            fifthNounDeprecated=false;
-                                            fifthNounDeprecatedNotifyMessage='';
-                                            fourthNounNotRecommend=false;
-                                            fourthNounNotRecommendNotifyMessage='';
-                                            fifthNounNotRecommend=false;
-                                            fifthNounNotRecommendNotifyMessage='';
-                                            fourthNounSynonym=false;
-                                            fourthNounSynonymNotifyMessage='';
-                                            fourthNounBroadSynonym=false;
-                                            fourthNounBroadSynonymNotifyMessage=''
-                                            fifthNounSynonym=false;
-                                            fifthNounSynonymNotifyMessage='';
-                                            fifthNounBroadSynonym=false;
-                                            fifthNounBroadSynonymNotifyMessage='';
                                             "
                               />
-                            </div>
+                            </div> -->
                         </div>
-                        <div style="margin-top: 5px;">
+                        <div class="row custom-flex" v-for="round in rounds" style="margin-top: 20px;" v-if="roundVal != ''">
+                          <div class="custom-character-field" v-if="round.round_val == 'D'">
+                            <input
+                              v-model="round.first"
+                              style="width: 100px; height: 26px;"
+                              placeholder="at 2cm"
+                            />
+                          </div>  
+                          <div class="custom-character-field" v-if="round.round_val == 'S'">
+                            <select style="height: 26px; width:80px;" v-model="round.second">
+                              <option value="of">of</option>
+                              <option value="on">on</option>
+                              <option value="in">in</option>
+                            </select>
+                          </div>
+                          <div class="custom-character-field" v-if="round.round_val == 'D'">
+                            <select style="height: 26px; width:80px;"  v-model="round.third">
+                              <option value="below">below</option>
+                              <option value="above">above</option>
+                            </select>
+                          </div>
+                          <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
+                            <select style="height: 26px;" class="width-100" v-model="round.fourth">
+                              <optgroup label="Dimension">
+                                <option value="longest">longest</option>
+                                <option value="widest">widest</option>
+                                <option value="shorest">shorest</option>
+                                <option value="narrowest">narrowest</option>
+                              </optgroup> 
+                              <optgroup label="Position">
+                                <option value="anterior">anterior</option>
+                                <option value="posterior">posterior</option>
+                                <option value="abaxial">abaxial</option>
+                                <option value="adaxial">adaxial</option>
+                                <option value="proximal">proximal</option>
+                                <option value="distal">distal</option>
+                                <option value="distallmost">distallmost</option>
+                                <option value="lateral">lateral</option>
+                                <option value="medial">medial</option>
+                                <option value="inner">inner</option>
+                                <option value="outer">outer</option>
+                                <option value="terminal">terminal</option>
+                              </optgroup> 
+                              <optgroup label="Prominence">
+                                <option value="distinct">distinct</option>
+                                <option value="total">total</option>
+                              </optgroup>
+                            </select>
+                          </div>
+                          <div class="custom-character-field">
+                            <input
+                              v-model="round.fifth"
+                              class="width-100"
+                              style="height: 26px;"
+                              :placeholder="round.text"
+                            />
+                          </div>
+                          
+                        </div>
+                        <div class="custom-character-field round-button">
+                          <button  type="button" @click="roundButton('S')" title="Strutural Constraint" class="button button5" style="border-radius: 50%; background-color: #598ee3; color: #ffffff; border-color: #598ee3;">+S</button>
+                          <button  type="button" @click="roundButton('P')" title="Positional Constraint" class="button button5" style="border-radius: 50%; background-color: #e19ef7; color: #ffffff; border-color: #e19ef7;">+P</button>
+                          <button  type="button" @click="roundButton('D')" title="Distance Constraint" class="button button5" style="border-radius: 50%; background-color:#fa8f48; color: #ffffff; border-color: #fa8f48;">+D</button>
+                        </div>
+                        <div style="margin-top: 20px;">
                           <input type="checkbox" id="numerical-flag" v-model="numericalFlag">
                           <label for="numerical-flag">This is a numerical character</label>
                         </div>
@@ -923,7 +930,7 @@
                         </div>
 
 
-                         <div class="row" v-if="fourthNounDeprecated">
+                        <!--  <div class="row" v-if="fourthNounDeprecated">
                           <div class="col-md-12" v-html="fourthNounDeprecatedNotifyMessage">
                           </div>
                         </div>
@@ -954,7 +961,7 @@
                         <div class="row" v-if="fifthNounBroadSynonym">
                           <div class="col-md-12" v-html="fifthNounBroadSynonymNotifyMessage">
                           </div>
-                        </div>
+                        </div> -->
                         <div class="row" v-if="alreadyExistingCharacter">
                           <div class="col-md-12" v-html="alreadyExistingCharacterNotifyMessage">
                           </div>
@@ -979,7 +986,7 @@
                           </div>
                         </div>
 
-                        <div class="row" v-if=" (secondMiddleCharacter == 'of' ||  secondMiddleCharacter == 'between') && fourthNounUndefined">
+                        <!-- <div class="row" v-if=" (secondMiddleCharacter == 'of' ||  secondMiddleCharacter == 'between') && fourthNounUndefined">
                           <div class="col-md-12">
                             What is {{ fourthCharacter }}? <input v-model="fourthCharacterDefinition" style="width:100%"
                                                                 :placeholder="'enter the definition of ' + fourthCharacter">
@@ -991,7 +998,7 @@
                                                                       style="width:100%"
                                                                       :placeholder="'enter the definition of ' + fifthCharacter">
                           </div>
-                        </div>
+                        </div> -->
 <!--                        <div class="row" v-if="(!firstCharacterUndefined && !nounUndefined) && wholeCharacterUndefined">-->
 <!--                          <div class="col-md-12">-->
 <!--                            What is-->
@@ -1021,8 +1028,7 @@
                                                                 firstNounSynonym ||
                                                                 firstNounBroadSynonym ||
                                                                 secondNounSynonym ||
-                                                                secondNounBroadSynonym ||
-                                                                ((secondMiddleCharacter == 'of' && !fourthCharacter || (fourthNounUndefined && !fourthCharacterDefinition)) || (secondMiddleCharacter == 'between' && (!fourthCharacter || !fifthCharacter || ((fourthNounUndefined && !fourthCharacterDefinition) || (fifthNounUndefined && !fifthCharacterDefinition )))))
+                                                                secondNounBroadSynonym
                                                         }" 
                            v-on:click="checkBracketConfirm()">
                           &nbsp; &nbsp; Next: Define Character &nbsp; &nbsp; </a>
@@ -3163,6 +3169,8 @@ export default {
       deprecatedTermsMessage: '',
       deprecatedTermsFlag: false,
       checkCharacters: 0,
+      roundVal: '',
+      rounds: [],
     }
   },
   components: {
@@ -5490,6 +5498,8 @@ export default {
     cancelNewCharacter() {
       var app = this;
       app.newCharacterFlag = false;
+      app.roundVal = "";
+      app.rounds = [];
     },
     cancelCharacter() {
       var app = this;
@@ -6561,6 +6571,20 @@ export default {
       if ((app.userCharacters.find(ch => ch.standard == 1 || !ch.username.includes(app.user.name)) || app.userCharacters.find(ch => ch.standard == 0 && ch.username.includes(app.user.name))) && !app.matrixShowFlag) {
         app.toCollapseConfirmFlag = true;
       }
+    },
+    roundButton(val) {
+      var app = this;
+      app.roundVal = val;
+      if(app.roundVal == 'S') {
+        var textConstraint = "enter a singular noun";
+      }else if(app.roundVal == 'P') {
+        var textConstraint = "enter a positional phrases";
+      }else {
+        var textConstraint = "enter a singular noun";
+      }
+      let values = {text:textConstraint, round_val:app.roundVal,first: '', second:'', third:'', fourth:'', fifth:'' };
+
+      this.rounds.push(values);
     },
     generateMatrix() {
       var app = this;
