@@ -59,7 +59,8 @@
                     >
                       the recommended set of characters
                     </a>
-                      <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">(what
+                      <!-- <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}"> -->
+                        <b>(what
                         are they?) </b><br/> or</b>
                   </div>
                   <div class="col-md-12 margin-top-10">
