@@ -99,7 +99,7 @@
                     <b v-if="eachCharacter.standard_tag != previousUserCharacter.standard_tag">
                       {{ eachCharacter.standard_tag }} </b>
                     <div style="margin-left: 50px;">
-                      <input type="checkbox" :id="'character_id'+eachCharacter.id"  name="use_character" v-model="eachCharacter.use_character"> 
+                     <!--  <input type="checkbox" :id="'character_id'+eachCharacter.id"  name="use_character" v-model="eachCharacter.use_character">  -->
                       <i
                         v-bind:style="{color:(eachCharacter.parent_term && eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{
                           eachCharacter.name
@@ -107,13 +107,12 @@
                         <a style="margin-left: 45px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                           <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench"></span>
                         </a>
-                       <!--  <a v-on:click="removeStandardCharacter(eachCharacter.id)"
+                        <a v-on:click="removeStandardCharacter(eachCharacter.id)"
                            :set="previousUserCharacter=eachCharacter"
                            style="margin-left: 5px;"
                         >
-                                                    <span class="glyphicon glyphicon-remove">
-                                                    </span>
-                        </a>  -->                           
+                        <span class="glyphicon glyphicon-remove"></span>
+                        </a>                            
                                                    
                       </i>
                     </div>
@@ -134,7 +133,7 @@
                          :key="index"
                          v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)"
                          v-tooltip="eachCharacter.tooltip" style="margin-left: 50px;">
-                      <input type="checkbox" :id="'character_id'+eachCharacter.id"  name="use_character" v-model="eachCharacter.use_character">
+                      <!-- <input type="checkbox" :id="'character_id'+eachCharacter.id"  name="use_character" v-model="eachCharacter.use_character"> -->
                       <i
                         v-bind:style="{color:(eachCharacter.parent_term && eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f', 'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear'}">{{
                           eachCharacter.name
@@ -142,9 +141,9 @@
                         <a style="margin-left: 35px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                           <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench"></span>
                         </a>
-                        <!-- <a style="margin-left: 5px;" v-on:click="removeStandardCharacter(eachCharacter.id)">
+                        <a style="margin-left: 5px;" v-on:click="removeStandardCharacter(eachCharacter.id)">
                           <span class="glyphicon glyphicon-remove"></span>
-                        </a> -->
+                        </a>
                         
                       </i>
                     </div>
@@ -6430,7 +6429,7 @@ export default {
 
       this.rounds.push(values);
     },
-    generateMatrix() {
+   /* generateMatrix() {
       var app = this;
       var ids = [];
       var addIds = [];
@@ -6504,6 +6503,47 @@ export default {
         alert('You need to select characters before you can go to matrix.');
         return false;
       }   
+    },*/
+    generateMatrix() {
+      var app = this;
+      app.isLoading = true;
+      console.log('app.userCharacters', app.userCharacters);
+      if (app.userCharacters.length === 0) {
+        app.isLoading = false;
+        alert("You need to select characters before you can go to matrix")
+      } else {
+        if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
+          var jsonMatrix = {
+            'user_id': app.user.id,
+            'column_count': app.columnCount,
+            'taxon': app.taxonName
+          };
+          app.oldUserTags = [];
+          axios.post('api/v1/matrix-store', jsonMatrix)
+            .then(function (resp) {
+              app.isLoading = false;
+              console.log('resp storeMatrix', resp.data);
+              app.matrixShowFlag = true;
+              app.collapsedFlag = true;
+              app.showSetupArea = false;
+              app.userCharacters = resp.data.characters;
+              app.headers = resp.data.headers;
+              app.values = resp.data.values;
+              app.matrixSaved = false;
+              console.log('app.userTags', app.userTags);
+              axios.get('api/v1/user-tag/' + app.user.id)
+                .then(function (resp) {
+                  app.userTags = resp.data;
+                  app.showTableForTab(app.currentTab);
+                });
+              app.refreshUserCharacters(true);
+              console.log('userCharacters', app.userCharacters);
+            });
+        } else {
+          app.isLoading = false;
+          alert("You need to fill the taxon name and specimen count in the input box!")
+        }
+      }
     },
     deleteHeader(headerId) {
       var app = this;
