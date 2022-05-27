@@ -668,6 +668,7 @@
                                 v-if="middleCharacter=='between'"
                                 v-model="secondLastCharacter"
                                 style="height: 26px;"
+                                list="second_last_characters"
                                 v-on:focus="nounUndefined = false;
                                             secondNounUndefined = false;
                                             lastCharacterDefinition = '';
@@ -703,6 +704,9 @@
                                             "
                                 placeholder="enter a singular noun"
                               />
+                              <datalist id="second_last_characters">
+                                <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
+                              </datalist>
                             </div>
                             <!-- <div class="custom-character-field">
                               <select v-model="secondMiddleCharacter" style="height: 26px;" class="width-100">
@@ -873,6 +877,7 @@
                                 v-model="round.fifth"
                                 class="width-100"
                                 style="height: 26px;"
+                                v-bind:list='[round.round_val == "S" || round.round_val == "D" ? "round_fifth_characters" : "" ]'
                                 :placeholder="round.text"
                                 v-on:focus = "nounUndefined = false;
                                               secondNounUndefined = false;
@@ -916,6 +921,9 @@
                                               round.broadSynonymNotifyMessage='';
                                               "
                               />
+                              <datalist id="round_fifth_characters" >
+                                <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
+                              </datalist>
                             </div>
                             
                           </div>
