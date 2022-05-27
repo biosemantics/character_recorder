@@ -463,7 +463,7 @@ class HomeController extends Controller
             'defaultCharacters' => $returnDefaultCharacters
         ];
 
-        event(new MyEvent());
+        //event(new MyEvent());
 
         return $data;
 
@@ -851,7 +851,7 @@ class HomeController extends Controller
             'defaultCharacters' => $returnDefaultCharacters,
         ];
 
-        event(new MyEvent());
+        //event(new MyEvent());
 
         return $data;
     }
@@ -3747,5 +3747,39 @@ class HomeController extends Controller
         }
 
         return $usernames;
+    }
+
+    // fetch the data for character values who has already defined
+    public function searchCharacter() {
+        $options = array(
+            CURLOPT_RETURNTRANSFER => true,   // return web page
+            CURLOPT_HEADER         => false,  // don't return headers
+            CURLOPT_SSL_VERIFYPEER => false
+        ); 
+        $ch = curl_init('http://shark.sbs.arizona.edu:8080/carex/getValidSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=anatomical_structure');
+        curl_setopt_array($ch, $options);
+        $content  = curl_exec($ch);
+        curl_close($ch);
+        $resArr = array();
+        $resArr = json_decode($content,true);
+        $characters = array();
+        if(!empty($resArr)) {
+            if(isset($resArr['children']) && !empty($resArr['children'])){
+                foreach ($resArr['children'] as $ckey => $cvalue) {
+                    if(!empty($cvalue['text'])) {
+                        $characters[] = $cvalue['text'];
+                    }  
+                    if(isset($cvalue['children']) && count($cvalue['children']) > 0) {
+                        foreach ($cvalue['children'] as $ch_key => $child) {
+                            if(!empty($cvalue['text'])) {
+                                $characters[] = $child['text'];    
+                            }
+                        }
+                    }
+                }
+            }       
+        }
+        sort($characters);
+        return $characters;
     }
 }

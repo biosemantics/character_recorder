@@ -622,6 +622,7 @@
                                 class="width-100"
                                 v-model="lastCharacter"
                                 style='height: 26px;'
+                                list="last_characters"
                                 v-on:focus="nounUndefined = false;
                                             secondNounUndefined = false;
                                             lastCharacterDefinition = '';
@@ -657,6 +658,9 @@
                                             "
                                 placeholder="enter a singular noun"
                               />
+                              <datalist id="last_characters">
+                                <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
+                              </datalist>
                               <br v-if="middleCharacter=='between'"/>
                               <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and</div>
                               <input
@@ -3193,7 +3197,7 @@ export default {
       secondNounBroadSynonym: false,
       secondNounBroadSynonymNotifyMessage: '',
 
-      fifthNounDeprecated: false,
+      /*fifthNounDeprecated: false,
       fourthNounDeprecatedNotifyMessage: '',
       fifthNounDeprecatedNotifyMessage: '',
       fourthNounNotRecommend: false,
@@ -3207,7 +3211,7 @@ export default {
       fifthNounSynonym: false,
       fifthNounSynonymNotifyMessage: '',
       fifthNounBroadSynonym: false,
-      fifthNounBroadSynonymNotifyMessage: '',
+      fifthNounBroadSynonymNotifyMessage: '',*/
 
       alreadyExistingCharacter: false,
       alreadyExistingCharacterNotifyMessage: '',
@@ -3245,6 +3249,7 @@ export default {
       roundVal: '',
       rounds: [],
       roundsUndefined: [],
+      nounCharacters: [],
     }
   },
   components: {
@@ -3459,7 +3464,7 @@ export default {
       var app = this;
       console.log('selectedItem', selectedItem);
       var selectedCharacter = app.defaultCharacters.find(ch => ch.id == selectedItem)
-
+       
       app.editFlag = false;
       sessionStorage.setItem('editFlag', false);
       if (!selectedCharacter) {
@@ -5102,7 +5107,6 @@ export default {
       //       // }
       //     });
       // }
-
       if (
         !app.firstCharacterUndefined &&
         !app.firstCharacterDeprecated &&
@@ -10349,6 +10353,14 @@ export default {
       } else {
         app.importMatrix();
       }
+    },
+
+    searchCharacter() {
+      var app = this;
+      axios.get('api/v1/character/search_character')
+        .then(function (resp) {
+            app.nounCharacters = resp.data;
+        });
     }
   },
   watch: {
@@ -10554,6 +10566,7 @@ export default {
   mounted() {
     console.log('mounted');
     var app = this;
+    app.searchCharacter();
     app.user.name = app.user.email.split('@')[0];
     app.characterUsername = app.user.name;
     sessionStorage.setItem('userId', app.user.id);
