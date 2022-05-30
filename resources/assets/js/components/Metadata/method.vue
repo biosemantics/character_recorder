@@ -44,7 +44,7 @@
                 <!--</div>-->
                 <div class="col-md-12">
                 </div>
-                <div class="col-md-12" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name != 'Color'"  style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
                     <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
                            @keyup="saveMeasureItems" name="methodFrom"/>
@@ -79,7 +79,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
                     <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
                     <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
@@ -112,7 +112,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
                     <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
                     <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
@@ -146,7 +146,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
                     <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
                     <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
@@ -254,6 +254,7 @@
                 shared: true,
                 childData: [],
                 character_name: null,
+                ch_name: null,
                 viewFlag: false,
                 edit_created_other: true,
                 editFlag: false,
@@ -887,6 +888,12 @@
         beforeMount () {
             var app = this;
             this.character_name = sessionStorage.getItem("characterName");
+            var ch = this.character_name.split(" ");
+            if(ch[0] != undefined && ch[0] == 'Color') {
+                app.ch_name = ch[0];
+            }else {
+                app.ch_name = '';
+            }
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.editFlag = (sessionStorage.getItem('editFlag') == 'true');
             this.edit_created_other = (sessionStorage.getItem('edit_created_other')=='true');

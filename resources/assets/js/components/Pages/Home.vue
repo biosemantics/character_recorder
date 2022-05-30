@@ -1142,20 +1142,31 @@
                             <ul style="margin-left: auto; margin-right: auto;">
                               <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
                               <li class="method"
-                                  v-bind:class="{'back-grey': !checkHaveUnit(character.name)}">
-                                <a
+                                  v-bind:class="{'back-grey': !checkHaveUnit(character.name,'method')}">
+                                <a 
                                   :disabled="(!checkHaveUnit(character.name) || editFlag)"
                                   v-on:click="showDetails('method', metadataFlag)">1.
                                   Method<br><span
                                     class="glyphicon glyphicon-edit"></span></a>
                               </li>
                               <li class="unit"
-                                  v-bind:class="{'back-grey': !checkHaveUnit(character.name)}">
-                                <a
-                                  :disabled="!checkHaveUnit(character.name)"
+                                  v-bind:class="{'back-grey': (!checkHaveUnit(character.name)  || firstCharacter == 'Color')}">
+                                <div v-if="firstCharacter != 'Color'">
+                                  <a 
+                                  :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')"
                                   v-on:click="showDetails('unit', metadataFlag)">2.
                                   Unit<br><span
-                                    class="glyphicon glyphicon-edit"></span></a>
+                                    class="glyphicon glyphicon-edit"></span>
+                                  </a>
+                                </div>
+                                <div v-else>
+                                   <a 
+                                    :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')">2.
+                                    Unit<br><span
+                                      class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                </div>
+                                
                               </li>
                               <li class="tag"><a
                                 v-on:click="showDetails('tag', metadataFlag)">3.
@@ -1163,9 +1174,9 @@
                                   class="glyphicon glyphicon-edit"></span></a>
                               </li>
                               <li class="summary"
-                                  v-bind:class="{'back-grey': !checkHaveUnit(character.name)}">
+                                  v-bind:class="{'back-grey': (!checkHaveUnit(character.name) || firstCharacter == 'Color')}">
                                 <a
-                                  :disabled="!checkHaveUnit(character.name)"
+                                  :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')"
                                   v-on:click="showDetails('summary', metadataFlag)">4.
                                   Summary<br>Function<br><span
                                     class="glyphicon glyphicon-edit"></span></a>
@@ -1238,16 +1249,16 @@
                             to save for <i>{{ character.name }}</i>?
                           </div>
                           <br>
-                          <div v-if="character.method_from">
+                          <div v-if="character.method_from && firstCharacter != 'Color'">
                             <b>From:</b> {{ character.method_from }}
                           </div>
-                          <div v-if="character.method_to">
+                          <div v-if="character.method_to && firstCharacter != 'Color'">
                             <b>To:</b> {{ character.method_to }}
                           </div>
-                          <div v-if="character.method_include">
+                          <div v-if="character.method_include && firstCharacter != 'Color'">
                             <b>Include:</b> {{ character.method_include }}
                           </div>
-                          <div v-if="character.method_exclude">
+                          <div v-if="character.method_exclude && firstCharacter != 'Color'">
                             <b>Exclude:</b> {{ character.method_exclude }}
                           </div>
                           <div v-if="character.method_where">
@@ -3258,6 +3269,7 @@ export default {
       rounds: [],
       roundsUndefined: [],
       nounCharacters: [],
+      collectionLists: [],
     }
   },
   components: {
@@ -3570,7 +3582,6 @@ export default {
       } else {
         app.character = selectedCharacter;
         app.item = selectedItem;
-
         app.viewFlag = true;
         sessionStorage.setItem('viewFlag', true);
         sessionStorage.setItem('edit_created_other', true);
@@ -3783,7 +3794,13 @@ export default {
             break;
         }
       } else {
-        if (app.checkHaveUnit(app.character.name) || app.character.summary) {
+        var ch = app.character.name.split(" ");
+        if(ch[0] != 'undefined' && ch[0] == 'Color') {
+          var type = 'method';
+        }else {
+          var type = "";
+        }
+        if (app.checkHaveUnit(app.character.name,type) || app.character.summary) {
           console.log('app.character', app.character);
           // Initializing the methodFieldData //
           app.methodFieldData.fromTerm = null;
@@ -5285,8 +5302,12 @@ export default {
       app.character.creator = app.user.name + ' via CR';
       app.editFlag = false;
       app.newCharacterFlag = false;
-
-      if (app.checkHaveUnit(app.character.name)) {
+      if(app.firstCharacter == 'Color') {
+        var type = 'method';
+      }else {
+        var type = '';
+      }
+      if (app.checkHaveUnit(app.character.name,type)) {
         // Initializing the methodFieldData //
         app.methodFieldData.fromTerm = null;
         app.methodFieldData.fromId = null;
@@ -5328,6 +5349,7 @@ export default {
       }
 
       sessionStorage.setItem("characterName", app.character.name);
+      sessionStorage.setItem("firstCharacterName", app.firstCharacter);
       app.detailsFlag = true;
     },
     cancelNewCharacter() {
@@ -5349,85 +5371,90 @@ export default {
 
       console.log('metadata', metadata);
       console.log("app.character=", app.character);
-      if ((app.checkHaveUnit(app.character.name)) || (metadata != 'method' && metadata != 'unit' && metadata != 'summary')) {
-        app.metadataFlag = metadata;
-        switch (metadata) {
-          case 'method':
-            // Initializing the methodFieldData //
-            app.methodFieldData.fromTerm = null;
-            app.methodFieldData.fromId = null;
-            app.methodFieldData.toTerm = null;
-            app.methodFieldData.toId = null;
-            app.methodFieldData.includeTerm = null;
-            app.methodFieldData.includeId = null;
-            app.methodFieldData.excludeTerm = null;
-            app.methodFieldData.excludeId = null;
-            app.methodFieldData.whereTerm = null;
-            app.methodFieldData.whereId = null;
-            app.methodFieldData.fromNeedMore = false;
-            app.methodFieldData.toNeedMore = false;
-            app.methodFieldData.includeNeedMore = false;
-            app.methodFieldData.excludeNeedMore = false;
-            app.methodFieldData.whereNeedMore = false;
-            app.methodFieldData.fromSynonyms = [];
-            app.methodFieldData.toSynonyms = [];
-            app.methodFieldData.includeSynonyms = [];
-            app.methodFieldData.excludeSynonyms = [];
-            app.methodFieldData.whereSynonyms = [];
-            app.methodFieldData.noneSynonymFlag = {
-              from: false,
-              to: false,
-              include: false,
-              exclude: false,
-              where: false,
-            };
-            //
-            app.parentData = [];
-            app.parentData[0] = app.character.method_as;
-            app.parentData[3] = app.user;
-            app.parentData[4] = app.character.method_from;
-            app.parentData[5] = app.character.method_to;
-            app.parentData[6] = app.character.method_include;
-            app.parentData[7] = app.character.method_exclude;
-            app.parentData[8] = app.character.method_where;
-            app.parentData[9] = app.methodFieldData;
-            app.currentMetadata = method;
-            break;
-          case 'unit':
-            app.parentData = app.character.unit;
-            app.currentMetadata = unit;
-            break;
-          case 'tag':
-            app.parentData = app.character.standard_tag;
-            app.currentMetadata = tag;
-            break;
-          case 'summary':
-            app.parentData = app.character.summary;
-            app.currentMetadata = summary;
-            break;
-          case 'creator':
-            app.parentData = app.character.username + ' via CR';//app.character.creator;
-            app.currentMetadata = creator;
-            break;
-          case 'usage':
-            axios.get('api/v1/get-usage/' + app.character.id)
-              .then(function (resp) {
-                app.parentData = [];
-                app.parentData[0] = resp.data.usage_count;
-                app.parentData[1] = app.user.name;
-                app.parentData[2] = app.taxonName;
-                app.currentMetadata = usage;
-              });
+/*      if(app.firstCharacter == 'Color' && (metadata == 'unit' || metadata == 'summary')) {
 
-            break;
-          case 'history':
-            app.parentData = app.character.history;
-            app.currentMetadata = history;
-            break;
-          default:
-            break;
+      }else {*/
+        if ((app.checkHaveUnit(app.character.name,metadata)) || (metadata != 'method' && metadata != 'unit' && metadata != 'summary')) {
+          app.metadataFlag = metadata;
+          switch (metadata) {
+            case 'method':
+              // Initializing the methodFieldData //
+              app.methodFieldData.fromTerm = null;
+              app.methodFieldData.fromId = null;
+              app.methodFieldData.toTerm = null;
+              app.methodFieldData.toId = null;
+              app.methodFieldData.includeTerm = null;
+              app.methodFieldData.includeId = null;
+              app.methodFieldData.excludeTerm = null;
+              app.methodFieldData.excludeId = null;
+              app.methodFieldData.whereTerm = null;
+              app.methodFieldData.whereId = null;
+              app.methodFieldData.fromNeedMore = false;
+              app.methodFieldData.toNeedMore = false;
+              app.methodFieldData.includeNeedMore = false;
+              app.methodFieldData.excludeNeedMore = false;
+              app.methodFieldData.whereNeedMore = false;
+              app.methodFieldData.fromSynonyms = [];
+              app.methodFieldData.toSynonyms = [];
+              app.methodFieldData.includeSynonyms = [];
+              app.methodFieldData.excludeSynonyms = [];
+              app.methodFieldData.whereSynonyms = [];
+              app.methodFieldData.noneSynonymFlag = {
+                from: false,
+                to: false,
+                include: false,
+                exclude: false,
+                where: false,
+              };
+              //
+              app.parentData = [];
+              app.parentData[0] = app.character.method_as;
+              app.parentData[3] = app.user;
+              app.parentData[4] = app.character.method_from;
+              app.parentData[5] = app.character.method_to;
+              app.parentData[6] = app.character.method_include;
+              app.parentData[7] = app.character.method_exclude;
+              app.parentData[8] = app.character.method_where;
+              app.parentData[9] = app.methodFieldData;
+              app.currentMetadata = method;
+              break;
+            case 'unit':
+              app.parentData = app.character.unit;
+              app.currentMetadata = unit;
+              break;
+            case 'tag':
+              app.parentData = app.character.standard_tag;
+              app.currentMetadata = tag;
+              break;
+            case 'summary':
+              app.parentData = app.character.summary;
+              app.currentMetadata = summary;
+              break;
+            case 'creator':
+              app.parentData = app.character.username + ' via CR';//app.character.creator;
+              app.currentMetadata = creator;
+              break;
+            case 'usage':
+              axios.get('api/v1/get-usage/' + app.character.id)
+                .then(function (resp) {
+                  app.parentData = [];
+                  app.parentData[0] = resp.data.usage_count;
+                  app.parentData[1] = app.user.name;
+                  app.parentData[2] = app.taxonName;
+                  app.currentMetadata = usage;
+                });
+
+              break;
+            case 'history':
+              app.parentData = app.character.history;
+              app.currentMetadata = history;
+              break;
+            default:
+              break;
+          }
         }
-      }
+      //}
+      
 
     },
     checkNumericalCharacter(characterName) {
@@ -5452,6 +5479,7 @@ export default {
       axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollection")
       .then(function(resp) {
         var collectionList = resp.data.entries;
+        app.collectionLists = resp.data.entries;
         axios.get("http://shark.sbs.arizona.edu:8080/carex/getStandardCollectionOrder")
         .then(function(resp) {
           var standardCharacters = JSON.parse(resp.data.replaceAll("'", '"'));
@@ -5482,6 +5510,11 @@ export default {
                 var tempCharacter = {};
                 tempCharacter.name = collectionList[i].term.charAt(0).toUpperCase() + collectionList[i].term.slice(1);
                 tempCharacter.IRI = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property == "http://www.geneontology.org/formats/oboInOwl#id").value;
+                tempCharacter.check_defintion = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property == "http://purl.obolibrary.org/obo/IAO_0000115");
+                tempCharacter.full_definition = '';
+                if(tempCharacter.check_defintion != undefined) {
+                  tempCharacter.full_definition = tempCharacter.check_defintion.value;
+                }
                 tempCharacter.parent_term = collectionList[i].parentTerm;
                 if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_from")) != 'undefined'
                   && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_from")) != undefined) {
@@ -5715,7 +5748,7 @@ export default {
 
       var awaitCount = 0;
 
-      if (!app.editFlag && (app.checkHaveUnit(app.character.name) == true) && (tempViewFlag == false)) {
+      if (!app.editFlag && (app.checkHaveUnit(app.character.name,metadataFlag) == true) && (tempViewFlag == false)) {
         var tempFlag = false;
         awaitCount++;
         console.log('awaitCount', awaitCount);
@@ -6105,7 +6138,7 @@ export default {
               app.showDetails('tag', app.metadataFlag);
 
             } else {
-              if (app.checkHaveUnit(app.character.name)) {
+              if (app.checkHaveUnit(app.character.name,metadataFlag)) {
                 app.confirmMethod = true;
               } else {
                 app.confirmTag = true;
@@ -6690,6 +6723,19 @@ export default {
         if (app.userCharacters[i].method_where != null && app.userCharacters[i].method_where != '') {
           app.userCharacters[i].tooltip += 'Where: ' + app.userCharacters[i].method_where;
         }
+        if (app.userCharacters[i].creator != null && app.userCharacters[i].creator != '') {
+          app.userCharacters[i].tooltip += ', Creator: ' + app.userCharacters[i].creator;
+        }
+        for (var coll = 0; coll < app.collectionLists.length; coll++) {
+          if(app.collectionLists[coll]['term'] == app.userCharacters[i].name.toLowerCase()) {
+            var check_definition = app.collectionLists[coll].resultAnnotations.find(eachCollection => eachCollection.property == "http://purl.obolibrary.org/obo/IAO_0000115");
+              if(check_definition != undefined) {
+                app.userCharacters[i].tooltip += '<br/>' + app.userCharacters[i].name  + ' is defined as ' + check_definition.value;
+              }
+              break;
+          }
+        }
+
         var definitionKey = app.userCharacters[i].name.slice(0, app.userCharacters[i].name.indexOf(' '));
         var definitionVar = app.definitionData.find(eachDefinition => eachDefinition.IRI == ('http://biosemantics.arizona.edu/ontologies/carex#' + (definitionKey == 'Color' ? 'color' : definitionKey.toLowerCase())));
         if (definitionVar) {
@@ -6935,6 +6981,7 @@ export default {
         if (app.standardCollections[i].method_where != null && app.standardCollections[i].method_where != '') {
           temp.tooltip = temp.tooltip + 'Where: ' + app.standardCollections[i].method_where;
         }
+
         temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.standardCollections[i].IRI);
 
         var src = '';
@@ -6955,6 +7002,8 @@ export default {
             src += '</div>';
           }
         }
+
+
 
         // var imageSrc = await app.getTooltipImageString(temp.name);
         temp.tooltip = src + temp.tooltip;
@@ -6989,6 +7038,7 @@ export default {
           if (app.defaultCharacters[i].method_where != null && app.defaultCharacters[i].method_where != '') {
             temp.tooltip = temp.tooltip + 'Where: ' + app.defaultCharacters[i].method_where;
           }
+
           temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.defaultCharacters[i].IRI);
           // temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
           var imageSrc = await app.getTooltipImageString(temp.name);
@@ -7010,30 +7060,103 @@ export default {
         app.updateDescription();
       }
     },
-    checkHaveUnit(string) {
+    checkHaveUnit(string,type) {
       var app = this;
-
-      var character = app.userCharacters.find(each => each.name === string);
-      if (string.startsWith('Length of')
-        || string.startsWith('Width of')
-        || string.startsWith('Depth of')
-        || string.startsWith('Diameter of')
-        || string.startsWith('Distance between')
-        || string.startsWith('Distance of')
-        || string.startsWith('Count of')
-        || string.startsWith('Number of')
-        || app.numericalFlag === true
-        && app.newCharacterFlag == false) {
-        return true;
-      } else if (character) {
-        if (character.summary && !string.startsWith('Number of')) {
+      if(app.firstCharacter == 'Color'  && ( type == 'method' || type == "tag")) {
+        var character = app.userCharacters.find(each => each.name === string);
+        if (string.startsWith('Length of')
+          || string.startsWith('Width of')
+          || string.startsWith('Depth of')
+          || string.startsWith('Diameter of')
+          || string.startsWith('Distance between')
+          || string.startsWith('Distance of')
+          || string.startsWith('Count of')
+          || string.startsWith('Number of')
+          || string.startsWith('Color')
+          || app.numericalFlag === true
+          && app.newCharacterFlag == false) {
           return true;
+        } else if (character) {
+          if (character.summary && !string.startsWith('Number of')) {
+            return true;
+          } else {
+            return false;
+          }
         } else {
           return false;
         }
-      } else {
-        return false;
-      }
+      }else if(type == 'method' || type == "tag"){
+        var ch = string.split(" ");
+        if(ch[0] != 'undefined' && ch[0] == 'Color') {
+          var character = app.userCharacters.find(each => each.name === string);
+          if (string.startsWith('Length of')
+            || string.startsWith('Width of')
+            || string.startsWith('Depth of')
+            || string.startsWith('Diameter of')
+            || string.startsWith('Distance between')
+            || string.startsWith('Distance of')
+            || string.startsWith('Count of')
+            || string.startsWith('Number of')
+            || string.startsWith('Color')
+            || app.numericalFlag === true
+            && app.newCharacterFlag == false) {
+            return true;
+          } else if (character) {
+            if (character.summary && !string.startsWith('Number of')) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        }else {
+          var character = app.userCharacters.find(each => each.name === string);
+          if (string.startsWith('Length of')
+            || string.startsWith('Width of')
+            || string.startsWith('Depth of')
+            || string.startsWith('Diameter of')
+            || string.startsWith('Distance between')
+            || string.startsWith('Distance of')
+            || string.startsWith('Count of')
+            || string.startsWith('Number of')
+            || app.numericalFlag === true
+            && app.newCharacterFlag == false) {
+            return true;
+          } else if (character) {
+            if (character.summary && !string.startsWith('Number of')) {
+              return true;
+            } else {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        }
+      }else {
+        var character = app.userCharacters.find(each => each.name === string);
+        if (string.startsWith('Length of')
+          || string.startsWith('Width of')
+          || string.startsWith('Depth of')
+          || string.startsWith('Diameter of')
+          || string.startsWith('Distance between')
+          || string.startsWith('Distance of')
+          || string.startsWith('Count of')
+          || string.startsWith('Number of')
+          || app.numericalFlag === true
+          && app.newCharacterFlag == false) {
+          return true;
+        } else if (character) {
+          if (character.summary && !string.startsWith('Number of')) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } 
+     
     },
     convertPluralWord(word) {
       if (singularToPlural[word]) {
