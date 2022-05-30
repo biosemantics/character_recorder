@@ -1138,7 +1138,80 @@
 
                       <div class="modal-body">
                         <div class="row">
-                          <div class="col-md-6 radial-menu">
+                          
+                          <div class="col-md-6">
+                            <ul class="customTabbing">
+                               <!--  <li><a v-on:click="showDetails('', metadataFlag)"></a></li> -->
+                                <li 
+                                  :class="['method',((!checkHaveUnit(character.name,'method')) ? 'grey' : ''), (active_el == 'method' ? 'active' : '')]">
+                                  <a 
+                                  :disabled="(!checkHaveUnit(character.name) || editFlag)"
+                                  v-on:click="showDetails('method', metadataFlag)">
+                                  Method
+                                  </a>
+                                </li>
+                                <li :class="['unit',((!checkHaveUnit(character.name) || firstCharacter == 'Color') ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
+                                  <div v-if="firstCharacter != 'Color'">
+                                    <a 
+                                    :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')"
+                                    v-on:click="showDetails('unit', metadataFlag)">
+                                    Unit
+                                    </a>
+                                  </div>
+                                  <div v-else>
+                                    <a 
+                                      :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')">
+                                      Unit
+                                    </a>
+                                  </div></li>
+                                <li class="tag" v-bind:class="{ active : active_el == 'tag' }"><a
+                                  v-on:click="showDetails('tag', metadataFlag)">
+                                  Tag</a>
+                                </li>
+                                <li  :class="['summary',((!checkHaveUnit(character.name) || firstCharacter == 'Color') ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
+                                    <div v-if="firstCharacter != 'Color'">
+                                      <a 
+                                      :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')"
+                                      v-on:click="showDetails('summary', metadataFlag)">
+                                       Summary Function
+                                      </a>
+                                    </div>
+                                    <div v-else>
+                                      <a 
+                                        :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')">
+                                         Summary Function
+                                      </a>
+                                    </div>
+                                </li>
+                                <li class="creator" v-bind:class="{ active : active_el == 'creator' }"><a
+                                  v-on:click="showDetails('creator', metadataFlag)">Creator</a>
+                                </li>
+                                <li :class="{ active : active_el == 'usage' }">
+                                  <a v-on:click="showDetails('usage', metadataFlag)">Usage</a>
+                                </li>
+                                <li :class="{ active : active_el == 'history' }">
+                                  <a v-on:click="showDetails('history', metadataFlag)">History</a>
+                                </li>
+                                <!-- <li><a v-on:click="showDetails('', metadataFlag)"></a></li> -->
+                              </ul>
+                            <div id="metadataPlace">
+                              <div :is="currentMetadata" :parentData="parentData"
+                                   @interface="handleFcAfterDateBack">
+
+                              </div>
+                            </div>
+                            <div class="col-md-12 text-right" style="margin-top: 15px;">
+                              <a v-if="viewFlag == false"
+                                 v-on:click="saveCharacter(metadataFlag)"
+                                 v-bind:class="{disabled: saveCharacterButtonFlag}"
+                                 class="btn btn-primary">Save</a>
+                              <a v-if="viewFlag == true && editFlag == false" v-on:click="use(item)"
+                                 class="btn btn-primary">Use this</a>
+                              <a v-on:click="cancelCharacter()"
+                                 class="btn btn-danger">Cancel</a>
+                            </div>
+                          </div>
+                       <!--    <div class="col-md-6 radial-menu">
                             <ul style="margin-left: auto; margin-right: auto;">
                               <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
                               <li class="method"
@@ -1195,32 +1268,10 @@
                             <div class="center">
                               <a>{{ character.name }}</a>
                             </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div id="metadataPlace">
-                              <div :is="currentMetadata" :parentData="parentData"
-                                   @interface="handleFcAfterDateBack">
-
-                              </div>
-                            </div>
-                          </div>
+                          </div> -->
+                          
                         </div>
-                        <div class="row">
-                          <div class="col-md-12 text-right" style="margin-top: 15px;">
-                            <a v-if="viewFlag == false"
-                               v-on:click="saveCharacter(metadataFlag)"
-                               v-bind:class="{disabled: saveCharacterButtonFlag}"
-                               class="btn btn-primary">Save</a>
-                            <a v-if="viewFlag == true && editFlag == false" v-on:click="use(item)"
-                               class="btn btn-primary">Use this</a>
-<!--                            <a v-if="viewFlag == true && editFlag == false" v-on:click="enhance(item)"-->
-<!--                               class="btn btn-primary">Modify and Use &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b-->
-<!--                              style="border: 1px solid #ffffff; background: #003366;"-->
-<!--                              title="Use thisoption when this character fits your needs but can be better defined. The original definition will be retained and the modified definition will be saved as a different character.">?</b></a>-->
-                            <a v-on:click="cancelCharacter()"
-                               class="btn btn-danger">Cancel</a>
-                          </div>
-                        </div>
+                       
                       </div>
 
                       <div class="modal-footer">
@@ -3270,6 +3321,7 @@ export default {
       roundsUndefined: [],
       nounCharacters: [],
       collectionLists: [],
+      active_el: 0,
     }
   },
   components: {
@@ -5356,6 +5408,7 @@ export default {
       var app = this;
       app.newCharacterFlag = false;
       app.roundVal = "";
+      app.active_el = 0;
       app.rounds = [];
     },
     cancelCharacter() {
@@ -5363,10 +5416,11 @@ export default {
       app.detailsFlag = false;
       app.rounds = [];
       app.roundVal = "";
+      app.active_el = 0;
     },
     showDetails(metadata, previousMetadata = null) {
       var app = this;
-
+      app.active_el = metadata;
       console.log('checkHaveUnit', app.checkHaveUnit(app.character.name));
 
       console.log('metadata', metadata);
@@ -6721,10 +6775,10 @@ export default {
           app.userCharacters[i].tooltip += 'Exclude: ' + app.userCharacters[i].method_exclude + ', ';
         }
         if (app.userCharacters[i].method_where != null && app.userCharacters[i].method_where != '') {
-          app.userCharacters[i].tooltip += 'Where: ' + app.userCharacters[i].method_where;
+          app.userCharacters[i].tooltip += 'Where: ' + app.userCharacters[i].method_where +', ';
         }
         if (app.userCharacters[i].creator != null && app.userCharacters[i].creator != '') {
-          app.userCharacters[i].tooltip += ', Creator: ' + app.userCharacters[i].creator;
+          app.userCharacters[i].tooltip += ' Creator: ' + app.userCharacters[i].creator + ', ';
         }
         for (var coll = 0; coll < app.collectionLists.length; coll++) {
           if(app.collectionLists[coll]['term'] == app.userCharacters[i].name.toLowerCase()) {
