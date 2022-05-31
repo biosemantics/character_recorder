@@ -5647,11 +5647,7 @@ export default {
                   var tempElucidations = collectionList[i].resultAnnotations.filter(eachProperty => eachProperty.property.endsWith("elucidation"));
                   for (var j = 0; j < tempElucidations.length; j++) {
                     if (j == 0) {
-                      tempCharacter.elucidation = tempElucidations[j].value
-                      /*var newUrl = tempElucidations[j].value.slice(0, tempElucidations[j].value.lastIndexOf('?usp=sharing"'))
-
-                      var final = newUrl.split('"');
-                      console.log('final',final);*/
+                      tempCharacter.elucidation = tempElucidations[j].value;
                       var newUrl = tempElucidations[j].value.slice(tempElucidations[j].value.indexOf('file/d/') + 7, tempElucidations[j].value.indexOf('/view?usp='));
                       tempCharacter.images.push(newUrl);
                     }
@@ -10255,8 +10251,6 @@ export default {
     },
     calcSummary(row) {
       var app = this;
-      // console.log('row',row);
-
       var characterName = row.find(each => each.header_id == 1).value;
       var currentCharacter = app.userCharacters.find(each => each.name == characterName);
       if (currentCharacter.summary || characterName.startsWith("Number ")) {
@@ -10270,8 +10264,7 @@ export default {
             }
           }
 
-          var mean = parseFloat(sum / tempRpArray.length).toFixed(1);
-
+          var mean = parseFloat(sum / tempRpArray.length).toFixed(2);
           tempRpArray.sort((a, b) => a - b);
           var minValue = tempRpArray[0];
           var maxValue = tempRpArray[tempRpArray.length - 1];

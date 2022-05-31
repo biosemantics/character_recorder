@@ -8,11 +8,10 @@ import OntologyUpdate from './components/Pages/ontology_update.vue';
 import SharedCharacter from './components/Pages/shared_character.vue';
 
 const routes = [
-    // {
-    //     path: '/home',
-    //     component: Home,
-    //     name: 'home'
-    // },
+    {
+        path: '/home',
+        redirect: '/'
+    },
     {
         path: '/',
         component: Home,
