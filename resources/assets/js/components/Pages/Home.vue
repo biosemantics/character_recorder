@@ -1211,6 +1211,35 @@
                                  class="btn btn-danger">Cancel</a>
                             </div>
                           </div>
+                          <div class="col-md-6">
+                            <div id="myCarousel" class="carousel slide" data-ride="carousel" v-if="character.images != undefined && character.images.length > 0">
+                              <!-- Indicators -->
+                              <ol class="carousel-indicators" v-for="(img, index) in character.images" v-if="character.images != undefined && character.images.length > 0">
+                                <li data-target="#myCarousel" :data-slide-to="index" class="active"></li>
+                              </ol>
+
+                              <!-- Wrapper for slides -->
+                              <div class="carousel-inner">
+                                <div class="item" v-bind:class="[(index == 0 ? 'active' : '')]" v-for="(img, index) in character.images" v-if="character.images != undefined && character.images.length > 0">
+                                  <img v-bind:src="'https://drive.google.com/uc?id=' + img" alt="image" style="width:100%; height:430px;">
+                                </div>
+
+                              </div>
+
+                              <!-- Left and right controls -->
+                              <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                <span class="sr-only">Previous</span>
+                              </a>
+                              <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                                <span class="sr-only">Next</span>
+                              </a>
+                            </div>
+                            <div v-else>
+                              <h2 style="text-align: center; margin-top:167px;">No image</h2>
+                            </div>
+                          </div>
                        <!--    <div class="col-md-6 radial-menu">
                             <ul style="margin-left: auto; margin-right: auto;">
                               <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
@@ -2863,6 +2892,7 @@
   </div>
 
 </template>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
 import Vue from 'vue';
@@ -5611,15 +5641,26 @@ export default {
                   && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_at")) != undefined) {
                   tempCharacter.method_where = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_at")).value.split("#")[1].replaceAll('_', ' ');
                 }
+                tempCharacter.images = [];
                 if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("elucidation")) != 'undefined'
                   && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("elucidation")) != undefined) {
                   var tempElucidations = collectionList[i].resultAnnotations.filter(eachProperty => eachProperty.property.endsWith("elucidation"));
                   for (var j = 0; j < tempElucidations.length; j++) {
                     if (j == 0) {
                       tempCharacter.elucidation = tempElucidations[j].value
+                      /*var newUrl = tempElucidations[j].value.slice(0, tempElucidations[j].value.lastIndexOf('?usp=sharing"'))
+
+                      var final = newUrl.split('"');
+                      console.log('final',final);*/
+                      var newUrl = tempElucidations[j].value.slice(tempElucidations[j].value.indexOf('file/d/') + 7, tempElucidations[j].value.indexOf('/view?usp='));
+                      tempCharacter.images.push(newUrl);
                     }
                     if (j > 0) {
                       tempCharacter.elucidation = tempCharacter.elucidation + ','+ tempElucidations[j].value;
+                      var newUrl = tempElucidations[j].value.slice(tempElucidations[j].value.indexOf('file/d/') + 7, tempElucidations[j].value.indexOf('/view?usp='));
+
+                      tempCharacter.images.push(newUrl);
+                    
                     }
                   }
                 }

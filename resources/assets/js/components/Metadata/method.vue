@@ -18,20 +18,20 @@
             <!--<div class="col-md-12" v-if="noneMethod == false && methodArray.length > 0">
                 Please select one illustration that matching your measurement methods.
             </div> -->
-            <div v-for="(each, index) in methodEntry.resultAnnotations"
+            <!-- <div v-for="(each, index) in methodEntry.resultAnnotations"
                  :key="index"
                  v-if="noneMethod == false && each.property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation'"
-                 class="col-md-6">
+                 class="col-md-6"> -->
                  <!-- <label>{{ each.value.substring(1, each.value.length - 1) }}</label>
                  <label>{{ each.value.indexOf('id=') < 0 ?
                         each.value.slice(each.value.indexOf('file/d/') + 7, each.value.indexOf('/view?usp=')) :
                         each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1) }}</label> -->
-                <img class="img-method"
+                <!-- <img class="img-method"
                      v-bind:class="{ greenBorder: illustratorProperty[index] }"
                      v-on:click="clickedMethod(index, each.clickMethodValue)"
                      v-bind:id="'img-method-' + index" style="width: 100%;"
                      v-bind:src="'https://drive.google.com/uc?id=' + each.src"/>
-            </div>
+            </div> -->
             <div v-if="!noneMethod && methodEntry.resultAnnotations && methodEntry.resultAnnotations.length > 0 && !edit_created_other && !editFlag" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
             </div>
