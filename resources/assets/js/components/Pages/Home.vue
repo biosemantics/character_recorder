@@ -61,7 +61,7 @@
                     </a>
                       <!-- <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}"> -->
                         <b>(what
-                        are they?) </b><br/> or</b>
+                        are they?) </b><br/> Or Choose more set of characters to add in this Matrix below</b>
                   </div>
                   <div class="col-md-12 margin-top-10">
                     <b>Search/create another character:&nbsp;</b>
@@ -1143,14 +1143,14 @@
                             <ul class="customTabbing">
                                <!--  <li><a v-on:click="showDetails('', metadataFlag)"></a></li> -->
                                 <li 
-                                  :class="['method',((!checkHaveUnit(character.name,'method')) ? 'grey' : ''), (active_el == 'method' ? 'active' : '')]">
+                                  :class="['method',(completeElement.includes('method') ? 'back-green':''),((!checkHaveUnit(character.name,'method')) ? 'grey' : ''), (active_el == 'method' ? 'active' : '')]">
                                   <a 
                                   :disabled="(!checkHaveUnit(character.name) || editFlag)"
                                   v-on:click="showDetails('method', metadataFlag)">
                                   Method
                                   </a>
                                 </li>
-                                <li :class="['unit',((!checkHaveUnit(character.name) || firstCharacter == 'Color') ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
+                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),((!checkHaveUnit(character.name) || firstCharacter == 'Color') ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
                                   <div v-if="firstCharacter != 'Color'">
                                     <a 
                                     :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')"
@@ -1164,11 +1164,11 @@
                                       Unit
                                     </a>
                                   </div></li>
-                                <li class="tag" v-bind:class="{ active : active_el == 'tag' }"><a
+                                <li class="tag" :class="[(completeElement.includes('tag') ? 'back-green': ''),(active_el == 'tag' ? 'active' : '') ]"><a
                                   v-on:click="showDetails('tag', metadataFlag)">
                                   Tag</a>
                                 </li>
-                                <li  :class="['summary',((!checkHaveUnit(character.name) || firstCharacter == 'Color') ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
+                                <li  :class="['summary',(completeElement.includes('summary') ? 'back-green' : ''),((!checkHaveUnit(character.name) || firstCharacter == 'Color') ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
                                     <div v-if="firstCharacter != 'Color'">
                                       <a 
                                       :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')"
@@ -1183,7 +1183,7 @@
                                       </a>
                                     </div>
                                 </li>
-                                <li class="creator" v-bind:class="{ active : active_el == 'creator' }"><a
+                                <li class="creator" :class="{ active : active_el == 'creator' }"><a
                                   v-on:click="showDetails('creator', metadataFlag)">Creator</a>
                                 </li>
                                 <li :class="{ active : active_el == 'usage' }">
@@ -3322,6 +3322,7 @@ export default {
       nounCharacters: [],
       collectionLists: [],
       active_el: 0,
+      completeElement:[],
     }
   },
   components: {
@@ -3375,7 +3376,8 @@ export default {
       var app = this;
       app.updatedFlag = true;
       $('.center').addClass('back-yellow');
-      $('.' + app.metadataFlag).addClass('back-median-green');
+      $('.' + app.metadataFlag).addClass('back-green');
+      app.completeElement.push(app.metadataFlag);
       switch (app.metadataFlag) {
         case 'method':
           app.character.method_as = event[0];
@@ -3847,6 +3849,14 @@ export default {
         }
       } else {
         var ch = app.character.name.split(" ");
+        if(ch[0] != undefined && ch[1] !== undefined){
+          if(ch[0]+' '+ch[1] == 'Length of' || ch[0]+' '+ch[1] == "Width of" || ch[0]+' '+ch[1] == 'Depth of' || ch[0]+' '+ch[1] == 'Diameter of' || ch[0]+' '+ch[1] == 'Distance of' || ch[0]+' '+ch[1] == 'Distance between' || ch[0]+' '+ch[1] == 'Count of' || ch[0]+' '+ch[1] == 'Number of' || ch[0] == "Color") {
+            app.active_el = 'method';
+          }else {
+            app.active_el = 'tag'
+          }
+        }
+        
         if(ch[0] != 'undefined' && ch[0] == 'Color') {
           var type = 'method';
         }else {
@@ -5399,7 +5409,12 @@ export default {
         app.metadataFlag = 'tag';
         app.currentMetadata = tag;
       }
-
+      var ch_name = app.character.name.split(' ')[0];
+      if(ch_name+' '+app.middleCharacter == 'Length of' || ch_name+' '+app.middleCharacter == "Width of" || ch_name+' '+app.middleCharacter == 'Depth of' || ch_name+' '+app.middleCharacter == 'Diameter of' || ch_name+' '+app.middleCharacter == 'Distance of' || ch_name+' '+app.middleCharacter == 'Distance between' || ch_name+' '+app.middleCharacter == 'Count of' || ch_name+' '+app.middleCharacter == 'Number of' || ch_name == "Color") {
+        app.active_el = 'method';
+      }else {
+        app.active_el = 'tag';
+      }
       sessionStorage.setItem("characterName", app.character.name);
       sessionStorage.setItem("firstCharacterName", app.firstCharacter);
       app.detailsFlag = true;
@@ -5410,6 +5425,7 @@ export default {
       app.roundVal = "";
       app.active_el = 0;
       app.rounds = [];
+      app.completeElement = [];
     },
     cancelCharacter() {
       var app = this;
@@ -5417,6 +5433,7 @@ export default {
       app.rounds = [];
       app.roundVal = "";
       app.active_el = 0;
+      app.completeElement = [];
     },
     showDetails(metadata, previousMetadata = null) {
       var app = this;
