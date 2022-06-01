@@ -47,7 +47,10 @@
                 <div class="col-md-12" v-if="ch_name != 'Color'"  style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
                     <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
-                           @keyup="saveMeasureItems" name="methodFrom"/>
+                           @keyup="saveMeasureItems" name="methodFrom" list="method_characters"/>
+                    <datalist id="method_characters">
+                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                    </datalist>      
                     <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
                        v-on:mouseover="needMore('from')">Need info on new terms:</a>
@@ -81,7 +84,10 @@
                 </div>
                 <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo" list="to_characters"/>
+                    <datalist id="to_characters">
+                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                    </datalist>     
                     <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
                     <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
                        v-on:mouseover="needMore('to')">Need info on new terms:</a>
@@ -114,7 +120,10 @@
                 </div>
                 <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude" list="include_characters"/>
+                    <datalist id="include_characters">
+                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                    </datalist>  
                     <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
                     <a v-if="includeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.include }" v-on:mouseover="needMore('include')">Need info on new
@@ -148,7 +157,10 @@
                 </div>
                 <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"  list="exclude_characters"/>
+                    <datalist id="exclude_characters">
+                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                    </datalist>  
                     <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
                     <a v-if="excludeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.exclude }" v-on:mouseover="needMore('exclude')">Need info on new
@@ -182,7 +194,10 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Where:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Where')" class="col-md-8" v-model="methodWhere" @keyup="saveMeasureItems" name="methodWhere"/>
+                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Where')" class="col-md-8" v-model="methodWhere" @keyup="saveMeasureItems" name="methodWhere" list="where_characters"/>
+                    <datalist id="where_characters">
+                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                    </datalist>  
                     <p v-if="whereId != null || greenTick.where == true" style="color: green;">&#10004;</p>
                     <a v-if="whereNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.where }"
                        v-on:mouseover="needMore('where')">Need info on new terms:</a>
@@ -888,6 +903,7 @@
         beforeMount () {
             var app = this;
             this.character_name = sessionStorage.getItem("characterName");
+            this.noun_characters = sessionStorage.getItem("nounCharacters").split(',');
             var ch = this.character_name.split(" ");
             if(ch[0] != undefined && ch[0] == 'Color') {
                 app.ch_name = ch[0];

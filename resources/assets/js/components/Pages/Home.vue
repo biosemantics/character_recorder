@@ -1150,17 +1150,17 @@
                                   Method
                                   </a>
                                 </li>
-                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),((!checkHaveUnit(character.name) || firstCharacter == 'Color') ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
-                                  <div v-if="firstCharacter != 'Color'">
+                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),((!checkHaveUnit(character.name) || firstCharacter == 'Color' || firstCharacter == 'Number') ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
+                                  <div v-if="firstCharacter != 'Color' && firstCharacter != 'Number'">
                                     <a 
-                                    :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')"
+                                    :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color' || firstCharacter == 'Number')"
                                     v-on:click="showDetails('unit', metadataFlag)">
                                     Unit
                                     </a>
                                   </div>
                                   <div v-else>
                                     <a 
-                                      :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')">
+                                      :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color' || firstCharacter == 'Number')">
                                       Unit
                                     </a>
                                   </div></li>
@@ -6536,6 +6536,8 @@ export default {
 
         });
       console.log("app.character", app.character);
+      app.active_el = 0;
+      app.completeElement = [];
       app.saveCharacterButtonFlag = false;
     },
     confirmCollapse() {
@@ -7170,6 +7172,7 @@ export default {
     },
     checkHaveUnit(string,type) {
       var app = this;
+      var ch = string.split(" ");
       if(app.firstCharacter == 'Color'  && ( type == 'method' || type == "tag")) {
         var character = app.userCharacters.find(each => each.name === string);
         if (string.startsWith('Length of')
@@ -7193,33 +7196,33 @@ export default {
         } else {
           return false;
         }
-      }else if(type == 'method' || type == "tag"){
-        var ch = string.split(" ");
-        if(ch[0] != 'undefined' && ch[0] == 'Color') {
-          var character = app.userCharacters.find(each => each.name === string);
-          if (string.startsWith('Length of')
-            || string.startsWith('Width of')
-            || string.startsWith('Depth of')
-            || string.startsWith('Diameter of')
-            || string.startsWith('Distance between')
-            || string.startsWith('Distance of')
-            || string.startsWith('Count of')
-            || string.startsWith('Number of')
-            || string.startsWith('Color')
-            || app.numericalFlag === true
-            && app.newCharacterFlag == false) {
+      }else if(ch[0] != 'undefined' && ch[0] == 'Color' && (type == 'method' || type == "tag"))
+      {
+        var character = app.userCharacters.find(each => each.name === string);
+        if (string.startsWith('Length of')
+          || string.startsWith('Width of')
+          || string.startsWith('Depth of')
+          || string.startsWith('Diameter of')
+          || string.startsWith('Distance between')
+          || string.startsWith('Distance of')
+          || string.startsWith('Count of')
+          || string.startsWith('Number of')
+          || string.startsWith('Color')
+          || app.numericalFlag === true
+          && app.newCharacterFlag == false) {
+          return true;
+        } else if (character) {
+          if (character.summary && !string.startsWith('Number of')) {
             return true;
-          } else if (character) {
-            if (character.summary && !string.startsWith('Number of')) {
-              return true;
-            } else {
-              return false;
-            }
           } else {
             return false;
           }
-        }else {
-          var character = app.userCharacters.find(each => each.name === string);
+        } else {
+          return false;
+        }
+      }else {
+        var character = app.userCharacters.find(each => each.name === string);
+        if(type == 'unit' ) {
           if (string.startsWith('Length of')
             || string.startsWith('Width of')
             || string.startsWith('Depth of')
@@ -7227,7 +7230,6 @@ export default {
             || string.startsWith('Distance between')
             || string.startsWith('Distance of')
             || string.startsWith('Count of')
-            || string.startsWith('Number of')
             || app.numericalFlag === true
             && app.newCharacterFlag == false) {
             return true;
@@ -7241,16 +7243,14 @@ export default {
             return false;
           }
         }
-      }else {
-        var character = app.userCharacters.find(each => each.name === string);
-        if (string.startsWith('Length of')
+        else if (string.startsWith('Length of')
           || string.startsWith('Width of')
           || string.startsWith('Depth of')
           || string.startsWith('Diameter of')
           || string.startsWith('Distance between')
           || string.startsWith('Distance of')
-          || string.startsWith('Count of')
           || string.startsWith('Number of')
+          || string.startsWith('Count of')
           || app.numericalFlag === true
           && app.newCharacterFlag == false) {
           return true;
