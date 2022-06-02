@@ -165,3 +165,66 @@ div.dropdown div.item:first-child {
   margin-right: -5px;
 }
 
+.imagePreviewWrapper {
+    width: auto;
+    height: 350px;
+    display: block;
+    cursor: pointer;
+    margin: 0 auto 30px;
+    background-size: cover;
+    background-position: center center;
+}
+.custom-carousal{
+    padding: 10px;
+    min-height: 435px;
+    max-height: 500px;
+    overflow: hidden;
+}
+.SelectUpload{
+  display: block;
+}
+.SelectUpload input, .SelectUpload input:focus, .SelectUpload input:hover{
+    outline: none;
+    box-shadow: 0 0 0;
+    margin-top: 15px !important;
+    padding: 0;
+    margin: 0 auto;
+    width: 168px;
+}
+
+.custom-file-input {
+  color: transparent;
+  padding: 29px;
+}
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.custom-file-input::before {
+  content: 'Upload New Illustration';
+  color: white;
+  display: inline-block;
+  background: -webkit-linear-gradient(top, #3097D1, #3097D1);
+  border: 1px solid #3097D1;
+  border-radius: 3px;
+  padding: 5px 8px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 10pt;
+  outline: none;
+}
+.custom-file-input:hover::before, .custom-file-input:focus::before { 
+  outline: none;
+}
+.custom-file-input:active {
+  outline: 0;
+}
+.custom-file-input:active::before {
+  background: -webkit-linear-gradient(top, #3097D1, #3097D1); 
+}
+
+
+
+

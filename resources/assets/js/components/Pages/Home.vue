@@ -1137,8 +1137,29 @@
                       </div>
 
                       <div class="modal-body">
+                        <transition name="modal" v-if="selectedImage">
+                          <div class="modal-mask">
+                              <div class="modal-wrapper">
+                                <div class="modal-container">
+                                   <div class="modal-header">
+                                    <h3>If you want to upload this image, press 'Yes'</h3>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div
+                                      class="imagePreviewWrapper"
+                                      :style="{ 'background-image': `url(${previewImage})` }"
+                                      @click="selectImage">
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" @click="temporayStore()">Yes</button>
+                                    <button type="button" class="btn btn-danger" @click="cancelTemporaryStore()">Cancel</button>
+                                  </div>
+                                </div>
+                              </div>
+                          </div>
+                        </transition>
                         <div class="row">
-                          
                           <div class="col-md-6">
                             <ul class="customTabbing">
                                <!--  <li><a v-on:click="showDetails('', metadataFlag)"></a></li> -->
@@ -1212,34 +1233,43 @@
                             </div>
                           </div>
                           <div class="col-md-6">
-                            <div id="myCarousel" class="carousel slide" data-ride="carousel" v-if="character.images != undefined && character.images.length > 0">
-                              <!-- Indicators -->
-                              <ol class="carousel-indicators" v-for="(img, index) in character.images" v-if="character.images != undefined && character.images.length > 0">
-                                <li data-target="#myCarousel" :data-slide-to="index" class="active"></li>
-                              </ol>
+                            <div class="custom-carousal">
+                              <div id="myCarousel" class="carousel slide" data-ride="carousel" v-if="viewImages != undefined && viewImages.length > 0">
+                                <!-- Indicators -->
+                                <ol class="carousel-indicators" v-for="(img, index) in viewImages" v-if="viewImages != undefined && viewImages.length > 0">
+                                  <li data-target="#myCarousel" :data-slide-to="index" class="active"></li>
+                                </ol>
 
-                              <!-- Wrapper for slides -->
-                              <div class="carousel-inner">
-                                <div class="item" v-bind:class="[(index == 0 ? 'active' : '')]" v-for="(img, index) in character.images" v-if="character.images != undefined && character.images.length > 0">
-                                  <img v-bind:src="'https://drive.google.com/uc?id=' + img" alt="image" style="width:100%; height:430px;">
+                                <!-- Wrapper for slides -->
+                                <div class="carousel-inner">
+                                  <div class="item slider_image" v-bind:class="[((active_image == img || index == 0) ? 'active' : '')]" v-for="(img, index) in viewImages" v-if="viewImages != undefined && viewImages.length > 0">
+                                    <img v-bind:src="img" alt="image" style="width:100%; height:430px;">
+                                  </div>
+
                                 </div>
 
+                                <!-- Left and right controls -->
+                                <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                  <span class="glyphicon glyphicon-chevron-left"></span>
+                                  <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                  <span class="glyphicon glyphicon-chevron-right"></span>
+                                  <span class="sr-only">Next</span>
+                                </a>
                               </div>
-
-                              <!-- Left and right controls -->
-                              <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-                                <span class="glyphicon glyphicon-chevron-left"></span>
-                                <span class="sr-only">Previous</span>
-                              </a>
-                              <a class="right carousel-control" href="#myCarousel" data-slide="next">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
-                                <span class="sr-only">Next</span>
-                              </a>
+                              <div v-else>
+                                <h2 style="text-align: center; margin-top:167px;">No image</h2>
+                              </div>                        
                             </div>
-                            <div v-else>
-                              <h2 style="text-align: center; margin-top:167px;">No image</h2>
-                            </div>
+                            <div class="SelectUpload">
+                              <form id= "imageForm" method="post">
+                                <input type="file" max-size="2000" name="image" ref="fileInput" class="custom-file-input" @input="pickFile">
+                              </form>
+                                
+                            </div> 
                           </div>
+                         
                        <!--    <div class="col-md-6 radial-menu">
                             <ul style="margin-left: auto; margin-right: auto;">
                               <li><a v-on:click="showDetails('', metadataFlag)"></a></li>
@@ -3353,6 +3383,11 @@ export default {
       collectionLists: [],
       active_el: 0,
       completeElement:[],
+      previewImage: null,
+      active_image: null,
+      selectedImage: 0,
+      temp_files: [],
+      viewImages: [],
     }
   },
   components: {
@@ -3363,6 +3398,81 @@ export default {
     'color-palette': ColorPalette
   },
   methods: {
+    cancelTemporaryStore() {
+      var app = this;
+      app.selectedImage = 0;
+    },
+    temporayStore(){
+      var app = this;
+      var filename = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '')
+      var data = {'name':filename, 'content':app.previewImage};
+      /*axios.post('api/v1/checkImage', data)
+          .then(function (resp) {
+            if(resp.data == 1) {
+              if($('.slider_image').hasClass('active')){
+                $('.slider_image').removeClass('active');
+              }
+              app.active_image = app.previewImage;
+              if(app.character.images == undefined){
+                app.character.images = [];
+                app.character.images.push(app.previewImage);
+              }else {
+                app.character.images.push(app.previewImage);
+              }
+              if(app.character.temp_files == undefined) {
+                app.character.temp_files = [];
+                app.character.temp_files.push(app.previewImage);
+              }else {
+                app.character.temp_files.push(app.previewImage);
+              }
+            }else {
+              alert('Same image name is already exists.');
+            }
+      })*/
+      if($('.slider_image').hasClass('active')){
+        $('.slider_image').removeClass('active');
+      }
+      app.active_image = app.previewImage;
+      app.viewImages.push(app.previewImage);
+      app.temp_files.push(app.previewImage);
+      app.selectedImage = 0;
+    },
+    selectImage () {
+      this.$refs.fileInput.click()
+    },
+    pickFile () {
+      var formData = new FormData($('#imageForm')[0]);
+      axios.post('api/v1/character/check-image', formData)
+          .then(function (resp) {
+        console.log(resp.data);
+        return true;
+      }).catch(function (error) {
+        this.selectedImage = 0;
+        alert('Please upload maximum image size: 2048KB');
+        return false;
+      });
+
+      let input = this.$refs.fileInput
+      let file = input.files
+      if (file && file[0]) {
+        const name = file[0].name;
+        const lastDot = name.lastIndexOf('.');
+        const ext = name.substring(lastDot + 1);
+        var extension = ext.toLowerCase();
+        if(extension == 'jpg' || extension =='jpeg' || extension == 'png' || extension == 'gif') {
+          let reader = new FileReader
+          reader.onload = e => {
+            this.previewImage = e.target.result
+            this.selectedImage = 1;
+          }
+          reader.readAsDataURL(file[0])
+          this.$emit('input', file[0])
+        }else {
+            alert('Image extension is not valid');
+            return false;
+        } 
+      }
+    },
     showViewer(node, event) {
       var app = this;
       event.preventDefault();
@@ -3780,6 +3890,16 @@ export default {
     editCharacter(character, editFlag = false, standardFlag = false, enhanceFlag = false) {
       var app = this;
       app.editFlag = editFlag;
+      if(app.character.images != undefined && app.character.images != null) {
+
+        var persons_data =  JSON.parse(app.character.images);
+        var origin   = window.location.href; 
+        var url = origin+'/storage/';
+        for (let p = 0; p < persons_data.length; p++) {
+          app.viewImages.push(url + persons_data[p]);
+        }
+        
+      }
       if (editFlag) {
         app.viewFlag = !editFlag;
         sessionStorage.setItem('viewFlag', !editFlag);
@@ -3893,7 +4013,7 @@ export default {
           var type = "";
         }
         if (app.checkHaveUnit(app.character.name,type) || app.character.summary) {
-          console.log('app.character', app.character);
+          console.log('app.charactersss', app.character);
           // Initializing the methodFieldData //
           app.methodFieldData.fromTerm = null;
           app.methodFieldData.fromId = null;
@@ -5456,6 +5576,8 @@ export default {
       app.active_el = 0;
       app.rounds = [];
       app.completeElement = [];
+      app.viewImages = [];
+      app.temp_files = [];
     },
     cancelCharacter() {
       var app = this;
@@ -5464,6 +5586,8 @@ export default {
       app.roundVal = "";
       app.active_el = 0;
       app.completeElement = [];
+      app.temp_files = [];
+      app.viewImages = [];
     },
     showDetails(metadata, previousMetadata = null) {
       var app = this;
@@ -5641,7 +5765,7 @@ export default {
                   && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_at")) != undefined) {
                   tempCharacter.method_where = collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("measured_at")).value.split("#")[1].replaceAll('_', ' ');
                 }
-                tempCharacter.images = [];
+
                 if (collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("elucidation")) != 'undefined'
                   && collectionList[i].resultAnnotations.find(eachCollection => eachCollection.property.endsWith("elucidation")) != undefined) {
                   var tempElucidations = collectionList[i].resultAnnotations.filter(eachProperty => eachProperty.property.endsWith("elucidation"));
@@ -5649,13 +5773,13 @@ export default {
                     if (j == 0) {
                       tempCharacter.elucidation = tempElucidations[j].value;
                       var newUrl = tempElucidations[j].value.slice(tempElucidations[j].value.indexOf('file/d/') + 7, tempElucidations[j].value.indexOf('/view?usp='));
-                      tempCharacter.images.push(newUrl);
+                      app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
                     }
                     if (j > 0) {
                       tempCharacter.elucidation = tempCharacter.elucidation + ','+ tempElucidations[j].value;
                       var newUrl = tempElucidations[j].value.slice(tempElucidations[j].value.indexOf('file/d/') + 7, tempElucidations[j].value.indexOf('/view?usp='));
 
-                      tempCharacter.images.push(newUrl);
+                      app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
                     
                     }
                   }
@@ -6426,7 +6550,12 @@ export default {
                   app.character.username += ', ' + app.character.owner_name;
                 }
               }
-
+              if(app.character.temp_files == undefined) {
+                app.character.temp_files = [];
+                app.character.temp_files = app.temp_files;
+              }else {
+                app.character.temp_files = app.temp_files;
+              }
               axios.post('api/v1/character/update-character', app.character)
                 .then(function (resp) {
                   app.userTags = resp.data.userTags;
@@ -6441,6 +6570,7 @@ export default {
 
                   app.enhanceFlag = false;
                   app.detailsFlag = false
+                  app.temp_files = [];
                 });
             } else {
               alert("The character already exists for this user!!");
@@ -6470,6 +6600,12 @@ export default {
 
             if (app.matrixShowFlag) {
               app.isLoading = true;
+              if(app.character.temp_files == undefined) {
+                app.character.temp_files = [];
+                app.character.temp_files = app.temp_files;
+              }else {
+                app.character.temp_files = app.temp_files;
+              }
               axios.post('api/v1/character/add-character', app.character)
                 .then(function (resp) {
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
@@ -6506,9 +6642,16 @@ export default {
                   app.numericalFlag = false;
                   app.isLoading = false;
                   app.showTableForTab(app.currentTab);
+                  app.temp_files = [];
                 });
             } else {
               app.isLoading = true;
+              if(app.character.temp_files == undefined) {
+                app.character.temp_files = [];
+                app.character.temp_files = app.temp_files;
+              }else {
+                app.character.temp_files = app.temp_files;
+              }
               axios.post("api/v1/character/create", app.character)
                 .then(function (resp) {
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
@@ -6530,6 +6673,7 @@ export default {
                   app.detailsFlag = false;
                   app.numericalFlag = false;
                   app.showTableForTab(app.currentTab);
+                  app.temp_files = [];
                 });
             }
           }
@@ -10596,6 +10740,7 @@ export default {
       axios.get('api/v1/character/search_character')
         .then(function (resp) {
             app.nounCharacters = resp.data;
+            sessionStorage.setItem("nounCharacters",resp.data)
         });
     }
   },

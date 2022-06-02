@@ -23,6 +23,7 @@ class character extends Model
         'usage_count',
         'show_flag',
         'summary',
+        'images',
     ];
     //
 }

@@ -86,5 +86,6 @@ Route::group([
         Route::post('delete-header/{headerId}',         ['as' => 'delete-header',               'uses' => 'HomeController@deleteHeader']);
         Route::post('change-order',                     ['as' => 'change-order',                'uses' => 'HomeController@changeOrder']);
         Route::get('{userId}',                          ['as' => 'get_character',               'uses' => 'HomeController@getCharacter']);
+        Route::post('check-image',                       ['as' => 'check_image',            'uses' => 'HomeController@checkImage']);
     });
 });

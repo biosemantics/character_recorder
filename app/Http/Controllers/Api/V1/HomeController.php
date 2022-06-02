@@ -23,6 +23,7 @@ use GuzzleHttp\Promise;
 
 use pietercolpaert\hardf\TriGWriter;
 use ZipArchive;
+use Illuminate\Support\Facades\Storage;
 
 function startsWith($string, $startString)
 {
@@ -397,7 +398,18 @@ class HomeController extends Controller
     {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
-
+        $allImageName = array();
+        if(isset($request->temp_files) && count($request->temp_files) > 0) {
+            foreach ($request->temp_files as $key => $img) {
+                $base64Image = explode(";base64,", $img);
+                $explodeImage = explode("image/", $base64Image[0]);
+                $imageType = $explodeImage[1];
+                $image_base64 = base64_decode($base64Image[1]);
+                $imageName = time().'.'.$imageType;
+                Storage::disk('public')->put($imageName, $image_base64);
+                $allImageName[] = $imageName;
+            }
+        }
         $character = new Character([
             'name' => $request->input('name'),
             'IRI' => $request->input('IRI'),
@@ -417,6 +429,7 @@ class HomeController extends Controller
             'show_flag' => $request->input('show_flag'),
             'standard_tag' => $request->input('standard_tag'),
             'summary' => $request->input('summary'),
+            'images' => json_encode($allImageName),
         ]);
 
         $character->save();
@@ -441,9 +454,24 @@ class HomeController extends Controller
                 'show_flag' => $request->input('show_flag'),
                 'standard_tag' => $request->input('standard_tag'),
                 'summary' => $request->input('summary'),
+                'images' => json_encode($allImageName),
             ]);
 
             $defaultCharacter->save();
+            
+        }else {
+            if(!empty($allImageName)) {
+                $defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
+
+                if(!empty($defaultCharacter->images)) {
+                    $img = json_decode($defaultCharacter->images,true);
+                    $final_array = array_merge($img,$allImageName);
+                    $defaultCharacter->images = json_encode($final_array);
+                }else {
+                    $defaultCharacter->images = json_encode($allImageName);
+                }
+                $defaultCharacter->save();
+            } 
         }
 
         $character->order = $character->id;
@@ -764,7 +792,18 @@ class HomeController extends Controller
     {
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
-
+        $allImageName = array();
+        if(isset($request->temp_files) && count($request->temp_files) > 0) {
+            foreach ($request->temp_files as $key => $img) {
+                $base64Image = explode(";base64,", $img);
+                $explodeImage = explode("image/", $base64Image[0]);
+                $imageType = $explodeImage[1];
+                $image_base64 = base64_decode($base64Image[1]);
+                $imageName = time().'.'.$imageType;
+                Storage::disk('public')->put($imageName, $image_base64);
+                $allImageName[] = $imageName;
+            }
+        }
         $character = new Character([
             'name' => $request->input('name'),
             'IRI' => $request->input('IRI'),
@@ -784,6 +823,7 @@ class HomeController extends Controller
             'show_flag' => $request->input('show_flag'),
             'standard_tag' => $request->input('standard_tag'),
             'summary' => $request->input('summary'),
+            'images' => json_encode($allImageName),
         ]);
 
         $character->save();
@@ -812,9 +852,23 @@ class HomeController extends Controller
                 'show_flag' => $request->input('show_flag'),
                 'standard_tag' => $request->input('standard_tag'),
                 'summary' => $request->input('summary'),
+                'images' => json_encode($allImageName),
             ]);
 
             $defaultCharacter->save();
+        }else {
+            if(!empty($allImageName)) {
+                $defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
+
+                if(!empty($defaultCharacter->images)) {
+                    $img = json_decode($defaultCharacter->images,true);
+                    $final_array = array_merge($img,$allImageName);
+                    $defaultCharacter->images = json_encode($final_array);
+                }else {
+                    $defaultCharacter->images = json_encode($allImageName);
+                }
+                $defaultCharacter->save();
+            } 
         }
 
         $headers = Header::where('user_id', '=', Auth::id())->get();
@@ -1525,6 +1579,13 @@ class HomeController extends Controller
 
         return $data;
     }
+    
+    // check image and size
+    public function checkImage(Request $request) {
+        $validatedData = $request->validate([
+         'image' => 'required|image|max:2048',
+        ]);
+    }
 
     public function updateCharacter(Request $request)
     {
@@ -1538,6 +1599,17 @@ class HomeController extends Controller
             $oldTag = $character->standard_tag;
         } else {
             $character = new Character();
+        }
+        if(isset($request->temp_files) && count($request->temp_files) > 0) {
+            foreach ($request->temp_files as $key => $img) {
+                $base64Image = explode(";base64,", $img);
+                $explodeImage = explode("image/", $base64Image[0]);
+                $imageType = $explodeImage[1];
+                $image_base64 = base64_decode($base64Image[1]);
+                $imageName = date('Y-m-d').'_'.time().'.'.$imageType;
+                Storage::disk('public')->put($imageName, $image_base64);
+                $allImageName[] = $imageName;
+            }
         }
 
         $character->name = $request->input('name');
@@ -1557,7 +1629,16 @@ class HomeController extends Controller
         $character->show_flag = $request->input('show_flag');
         $character->standard_tag = $request->input('standard_tag');
         $character->summary = $request->input('summary');
-
+        if(!empty($allImageName)) {
+           if(!empty($character->images)) {
+                $img = json_decode($character->images,true);
+                $final_array = array_merge($img,$allImageName);
+                $character->images = json_encode($final_array);
+            }else {
+                $character->images = json_encode($allImageName);
+            } 
+        }
+        
         $character->save();
 
         if ($oldTag) {
