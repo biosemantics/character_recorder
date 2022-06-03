@@ -523,335 +523,473 @@
                         <br>
                         <br>
                         <div class="row custom-flex">
-                            <div class="custom-character-field">
-                              <input
-                                style="height: 26px;"
-                                class="width-100"
-                                type="text"
-                                v-on:focus="nounUndefined = false;
-                                            secondNounUndefined = false;
-                                            lastCharacterDefinition = '';
-                                            firstCharacterUndefined = false;
-                                            firstCharacterDefinition = ''
-                                            firstCharacterDeprecated = false;
-                                            firstCharacterDeprecatedNotifyMessage = '';
-                                            firstCharacterNotRecommend = false;
-                                            firstCharacterNotRecommendNotifyMessage = '';
-                                            firstCharacterSynonym = false;
-                                            firstCharacterSynonymNotifyMessage = '';
-                                            firstCharacterBroadSynonym = false;
-                                            firstCharacterBroadSynonymNotifyMessage = '';
-                                            wholeCharacterUndefined=false;
-                                            wholeCharacterDefinition='';
-                                            firstNounDeprecated=false;
-                                            firstNounDeprecatedNotifyMessage='';
-                                            secondNounDeprecated=false;
-                                            secondNounDeprecatedNotifyMessage='';
-                                            firstNounNotRecommend=false;
-                                            firstNounNotRecommendNotifyMessage='';
-                                            secondNounNotRecommend=false;
-                                            secondNounNotRecommendNotifyMessage='';
-                                            firstNounSynonym=false;
-                                            firstNounSynonymNotifyMessage='';
-                                            firstNounBroadSynonym=false;
-                                            firstNounBroadSynonymNotifyMessage='';
-                                            secondNounSynonym=false;
-                                            secondNounSynonymNotifyMessage='';
-                                            secondNounBroadSynonym=false;
-                                            secondNounBroadSynonymNotifyMessage='';
-                                            input();
-                                            "
-                                list="first_characters"
-                                placeholder="enter value or select"
-                                v-model="firstCharacter"
-                              />
-                              <datalist id="first_characters">
-                                <option value="Length">Length</option>
-                                <option value="Width">Width</option>
-                                <option value="Depth">Depth</option>
-                                <option value="Diameter">Diameter</option>
-                                <option value="Distance">Distance</option>
-                                <option value="Color">Color</option>
-                                <option value="Presence">Presence</option>
-                                <option value="Shape">Shape</option>
-                                <option value="Texture">Texture</option>
-                                <option value="Growth form">Growth form</option>
-                                <option value="Number">Number</option>
-                                <option value="Pubescence">Pubescence</option>
-                                <option value="Relative Position">Relative Position</option>
-                                <option value="Inflation">Inflation</option>
-                                <option value="Orientation">Orientation</option>
-                              </datalist>
+                          <div class="col-md-9">
+                            <div class="row custom-flex">
+                              <div class="custom-character-field">
+                                <input
+                                  style="height: 26px;"
+                                  class="width-100"
+                                  type="text"
+                                  v-on:focus="nounUndefined = false;
+                                              secondNounUndefined = false;
+                                              lastCharacterDefinition = '';
+                                              firstCharacterUndefined = false;
+                                              firstCharacterDefinition = ''
+                                              firstCharacterDeprecated = false;
+                                              firstCharacterDeprecatedNotifyMessage = '';
+                                              firstCharacterNotRecommend = false;
+                                              firstCharacterNotRecommendNotifyMessage = '';
+                                              firstCharacterSynonym = false;
+                                              firstCharacterSynonymNotifyMessage = '';
+                                              firstCharacterBroadSynonym = false;
+                                              firstCharacterBroadSynonymNotifyMessage = '';
+                                              wholeCharacterUndefined=false;
+                                              wholeCharacterDefinition='';
+                                              firstNounDeprecated=false;
+                                              firstNounDeprecatedNotifyMessage='';
+                                              secondNounDeprecated=false;
+                                              secondNounDeprecatedNotifyMessage='';
+                                              firstNounNotRecommend=false;
+                                              firstNounNotRecommendNotifyMessage='';
+                                              secondNounNotRecommend=false;
+                                              secondNounNotRecommendNotifyMessage='';
+                                              firstNounSynonym=false;
+                                              firstNounSynonymNotifyMessage='';
+                                              firstNounBroadSynonym=false;
+                                              firstNounBroadSynonymNotifyMessage='';
+                                              secondNounSynonym=false;
+                                              secondNounSynonymNotifyMessage='';
+                                              secondNounBroadSynonym=false;
+                                              secondNounBroadSynonymNotifyMessage='';
+                                              input();
+                                              "
+                                  list="first_characters"
+                                  placeholder="enter value or select"
+                                  v-model="firstCharacter"
+                                />
+                                <datalist id="first_characters">
+                                  <option value="Length">Length</option>
+                                  <option value="Width">Width</option>
+                                  <option value="Depth">Depth</option>
+                                  <option value="Diameter">Diameter</option>
+                                  <option value="Distance">Distance</option>
+                                  <option value="Color">Color</option>
+                                  <option value="Presence">Presence</option>
+                                  <option value="Shape">Shape</option>
+                                  <option value="Texture">Texture</option>
+                                  <option value="Growth form">Growth form</option>
+                                  <option value="Number">Number</option>
+                                  <option value="Pubescence">Pubescence</option>
+                                  <option value="Relative Position">Relative Position</option>
+                                  <option value="Inflation">Inflation</option>
+                                  <option value="Orientation">Orientation</option>
+                                </datalist>
+                              </div>
+                              <div class="custom-character-field">
+                                <select v-model="middleCharacter" style="height: 26px;" class="width-100">
+                                  <option>of</option>
+                                  <option>between</option>
+                                </select>
+                              </div>
+                              <div class="custom-character-field">
+                                <select v-model="thirdCharacter" style="height: 26px;" class="width-100">
+                                  <optgroup label="Dimension">
+                                    <option value="longest">longest</option>
+                                    <option value="widest">widest</option>
+                                    <option value="shorest">shorest</option>
+                                    <option value="narrowest">narrowest</option>
+                                  </optgroup> 
+                                  <optgroup label="Position">
+                                    <option value="anterior">anterior</option>
+                                    <option value="posterior">posterior</option>
+                                    <option value="abaxial">abaxial</option>
+                                    <option value="adaxial">adaxial</option>
+                                    <option value="proximal">proximal</option>
+                                    <option value="distal">distal</option>
+                                    <option value="distallmost">distallmost</option>
+                                    <option value="lateral">lateral</option>
+                                    <option value="medial">medial</option>
+                                    <option value="inner">inner</option>
+                                    <option value="outer">outer</option>
+                                    <option value="terminal">terminal</option>
+                                  </optgroup> 
+                                  <optgroup label="Prominence">
+                                    <option value="distinct">distinct</option>
+                                    <option value="total">total</option>
+                                  </optgroup>
+                                </select>
+                              </div>
+                              <div class="custom-character-field">
+                                <input
+                                  class="width-100"
+                                  v-model="lastCharacter"
+                                  style='height: 26px;'
+                                  list="last_characters"
+                                  v-on:focus="nounUndefined = false;
+                                              secondNounUndefined = false;
+                                              lastCharacterDefinition = '';
+                                              firstCharacterUndefined = false;
+                                              firstCharacterDefinition = ''
+                                              firstCharacterDeprecated = false;
+                                              firstCharacterDeprecatedNotifyMessage = '';
+                                              firstCharacterNotRecommend = false;
+                                              firstCharacterNotRecommendNotifyMessage = '';
+                                              firstCharacterSynonym = false;
+                                              firstCharacterSynonymNotifyMessage = '';
+                                              firstCharacterBroadSynonym = false;
+                                              firstCharacterBroadSynonymNotifyMessage = '';
+                                              wholeCharacterUndefined=false;
+                                              wholeCharacterDefinition='';
+                                              firstNounDeprecated=false;
+                                              firstNounDeprecatedNotifyMessage='';
+                                              secondNounDeprecated=false;
+                                              secondNounDeprecatedNotifyMessage='';
+                                              firstNounNotRecommend=false;
+                                              firstNounNotRecommendNotifyMessage='';
+                                              secondNounNotRecommend=false;
+                                              secondNounNotRecommendNotifyMessage='';
+                                              firstNounSynonym=false;
+                                              firstNounSynonymNotifyMessage='';
+                                              firstNounBroadSynonym=false;
+                                              firstNounBroadSynonymNotifyMessage='';
+                                              secondNounSynonym=false;
+                                              secondNounSynonymNotifyMessage='';
+                                              secondNounBroadSynonym=false;
+                                              secondNounBroadSynonymNotifyMessage='';
+                                              input();
+                                              "
+                                  placeholder="enter a singular noun"
+                                />
+                                <datalist id="last_characters">
+                                  <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
+                                </datalist>
+                               
+                              </div>
                             </div>
-                            <div class="custom-character-field">
-                              <select v-model="middleCharacter" style="height: 26px;" class="width-100">
-                                <option>of</option>
-                                <option>between</option>
-                              </select>
+                            <div class="row custom-flex" v-for="(round,index) in roundsOne" style="margin-top: 20px;" v-if="roundValOne != '' && (middleCharacter == 'of' || middleCharacter == 'between')">
+                              <div class="custom-character-field" v-if="round.round_val == 'D'">
+                                <input
+                                  v-model="round.first"
+                                  style="width: 100px; height: 26px;"
+                                  placeholder="at 2cm"
+                                />
+                              </div>  
+                              <div class="custom-character-field" v-if="round.round_val == 'S'">
+                                <select style="height: 26px; width:80px;" v-model="round.second">
+                                  <option value="of">of</option>
+                                  <option value="on">on</option>
+                                  <option value="in">in</option>
+                                </select>
+                              </div>
+                              <div class="custom-character-field" v-if="round.round_val == 'D'">
+                                <select style="height: 26px; width:80px;"  v-model="round.third">
+                                  <option value="below">below</option>
+                                  <option value="above">above</option>
+                                </select>
+                              </div>
+                              <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
+                                <select style="height: 26px;" class="width-100" v-model="round.fourth">
+                                  <optgroup label="Dimension">
+                                    <option value="longest">longest</option>
+                                    <option value="widest">widest</option>
+                                    <option value="shorest">shorest</option>
+                                    <option value="narrowest">narrowest</option>
+                                  </optgroup> 
+                                  <optgroup label="Position">
+                                    <option value="anterior">anterior</option>
+                                    <option value="posterior">posterior</option>
+                                    <option value="abaxial">abaxial</option>
+                                    <option value="adaxial">adaxial</option>
+                                    <option value="proximal">proximal</option>
+                                    <option value="distal">distal</option>
+                                    <option value="distallmost">distallmost</option>
+                                    <option value="lateral">lateral</option>
+                                    <option value="medial">medial</option>
+                                    <option value="inner">inner</option>
+                                    <option value="outer">outer</option>
+                                    <option value="terminal">terminal</option>
+                                  </optgroup> 
+                                  <optgroup label="Prominence">
+                                    <option value="distinct">distinct</option>
+                                    <option value="total">total</option>
+                                  </optgroup>
+                                </select>
+                              </div>
+                              <div class="custom-character-field">
+                                <input
+                                  v-model="round.fifth"
+                                  class="width-100"
+                                  v-bind:style="{ 'width': round.text == 'enter a positional phrases,e.g at middle length' ? 340 + 'px' : ''}"
+                                  style="height: 26px;"
+                                  v-bind:list='[round.round_val == "S" || round.round_val == "D" ? "round_fifth_characters" : "" ]'
+                                  :placeholder="round.text"
+                                  v-on:focus = "nounUndefined = false;
+                                                secondNounUndefined = false;
+                                                lastCharacterDefinition = '';
+                                                firstCharacterUndefined = false;
+                                                firstCharacterDefinition = ''
+                                                firstCharacterDeprecated = false;
+                                                firstCharacterDeprecatedNotifyMessage = '';
+                                                firstCharacterNotRecommend = false;
+                                                firstCharacterNotRecommendNotifyMessage = '';
+                                                firstCharacterSynonym = false;
+                                                firstCharacterSynonymNotifyMessage = '';
+                                                firstCharacterBroadSynonym = false;
+                                                firstCharacterBroadSynonymNotifyMessage = '';
+                                                wholeCharacterUndefined=false;
+                                                wholeCharacterDefinition='';
+                                                firstNounDeprecated=false;
+                                                firstNounDeprecatedNotifyMessage='';
+                                                secondNounDeprecated=false;
+                                                secondNounDeprecatedNotifyMessage='';
+                                                firstNounNotRecommend=false;
+                                                firstNounNotRecommendNotifyMessage='';
+                                                secondNounNotRecommend=false;
+                                                secondNounNotRecommendNotifyMessage='';
+                                                firstNounSynonym=false;
+                                                firstNounSynonymNotifyMessage='';
+                                                firstNounBroadSynonym=false;
+                                                firstNounBroadSynonymNotifyMessage='';
+                                                secondNounSynonym=false;
+                                                secondNounSynonymNotifyMessage='';
+                                                secondNounBroadSynonym=false;
+                                                secondNounBroadSynonymNotifyMessage='';
+                                                round.undefined=false;
+                                                round.deprecated=false;
+                                                round.recommend=false;
+                                                round.synonym=false;
+                                                round.broadSynonym=false;
+                                                round.deprecatedNotifyMessage='';
+                                                round.recommendNotifyMessage='';
+                                                round.synonymNotifyMessage='';
+                                                round.broadSynonymNotifyMessage='';
+                                                "
+                                />
+                                <datalist id="round_fifth_characters" >
+                                  <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
+                                </datalist>
+                              </div>    
                             </div>
-                            <div class="custom-character-field">
-                              <select v-model="thirdCharacter" style="height: 26px;" class="width-100">
-                                <optgroup label="Dimension">
-                                  <option value="longest">longest</option>
-                                  <option value="widest">widest</option>
-                                  <option value="shorest">shorest</option>
-                                  <option value="narrowest">narrowest</option>
-                                </optgroup> 
-                                <optgroup label="Position">
-                                  <option value="anterior">anterior</option>
-                                  <option value="posterior">posterior</option>
-                                  <option value="abaxial">abaxial</option>
-                                  <option value="adaxial">adaxial</option>
-                                  <option value="proximal">proximal</option>
-                                  <option value="distal">distal</option>
-                                  <option value="distallmost">distallmost</option>
-                                  <option value="lateral">lateral</option>
-                                  <option value="medial">medial</option>
-                                  <option value="inner">inner</option>
-                                  <option value="outer">outer</option>
-                                  <option value="terminal">terminal</option>
-                                </optgroup> 
-                                <optgroup label="Prominence">
-                                  <option value="distinct">distinct</option>
-                                  <option value="total">total</option>
-                                </optgroup>
-                              </select>
-                              <br v-if="middleCharacter=='between'"/>
-                              <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and</div>
-                              <select v-if="middleCharacter=='between'"  v-model="secondThirdCharacter" style="height: 26px;" class="width-100">
-                                <optgroup label="Dimension">
-                                  <option value="longest">longest</option>
-                                  <option value="widest">widest</option>
-                                  <option value="shorest">shorest</option>
-                                  <option value="narrowest">narrowest</option>
-                                </optgroup> 
-                                <optgroup label="Position">
-                                  <option value="anterior">anterior</option>
-                                  <option value="posterior">posterior</option>
-                                  <option value="abaxial">abaxial</option>
-                                  <option value="adaxial">adaxial</option>
-                                  <option value="proximal">proximal</option>
-                                  <option value="distal">distal</option>
-                                  <option value="distallmost">distallmost</option>
-                                  <option value="lateral">lateral</option>
-                                  <option value="medial">medial</option>
-                                  <option value="inner">inner</option>
-                                  <option value="outer">outer</option>
-                                  <option value="terminal">terminal</option>
-                                </optgroup> 
-                                <optgroup label="Prominence">
-                                  <option value="distinct">distinct</option>
-                                  <option value="total">total</option>
-                                </optgroup>
-                              </select>
+                          </div>
+                          <div class="col-md-3">
+                            
+                            <div class="custom-character-field round-button-one" v-bind:style="[middleCharacter == 'between' ? {'margin-top': '-80px'} : {'margin-top':-'29px'}]">
+                              <button  type="button" @click="roundButtonOne('S')" title="Strutural Constraint" class="button button5 roundedBtn blueBtn">+S</button>
+                              <button  type="button" @click="roundButtonOne('P')" title="Positional Constraint" class="button button5 roundedBtn pinkBtn">+P</button>
+                              <button  type="button" @click="roundButtonOne('D')" title="Distance Constraint" class="button button5 roundedBtn orangeBtn">+D</button>
                             </div>
-                            <div class="custom-character-field">
-                              <input
-                                class="width-100"
-                                v-model="lastCharacter"
-                                style='height: 26px;'
-                                list="last_characters"
-                                v-on:focus="nounUndefined = false;
-                                            secondNounUndefined = false;
-                                            lastCharacterDefinition = '';
-                                            firstCharacterUndefined = false;
-                                            firstCharacterDefinition = ''
-                                            firstCharacterDeprecated = false;
-                                            firstCharacterDeprecatedNotifyMessage = '';
-                                            firstCharacterNotRecommend = false;
-                                            firstCharacterNotRecommendNotifyMessage = '';
-                                            firstCharacterSynonym = false;
-                                            firstCharacterSynonymNotifyMessage = '';
-                                            firstCharacterBroadSynonym = false;
-                                            firstCharacterBroadSynonymNotifyMessage = '';
-                                            wholeCharacterUndefined=false;
-                                            wholeCharacterDefinition='';
-                                            firstNounDeprecated=false;
-                                            firstNounDeprecatedNotifyMessage='';
-                                            secondNounDeprecated=false;
-                                            secondNounDeprecatedNotifyMessage='';
-                                            firstNounNotRecommend=false;
-                                            firstNounNotRecommendNotifyMessage='';
-                                            secondNounNotRecommend=false;
-                                            secondNounNotRecommendNotifyMessage='';
-                                            firstNounSynonym=false;
-                                            firstNounSynonymNotifyMessage='';
-                                            firstNounBroadSynonym=false;
-                                            firstNounBroadSynonymNotifyMessage='';
-                                            secondNounSynonym=false;
-                                            secondNounSynonymNotifyMessage='';
-                                            secondNounBroadSynonym=false;
-                                            secondNounBroadSynonymNotifyMessage='';
-                                            input();
-                                            "
-                                placeholder="enter a singular noun"
-                              />
-                              <datalist id="last_characters">
-                                <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
-                              </datalist>
-                              
+                          </div>
+                        </div> 
+                        <div class="row">
+                          <div class="col-md-9">
+                            <div class="row">
+                              <div class="col-md-6 subClidField">
+                              <div class="custom-character-field">
+                                <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and
+                                </div>
+                                  <select v-if="middleCharacter=='between'"  v-model="secondThirdCharacter" style="height: 26px;" class="width-100">
+                                    <optgroup label="Dimension">
+                                      <option value="longest">longest</option>
+                                      <option value="widest">widest</option>
+                                      <option value="shorest">shorest</option>
+                                      <option value="narrowest">narrowest</option>
+                                    </optgroup> 
+                                    <optgroup label="Position">
+                                      <option value="anterior">anterior</option>
+                                      <option value="posterior">posterior</option>
+                                      <option value="abaxial">abaxial</option>
+                                      <option value="adaxial">adaxial</option>
+                                      <option value="proximal">proximal</option>
+                                      <option value="distal">distal</option>
+                                      <option value="distallmost">distallmost</option>
+                                      <option value="lateral">lateral</option>
+                                      <option value="medial">medial</option>
+                                      <option value="inner">inner</option>
+                                      <option value="outer">outer</option>
+                                      <option value="terminal">terminal</option>
+                                    </optgroup> 
+                                    <optgroup label="Prominence">
+                                      <option value="distinct">distinct</option>
+                                      <option value="total">total</option>
+                                    </optgroup>
+                                  </select>
+                              </div>
+                              <div class="custom-character-field">
+                                <div v-if="middleCharacter=='between'" style="width:100%; text-align: center" :stytle="[(roundValOne == '' ? '-69px' : '-43px')]">and</div>
+                                <input
+                                  class="width-100"
+                                  v-if="middleCharacter=='between'"
+                                  v-model="secondLastCharacter"
+                                  style="height: 26px;"
+                                  list="second_last_characters"
+                                  v-on:focus="nounUndefined = false;
+                                              secondNounUndefined = false;
+                                              lastCharacterDefinition = '';
+                                              firstCharacterUndefined = false;
+                                              firstCharacterDefinition = ''
+                                              firstCharacterDeprecated = false;
+                                              firstCharacterDeprecatedNotifyMessage = '';
+                                              firstCharacterNotRecommend = false;
+                                              firstCharacterNotRecommendNotifyMessage = '';
+                                              firstCharacterSynonym = false;
+                                              firstCharacterSynonymNotifyMessage = '';
+                                              firstCharacterBroadSynonym = false;
+                                              firstCharacterBroadSynonymNotifyMessage = '';
+                                              wholeCharacterUndefined=false;
+                                              wholeCharacterDefinition='';
+                                              firstNounDeprecated=false;
+                                              firstNounDeprecatedNotifyMessage='';
+                                              secondNounDeprecated=false;
+                                              secondNounDeprecatedNotifyMessage='';
+                                              firstNounNotRecommend=false;
+                                              firstNounNotRecommendNotifyMessage='';
+                                              secondNounNotRecommend=false;
+                                              secondNounNotRecommendNotifyMessage='';
+                                              firstNounSynonym=false;
+                                              firstNounSynonymNotifyMessage='';
+                                              firstNounBroadSynonym=false;
+                                              firstNounBroadSynonymNotifyMessage='';
+                                              secondNounSynonym=false;
+                                              secondNounSynonymNotifyMessage='';
+                                              secondNounBroadSynonym=false;
+                                              secondNounBroadSynonymNotifyMessage='';
+                                              input();
+                                              "
+                                  placeholder="enter a singular noun"
+                                />
+                                <datalist id="second_last_characters">
+                                  <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
+                                </datalist>
+                              </div>
+                              </div>
+                            </div>
 
-                              <br v-if="middleCharacter=='between'"/>
-                              <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and</div>
-                              <input
-                                class="width-100"
-                                v-if="middleCharacter=='between'"
-                                v-model="secondLastCharacter"
-                                style="height: 26px;"
-                                list="second_last_characters"
-                                v-on:focus="nounUndefined = false;
-                                            secondNounUndefined = false;
-                                            lastCharacterDefinition = '';
-                                            firstCharacterUndefined = false;
-                                            firstCharacterDefinition = ''
-                                            firstCharacterDeprecated = false;
-                                            firstCharacterDeprecatedNotifyMessage = '';
-                                            firstCharacterNotRecommend = false;
-                                            firstCharacterNotRecommendNotifyMessage = '';
-                                            firstCharacterSynonym = false;
-                                            firstCharacterSynonymNotifyMessage = '';
-                                            firstCharacterBroadSynonym = false;
-                                            firstCharacterBroadSynonymNotifyMessage = '';
-                                            wholeCharacterUndefined=false;
-                                            wholeCharacterDefinition='';
-                                            firstNounDeprecated=false;
-                                            firstNounDeprecatedNotifyMessage='';
-                                            secondNounDeprecated=false;
-                                            secondNounDeprecatedNotifyMessage='';
-                                            firstNounNotRecommend=false;
-                                            firstNounNotRecommendNotifyMessage='';
-                                            secondNounNotRecommend=false;
-                                            secondNounNotRecommendNotifyMessage='';
-                                            firstNounSynonym=false;
-                                            firstNounSynonymNotifyMessage='';
-                                            firstNounBroadSynonym=false;
-                                            firstNounBroadSynonymNotifyMessage='';
-                                            secondNounSynonym=false;
-                                            secondNounSynonymNotifyMessage='';
-                                            secondNounBroadSynonym=false;
-                                            secondNounBroadSynonymNotifyMessage='';
-                                            input();
-                                            "
-                                placeholder="enter a singular noun"
-                              />
-                              <datalist id="second_last_characters">
-                                <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
-                              </datalist>
-                             
+                          </div>
+                          </div>
+                        <div class="row custom-flex">
+                          <div class="col-md-9">
+                              <div class="row custom-flex" v-if="middleCharacter=='between'">
+                                <div class="col-md-8"></div>
+                               
+                              </div>
+                              <div class="row custom-flex" v-for="round in roundsTwo" style="margin-top: 20px;" v-if="roundValTwo != '' && middleCharacter == 'between'">
+                                <div class="custom-character-field" v-if="round.round_val == 'D'">
+                                  <input
+                                    v-model="round.first"
+                                    style="width: 100px; height: 26px;"
+                                    placeholder="at 2cm"
+                                  />
+                                </div>  
+                                <div class="custom-character-field" v-if="round.round_val == 'S'">
+                                  <select style="height: 26px; width:80px;" v-model="round.second">
+                                    <option value="of">of</option>
+                                    <option value="on">on</option>
+                                    <option value="in">in</option>
+                                  </select>
+                                </div>
+                                <div class="custom-character-field" v-if="round.round_val == 'D'">
+                                  <select style="height: 26px; width:80px;"  v-model="round.third">
+                                    <option value="below">below</option>
+                                    <option value="above">above</option>
+                                  </select>
+                                </div>
+                                <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
+                                  <select style="height: 26px;" class="width-100" v-model="round.fourth">
+                                    <optgroup label="Dimension">
+                                      <option value="longest">longest</option>
+                                      <option value="widest">widest</option>
+                                      <option value="shorest">shorest</option>
+                                      <option value="narrowest">narrowest</option>
+                                    </optgroup> 
+                                    <optgroup label="Position">
+                                      <option value="anterior">anterior</option>
+                                      <option value="posterior">posterior</option>
+                                      <option value="abaxial">abaxial</option>
+                                      <option value="adaxial">adaxial</option>
+                                      <option value="proximal">proximal</option>
+                                      <option value="distal">distal</option>
+                                      <option value="distallmost">distallmost</option>
+                                      <option value="lateral">lateral</option>
+                                      <option value="medial">medial</option>
+                                      <option value="inner">inner</option>
+                                      <option value="outer">outer</option>
+                                      <option value="terminal">terminal</option>
+                                    </optgroup> 
+                                    <optgroup label="Prominence">
+                                      <option value="distinct">distinct</option>
+                                      <option value="total">total</option>
+                                    </optgroup>
+                                  </select>
+                                </div>
+                                <div class="custom-character-field">
+                                  <input
+                                    v-model="round.fifth"
+                                    class="width-100"
+                                    style="height: 26px;"
+                                    v-bind:style="{ 'width': round.text == 'enter a positional phrases,e.g at middle length' ? 340 + 'px' : ''}"
+                                    v-bind:list='[round.round_val == "S" || round.round_val == "D" ? "roundTwo_fifth_characters" : "" ]'
+                                    :placeholder="round.text"
+                                    v-on:focus = "nounUndefined = false;
+                                                  secondNounUndefined = false;
+                                                  lastCharacterDefinition = '';
+                                                  firstCharacterUndefined = false;
+                                                  firstCharacterDefinition = ''
+                                                  firstCharacterDeprecated = false;
+                                                  firstCharacterDeprecatedNotifyMessage = '';
+                                                  firstCharacterNotRecommend = false;
+                                                  firstCharacterNotRecommendNotifyMessage = '';
+                                                  firstCharacterSynonym = false;
+                                                  firstCharacterSynonymNotifyMessage = '';
+                                                  firstCharacterBroadSynonym = false;
+                                                  firstCharacterBroadSynonymNotifyMessage = '';
+                                                  wholeCharacterUndefined=false;
+                                                  wholeCharacterDefinition='';
+                                                  firstNounDeprecated=false;
+                                                  firstNounDeprecatedNotifyMessage='';
+                                                  secondNounDeprecated=false;
+                                                  secondNounDeprecatedNotifyMessage='';
+                                                  firstNounNotRecommend=false;
+                                                  firstNounNotRecommendNotifyMessage='';
+                                                  secondNounNotRecommend=false;
+                                                  secondNounNotRecommendNotifyMessage='';
+                                                  firstNounSynonym=false;
+                                                  firstNounSynonymNotifyMessage='';
+                                                  firstNounBroadSynonym=false;
+                                                  firstNounBroadSynonymNotifyMessage='';
+                                                  secondNounSynonym=false;
+                                                  secondNounSynonymNotifyMessage='';
+                                                  secondNounBroadSynonym=false;
+                                                  secondNounBroadSynonymNotifyMessage='';
+                                                  round.undefined=false;
+                                                  round.deprecated=false;
+                                                  round.recommend=false;
+                                                  round.synonym=false;
+                                                  round.broadSynonym=false;
+                                                  round.deprecatedNotifyMessage='';
+                                                  round.recommendNotifyMessage='';
+                                                  round.synonymNotifyMessage='';
+                                                  round.broadSynonymNotifyMessage='';
+                                                  "
+                                  />
+                                  <datalist id="roundTwo_fifth_characters" >
+                                    <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
+                                  </datalist>
+                                </div>
+                                <!-- <i class="fa fa-times-circle custom-close" aria-hidden="true"></i> -->      
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="custom-character-field round-button-two" v-if="middleCharacter == 'between'" v-bind:style="[middleCharacter == 'between' ? {'margin-top': '-31px'} : {'margin-top': '0px'}]">
+                              <button  type="button" @click="roundButtonTwo('S')" title="Strutural Constraint" class="button button5 roundedBtn blueBtn">+S</button>
+                              <button  type="button" @click="roundButtonTwo('P')" title="Positional Constraint" class="button button5 roundedBtn pinkBtn">+P</button>
+                              <button  type="button" @click="roundButtonTwo('D')" title="Distance Constraint" class="button button5 roundedBtn orangeBtn">+D</button>
                             </div>
+                          </div>
                         </div>
-                        <div class="row custom-flex" v-for="round in rounds" style="margin-top: 20px;" v-if="roundVal != ''">
-                          <div class="custom-character-field" v-if="round.round_val == 'D'">
-                            <input
-                              v-model="round.first"
-                              style="width: 100px; height: 26px;"
-                              placeholder="at 2cm"
-                            />
-                          </div>  
-                          <div class="custom-character-field" v-if="round.round_val == 'S'">
-                            <select style="height: 26px; width:80px;" v-model="round.second">
-                              <option value="of">of</option>
-                              <option value="on">on</option>
-                              <option value="in">in</option>
-                            </select>
-                          </div>
-                          <div class="custom-character-field" v-if="round.round_val == 'D'">
-                            <select style="height: 26px; width:80px;"  v-model="round.third">
-                              <option value="below">below</option>
-                              <option value="above">above</option>
-                            </select>
-                          </div>
-                          <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
-                            <select style="height: 26px;" class="width-100" v-model="round.fourth">
-                              <optgroup label="Dimension">
-                                <option value="longest">longest</option>
-                                <option value="widest">widest</option>
-                                <option value="shorest">shorest</option>
-                                <option value="narrowest">narrowest</option>
-                              </optgroup> 
-                              <optgroup label="Position">
-                                <option value="anterior">anterior</option>
-                                <option value="posterior">posterior</option>
-                                <option value="abaxial">abaxial</option>
-                                <option value="adaxial">adaxial</option>
-                                <option value="proximal">proximal</option>
-                                <option value="distal">distal</option>
-                                <option value="distallmost">distallmost</option>
-                                <option value="lateral">lateral</option>
-                                <option value="medial">medial</option>
-                                <option value="inner">inner</option>
-                                <option value="outer">outer</option>
-                                <option value="terminal">terminal</option>
-                              </optgroup> 
-                              <optgroup label="Prominence">
-                                <option value="distinct">distinct</option>
-                                <option value="total">total</option>
-                              </optgroup>
-                            </select>
-                          </div>
-                          <div class="custom-character-field">
-                            <input
-                              v-model="round.fifth"
-                              class="width-100"
-                              style="height: 26px;"
-                              v-bind:list='[round.round_val == "S" || round.round_val == "D" ? "round_fifth_characters" : "" ]'
-                              :placeholder="round.text"
-                              v-on:focus = "nounUndefined = false;
-                                            secondNounUndefined = false;
-                                            lastCharacterDefinition = '';
-                                            firstCharacterUndefined = false;
-                                            firstCharacterDefinition = ''
-                                            firstCharacterDeprecated = false;
-                                            firstCharacterDeprecatedNotifyMessage = '';
-                                            firstCharacterNotRecommend = false;
-                                            firstCharacterNotRecommendNotifyMessage = '';
-                                            firstCharacterSynonym = false;
-                                            firstCharacterSynonymNotifyMessage = '';
-                                            firstCharacterBroadSynonym = false;
-                                            firstCharacterBroadSynonymNotifyMessage = '';
-                                            wholeCharacterUndefined=false;
-                                            wholeCharacterDefinition='';
-                                            firstNounDeprecated=false;
-                                            firstNounDeprecatedNotifyMessage='';
-                                            secondNounDeprecated=false;
-                                            secondNounDeprecatedNotifyMessage='';
-                                            firstNounNotRecommend=false;
-                                            firstNounNotRecommendNotifyMessage='';
-                                            secondNounNotRecommend=false;
-                                            secondNounNotRecommendNotifyMessage='';
-                                            firstNounSynonym=false;
-                                            firstNounSynonymNotifyMessage='';
-                                            firstNounBroadSynonym=false;
-                                            firstNounBroadSynonymNotifyMessage='';
-                                            secondNounSynonym=false;
-                                            secondNounSynonymNotifyMessage='';
-                                            secondNounBroadSynonym=false;
-                                            secondNounBroadSynonymNotifyMessage='';
-                                            round.undefined=false;
-                                            round.deprecated=false;
-                                            round.recommend=false;
-                                            round.synonym=false;
-                                            round.broadSynonym=false;
-                                            round.deprecatedNotifyMessage='';
-                                            round.recommendNotifyMessage='';
-                                            round.synonymNotifyMessage='';
-                                            round.broadSynonymNotifyMessage='';
-                                            "
-                            />
-                            <datalist id="round_fifth_characters" >
-                              <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
-                            </datalist>
-                          </div>
-                                
-                        </div>
-                        <div class="custom-character-field round-button">
-                          <button  type="button" @click="roundButton('S')" title="Strutural Constraint" class="button button5 roundedBtn blueBtn">+S</button>
-                          <button  type="button" @click="roundButton('P')" title="Positional Constraint" class="button button5 roundedBtn pinkBtn">+P</button>
-                          <button  type="button" @click="roundButton('D')" title="Distance Constraint" class="button button5 roundedBtn orangeBtn">+D</button>
-                        </div>
-                          
                         
-                          
+                        
+                        
+                        
                         <div style="margin-top: 20px;">
                           <input type="checkbox" id="numerical-flag" v-model="numericalFlag">
                           <label for="numerical-flag">This is a numerical character</label>
@@ -905,7 +1043,25 @@
                           <div class="col-md-12" v-html="secondNounBroadSynonymNotifyMessage">
                           </div>
                         </div>
-                        <div v-for="round in rounds">
+                        <div v-for="round in roundsOne">
+                          <div class="row" v-if="round.deprecated">
+                            <div class="col-md-12" v-html="round.deprecatedNotifyMessage">
+                            </div>
+                          </div>
+                          <div class="row" v-if="round.recommend">
+                            <div class="col-md-12" v-html="round.recommendNotifyMessage">
+                            </div>
+                          </div>
+                          <div class="row" v-if="round.synonym">
+                            <div class="col-md-12" v-html="round.synonymNotifyMessage">
+                            </div>
+                          </div>
+                          <div class="row" v-if="round.broadSynonym">
+                            <div class="col-md-12" v-html="round.broadSynonymNotifyMessage">
+                            </div>
+                          </div>
+                        </div>
+                        <div v-for="round in roundsTwo" v-if="middleCharacter == 'between'">
                           <div class="row" v-if="round.deprecated">
                             <div class="col-md-12" v-html="round.deprecatedNotifyMessage">
                             </div>
@@ -946,7 +1102,15 @@
                                                                       :placeholder="'enter the definition of ' + secondLastCharacter">
                           </div>
                         </div>
-                        <div v-for="round in rounds">
+                        <div v-for="round in roundsOne">
+                          <div class="row">
+                            <div class="col-md-12" v-if="round.undefined">
+                              What is {{ round.fifth }}? <input v-model="round.definition" style="width:100%"
+                                                                  :placeholder="'enter the definition of ' + round.fifth">
+                            </div>
+                          </div>
+                        </div>
+                        <div v-for="round in roundsTwo" v-if="middleCharacter == 'between'">
                           <div class="row">
                             <div class="col-md-12" v-if="round.undefined">
                               What is {{ round.fifth }}? <input v-model="round.definition" style="width:100%"
@@ -3240,10 +3404,12 @@ export default {
       deprecatedTermsMessage: '',
       deprecatedTermsFlag: false,
       checkCharacters: 0,
-      round: '',
-      round: '',
-      rounds: [],
-      roundsUndefined: [],
+      roundValOne: '',
+      roundValTwo: '',
+      roundsOne: [],
+      roundsTwo: [],
+      roundsOneUndefined: [],
+      roundsTwoUndefined: [],
       nounCharacters: [],
       collectionLists: [],
       active_el: 0,
@@ -3626,18 +3792,32 @@ export default {
         app.newCharacterFlag = true;
         app.viewFlag = false;
         app.numericalFlag = false;
-        if(app.rounds.length > 0) {
-              $.each(this.rounds, function (i, item) {
-                app.rounds[i].undefined = false;
-                app.rounds[i].deprecated = false;
-                app.rounds[i].recommend = false;
-                app.rounds[i].synonym = false;
-                app.rounds[i].broadSynonym = false;
-                app.rounds[i].deprecatedNotifyMessage = '';
-                app.rounds[i].recommendNotifyMessage = '';
-                app.rounds[i].synonymNotifyMessage = '';
-                app.rounds[i].broadSynonymNotifyMessage = '';
-                app.rounds[i].definition = '';
+        if(app.roundsOne.length > 0) {
+              $.each(this.roundsOne, function (i, item) {
+                app.roundsOne[i].undefined = false;
+                app.roundsOne[i].deprecated = false;
+                app.roundsOne[i].recommend = false;
+                app.roundsOne[i].synonym = false;
+                app.roundsOne[i].broadSynonym = false;
+                app.roundsOne[i].deprecatedNotifyMessage = '';
+                app.roundsOne[i].recommendNotifyMessage = '';
+                app.roundsOne[i].synonymNotifyMessage = '';
+                app.roundsOne[i].broadSynonymNotifyMessage = '';
+                app.roundsOne[i].definition = '';
+              });   
+        }
+        if(app.roundsTwo.length > 0) {
+              $.each(this.roundsTwo, function (i, item) {
+                app.roundsTwo[i].undefined = false;
+                app.roundsTwo[i].deprecated = false;
+                app.roundsTwo[i].recommend = false;
+                app.roundsTwo[i].synonym = false;
+                app.roundsTwo[i].broadSynonym = false;
+                app.roundsTwo[i].deprecatedNotifyMessage = '';
+                app.roundsTwo[i].recommendNotifyMessage = '';
+                app.roundsTwo[i].synonymNotifyMessage = '';
+                app.roundsTwo[i].broadSynonymNotifyMessage = '';
+                app.roundsTwo[i].definition = '';
               });   
         }
         sessionStorage.setItem('viewFlag', false);
@@ -3992,16 +4172,26 @@ export default {
       app.alreadyExistingCharacterNotifyMessage = '';
       app.alreadyExistingCharacter = false;
       var roundOfIndex = true;
-        if(app.rounds.length > 0) {
-            $.each(app.rounds, function (i, item) {
+        if(app.roundsOne.length > 0) {
+            $.each(app.roundsOne, function (i, item) {
               if(item.fifth.indexOf('(') > -1 || item.fifth.indexOf(')') > -1) {
-                roundOfIndex = false;
+                roundOfIndexOne = false;
                 return false;
               }
             });   
         }
+
+        if(app.roundsTwo.length > 0) {
+            $.each(app.roundsTwo, function (i, item) {
+              if(item.fifth.indexOf('(') > -1 || item.fifth.indexOf(')') > -1) {
+                roundOfIndexTwo = false;
+                return false;
+              }
+            });   
+        }
+
       if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1 || app.lastCharacter.indexOf('(') > -1 || app.lastCharacter.indexOf(')') > -1 || app.secondLastCharacter.indexOf('(') > -1 || app.secondLastCharacter.indexOf(')') > -1 ) {
-        if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1 || roundOfIndex) {
+        if (app.firstCharacter.indexOf('(') > -1 || app.firstCharacter.indexOf(')') > -1 || roundOfIndexOne || roundOfIndexTwo) {
           app.currentTermForBracket += app.firstCharacter;
         }
         if (app.lastCharacter.indexOf('(') > -1 || app.lastCharacter.indexOf(')') > -1) {
@@ -4010,23 +4200,35 @@ export default {
           }
           app.currentTermForBracket += app.lastCharacter;
         }
+        if(app.roundOfIndexOne.length > 0) {
+          $.each(app.roundOfIndexOne, function (i, item) {
+            if (app.roundOfIndexOne[i].fifth.indexOf('(') > -1 || app.roundOfIndexOne[i].fifth.indexOf(')') > -1) {
+              if (app.currentTermForBracket != '') {
+                app.currentTermForBracket += ', ';
+              }
+              app.currentTermForBracket += app.roundOfIndexOne[i].fifth;
+            }
+          });   
+        }
         if (app.secondLastCharacter.indexOf('(') > -1 || app.secondLastCharacter.indexOf(')') > -1) {
           if (app.currentTermForBracket != '') {
             app.currentTermForBracket += ', ';
           }
           app.currentTermForBracket += app.secondLastCharacter;
         }
-       
-        if(app.rounds.length > 0) {
-          $.each(app.rounds, function (i, item) {
-            if (app.rounds[i].fifth.indexOf('(') > -1 || app.rounds[i].fifth.indexOf(')') > -1) {
+
+        if(app.roundOfIndexTwo.length > 0) {
+          $.each(app.roundOfIndexTwo, function (i, item) {
+            if (app.roundOfIndexTwo[i].fifth.indexOf('(') > -1 || app.roundOfIndexTwo[i].fifth.indexOf(')') > -1) {
               if (app.currentTermForBracket != '') {
                 app.currentTermForBracket += ', ';
               }
-              app.currentTermForBracket += app.rounds[i].fifth;
+              app.currentTermForBracket += app.roundOfIndexTwo[i].fifth;
             }
           });   
         }
+       
+        
         app.toRemoveBracketConfirmFlag = true;
       } else {
 
@@ -4034,12 +4236,8 @@ export default {
         if(app.thirdCharacter != '' && app.thirdCharacter != null) {
           var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.middleCharacter + ' '+ app.lastCharacter;
         }
-        if (app.middleCharacter == 'between') {
-          tempWholeCharacter += ' and ' + app.secondLastCharacter;
-        }
-
-        if(app.rounds.length > 0) {
-          $.each(app.rounds, function (i, item) {
+        if(app.roundsOne.length > 0) {
+          $.each(app.roundsOne, function (i, item) {
             if(item.round_val == 'S') {
               tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
             }else if(item.round_val == 'P') {
@@ -4048,6 +4246,21 @@ export default {
               tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
             }
           });   
+        }
+
+        if (app.middleCharacter == 'between') {
+          tempWholeCharacter += ' and ' + app.secondLastCharacter;
+          if(app.roundsTwo.length > 0) {
+            $.each(app.roundsTwo, function (i, item) {
+              if(item.round_val == 'S') {
+                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+              }else if(item.round_val == 'P') {
+                tempWholeCharacter += ' ' + item.fifth;
+              }else if(item.round_val == 'D'){
+                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+              }
+            });   
+          }
         }
 
         tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
@@ -4237,9 +4450,14 @@ export default {
             app.firstCharacter = app.trimInputString(app.firstCharacter);
             app.lastCharacter = app.trimInputString(app.lastCharacter);
             app.secondLastCharacter = app.trimInputString(app.secondLastCharacter);
-            if(app.rounds.length > 0) {
-              $.each(app.rounds, function (i, item) {
-                app.rounds[i].fifth = app.trimInputString(item.fifth);
+            if(app.roundsOne.length > 0) {
+              $.each(app.roundsOne, function (i, item) {
+                app.roundsOne[i].fifth = app.trimInputString(item.fifth);
+              });
+            }
+            if(app.middleCharacter == 'between' && app.roundsTwo.length > 0) {
+              $.each(app.roundsTwo, function (i, item) {
+                app.roundsTwo[i].fifth = app.trimInputString(item.fifth);
               });
             }
             await app.checkStoreCharacter();
@@ -4328,16 +4546,16 @@ export default {
           });
       }
 
-      if(app.rounds.length > 0) {
-        $.each(app.rounds, function (i, item) {
-          if(app.rounds[i].undefined) {
+      if(app.roundsOne.length > 0) {
+        $.each(app.roundsOne, function (i, item) {
+          if(app.roundsOne[i].undefined) {
               var date = new Date();
               requestBody = {
                 "user": app.sharedFlag ? '' : app.user.name,
                 "ontology": "carex",
-                "term": app.rounds[i].fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
+                "term": app.roundsOne[i].fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
                 "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
-                "definition": app.rounds[i].definition,
+                "definition": app.roundsOne[i].definition,
                 "elucidation": "",
                 "createdBy": app.user.name,
                 "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
@@ -4350,7 +4568,36 @@ export default {
                   ontology: 'carex'
                 })
                   .then(function (resp) {
-                    app.rounds[i].undefined = false;
+                    app.roundsOne[i].undefined = false;
+                  });
+              });
+          }
+        });
+      }
+
+      if(app.middleCharacter == 'between' && app.roundsTwo.length > 0) {
+        $.each(app.roundsTwo, function (i, item) {
+          if(app.roundsTwo[i].undefined) {
+              var date = new Date();
+              requestBody = {
+                "user": app.sharedFlag ? '' : app.user.name,
+                "ontology": "carex",
+                "term": app.roundsTwo[i].fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
+                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                "definition": app.roundsTwo[i].definition,
+                "elucidation": "",
+                "createdBy": app.user.name,
+                "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                "definitionSrc": app.user.name,
+              };
+              axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+              .then(function (resp) {
+                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                  user: app.sharedFlag ? '' : app.user.name,
+                  ontology: 'carex'
+                })
+                  .then(function (resp) {
+                    app.roundsTwo[i].undefined = false;
                   });
               });
           }
@@ -4362,11 +4609,9 @@ export default {
       if(app.thirdCharacter != null && app.thirdCharacter != '') {
         let wholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
       }
-      if (app.middleCharacter == 'between') {
-        wholeCharacter += ' and ' + app.secondLastCharacter;
-      }
-      if(app.rounds.length > 0) {
-        $.each(app.rounds, function (i, item) {
+
+      if(app.roundsOne.length > 0) {
+        $.each(app.roundsOne, function (i, item) {
           if(item.round_val == 'S') {
             wholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
           }else if(item.round_val == 'P') {
@@ -4375,6 +4620,20 @@ export default {
             wholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
           }
         });   
+      }
+      if (app.middleCharacter == 'between') {
+        wholeCharacter += ' and ' + app.secondLastCharacter;
+        if(app.roundsTwo.length > 0) {
+          $.each(app.roundsTwo, function (i, item) {
+            if(item.round_val == 'S') {
+              wholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+            }else if(item.round_val == 'P') {
+              wholeCharacter += ' ' + item.fifth;
+            }else if(item.round_val == 'D'){
+              wholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+            }
+          });   
+        }
       }
 
       if (app.wholeCharacterUndefined) {
@@ -4425,13 +4684,8 @@ export default {
             var tempWholeCharacter = firstCharacterDeprecatedValue['replacement term'] + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
           }
           
-
-          if (app.middleCharacter === 'between') {
-            tempWholeCharacter += ' and ' + app.secondLastCharacter;
-          }
-
-          if(app.rounds.length > 0) {
-            $.each(app.rounds, function (i, item) {
+          if(app.roundsOne.length > 0) {
+            $.each(app.roundsOne, function (i, item) {
               if(item.round_val == 'S') {
                 tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
               }else if(item.round_val == 'P') {
@@ -4440,6 +4694,21 @@ export default {
                 tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
               }
             });   
+          }
+          if (app.middleCharacter === 'between') {
+            tempWholeCharacter += ' and ' + app.secondLastCharacter;
+            if(app.roundsTwo.length > 0) {
+              $.each(app.roundsTwo, function (i, item) {
+                if(item.round_val == 'S') {
+                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                }else if(item.round_val == 'P') {
+                  tempWholeCharacter += ' ' + item.fifth;
+                }else if(item.round_val == 'D'){
+                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                }
+              });   
+            }
+
           }
 
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
@@ -4480,12 +4749,9 @@ export default {
                       }else {
                         var tempWholeCharacter = methodEntry.term + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
                       }
-                      
-                      if (app.middleCharacter == 'between') {
-                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                      }
-                      if(app.rounds.length > 0) {
-                        $.each(app.rounds, function (i, item) {
+
+                      if(app.roundsOne.length > 0) {
+                        $.each(app.roundsOne, function (i, item) {
                           if(item.round_val == 'S') {
                             tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                           }else if(item.round_val == 'P') {
@@ -4494,7 +4760,24 @@ export default {
                             tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
                           }
                         });   
-                      }  
+                      }
+                      
+                      if (app.middleCharacter == 'between') {
+                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                        if(app.roundsTwo.length > 0) {
+                          $.each(app.roundsTwo, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + item.fifth;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                            }
+                          });   
+                        } 
+                      }
+
+                      
 
                       await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
                         .then(function (resp) {
@@ -4535,12 +4818,8 @@ export default {
                       var tempWholeCharacter = methodEntry.term + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
                     }
 
-                    if (app.middleCharacter == 'between') {
-                      tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                    }
-
-                    if(app.rounds.length > 0) {
-                      $.each(app.rounds, function (i, item) {
+                    if(app.roundsOne.length > 0) {
+                      $.each(app.roundsOne, function (i, item) {
                         if(item.round_val == 'S') {
                           tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                         }else if(item.round_val == 'P') {
@@ -4550,6 +4829,23 @@ export default {
                         }
                       });   
                     }
+
+                    if (app.middleCharacter == 'between') {
+                      tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                      if(app.roundsTwo.length > 0) {
+                        $.each(app.roundsTwo, function (i, item) {
+                          if(item.round_val == 'S') {
+                            tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                          }else if(item.round_val == 'P') {
+                            tempWholeCharacter += ' ' + item.fifth;
+                          }else if(item.round_val == 'D'){
+                            tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                          }
+                        });   
+                      }
+                    }
+
+                    
 
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
                       .then(function (resp) {
@@ -4573,13 +4869,8 @@ export default {
                       }else {
                         var tempWholeCharacter = methodEntry.term + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
                       }
-
-                      if (app.middleCharacter == 'between') {
-                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                      }
-
-                      if(app.rounds.length > 0) {
-                        $.each(app.rounds, function (i, item) {
+                      if(app.roundsOne.length > 0) {
+                        $.each(app.roundsOne, function (i, item) {
                           if(item.round_val == 'S') {
                             tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                           }else if(item.round_val == 'P') {
@@ -4588,7 +4879,24 @@ export default {
                             tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
                           }
                         });   
-                      } 
+                      }
+
+                      if (app.middleCharacter == 'between') {
+                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                        if(app.roundsTwo.length > 0) {
+                          $.each(app.roundsTwo, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + item.fifth;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                            }
+                          });   
+                        }
+                      }
+
+                      
 
                       tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
 
@@ -4620,12 +4928,8 @@ export default {
             var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + nounDeprecatedValue['replacement term'];
           }
 
-          if (app.middleCharacter == 'between') {
-            tempWholeCharacter += ' and ' + app.secondLastCharacter;
-          }
-
-          if(app.rounds.length > 0) {
-            $.each(app.rounds, function (i, item) {
+          if(app.roundsOne.length > 0) {
+            $.each(app.roundsOne, function (i, item) {
               if(item.round_val == 'S') {
                 tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
               }else if(item.round_val == 'P') {
@@ -4634,7 +4938,24 @@ export default {
                 tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
               }
             });   
-          }  
+          }
+
+          if (app.middleCharacter == 'between') {
+            tempWholeCharacter += ' and ' + app.secondLastCharacter;
+            if(app.roundsTwo.length > 0) {
+              $.each(app.roundsTwo, function (i, item) {
+                if(item.round_val == 'S') {
+                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                }else if(item.round_val == 'P') {
+                  tempWholeCharacter += ' ' + item.fifth;
+                }else if(item.round_val == 'D'){
+                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                }
+              });   
+            } 
+          }
+
+           
 
           await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
             .then(async function (resp) {
@@ -4709,12 +5030,8 @@ export default {
                         var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
                       }
 
-                      if (app.middleCharacter === 'between') {
-                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                      }
-
-                      if(app.rounds.length > 0) {
-                        $.each(app.rounds, function (i, item) {
+                      if(app.roundsOne.length > 0) {
+                        $.each(app.roundsOne, function (i, item) {
                           if(item.round_val == 'S') {
                             tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                           }else if(item.round_val == 'P') {
@@ -4723,6 +5040,21 @@ export default {
                             tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
                           }
                         });   
+                      }
+
+                      if (app.middleCharacter === 'between') {
+                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                        if(app.roundsTwo.length > 0) {
+                          $.each(app.roundsTwo, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + item.fifth;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                            }
+                          });   
+                        }
                       }
 
                       await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
@@ -4765,12 +5097,8 @@ export default {
                       var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
                     }
 
-                    if (app.middleCharacter == 'between') {
-                      tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                    }
-
-                    if(app.rounds.length > 0) {
-                      $.each(app.rounds, function (i, item) {
+                    if(app.roundsOne.length > 0) {
+                      $.each(app.roundsOne, function (i, item) {
                         if(item.round_val == 'S') {
                           tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                         }else if(item.round_val == 'P') {
@@ -4779,7 +5107,22 @@ export default {
                           tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
                         }
                       });   
-                    } 
+                    }
+
+                    if (app.middleCharacter == 'between') {
+                      tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                      if(app.roundsTwo.length > 0) {
+                        $.each(app.roundsTwo, function (i, item) {
+                          if(item.round_val == 'S') {
+                            tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                          }else if(item.round_val == 'P') {
+                            tempWholeCharacter += ' ' + item.fifth;
+                          }else if(item.round_val == 'D'){
+                            tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                          }
+                        });   
+                      }
+                    }
 
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
                       .then(function (resp) {
@@ -4804,12 +5147,8 @@ export default {
                         var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
                       }
 
-                      if (app.middleCharacter == 'between') {
-                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                      }
-
-                      if(app.rounds.length > 0) {
-                        $.each(app.rounds, function (i, item) {
+                      if(app.roundsOne.length > 0) {
+                        $.each(app.roundsOne, function (i, item) {
                           if(item.round_val == 'S') {
                             tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                           }else if(item.round_val == 'P') {
@@ -4818,6 +5157,21 @@ export default {
                             tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
                           }
                         });   
+                      }
+
+                      if (app.middleCharacter == 'between') {
+                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                        if(app.roundsTwo.length > 0) {
+                          $.each(app.roundsTwo, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + item.fifth;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                            }
+                          });   
+                        }
                       }
 
                       tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
@@ -4842,6 +5196,225 @@ export default {
           });
       }
 
+      if(app.roundsOne.length > 0) {
+        $.each(app.roundsOne, function (r_key, item) {
+          var roundNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == item.fifth.toLowerCase());
+          if (roundNounDeprecatedValue) {
+            app.roundsOne[r_key].deprecated = true;
+            if (roundNounDeprecatedValue['replacement term']) {
+              
+              if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+              }else {
+                var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+              }
+
+              if(app.roundsOne.length > 0) {
+                $.each(app.roundsOne, function (i, item) {
+                  if(item.round_val == 'S') {
+                    tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                  }else if(item.round_val == 'P') {
+                    tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
+                  }else if(item.round_val == 'D'){
+                    tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                  }
+                });   
+              }  
+
+              if (app.middleCharacter == 'between') {
+                tempWholeCharacter += ' and ' + secondLastCharacter;
+                if(app.roundsTwo.length > 0) {
+                  $.each(app.roundsTwo, function (i, item) {
+                    if(item.round_val == 'S') {
+                      tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                    }else if(item.round_val == 'P') {
+                      tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
+                    }else if(item.round_val == 'D'){
+                      tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                    }
+                  });   
+                }  
+              }
+
+              axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                .then(function (resp) {
+                  console.log('term?' + tempWholeCharacter, resp.data);
+                  if (resp.data.entries.length > 0) {
+                    app.roundsOne[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                      roundNounDeprecatedValue['replacement term'] +
+                      '</b>. Please cancel and use the existing character <b>' +
+                      tempWholeCharacter + '</b>.';
+                  } else {
+                    app.roundsOne[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is a deprecated term' +
+                      (roundNounDeprecatedValue['replacement term'] ?
+                        ', consider using <b>' + roundNounDeprecatedValue['replacement term'] + '</b>.' :
+                        ' because ' + roundNounDeprecatedValue['deprecated reason'] + '. Please use another term.');
+                  }
+                });
+            }
+          } else {
+          axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + item.fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
+              .then(async function (resp) {
+                var methodEntry = null;
+                console.log('termround?' + item.fifth, resp.data);
+                if (!resp.data.entries.length) {
+                  console.log(app.roundsOne);
+                  app.roundsOne[r_key].undefined = true;
+                } else {
+                  methodEntry = resp.data.entries.filter(function (each) {
+                    return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
+                  })[0];
+                  if (methodEntry) {
+                    for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                      if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
+                        if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
+                          app.roundsOne[r_key].recommend = true;
+                          break;
+                        }
+                      }
+                    }
+                    if (app.roundsOne[r_key].recommend == true) {
+
+                      if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                        var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                      }else {
+                        var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                      }
+
+                      if(app.roundsOne.length > 0) {
+                        $.each(app.roundsOne, function (i, item) {
+                          if(item.round_val == 'S') {
+                            tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                          }else if(item.round_val == 'P') {
+                            tempWholeCharacter += ' ' + methodEntry.term;
+                          }else if(item.round_val == 'D'){
+                            tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                          }
+                        });   
+                      } 
+
+                      if (app.middleCharacter == 'between') {
+                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                      }
+
+                       
+
+                      await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                        .then(function (resp) {
+                          console.log('term?' + tempWholeCharacter, resp.data);
+                          if (resp.data.entries.length > 0) {
+                            app.roundsOne[r_key].recommendNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                              methodEntry.term +
+                              '</b>. Please cancel and use the existing character <b>' +
+                              tempWholeCharacter + '</b>.';
+                          } else {
+                            app.roundsOne[r_key].recommendNotifyMessage = "Term <b>" + item.fifth + '</b> is a not recommended synonym of <b>' +
+                              methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                          }
+                        });
+                    }
+                  }
+                  if (!app.roundsOne[r_key].recommend) {
+                    methodEntry = resp.data.entries.filter(function (each) {
+                      return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+                    })[0];
+                    if (methodEntry && methodEntry.term != item.fifth.toLowerCase()) {
+                      var tempBroadSynonyms = resp.data.entries;
+                      for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                        if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
+                          if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
+                            app.roundsOne[r_key].synonym = true;
+                            break;
+                          }
+                        }
+                      }
+                      if (app.roundsOne[r_key].synonym == true) {
+
+                        if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                        }else {
+                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                        }
+
+                        if(app.roundsOne.length > 0) {
+                          $.each(app.roundsOne, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + methodEntry.term;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                            }
+                          });   
+                        } 
+
+                        if (app.middleCharacter == 'between') {
+                          tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                        }
+
+                        
+
+                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                          .then(function (resp) {
+                            console.log('term?' + tempWholeCharacter, resp.data);
+                            if (resp.data.entries.length > 0) {
+                              app.roundsOne[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                                methodEntry.term +
+                                '</b>. Please cancel and use the existing character <b>' +
+                                tempWholeCharacter + '</b>.';
+                            } else {
+                              app.roundsOne[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is an exact synonym of <b>' +
+                                methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                            }
+                          });
+                      } else {
+                        if (tempBroadSynonyms.length > 0) {
+                          app.roundsOne[r_key].broadSynonym = true;
+                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                          
+                            if(app.roundsOne.length > 0) {
+                            $.each(app.roundsOne, function (i, item) {
+                              if(item.round_val == 'S') {
+                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                              }else if(item.round_val == 'P') {
+                                tempWholeCharacter += ' ' + methodEntry.term;
+                              }else if(item.round_val == 'D'){
+                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                              }
+                            });   
+                          }
+
+                          if (app.middleCharacter == 'between') {
+                            tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                          }
+
+                       
+
+                          tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+
+                          if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
+                            app.roundsOne[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
+
+                          } else {
+                            app.roundsOne[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                            if (tempBroadSynonyms.length > 1) {
+                              for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                                app.roundsOne[r_key].broadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                              }
+                            }
+                          }
+                          app.roundsOne[r_key].broadSynonymNotifyMessage += "</b>.";
+                        }
+                      }
+                    }
+                  }
+                }
+              });
+          }
+        });
+
+      }
+
       if (app.middleCharacter == 'between') {
         var secondNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == app.secondLastCharacter.toLowerCase());
         if (secondNounDeprecatedValue) {
@@ -4853,12 +5426,9 @@ export default {
             }else {
               var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
             }
-            if (app.middleCharacter == 'between') {
-              tempWholeCharacter += ' and ' + secondNounDeprecatedValue['replacement term'];
-            }
-
-            if(app.rounds.length > 0) {
-              $.each(app.rounds, function (i, item) {
+            
+            if(app.roundsOne.length > 0) {
+              $.each(app.roundsOne, function (i, item) {
                 if(item.round_val == 'S') {
                   tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                 }else if(item.round_val == 'P') {
@@ -4867,7 +5437,24 @@ export default {
                   tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
                 }
               });   
-            }  
+            }
+
+            if (app.middleCharacter == 'between') {
+              tempWholeCharacter += ' and ' + secondNounDeprecatedValue['replacement term'];
+              if(app.roundsTwo.length > 0) {
+                $.each(app.roundsTwo, function (i, item) {
+                  if(item.round_val == 'S') {
+                    tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                  }else if(item.round_val == 'P') {
+                    tempWholeCharacter += ' ' + item.fifth;
+                  }else if(item.round_val == 'D'){
+                    tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                  }
+                });   
+              } 
+            }
+
+            
 
             await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
               .then(function (resp) {
@@ -4913,12 +5500,8 @@ export default {
                       var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
                     }
 
-                    if (app.middleCharacter == 'between') {
-                      tempWholeCharacter += ' and ' + methodEntry.term;
-                    }
-
-                    if(app.rounds.length > 0) {
-                      $.each(app.rounds, function (i, item) {
+                    if(app.roundsOne.length > 0) {
+                      $.each(app.roundsOne, function (i, item) {
                         if(item.round_val == 'S') {
                           tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                         }else if(item.round_val == 'P') {
@@ -4927,7 +5510,24 @@ export default {
                           tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
                         }
                       });   
-                    }  
+                    }
+
+                    if (app.middleCharacter == 'between') {
+                      tempWholeCharacter += ' and ' + methodEntry.term;
+                      if(app.roundsTwo.length > 0) {
+                        $.each(app.roundsTwo, function (i, item) {
+                          if(item.round_val == 'S') {
+                            tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                          }else if(item.round_val == 'P') {
+                            tempWholeCharacter += ' ' + item.fifth;
+                          }else if(item.round_val == 'D'){
+                            tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                          }
+                        });   
+                      }  
+                    }
+
+                    
 
                     await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
                       .then(function (resp) {
@@ -4966,12 +5566,8 @@ export default {
                         var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
                       }
 
-                      if (app.middleCharacter == 'between') {
-                        tempWholeCharacter += ' and ' + methodEntry.term;
-                      }
-
-                      if(app.rounds.length > 0) {
-                        $.each(app.rounds, function (i, item) {
+                      if(app.roundsOne.length > 0) {
+                        $.each(app.roundsOne, function (i, item) {
                           if(item.round_val == 'S') {
                             tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
                           }else if(item.round_val == 'P') {
@@ -4980,7 +5576,24 @@ export default {
                             tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
                           }
                         });   
-                      } 
+                      }
+
+                      if (app.middleCharacter == 'between') {
+                        tempWholeCharacter += ' and ' + methodEntry.term;
+                        if(app.roundsTwo.length > 0) {
+                          $.each(app.roundsTwo, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + item.fifth;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                            }
+                          });   
+                        } 
+                      }
+
+                      
 
                       await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
                         .then(function (resp) {
@@ -5000,21 +5613,34 @@ export default {
                         app.secondNounBroadSynonym = true;
                         var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + methodEntry.term;
 
-                        if (app.middleCharacter == 'between') {
-                          tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                        if(app.roundsOne.length > 0) {
+                          $.each(app.roundsOne, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + item.fifth;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                            }
+                          });   
                         }
 
-                      if(app.rounds.length > 0) {
-                        $.each(app.rounds, function (i, item) {
-                          if(item.round_val == 'S') {
-                            tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-                          }else if(item.round_val == 'P') {
-                            tempWholeCharacter += ' ' + item.fifth;
-                          }else if(item.round_val == 'D'){
-                            tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                        if (app.middleCharacter == 'between') {
+                          tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                          if(app.roundsTwo.length > 0) {
+                            $.each(app.roundsTwo, function (i, item) {
+                              if(item.round_val == 'S') {
+                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                              }else if(item.round_val == 'P') {
+                                tempWholeCharacter += ' ' + item.fifth;
+                              }else if(item.round_val == 'D'){
+                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                              }
+                            });   
                           }
-                        });   
-                      }
+                        }
+
+                      
 
                         tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
 
@@ -5039,125 +5665,87 @@ export default {
         }
       }
 
-      if(app.rounds.length > 0) {
-        $.each(this.rounds, function (r_key, item) {
-          var roundNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == item.fifth.toLowerCase());
-          if (roundNounDeprecatedValue) {
-            app.rounds[r_key].deprecated = true;
-            if (roundNounDeprecatedValue['replacement term']) {
-              
-              if(app.thirdCharacter != '' && app.thirdCharacter != null) {
-                var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
-              }else {
-                var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-              }
-              if (app.middleCharacter == 'between') {
-                tempWholeCharacter += ' and ' + secondLastCharacter;
-              }
+      if(app.middleCharacter == 'between' && app.roundsTwo.length > 0) {
+          $.each(app.roundsTwo, function (r_key, item) {
+            var roundNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == item.fifth.toLowerCase());
+            if (roundNounDeprecatedValue) {
+              app.roundsTwo[r_key].deprecated = true;
+              if (roundNounDeprecatedValue['replacement term']) {
+                
+                if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                  var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                }else {
+                  var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                }
 
-              if(app.rounds.length > 0) {
-                $.each(app.rounds, function (i, item) {
-                  if(item.round_val == 'S') {
-                    tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
-                  }else if(item.round_val == 'P') {
-                    tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
-                  }else if(item.round_val == 'D'){
-                    tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
-                  }
-                });   
-              }  
+                if(app.roundsOne.length > 0) {
+                  $.each(app.roundsOne, function (i, item) {
+                    if(item.round_val == 'S') {
+                      tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                    }else if(item.round_val == 'P') {
+                      tempWholeCharacter += ' ' + item.fifth;
+                    }else if(item.round_val == 'D'){
+                      tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                    }
+                  });   
+                }  
 
-              axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-                .then(function (resp) {
-                  console.log('term?' + tempWholeCharacter, resp.data);
-                  if (resp.data.entries.length > 0) {
-                    app.rounds[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
-                      roundNounDeprecatedValue['replacement term'] +
-                      '</b>. Please cancel and use the existing character <b>' +
-                      tempWholeCharacter + '</b>.';
+                if (app.middleCharacter == 'between') {
+                  tempWholeCharacter += ' and ' + secondLastCharacter;
+                }
+
+                if(app.roundsTwo.length > 0) {
+                  $.each(app.roundsTwo, function (i, item) {
+                    if(item.round_val == 'S') {
+                      tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                    }else if(item.round_val == 'P') {
+                      tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
+                    }else if(item.round_val == 'D'){
+                      tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                    }
+                  });   
+                }  
+
+                
+
+                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                  .then(function (resp) {
+                    console.log('term?' + tempWholeCharacter, resp.data);
+                    if (resp.data.entries.length > 0) {
+                      app.roundsTwo[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                        roundNounDeprecatedValue['replacement term'] +
+                        '</b>. Please cancel and use the existing character <b>' +
+                        tempWholeCharacter + '</b>.';
+                    } else {
+                      app.roundsTwo[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is a deprecated term' +
+                        (roundNounDeprecatedValue['replacement term'] ?
+                          ', consider using <b>' + roundNounDeprecatedValue['replacement term'] + '</b>.' :
+                          ' because ' + roundNounDeprecatedValue['deprecated reason'] + '. Please use another term.');
+                    }
+                  });
+              }
+            } else {
+            axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + item.fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
+                .then(async function (resp) {
+                  var methodEntry = null;
+                  console.log('termround?' + item.fifth, resp.data);
+                  if (!resp.data.entries.length) {
+                    console.log(app.roundsTwo);
+                    app.roundsTwo[r_key].undefined = true;
                   } else {
-                    app.rounds[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is a deprecated term' +
-                      (roundNounDeprecatedValue['replacement term'] ?
-                        ', consider using <b>' + roundNounDeprecatedValue['replacement term'] + '</b>.' :
-                        ' because ' + roundNounDeprecatedValue['deprecated reason'] + '. Please use another term.');
-                  }
-                });
-            }
-          } else {
-          axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + item.fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
-              .then(async function (resp) {
-                var methodEntry = null;
-                console.log('termround?' + item.fifth, resp.data);
-                if (!resp.data.entries.length) {
-                  console.log(app.rounds);
-                  app.rounds[r_key].undefined = true;
-                } else {
-                  methodEntry = resp.data.entries.filter(function (each) {
-                    return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
-                  })[0];
-                  if (methodEntry) {
-                    for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                      if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
-                        if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
-                          app.rounds[r_key].recommend = true;
-                          break;
-                        }
-                      }
-                    }
-                    if (app.rounds[r_key].recommend == true) {
-
-                      if(app.thirdCharacter != '' && app.thirdCharacter != null) {
-                        var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
-                      }else {
-                        var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                      }
-
-                      if (app.middleCharacter == 'between') {
-                        tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                      }
-
-                      if(app.rounds.length > 0) {
-                        $.each(app.rounds, function (i, item) {
-                          if(item.round_val == 'S') {
-                            tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
-                          }else if(item.round_val == 'P') {
-                            tempWholeCharacter += ' ' + methodEntry.term;
-                          }else if(item.round_val == 'D'){
-                            tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
-                          }
-                        });   
-                      }  
-
-                      await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-                        .then(function (resp) {
-                          console.log('term?' + tempWholeCharacter, resp.data);
-                          if (resp.data.entries.length > 0) {
-                            app.recommendNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
-                              methodEntry.term +
-                              '</b>. Please cancel and use the existing character <b>' +
-                              tempWholeCharacter + '</b>.';
-                          } else {
-                            app.recommendNotifyMessage = "Term <b>" + item.fifth + '</b> is a not recommended synonym of <b>' +
-                              methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
-                          }
-                        });
-                    }
-                  }
-                  if (!app.rounds[r_key].recommend) {
                     methodEntry = resp.data.entries.filter(function (each) {
-                      return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+                      return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
                     })[0];
-                    if (methodEntry && methodEntry.term != item.fifth.toLowerCase()) {
-                      var tempBroadSynonyms = resp.data.entries;
+                    if (methodEntry) {
                       for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                        if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
+                        if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
                           if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
-                            app.rounds[r_key].synonym = true;
+                            app.roundsTwo[r_key].recommend = true;
                             break;
                           }
                         }
                       }
-                      if (app.rounds[r_key].synonym == true) {
+                      if (app.roundsTwo[r_key].recommend == true) {
 
                         if(app.thirdCharacter != '' && app.thirdCharacter != null) {
                           var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
@@ -5165,12 +5753,24 @@ export default {
                           var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
                         }
 
+                        if(app.roundsOne.length > 0) {
+                          $.each(app.roundsOne, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + item.fifth;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                            }
+                          });   
+                        } 
+
                         if (app.middleCharacter == 'between') {
                           tempWholeCharacter += ' and ' + app.secondLastCharacter;
                         }
-
-                        if(app.rounds.length > 0) {
-                          $.each(app.rounds, function (i, item) {
+                        
+                        if(app.roundsTwo.length > 0) {
+                          $.each(app.roundsTwo, function (i, item) {
                             if(item.round_val == 'S') {
                               tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
                             }else if(item.round_val == 'P') {
@@ -5180,63 +5780,144 @@ export default {
                             }
                           });   
                         } 
+                         
 
                         await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
                           .then(function (resp) {
                             console.log('term?' + tempWholeCharacter, resp.data);
                             if (resp.data.entries.length > 0) {
-                              app.rounds[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                              app.roundsTwo[r_key].recommendNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
                                 methodEntry.term +
                                 '</b>. Please cancel and use the existing character <b>' +
                                 tempWholeCharacter + '</b>.';
                             } else {
-                              app.rounds[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is an exact synonym of <b>' +
+                              app.roundsTwo[r_key].recommendNotifyMessage = "Term <b>" + item.fifth + '</b> is a not recommended synonym of <b>' +
                                 methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
                             }
                           });
-                      } else {
-                        if (tempBroadSynonyms.length > 0) {
-                          app.rounds[r_key].broadSynonym = true;
-                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                      }
+                    }
+                    if (!app.roundsTwo[r_key].recommend) {
+                      methodEntry = resp.data.entries.filter(function (each) {
+                        return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+                      })[0];
+                      if (methodEntry && methodEntry.term != item.fifth.toLowerCase()) {
+                        var tempBroadSynonyms = resp.data.entries;
+                        for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                          if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
+                            if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
+                              app.roundsTwo[r_key].synonym = true;
+                              break;
+                            }
+                          }
+                        }
+                        if (app.roundsTwo[r_key].synonym == true) {
+
+                          if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                          }else {
+                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                          }
+
+                          if(app.roundsOne.length > 0) {
+                            $.each(app.roundsOne, function (i, item) {
+                              if(item.round_val == 'S') {
+                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                              }else if(item.round_val == 'P') {
+                                tempWholeCharacter += ' ' + item.fifth;
+                              }else if(item.round_val == 'D'){
+                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                              }
+                            });   
+                          } 
 
                           if (app.middleCharacter == 'between') {
                             tempWholeCharacter += ' and ' + app.secondLastCharacter;
                           }
 
-                        if(app.rounds.length > 0) {
-                          $.each(app.rounds, function (i, item) {
-                            if(item.round_val == 'S') {
-                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
-                            }else if(item.round_val == 'P') {
-                              tempWholeCharacter += ' ' + methodEntry.term;
-                            }else if(item.round_val == 'D'){
-                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                          if(app.roundsTwo.length > 0) {
+                            $.each(app.roundsTwo, function (i, item) {
+                              if(item.round_val == 'S') {
+                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                              }else if(item.round_val == 'P') {
+                                tempWholeCharacter += ' ' + methodEntry.term;
+                              }else if(item.round_val == 'D'){
+                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                              }
+                            });   
+                          } 
+
+                          
+
+                          await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                            .then(function (resp) {
+                              console.log('term?' + tempWholeCharacter, resp.data);
+                              if (resp.data.entries.length > 0) {
+                                app.roundsTwo[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                                  methodEntry.term +
+                                  '</b>. Please cancel and use the existing character <b>' +
+                                  tempWholeCharacter + '</b>.';
+                              } else {
+                                app.roundsTwo[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is an exact synonym of <b>' +
+                                  methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                              }
+                            });
+                        } else {
+                          if (tempBroadSynonyms.length > 0) {
+                            app.roundsTwo[r_key].broadSynonym = true;
+                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                            
+                              if(app.roundsOne.length > 0) {
+                              $.each(app.roundsOne, function (i, item) {
+                                if(item.round_val == 'S') {
+                                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                                }else if(item.round_val == 'P') {
+                                  tempWholeCharacter += ' ' + item.fifth;
+                                }else if(item.round_val == 'D'){
+                                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                                }
+                              });   
                             }
-                          });   
-                        }
 
-                          tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+                              if (app.middleCharacter == 'between') {
+                                tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                              }
+                              if(app.roundsTwo.length > 0) {
+                              $.each(app.roundsTwo, function (i, item) {
+                                if(item.round_val == 'S') {
+                                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                                }else if(item.round_val == 'P') {
+                                  tempWholeCharacter += ' ' + methodEntry.term;
+                                }else if(item.round_val == 'D'){
+                                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                                }
+                              });   
+                            }
 
-                          if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
-                            app.rounds[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
+                         
 
-                          } else {
-                            app.rounds[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
-                            if (tempBroadSynonyms.length > 1) {
-                              for (var i = 1; i < tempBroadSynonyms.length; i++) {
-                                app.rounds[r_key].broadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                            tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+
+                            if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
+                              app.roundsTwo[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
+
+                            } else {
+                              app.roundsTwo[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                              if (tempBroadSynonyms.length > 1) {
+                                for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                                  app.roundsTwo[r_key].broadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                                }
                               }
                             }
+                            app.roundsTwo[r_key].broadSynonymNotifyMessage += "</b>.";
                           }
-                          app.rounds[r_key].broadSynonymNotifyMessage += "</b>.";
                         }
                       }
                     }
                   }
-                }
-              });
-          }
-        });
+                });
+            }
+          });
 
       }
 
@@ -5280,8 +5961,19 @@ export default {
     checkStoreCharacterValidation() {
       var result = true;
       var app = this;
-      if(app.rounds.length > 0) {
-        $.each(app.rounds, function (r_key, item) {
+      if(app.roundsOne.length > 0) {
+        $.each(app.roundsOne, function (r_key, item) {
+            if(item.undefined == false && item.recommend == false && item.deprecated == false && item.synonym == false && item.broadSynonym == false) {
+              result = true;
+              return false;
+            }else {
+              result = false;
+              return false;
+            }
+        });
+      }
+      if(app.roundsTwo.length > 0) {
+        $.each(app.roundsTwo, function (r_key, item) {
             if(item.undefined == false && item.recommend == false && item.deprecated == false && item.synonym == false && item.broadSynonym == false) {
               result = true;
               return false;
@@ -5381,12 +6073,8 @@ export default {
         app.character.name = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
       }
 
-      if (app.middleCharacter == 'between') {
-        app.character.name += ' and ' + app.secondLastCharacter;
-      }
-
-       if(app.rounds.length > 0) {
-          $.each(app.rounds, function (i, item) {
+      if(app.roundsOne.length > 0) {
+          $.each(app.roundsOne, function (i, item) {
             if(item.round_val == 'S') {
               app.character.name += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
             }else if(item.round_val == 'P') {
@@ -5396,6 +6084,23 @@ export default {
             }
           });   
       }  
+
+      if (app.middleCharacter == 'between') {
+        app.character.name += ' and ' + app.secondLastCharacter;
+        if(app.roundsTwo.length > 0) {
+            $.each(app.roundsTwo, function (i, item) {
+              if(item.round_val == 'S') {
+                app.character.name += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+              }else if(item.round_val == 'P') {
+                app.character.name += ' ' + item.fifth;
+              }else if(item.round_val == 'D'){
+                app.character.name += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+              }
+            });   
+        }  
+      }
+
+      
 
       app.character.name = app.character.name.toLowerCase();
       app.character.name = app.character.name.charAt(0).toUpperCase() + app.character.name.slice(1);
@@ -5481,9 +6186,11 @@ export default {
     cancelNewCharacter() {
       var app = this;
       app.newCharacterFlag = false;
-      app.roundVal = "";
+      app.roundValOne = "";
+      app.roundValTwo = "";
       app.active_el = 0;
-      app.rounds = [];
+      app.roundsOne = [];
+      app.roundsTwo = [];
       app.completeElement = [];
       app.viewImages = [];
       app.temp_files = [];
@@ -5493,8 +6200,10 @@ export default {
     cancelCharacter() {
       var app = this;
       app.detailsFlag = false;
-      app.rounds = [];
-      app.roundVal = "";
+      app.roundsOne = [];
+      app.roundsTwo = [];
+      app.roundValOne = "";
+      app.roundValTwo = "";
       app.active_el = 0;
       app.completeElement = [];
       app.temp_files = [];
@@ -6342,6 +7051,10 @@ export default {
           app.active_el = 0;
           app.temp_files = [];
           app.viewImages = [];
+          app.roundValOne = "";
+          app.roundValTwo = "";
+          app.roundsOne = [];
+          app.roundsTwo = [];
           app.active_image = null;
           app.character.temp_files = [];
         }
@@ -6351,6 +7064,10 @@ export default {
         app.active_el = 0;
         app.temp_files = [];
         app.viewImages = [];
+        app.roundValOne = "";
+        app.roundValTwo = "";
+        app.roundsOne = [];
+        app.roundsTwo = [];
         app.active_image = null;
         app.character.temp_files = [];
       }
@@ -6376,6 +7093,10 @@ export default {
       app.active_el = 0;
       app.temp_files = [];
       app.viewImages = [];
+      app.roundValOne = "";
+      app.roundValTwo = "";
+      app.roundsOne = [];
+      app.roundsTwo = [];
       app.active_image = null;
       app.character.temp_files = [];
       sessionStorage.setItem('viewFlag', false);
@@ -6492,6 +7213,10 @@ export default {
                   app.active_el = 0;
                   app.temp_files = [];
                   app.viewImages = [];
+                  app.roundValOne = "";
+                  app.roundValTwo = "";
+                  app.roundsOne = [];
+                  app.roundsTwo = [];
                   app.active_image = null;
                   app.character.temp_files = [];
                 });
@@ -6565,6 +7290,10 @@ export default {
                   app.active_el = 0;
                   app.temp_files = [];
                   app.viewImages = [];
+                  app.roundValOne = "";
+                  app.roundValTwo = "";
+                  app.roundsOne = [];
+                  app.roundsTwo = [];
                   app.active_image = null;
                   app.character.temp_files = [];
                 });
@@ -6599,6 +7328,10 @@ export default {
                   app.viewImages = [];
                   app.active_image = null;
                   app.character.temp_files = [];
+                  app.roundValOne = "";
+                  app.roundValTwo = "";
+                  app.roundsOne = [];
+                  app.roundsTwo = [];
                 });
             }
           }
@@ -6622,36 +7355,70 @@ export default {
     },
     input() {
       var app = this;
-      if(app.rounds.length > 0) {
-        $.each(app.rounds, function (i, item) {
-          app.rounds[i].undefined = false;
-          app.rounds[i].deprecated = false;
-          app.rounds[i].recommend = false;
-          app.rounds[i].synonym = false;
-          app.rounds[i].broadSynonym = false;
-          app.rounds[i].deprecatedNotifyMessage = '';
-          app.rounds[i].recommendNotifyMessage = '';
-          app.rounds[i].synonymNotifyMessage = '';
-          app.rounds[i].broadSynonymNotifyMessage = '';
-          app.rounds[i].definition = '';
+      if(app.roundsOne.length > 0) {
+        $.each(app.roundsOne, function (i, item) {
+          app.roundsOne[i].undefined = false;
+          app.roundsOne[i].deprecated = false;
+          app.roundsOne[i].recommend = false;
+          app.roundsOne[i].synonym = false;
+          app.roundsOne[i].broadSynonym = false;
+          app.roundsOne[i].deprecatedNotifyMessage = '';
+          app.roundsOne[i].recommendNotifyMessage = '';
+          app.roundsOne[i].synonymNotifyMessage = '';
+          app.roundsOne[i].broadSynonymNotifyMessage = '';
+          app.roundsOne[i].definition = '';
         });   
-        
+      }
+      if(app.middleCharacter == 'between' && app.roundsTwo.length > 0) {
+        $.each(app.roundsTwo, function (i, item) {
+          app.roundsTwo[i].undefined = false;
+          app.roundsTwo[i].deprecated = false;
+          app.roundsTwo[i].recommend = false;
+          app.roundsTwo[i].synonym = false;
+          app.roundsTwo[i].broadSynonym = false;
+          app.roundsTwo[i].deprecatedNotifyMessage = '';
+          app.roundsTwo[i].recommendNotifyMessage = '';
+          app.roundsTwo[i].synonymNotifyMessage = '';
+          app.roundsTwo[i].broadSynonymNotifyMessage = '';
+          app.roundsTwo[i].definition = '';
+        });   
       }
     },
-    roundButton(val) {
+    removeRoundOne(index) {
+      this.roundsOne.splice(index, 1)
+    },
+     removeRoundTwo(index) {
+      this.roundsTwo.splice(index, 1)
+    },
+    roundButtonOne(val) {
       var app = this;
-      app.roundVal = val;
-      if(app.roundVal == 'S') {
+      app.roundValOne = val;
+      if(app.roundValOne == 'S') {
         var textConstraint = "enter a singular noun";
-      }else if(app.roundVal == 'P') {
-        var textConstraint = "enter a positional phrases";
+      }else if(app.roundValOne == 'P') {
+        var textConstraint = "enter a positional phrases,e.g at middle length";
       }else {
         var textConstraint = "enter a singular noun";
       }
 
-      let values = {text:textConstraint, round_val:app.roundVal,first: '', second:'', third:'', fourth:'', fifth:'' , undefined: false, deprecated: false, recommend: false, synonym: false, broadSynonym: false, deprecatedNotifyMessage: '', recommendNotifyMessage: '', synonymNotifyMessage: '', broadSynonymNotifyMessage: '', definition: ''};
+      let values = {text:textConstraint, round_val:app.roundValOne,first: '', second:'', third:'', fourth:'', fifth:'' , undefined: false, deprecated: false, recommend: false, synonym: false, broadSynonym: false, deprecatedNotifyMessage: '', recommendNotifyMessage: '', synonymNotifyMessage: '', broadSynonymNotifyMessage: '', definition: ''};
 
-      this.rounds.push(values);
+      this.roundsOne.push(values);
+    },
+    roundButtonTwo(val) {
+      var app = this;
+      app.roundValTwo = val;
+      if(app.roundValTwo == 'S') {
+        var textConstraint = "enter a singular noun";
+      }else if(app.roundValTwo == 'P') {
+        var textConstraint = "enter a positional phrases,e.g at middle length";
+      }else {
+        var textConstraint = "enter a singular noun";
+      }
+
+      let values = {text:textConstraint, round_val:app.roundValTwo,first: '', second:'', third:'', fourth:'', fifth:'' , undefined: false, deprecated: false, recommend: false, synonym: false, broadSynonym: false, deprecatedNotifyMessage: '', recommendNotifyMessage: '', synonymNotifyMessage: '', broadSynonymNotifyMessage: '', definition: ''};
+
+      this.roundsTwo.push(values);
     },
    /* generateMatrix() {
       var app = this;
@@ -10684,7 +11451,7 @@ export default {
     console.log('created');
     app.generateDescriptionTooltip = '<div>Click this button to generate a textual description of the taxon based on the matrix. Use up/down arrow in the matrix to adjust the order of the characters shown in the text</div>';
     app.isLoading = true;
-    app.getStandardCollections();
+    /*app.getStandardCollections();
     await axios.get("http://shark.sbs.arizona.edu:8080/carex/getTree")
       .then(function (resp) {
         app.treeResult = resp.data;
@@ -10714,7 +11481,7 @@ export default {
       .then(function (resp) {
         app.deprecatedTerms = resp.data['deprecated classes'];
         console.log('app.deprecatedTerms', app.deprecatedTerms);
-      });
+      });*/
     await axios.get('api/v1/standard_characters')
       .then(async function (resp) {
         console.log('standardCharacters', resp);
@@ -10844,20 +11611,41 @@ export default {
     _valid() {
       var result = true;
       var app = this;
-      if (app.rounds != undefined && app.rounds.length > 0) {
-          $.each(app.rounds, function (i, item) {
+      if (app.roundsOne != undefined && app.roundsOne.length > 0) {
+          $.each(app.roundsOne, function (i, item) {
               if (item.round_val == 'S') {
-                if(item.second == '' || item.fourth == '' || (item.fifth == '' || app.rounds[i].undefined && !app.rounds[i].definition)) {
+                if(item.second == '' || item.fourth == '' || (item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)) {
                   result = false;
                   return false;
                 }
               }else if(item.round_val == 'P') {
-                if(item.fifth == '' || app.rounds[i].undefined && !app.rounds[i].definition) {
+                if(item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition) {
                   result = false;
                   return false;
                 }
               }else if(item.round_val == 'D') {
-                if(item.first == '' || item.third == '' || item.fourth == '' || (item.fifth == '' || app.rounds[i].undefined && !app.rounds[i].definition)) {
+                if(item.first == '' || item.third == '' || item.fourth == '' || (item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)) {
+                  result = false;
+                  return false;
+                }
+                
+              }
+          });   
+      } 
+      if (app.middleCharacter == 'between' && app.roundsTwo != undefined && app.roundsTwo.length > 0) {
+          $.each(app.roundsTwo, function (i, item) {
+              if (item.round_val == 'S') {
+                if(item.second == '' || item.fourth == '' || (item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)) {
+                  result = false;
+                  return false;
+                }
+              }else if(item.round_val == 'P') {
+                if(item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition) {
+                  result = false;
+                  return false;
+                }
+              }else if(item.round_val == 'D') {
+                if(item.first == '' || item.third == '' || item.fourth == '' || (item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)) {
                   result = false;
                   return false;
                 }

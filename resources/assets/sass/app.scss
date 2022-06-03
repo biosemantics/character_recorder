@@ -159,10 +159,26 @@ div.dropdown div.item:first-child {
   }
 }
 
-.round-button {
-  float: right;
-  margin-top: -29px;
-  margin-right: -5px;
+.round-button-one {
+  bottom: 0;
+  position: absolute;
+}
+.round-button-two {
+  bottom: 0;
+  position: absolute;
+}
+
+.subClidField {
+    display: flex;
+    float: right;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.custom-close {
+  color: red;
+  font-size: 20px !important;
+  line-height: 26px !important;
 }
 
 .imagePreviewWrapper {
