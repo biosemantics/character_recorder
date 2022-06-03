@@ -87,5 +87,6 @@ Route::group([
         Route::post('change-order',                     ['as' => 'change-order',                'uses' => 'HomeController@changeOrder']);
         Route::get('{userId}',                          ['as' => 'get_character',               'uses' => 'HomeController@getCharacter']);
         Route::post('check-image',                       ['as' => 'check_image',            'uses' => 'HomeController@checkImage']);
+        Route::post('identify',                       ['as' => 'identify',            'uses' => 'HomeController@identify']);
     });
 });

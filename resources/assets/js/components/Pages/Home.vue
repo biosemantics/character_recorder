@@ -616,6 +616,34 @@
                                   <option value="total">total</option>
                                 </optgroup>
                               </select>
+                              <br v-if="middleCharacter=='between'"/>
+                              <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and</div>
+                              <select v-if="middleCharacter=='between'"  v-model="secondThirdCharacter" style="height: 26px;" class="width-100">
+                                <optgroup label="Dimension">
+                                  <option value="longest">longest</option>
+                                  <option value="widest">widest</option>
+                                  <option value="shorest">shorest</option>
+                                  <option value="narrowest">narrowest</option>
+                                </optgroup> 
+                                <optgroup label="Position">
+                                  <option value="anterior">anterior</option>
+                                  <option value="posterior">posterior</option>
+                                  <option value="abaxial">abaxial</option>
+                                  <option value="adaxial">adaxial</option>
+                                  <option value="proximal">proximal</option>
+                                  <option value="distal">distal</option>
+                                  <option value="distallmost">distallmost</option>
+                                  <option value="lateral">lateral</option>
+                                  <option value="medial">medial</option>
+                                  <option value="inner">inner</option>
+                                  <option value="outer">outer</option>
+                                  <option value="terminal">terminal</option>
+                                </optgroup> 
+                                <optgroup label="Prominence">
+                                  <option value="distinct">distinct</option>
+                                  <option value="total">total</option>
+                                </optgroup>
+                              </select>
                             </div>
                             <div class="custom-character-field">
                               <input
@@ -661,6 +689,8 @@
                               <datalist id="last_characters">
                                 <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
                               </datalist>
+                              
+
                               <br v-if="middleCharacter=='between'"/>
                               <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and</div>
                               <input
@@ -707,231 +737,119 @@
                               <datalist id="second_last_characters">
                                 <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
                               </datalist>
+                             
                             </div>
-                            <!-- <div class="custom-character-field">
-                              <select v-model="secondMiddleCharacter" style="height: 26px;" class="width-100">
-                                <option>of</option>
-                                <option>between</option>
-                              </select>
-                            </div>
-                            <div class="custom-character-field" v-if="secondMiddleCharacter=='of' || secondMiddleCharacter=='between'">
-                              <select v-model="secondThirdCharacter" style="height: 26px;" class="width-100">
-                                <option>Longest</option>
-                                <option>Widest</option>
-                                <option>Shorest</option>
-                              </select>
-                            </div>
-                            <div class="custom-character-field" v-if="secondMiddleCharacter=='of' || secondMiddleCharacter=='between'">
-                              <input
-                                class="width-100"
-                                v-model="fourthCharacter"
-                                placeholder="enter a singular noun"
-                                v-on:focus="nounUndefined = false;
-                                            secondNounUndefined = false;
-                                            lastCharacterDefinition = '';
-                                            firstCharacterUndefined = false;
-                                            firstCharacterDefinition = ''
-                                            firstCharacterDeprecated = false;
-                                            firstCharacterDeprecatedNotifyMessage = '';
-                                            firstCharacterNotRecommend = false;
-                                            firstCharacterNotRecommendNotifyMessage = '';
-                                            firstCharacterSynonym = false;
-                                            firstCharacterSynonymNotifyMessage = '';
-                                            firstCharacterBroadSynonym = false;
-                                            firstCharacterBroadSynonymNotifyMessage = '';
-                                            wholeCharacterUndefined=false;
-                                            wholeCharacterDefinition='';
-                                            firstNounDeprecated=false;
-                                            firstNounDeprecatedNotifyMessage='';
-                                            secondNounDeprecated=false;
-                                            secondNounDeprecatedNotifyMessage='';
-                                            firstNounNotRecommend=false;
-                                            firstNounNotRecommendNotifyMessage='';
-                                            secondNounNotRecommend=false;
-                                            secondNounNotRecommendNotifyMessage='';
-                                            firstNounSynonym=false;
-                                            firstNounSynonymNotifyMessage='';
-                                            firstNounBroadSynonym=false;
-                                            firstNounBroadSynonymNotifyMessage='';
-                                            secondNounSynonym=false;
-                                            secondNounSynonymNotifyMessage='';
-                                            secondNounBroadSynonym=false;
-                                            secondNounBroadSynonymNotifyMessage='';
-                                            fourthNounUndefined = false;
-                                            fifthNounUndefined = false;
-                                            fourthCharacterDefinition = '';
-                                            fifthCharacterDefinition = '';
-                                            fourthNounDeprecated=false;
-                                            fourthNounDeprecatedNotifyMessage='';
-                                            fifthNounDeprecated=false;
-                                            fifthNounDeprecatedNotifyMessage='';
-                                            fourthNounNotRecommend=false;
-                                            fourthNounNotRecommendNotifyMessage='';
-                                            fifthNounNotRecommend=false;
-                                            fifthNounNotRecommendNotifyMessage='';
-                                            fourthNounSynonym=false;
-                                            fourthNounSynonymNotifyMessage='';
-                                            fourthNounBroadSynonym=false;
-                                            fourthNounBroadSynonymNotifyMessage=''
-                                            fifthNounSynonym=false;
-                                            fifthNounSynonymNotifyMessage='';
-                                            fifthNounBroadSynonym=false;
-                                            fifthNounBroadSynonymNotifyMessage='';
-                                            "
-                              />
-                              <br v-if="secondMiddleCharacter=='between'"/>
-                              <div v-if="secondMiddleCharacter=='between'" style="width:100%; text-align: center">and</div>
-                              <input
-                                class="width-100"
-                                v-if="secondMiddleCharacter=='between'"
-                                v-model="fifthCharacter"
-                                placeholder="enter a singular noun"
-                                v-on:focus="
-                                            nounUndefined = false;
-                                            secondNounUndefined = false;
-                                            lastCharacterDefinition = '';
-                                            firstCharacterUndefined = false;
-                                            firstCharacterDefinition = ''
-                                            firstCharacterDeprecated = false;
-                                            firstCharacterDeprecatedNotifyMessage = '';
-                                            firstCharacterNotRecommend = false;
-                                            firstCharacterNotRecommendNotifyMessage = '';
-                                            firstCharacterSynonym = false;
-                                            firstCharacterSynonymNotifyMessage = '';
-                                            firstCharacterBroadSynonym = false;
-                                            firstCharacterBroadSynonymNotifyMessage = '';
-                                            wholeCharacterUndefined=false;
-                                            wholeCharacterDefinition='';
-                                            firstNounDeprecated=false;
-                                            firstNounDeprecatedNotifyMessage='';
-                                            secondNounDeprecated=false;
-                                            secondNounDeprecatedNotifyMessage='';
-                                            firstNounNotRecommend=false;
-                                            firstNounNotRecommendNotifyMessage='';
-                                            secondNounNotRecommend=false;
-                                            secondNounNotRecommendNotifyMessage='';
-                                            firstNounSynonym=false;
-                                            firstNounSynonymNotifyMessage='';
-                                            firstNounBroadSynonym=false;
-                                            firstNounBroadSynonymNotifyMessage='';
-                                            secondNounSynonym=false;
-                                            secondNounSynonymNotifyMessage='';
-                                            secondNounBroadSynonym=false;
-                                            secondNounBroadSynonymNotifyMessage='';
-                                            "
-                              />
-                            </div> -->
                         </div>
-                      
-                          <div class="row custom-flex" v-for="round in rounds" style="margin-top: 20px;" v-if="roundVal != ''">
-                            <div class="custom-character-field" v-if="round.round_val == 'D'">
-                              <input
-                                v-model="round.first"
-                                style="width: 100px; height: 26px;"
-                                placeholder="at 2cm"
-                              />
-                            </div>  
-                            <div class="custom-character-field" v-if="round.round_val == 'S'">
-                              <select style="height: 26px; width:80px;" v-model="round.second">
-                                <option value="of">of</option>
-                                <option value="on">on</option>
-                                <option value="in">in</option>
-                              </select>
-                            </div>
-                            <div class="custom-character-field" v-if="round.round_val == 'D'">
-                              <select style="height: 26px; width:80px;"  v-model="round.third">
-                                <option value="below">below</option>
-                                <option value="above">above</option>
-                              </select>
-                            </div>
-                            <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
-                              <select style="height: 26px;" class="width-100" v-model="round.fourth">
-                                <optgroup label="Dimension">
-                                  <option value="longest">longest</option>
-                                  <option value="widest">widest</option>
-                                  <option value="shorest">shorest</option>
-                                  <option value="narrowest">narrowest</option>
-                                </optgroup> 
-                                <optgroup label="Position">
-                                  <option value="anterior">anterior</option>
-                                  <option value="posterior">posterior</option>
-                                  <option value="abaxial">abaxial</option>
-                                  <option value="adaxial">adaxial</option>
-                                  <option value="proximal">proximal</option>
-                                  <option value="distal">distal</option>
-                                  <option value="distallmost">distallmost</option>
-                                  <option value="lateral">lateral</option>
-                                  <option value="medial">medial</option>
-                                  <option value="inner">inner</option>
-                                  <option value="outer">outer</option>
-                                  <option value="terminal">terminal</option>
-                                </optgroup> 
-                                <optgroup label="Prominence">
-                                  <option value="distinct">distinct</option>
-                                  <option value="total">total</option>
-                                </optgroup>
-                              </select>
-                            </div>
-                            <div class="custom-character-field">
-                              <input
-                                v-model="round.fifth"
-                                class="width-100"
-                                style="height: 26px;"
-                                v-bind:list='[round.round_val == "S" || round.round_val == "D" ? "round_fifth_characters" : "" ]'
-                                :placeholder="round.text"
-                                v-on:focus = "nounUndefined = false;
-                                              secondNounUndefined = false;
-                                              lastCharacterDefinition = '';
-                                              firstCharacterUndefined = false;
-                                              firstCharacterDefinition = ''
-                                              firstCharacterDeprecated = false;
-                                              firstCharacterDeprecatedNotifyMessage = '';
-                                              firstCharacterNotRecommend = false;
-                                              firstCharacterNotRecommendNotifyMessage = '';
-                                              firstCharacterSynonym = false;
-                                              firstCharacterSynonymNotifyMessage = '';
-                                              firstCharacterBroadSynonym = false;
-                                              firstCharacterBroadSynonymNotifyMessage = '';
-                                              wholeCharacterUndefined=false;
-                                              wholeCharacterDefinition='';
-                                              firstNounDeprecated=false;
-                                              firstNounDeprecatedNotifyMessage='';
-                                              secondNounDeprecated=false;
-                                              secondNounDeprecatedNotifyMessage='';
-                                              firstNounNotRecommend=false;
-                                              firstNounNotRecommendNotifyMessage='';
-                                              secondNounNotRecommend=false;
-                                              secondNounNotRecommendNotifyMessage='';
-                                              firstNounSynonym=false;
-                                              firstNounSynonymNotifyMessage='';
-                                              firstNounBroadSynonym=false;
-                                              firstNounBroadSynonymNotifyMessage='';
-                                              secondNounSynonym=false;
-                                              secondNounSynonymNotifyMessage='';
-                                              secondNounBroadSynonym=false;
-                                              secondNounBroadSynonymNotifyMessage='';
-                                              round.undefined=false;
-                                              round.deprecated=false;
-                                              round.recommend=false;
-                                              round.synonym=false;
-                                              round.broadSynonym=false;
-                                              round.deprecatedNotifyMessage='';
-                                              round.recommendNotifyMessage='';
-                                              round.synonymNotifyMessage='';
-                                              round.broadSynonymNotifyMessage='';
-                                              "
-                              />
-                              <datalist id="round_fifth_characters" >
-                                <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
-                              </datalist>
-                            </div>
-                            
+                        <div class="row custom-flex" v-for="round in rounds" style="margin-top: 20px;" v-if="roundVal != ''">
+                          <div class="custom-character-field" v-if="round.round_val == 'D'">
+                            <input
+                              v-model="round.first"
+                              style="width: 100px; height: 26px;"
+                              placeholder="at 2cm"
+                            />
+                          </div>  
+                          <div class="custom-character-field" v-if="round.round_val == 'S'">
+                            <select style="height: 26px; width:80px;" v-model="round.second">
+                              <option value="of">of</option>
+                              <option value="on">on</option>
+                              <option value="in">in</option>
+                            </select>
                           </div>
-                          <div class="custom-character-field round-button">
-                            <button  type="button" @click="roundButton('S')" title="Strutural Constraint" class="button button5 roundedBtn blueBtn">+S</button>
-                            <button  type="button" @click="roundButton('P')" title="Positional Constraint" class="button button5 roundedBtn pinkBtn">+P</button>
-                            <button  type="button" @click="roundButton('D')" title="Distance Constraint" class="button button5 roundedBtn orangeBtn">+D</button>
+                          <div class="custom-character-field" v-if="round.round_val == 'D'">
+                            <select style="height: 26px; width:80px;"  v-model="round.third">
+                              <option value="below">below</option>
+                              <option value="above">above</option>
+                            </select>
                           </div>
+                          <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
+                            <select style="height: 26px;" class="width-100" v-model="round.fourth">
+                              <optgroup label="Dimension">
+                                <option value="longest">longest</option>
+                                <option value="widest">widest</option>
+                                <option value="shorest">shorest</option>
+                                <option value="narrowest">narrowest</option>
+                              </optgroup> 
+                              <optgroup label="Position">
+                                <option value="anterior">anterior</option>
+                                <option value="posterior">posterior</option>
+                                <option value="abaxial">abaxial</option>
+                                <option value="adaxial">adaxial</option>
+                                <option value="proximal">proximal</option>
+                                <option value="distal">distal</option>
+                                <option value="distallmost">distallmost</option>
+                                <option value="lateral">lateral</option>
+                                <option value="medial">medial</option>
+                                <option value="inner">inner</option>
+                                <option value="outer">outer</option>
+                                <option value="terminal">terminal</option>
+                              </optgroup> 
+                              <optgroup label="Prominence">
+                                <option value="distinct">distinct</option>
+                                <option value="total">total</option>
+                              </optgroup>
+                            </select>
+                          </div>
+                          <div class="custom-character-field">
+                            <input
+                              v-model="round.fifth"
+                              class="width-100"
+                              style="height: 26px;"
+                              v-bind:list='[round.round_val == "S" || round.round_val == "D" ? "round_fifth_characters" : "" ]'
+                              :placeholder="round.text"
+                              v-on:focus = "nounUndefined = false;
+                                            secondNounUndefined = false;
+                                            lastCharacterDefinition = '';
+                                            firstCharacterUndefined = false;
+                                            firstCharacterDefinition = ''
+                                            firstCharacterDeprecated = false;
+                                            firstCharacterDeprecatedNotifyMessage = '';
+                                            firstCharacterNotRecommend = false;
+                                            firstCharacterNotRecommendNotifyMessage = '';
+                                            firstCharacterSynonym = false;
+                                            firstCharacterSynonymNotifyMessage = '';
+                                            firstCharacterBroadSynonym = false;
+                                            firstCharacterBroadSynonymNotifyMessage = '';
+                                            wholeCharacterUndefined=false;
+                                            wholeCharacterDefinition='';
+                                            firstNounDeprecated=false;
+                                            firstNounDeprecatedNotifyMessage='';
+                                            secondNounDeprecated=false;
+                                            secondNounDeprecatedNotifyMessage='';
+                                            firstNounNotRecommend=false;
+                                            firstNounNotRecommendNotifyMessage='';
+                                            secondNounNotRecommend=false;
+                                            secondNounNotRecommendNotifyMessage='';
+                                            firstNounSynonym=false;
+                                            firstNounSynonymNotifyMessage='';
+                                            firstNounBroadSynonym=false;
+                                            firstNounBroadSynonymNotifyMessage='';
+                                            secondNounSynonym=false;
+                                            secondNounSynonymNotifyMessage='';
+                                            secondNounBroadSynonym=false;
+                                            secondNounBroadSynonymNotifyMessage='';
+                                            round.undefined=false;
+                                            round.deprecated=false;
+                                            round.recommend=false;
+                                            round.synonym=false;
+                                            round.broadSynonym=false;
+                                            round.deprecatedNotifyMessage='';
+                                            round.recommendNotifyMessage='';
+                                            round.synonymNotifyMessage='';
+                                            round.broadSynonymNotifyMessage='';
+                                            "
+                            />
+                            <datalist id="round_fifth_characters" >
+                              <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
+                            </datalist>
+                          </div>
+                                
+                        </div>
+                        <div class="custom-character-field round-button">
+                          <button  type="button" @click="roundButton('S')" title="Strutural Constraint" class="button button5 roundedBtn blueBtn">+S</button>
+                          <button  type="button" @click="roundButton('P')" title="Positional Constraint" class="button button5 roundedBtn pinkBtn">+P</button>
+                          <button  type="button" @click="roundButton('D')" title="Distance Constraint" class="button button5 roundedBtn orangeBtn">+D</button>
+                        </div>
+                          
                         
                           
                         <div style="margin-top: 20px;">
@@ -1005,39 +923,6 @@
                             </div>
                           </div>
                         </div>
-
-                        <!--  <div class="row" v-if="fourthNounDeprecated">
-                          <div class="col-md-12" v-html="fourthNounDeprecatedNotifyMessage">
-                          </div>
-                        </div>
-                        <div class="row" v-if="fifthNounDeprecated">
-                          <div class="col-md-12" v-html="fifthNounDeprecatedNotifyMessage">
-                          </div>
-                        </div>
-                        <div class="row" v-if="fourthNounNotRecommend">
-                          <div class="col-md-12" v-html="fourthNounNotRecommendNotifyMessage">
-                          </div>
-                        </div>
-                        <div class="row" v-if="fifthNounNotRecommend">
-                          <div class="col-md-12" v-html="fifthNounNotRecommendNotifyMessage">
-                          </div>
-                        </div>
-                        <div class="row" v-if="fourthNounSynonym">
-                          <div class="col-md-12" v-html="fourthNounSynonymNotifyMessage">
-                          </div>
-                        </div>
-                        <div class="row" v-if="fourthNounBroadSynonym">
-                          <div class="col-md-12" v-html="firstNounBroadSynonymNotifyMessage">
-                          </div>
-                        </div>
-                        <div class="row" v-if="fifthNounSynonym">
-                          <div class="col-md-12" v-html="fifthNounSynonymNotifyMessage">
-                          </div>
-                        </div>
-                        <div class="row" v-if="fifthNounBroadSynonym">
-                          <div class="col-md-12" v-html="fifthNounBroadSynonymNotifyMessage">
-                          </div>
-                        </div> -->
                         <div class="row" v-if="alreadyExistingCharacter">
                           <div class="col-md-12" v-html="alreadyExistingCharacterNotifyMessage">
                           </div>
@@ -1069,28 +954,6 @@
                             </div>
                           </div>
                         </div>
-
-                        <!-- <div class="row" v-if=" (secondMiddleCharacter == 'of' ||  secondMiddleCharacter == 'between') && fourthNounUndefined">
-                          <div class="col-md-12">
-                            What is {{ fourthCharacter }}? <input v-model="fourthCharacterDefinition" style="width:100%"
-                                                                :placeholder="'enter the definition of ' + fourthCharacter">
-                          </div>
-                        </div>
-                        <div class="row" v-if="fifthNounUndefined && secondMiddleCharacter == 'between'">
-                          <div class="col-md-12">
-                            What is {{ fifthCharacter }}? <input v-model="fifthCharacterDefinition"
-                                                                      style="width:100%"
-                                                                      :placeholder="'enter the definition of ' + fifthCharacter">
-                          </div>
-                        </div> -->
-<!--                        <div class="row" v-if="(!firstCharacterUndefined && !nounUndefined) && wholeCharacterUndefined">-->
-<!--                          <div class="col-md-12">-->
-<!--                            What is-->
-<!--                            {{ firstCharacter + ' ' + middleCharacter + ' ' + lastCharacter + (middleCharacter == 'between' ? (' and ' + secondLastCharacter) : '') }}?-->
-<!--                            <input v-model="wholeCharacterDefinition" style="width:100%"-->
-<!--                                   :placeholder="'enter the definition of ' + firstCharacter + ' ' + middleCharacter + ' ' +  lastCharacter + (middleCharacter == 'between' ? (' and ' + secondLastCharacter) : ' ')">-->
-<!--                          </div>-->
-<!--                        </div>-->
                       </div>
                       <div class="modal-footer">
                         <a class="btn btn-primary ok-btn"
@@ -3087,7 +2950,7 @@ export default {
       ],
       originalColorTreeData: {},
       standardCollections: [],
-      character: {},
+      character: {temp_files:[]},
       userCharacters: [],
       defaultCharacters: [],
       defaultCharactersToolTip: [],
@@ -3100,6 +2963,7 @@ export default {
       middleCharacter: null,
       secondMiddleCharacter: null,
       thirdCharacter: null,
+      secondThirdCharacter: null,
       fourthCharacter: null,
       fifthCharacter: null,
       fourthCharacterDefinition: null,
@@ -3376,7 +3240,8 @@ export default {
       deprecatedTermsMessage: '',
       deprecatedTermsFlag: false,
       checkCharacters: 0,
-      roundVal: '',
+      round: '',
+      round: '',
       rounds: [],
       roundsUndefined: [],
       nounCharacters: [],
@@ -3441,37 +3306,41 @@ export default {
       this.$refs.fileInput.click()
     },
     pickFile () {
+      var app = this;
       var formData = new FormData($('#imageForm')[0]);
       axios.post('api/v1/character/check-image', formData)
           .then(function (resp) {
         console.log(resp.data);
-        return true;
-      }).catch(function (error) {
-        this.selectedImage = 0;
-        alert('Please upload maximum image size: 2048KB');
-        return false;
-      });
-
-      let input = this.$refs.fileInput
-      let file = input.files
-      if (file && file[0]) {
-        const name = file[0].name;
-        const lastDot = name.lastIndexOf('.');
-        const ext = name.substring(lastDot + 1);
-        var extension = ext.toLowerCase();
-        if(extension == 'jpg' || extension =='jpeg' || extension == 'png' || extension == 'gif') {
-          let reader = new FileReader
-          reader.onload = e => {
-            this.previewImage = e.target.result
-            this.selectedImage = 1;
+        let input = app.$refs.fileInput
+        let file = input.files
+        if(resp.data == 1) {
+          if (file && file[0]) {
+            const name = file[0].name;
+            const lastDot = name.lastIndexOf('.');
+            const ext = name.substring(lastDot + 1);
+            var extension = ext.toLowerCase();
+            if(extension == 'jpg' || extension =='jpeg' || extension == 'png' || extension == 'gif') {
+              let reader = new FileReader
+              reader.onload = e => {
+                app.previewImage = e.target.result
+                app.selectedImage = 1;
+              }
+              reader.readAsDataURL(file[0])
+              app.$emit('input', file[0])
+            }else {
+              app.selectedImage = 0;
+              alert('Image extension is not valid');
+            } 
           }
-          reader.readAsDataURL(file[0])
-          this.$emit('input', file[0])
         }else {
-            alert('Image extension is not valid');
-            return false;
-        } 
-      }
+          app.selectedImage = 0;
+          alert(resp.data);
+        }
+        
+      }).catch(function (error) {
+        app.selectedImage = 0;
+        alert('Something went wrong.');
+      }); 
     },
     showViewer(node, event) {
       var app = this;
@@ -3890,16 +3759,56 @@ export default {
     editCharacter(character, editFlag = false, standardFlag = false, enhanceFlag = false) {
       var app = this;
       app.editFlag = editFlag;
-      if(app.character.images != undefined && app.character.images != null) {
+            axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
+      .then(function (resp) {
+        if (resp.data.entries.length > 0) {
+          var methodEntry = resp.data.entries.filter(function(each) {
+              return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
+          })[0];
+          if (methodEntry) {
+              for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                  if (methodEntry.resultAnnotations[i].property === 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                      
+                      if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
+                        var newUrl = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view?usp='));
+                        app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
+                      } else {
+                        var newUrl =   methodEntry.resultAnnotations[i].src = methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1);
+                        app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
+                      }
+                  }
+              }
+          } 
 
-        var persons_data =  JSON.parse(app.character.images);
-        var origin   = window.location.href; 
-        var url = origin+'/storage/';
-        for (let p = 0; p < persons_data.length; p++) {
-          app.viewImages.push(url + persons_data[p]);
+        } 
+        if(app.character.images != undefined && app.character.images != null) {
+          var persons_data =  JSON.parse(app.character.images);
+          var origin   = window.location.href; 
+          var url = origin+'/storage/';
+          if(persons_data.length > 0) {
+            for (let p = 0; p < persons_data.length; p++) {
+              app.viewImages.push(url + persons_data[p]);
+            }
+          }
+          
+        }else {
+          var send_data = [];
+          send_data.push(app.character.name);
+          send_data.push(app.character.owner_name);
+          axios.post('api/v1/character/identify', send_data)
+            .then(function (resp) {
+              console.log(resp);
+              var origin   = window.location.href; 
+              var url = origin+'/storage/';
+              var persons_data =  resp.data;
+              if(persons_data.length > 0) {
+                for (let p = 0; p < persons_data.length; p++) {
+                  app.viewImages.push(url + persons_data[p]);
+                }
+              }
+            });
         }
-        
-      }
+      });  
       if (editFlag) {
         app.viewFlag = !editFlag;
         sessionStorage.setItem('viewFlag', !editFlag);
@@ -5578,6 +5487,8 @@ export default {
       app.completeElement = [];
       app.viewImages = [];
       app.temp_files = [];
+      app.active_image = null;
+      app.character.temp_files = [];
     },
     cancelCharacter() {
       var app = this;
@@ -5588,6 +5499,8 @@ export default {
       app.completeElement = [];
       app.temp_files = [];
       app.viewImages = [];
+      app.active_image = null;
+      app.character.temp_files = [];
     },
     showDetails(metadata, previousMetadata = null) {
       var app = this;
@@ -5772,15 +5685,9 @@ export default {
                   for (var j = 0; j < tempElucidations.length; j++) {
                     if (j == 0) {
                       tempCharacter.elucidation = tempElucidations[j].value;
-                      var newUrl = tempElucidations[j].value.slice(tempElucidations[j].value.indexOf('file/d/') + 7, tempElucidations[j].value.indexOf('/view?usp='));
-                      app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
                     }
                     if (j > 0) {
                       tempCharacter.elucidation = tempCharacter.elucidation + ','+ tempElucidations[j].value;
-                      var newUrl = tempElucidations[j].value.slice(tempElucidations[j].value.indexOf('file/d/') + 7, tempElucidations[j].value.indexOf('/view?usp='));
-
-                      app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
-                    
                     }
                   }
                 }
@@ -6432,10 +6339,20 @@ export default {
         } else {
           alert("The character already exists for this user!!");
           app.detailsFlag = false;
+          app.active_el = 0;
+          app.temp_files = [];
+          app.viewImages = [];
+          app.active_image = null;
+          app.character.temp_files = [];
         }
       } else {
         alert("The character already exists for this user!!");
         app.detailsFlag = false;
+        app.active_el = 0;
+        app.temp_files = [];
+        app.viewImages = [];
+        app.active_image = null;
+        app.character.temp_files = [];
       }
 
     },
@@ -6456,6 +6373,11 @@ export default {
       selectedCharacter.creator = app.user.name + ' via CR';
       selectedCharacter.standard = 0;
       app.detailsFlag = false;
+      app.active_el = 0;
+      app.temp_files = [];
+      app.viewImages = [];
+      app.active_image = null;
+      app.character.temp_files = [];
       sessionStorage.setItem('viewFlag', false);
       sessionStorage.setItem('edit_created_other', false);
       sessionStorage.setItem('editFlag', false);
@@ -6550,12 +6472,9 @@ export default {
                   app.character.username += ', ' + app.character.owner_name;
                 }
               }
-              if(app.character.temp_files == undefined) {
-                app.character.temp_files = [];
-                app.character.temp_files = app.temp_files;
-              }else {
-                app.character.temp_files = app.temp_files;
-              }
+              
+              app.character.temp_files = app.temp_files;
+
               axios.post('api/v1/character/update-character', app.character)
                 .then(function (resp) {
                   app.userTags = resp.data.userTags;
@@ -6570,7 +6489,11 @@ export default {
 
                   app.enhanceFlag = false;
                   app.detailsFlag = false
+                  app.active_el = 0;
                   app.temp_files = [];
+                  app.viewImages = [];
+                  app.active_image = null;
+                  app.character.temp_files = [];
                 });
             } else {
               alert("The character already exists for this user!!");
@@ -6600,12 +6523,9 @@ export default {
 
             if (app.matrixShowFlag) {
               app.isLoading = true;
-              if(app.character.temp_files == undefined) {
-                app.character.temp_files = [];
-                app.character.temp_files = app.temp_files;
-              }else {
-                app.character.temp_files = app.temp_files;
-              }
+              
+              app.character.temp_files = app.temp_files;
+
               axios.post('api/v1/character/add-character', app.character)
                 .then(function (resp) {
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
@@ -6642,16 +6562,17 @@ export default {
                   app.numericalFlag = false;
                   app.isLoading = false;
                   app.showTableForTab(app.currentTab);
+                  app.active_el = 0;
                   app.temp_files = [];
+                  app.viewImages = [];
+                  app.active_image = null;
+                  app.character.temp_files = [];
                 });
             } else {
               app.isLoading = true;
-              if(app.character.temp_files == undefined) {
-                app.character.temp_files = [];
-                app.character.temp_files = app.temp_files;
-              }else {
-                app.character.temp_files = app.temp_files;
-              }
+              
+              app.character.temp_files = app.temp_files;
+
               axios.post("api/v1/character/create", app.character)
                 .then(function (resp) {
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
@@ -6673,14 +6594,17 @@ export default {
                   app.detailsFlag = false;
                   app.numericalFlag = false;
                   app.showTableForTab(app.currentTab);
+                  app.active_el = 0;
                   app.temp_files = [];
+                  app.viewImages = [];
+                  app.active_image = null;
+                  app.character.temp_files = [];
                 });
             }
           }
 
         });
       console.log("app.character", app.character);
-      app.active_el = 0;
       app.completeElement = [];
       app.saveCharacterButtonFlag = false;
     },

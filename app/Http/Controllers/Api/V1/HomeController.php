@@ -405,7 +405,7 @@ class HomeController extends Controller
                 $explodeImage = explode("image/", $base64Image[0]);
                 $imageType = $explodeImage[1];
                 $image_base64 = base64_decode($base64Image[1]);
-                $imageName = time().'.'.$imageType;
+                $imageName = date('Y-m-d').'_'.time().'.'.$imageType;
                 Storage::disk('public')->put($imageName, $image_base64);
                 $allImageName[] = $imageName;
             }
@@ -460,19 +460,19 @@ class HomeController extends Controller
             $defaultCharacter->save();
             
         }else {
-            if(!empty($allImageName)) {
-                $defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
-
-                if(!empty($defaultCharacter->images)) {
-                    $img = json_decode($defaultCharacter->images,true);
-                    $final_array = array_merge($img,$allImageName);
-                    $defaultCharacter->images = json_encode($final_array);
-                }else {
-                    $defaultCharacter->images = json_encode($allImageName);
-                }
-                $defaultCharacter->save();
-            } 
+            $defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
         }
+
+        if(!empty($allImageName) && !empty($defaultCharacter)) {
+            if(!empty($defaultCharacter->images)) {
+                $img = json_decode($defaultCharacter->images,true);
+                $final_array = array_merge($img,$allImageName);
+                $defaultCharacter->images = json_encode($final_array);
+            }else {
+                $defaultCharacter->images = json_encode($allImageName);
+            }
+            $defaultCharacter->save();
+        } 
 
         $character->order = $character->id;
         $character->save();
@@ -799,7 +799,7 @@ class HomeController extends Controller
                 $explodeImage = explode("image/", $base64Image[0]);
                 $imageType = $explodeImage[1];
                 $image_base64 = base64_decode($base64Image[1]);
-                $imageName = time().'.'.$imageType;
+                $imageName = date('Y-m-d').'_'.time().'.'.$imageType;
                 Storage::disk('public')->put($imageName, $image_base64);
                 $allImageName[] = $imageName;
             }
@@ -857,19 +857,19 @@ class HomeController extends Controller
 
             $defaultCharacter->save();
         }else {
-            if(!empty($allImageName)) {
-                $defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
-
-                if(!empty($defaultCharacter->images)) {
-                    $img = json_decode($defaultCharacter->images,true);
-                    $final_array = array_merge($img,$allImageName);
-                    $defaultCharacter->images = json_encode($final_array);
-                }else {
-                    $defaultCharacter->images = json_encode($allImageName);
-                }
-                $defaultCharacter->save();
-            } 
+            $defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
         }
+
+        if(!empty($allImageName) && !empty($defaultCharacter)) {
+            if(!empty($defaultCharacter->images)) {
+                $img = json_decode($defaultCharacter->images,true);
+                $final_array = array_merge($img,$allImageName);
+                $defaultCharacter->images = json_encode($final_array);
+            }else {
+                $defaultCharacter->images = json_encode($allImageName);
+            }
+            $defaultCharacter->save();
+        } 
 
         $headers = Header::where('user_id', '=', Auth::id())->get();
 
@@ -1582,9 +1582,22 @@ class HomeController extends Controller
     
     // check image and size
     public function checkImage(Request $request) {
-        $validatedData = $request->validate([
-         'image' => 'required|image|max:2048',
-        ]);
+        $validatedData = validator($request->all(),['image' => 'required|image|max:2048']);
+        if($validatedData->fails()){
+            return $validatedData->errors()->first();
+        }else {
+            return 1;
+        }
+    }
+
+    // identify character
+    public function identify(Request $request) {
+        $data =$request->all();
+        $info = Character::where('name',$data[0])->where('owner_name',$data[1])->first();
+        if(!empty($info) && !empty($info->images)) {
+            return json_decode($info->images,true);
+        }
+
     }
 
     public function updateCharacter(Request $request)
