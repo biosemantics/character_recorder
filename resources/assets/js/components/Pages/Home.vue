@@ -586,7 +586,7 @@
                                 </datalist>
                               </div>
                               <div class="custom-character-field">
-                                <select v-model="middleCharacter" style="height: 26px;" class="width-100">
+                                <select v-model="middleCharacter" style="height: 26px;" class="width-100" @change="valueMiddleCharacter($event)">
                                   <option>of</option>
                                   <option>between</option>
                                 </select>
@@ -7475,6 +7475,24 @@ export default {
           app.roundsTwo[i].definition = '';
         });   
       }
+    },
+    valueMiddleCharacter($event){
+      var val = event.target.value;
+      if(val == 'of'){
+        this.roundsTwo = [];
+        this.roundValTwo = '';
+        this.secondThirdCharacter = '';
+        this.secondLastCharacter = '';
+      }else if(val == '' || val == null || val == undefined) {
+        this.roundsTwo = [];
+        this.roundValTwo = '';
+        this.roundsOne = [];
+        this.roundValOne = '';
+        this.secondThirdCharacter = '';
+        this.secondLastCharacter = '';
+        this.thirdCharacter = '';
+        this.lastCharacter = '';
+      }else {}
     },
     removeRoundOne(index) {
       this.roundsOne.splice(index, 1)
