@@ -3868,6 +3868,14 @@ class HomeController extends Controller
                             if(!empty($cvalue['text'])) {
                                 $characters[] = $child['text'];    
                             }
+
+                            if(isset($child['children']) && count($child['children']) > 0) {
+                              foreach($child['children'] as $ch_child) {
+                                if(!empty($cvalue['text'])) {
+                                    $characters[] = $ch_child['text'];    
+                                }
+                              }
+                            } 
                         }
                     }
                 }
