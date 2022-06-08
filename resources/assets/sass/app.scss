@@ -66,12 +66,15 @@ div.dropdown div.item:first-child {
     border: 1px solid #cccccc;
     position: absolute;
     width: 100%;
+    z-index: 999;
     opacity: 0;
-    z-index: 99999;
+    background: #ffffff;
     li{
-      padding: 2px 6px;
-      font-size: 14px;
+      padding: 6px 6px;
+      font-size: 13px;
       cursor: pointer;
+      line-height: 18px;
+      border-bottom: 1px solid #f7f4f4;
       &:hover{
         background-color: #3097D1;
         color: #ffffff;
