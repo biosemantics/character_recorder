@@ -11762,7 +11762,7 @@ export default {
     console.log('created');
     app.generateDescriptionTooltip = '<div>Click this button to generate a textual description of the taxon based on the matrix. Use up/down arrow in the matrix to adjust the order of the characters shown in the text</div>';
     app.isLoading = true;
-   /* app.getStandardCollections();
+    app.getStandardCollections();
     await axios.get("http://shark.sbs.arizona.edu:8080/carex/getTree")
       .then(function (resp) {
         app.treeResult = resp.data;
@@ -11798,7 +11798,7 @@ export default {
         console.log('standardCharacters', resp);
         app.defaultCharacters = resp.data;
         app.refreshDefaultCharacters();
-      });*/
+      });
     axios.get("api/v1/character/" + app.user.id)
       .then(function (resp) {
         app.userCharacters = resp.data.characters;
