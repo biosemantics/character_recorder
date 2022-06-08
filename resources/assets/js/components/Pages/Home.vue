@@ -698,49 +698,54 @@
                               <!-- custom static datalist end--> 
 
                               <div class="custom-character-field">
-                                <input
-                                  class="width-100"
-                                  v-model="lastCharacter"
-                                  style='height: 26px;'
-                                  list="last_characters"
-                                  v-on:focus="nounUndefined = false;
-                                              secondNounUndefined = false;
-                                              lastCharacterDefinition = '';
-                                              firstCharacterUndefined = false;
-                                              firstCharacterDefinition = ''
-                                              firstCharacterDeprecated = false;
-                                              firstCharacterDeprecatedNotifyMessage = '';
-                                              firstCharacterNotRecommend = false;
-                                              firstCharacterNotRecommendNotifyMessage = '';
-                                              firstCharacterSynonym = false;
-                                              firstCharacterSynonymNotifyMessage = '';
-                                              firstCharacterBroadSynonym = false;
-                                              firstCharacterBroadSynonymNotifyMessage = '';
-                                              wholeCharacterUndefined=false;
-                                              wholeCharacterDefinition='';
-                                              firstNounDeprecated=false;
-                                              firstNounDeprecatedNotifyMessage='';
-                                              secondNounDeprecated=false;
-                                              secondNounDeprecatedNotifyMessage='';
-                                              firstNounNotRecommend=false;
-                                              firstNounNotRecommendNotifyMessage='';
-                                              secondNounNotRecommend=false;
-                                              secondNounNotRecommendNotifyMessage='';
-                                              firstNounSynonym=false;
-                                              firstNounSynonymNotifyMessage='';
-                                              firstNounBroadSynonym=false;
-                                              firstNounBroadSynonymNotifyMessage='';
-                                              secondNounSynonym=false;
-                                              secondNounSynonymNotifyMessage='';
-                                              secondNounBroadSynonym=false;
-                                              secondNounBroadSynonymNotifyMessage='';
-                                              input();
-                                              "
-                                  placeholder="enter a singular noun"
-                                />
-                                <datalist id="last_characters">
+                                <div class="selectDataList width-100">
+                                  <input
+                                    class="width-100"
+                                    v-model="lastCharacter"
+                                    style='height: 26px;'
+                                    v-on:focus="nounUndefined = false;
+                                                secondNounUndefined = false;
+                                                lastCharacterDefinition = '';
+                                                firstCharacterUndefined = false;
+                                                firstCharacterDefinition = ''
+                                                firstCharacterDeprecated = false;
+                                                firstCharacterDeprecatedNotifyMessage = '';
+                                                firstCharacterNotRecommend = false;
+                                                firstCharacterNotRecommendNotifyMessage = '';
+                                                firstCharacterSynonym = false;
+                                                firstCharacterSynonymNotifyMessage = '';
+                                                firstCharacterBroadSynonym = false;
+                                                firstCharacterBroadSynonymNotifyMessage = '';
+                                                wholeCharacterUndefined=false;
+                                                wholeCharacterDefinition='';
+                                                firstNounDeprecated=false;
+                                                firstNounDeprecatedNotifyMessage='';
+                                                secondNounDeprecated=false;
+                                                secondNounDeprecatedNotifyMessage='';
+                                                firstNounNotRecommend=false;
+                                                firstNounNotRecommendNotifyMessage='';
+                                                secondNounNotRecommend=false;
+                                                secondNounNotRecommendNotifyMessage='';
+                                                firstNounSynonym=false;
+                                                firstNounSynonymNotifyMessage='';
+                                                firstNounBroadSynonym=false;
+                                                firstNounBroadSynonymNotifyMessage='';
+                                                secondNounSynonym=false;
+                                                secondNounSynonymNotifyMessage='';
+                                                secondNounBroadSynonym=false;
+                                                secondNounBroadSynonymNotifyMessage='';
+                                                input();
+                                                "
+                                    placeholder="enter a singular noun"
+                                  />
+                                  <ul>
+                                    <li v-on:click="handleLastCharacter(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultLastCharacterQuery">{{nounCharacter}}
+                                    </li>
+                                  </ul>
+                                </div>
+                                <!-- <datalist id="last_characters">
                                   <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
-                                </datalist>
+                                </datalist> -->
                                
                               </div>
                             </div>
@@ -794,58 +799,63 @@
                                 </select>
                               </div>
                               <div class="custom-character-field">
-                                <input
-                                  v-model="round.fifth"
-                                  class="width-100"
-                                  v-bind:style="{ 'width': round.text == 'enter a positional phrases,e.g at middle length' ? 340 + 'px' : ''}"
-                                  style="height: 26px;"
-                                  v-bind:list='[round.round_val == "S" || round.round_val == "D" ? "round_fifth_characters" : "" ]'
-                                  :placeholder="round.text"
-                                  v-on:focus = "nounUndefined = false;
-                                                secondNounUndefined = false;
-                                                lastCharacterDefinition = '';
-                                                firstCharacterUndefined = false;
-                                                firstCharacterDefinition = ''
-                                                firstCharacterDeprecated = false;
-                                                firstCharacterDeprecatedNotifyMessage = '';
-                                                firstCharacterNotRecommend = false;
-                                                firstCharacterNotRecommendNotifyMessage = '';
-                                                firstCharacterSynonym = false;
-                                                firstCharacterSynonymNotifyMessage = '';
-                                                firstCharacterBroadSynonym = false;
-                                                firstCharacterBroadSynonymNotifyMessage = '';
-                                                wholeCharacterUndefined=false;
-                                                wholeCharacterDefinition='';
-                                                firstNounDeprecated=false;
-                                                firstNounDeprecatedNotifyMessage='';
-                                                secondNounDeprecated=false;
-                                                secondNounDeprecatedNotifyMessage='';
-                                                firstNounNotRecommend=false;
-                                                firstNounNotRecommendNotifyMessage='';
-                                                secondNounNotRecommend=false;
-                                                secondNounNotRecommendNotifyMessage='';
-                                                firstNounSynonym=false;
-                                                firstNounSynonymNotifyMessage='';
-                                                firstNounBroadSynonym=false;
-                                                firstNounBroadSynonymNotifyMessage='';
-                                                secondNounSynonym=false;
-                                                secondNounSynonymNotifyMessage='';
-                                                secondNounBroadSynonym=false;
-                                                secondNounBroadSynonymNotifyMessage='';
-                                                round.undefined=false;
-                                                round.deprecated=false;
-                                                round.recommend=false;
-                                                round.synonym=false;
-                                                round.broadSynonym=false;
-                                                round.deprecatedNotifyMessage='';
-                                                round.recommendNotifyMessage='';
-                                                round.synonymNotifyMessage='';
-                                                round.broadSynonymNotifyMessage='';
-                                                "
-                                />
-                                <datalist id="round_fifth_characters" >
+                                <div class="selectDataList width-100">
+                                  <input
+                                    v-model="round.fifth"
+                                    class="width-100"
+                                    v-bind:style="{ 'width': round.text == 'enter a positional phrases,e.g at middle length' ? 340 + 'px' : ''}"
+                                    style="height: 26px;"
+                                    :placeholder="round.text"
+                                    v-on:focus = "nounUndefined = false;
+                                                  secondNounUndefined = false;
+                                                  lastCharacterDefinition = '';
+                                                  firstCharacterUndefined = false;
+                                                  firstCharacterDefinition = ''
+                                                  firstCharacterDeprecated = false;
+                                                  firstCharacterDeprecatedNotifyMessage = '';
+                                                  firstCharacterNotRecommend = false;
+                                                  firstCharacterNotRecommendNotifyMessage = '';
+                                                  firstCharacterSynonym = false;
+                                                  firstCharacterSynonymNotifyMessage = '';
+                                                  firstCharacterBroadSynonym = false;
+                                                  firstCharacterBroadSynonymNotifyMessage = '';
+                                                  wholeCharacterUndefined=false;
+                                                  wholeCharacterDefinition='';
+                                                  firstNounDeprecated=false;
+                                                  firstNounDeprecatedNotifyMessage='';
+                                                  secondNounDeprecated=false;
+                                                  secondNounDeprecatedNotifyMessage='';
+                                                  firstNounNotRecommend=false;
+                                                  firstNounNotRecommendNotifyMessage='';
+                                                  secondNounNotRecommend=false;
+                                                  secondNounNotRecommendNotifyMessage='';
+                                                  firstNounSynonym=false;
+                                                  firstNounSynonymNotifyMessage='';
+                                                  firstNounBroadSynonym=false;
+                                                  firstNounBroadSynonymNotifyMessage='';
+                                                  secondNounSynonym=false;
+                                                  secondNounSynonymNotifyMessage='';
+                                                  secondNounBroadSynonym=false;
+                                                  secondNounBroadSynonymNotifyMessage='';
+                                                  round.undefined=false;
+                                                  round.deprecated=false;
+                                                  round.recommend=false;
+                                                  round.synonym=false;
+                                                  round.broadSynonym=false;
+                                                  round.deprecatedNotifyMessage='';
+                                                  round.recommendNotifyMessage='';
+                                                  round.synonymNotifyMessage='';
+                                                  round.broadSynonymNotifyMessage='';
+                                                  "
+                                  />
+                                  <ul v-if='round.round_val == "S" || round.round_val == "D"'>
+                                    <li v-on:click="handleRoundOne(nounCharacter,index)" :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}
+                                    </li>
+                                  </ul>
+                                </div>
+                                <!-- <datalist id="round_fifth_characters" >
                                   <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
-                                </datalist>
+                                </datalist> -->
                               </div>  
                               <i class="fa fa-times-circle custom-close" aria-hidden="true" @click="removeRoundOne(index)"></i>        
                             </div>
@@ -895,50 +905,56 @@
                               </div>
                               <div class="custom-character-field">
                                 <div v-if="middleCharacter=='between'" style="width:100%; text-align: center; margin-top: 27px;" :stytle="[(roundValOne == '' ? '-69px' : '-43px')]"></div>
-                                  <input
-                                    class="width-100"
-                                    v-if="middleCharacter=='between'"
-                                    v-model="secondLastCharacter"
-                                    style="height: 26px;"
-                                    list="second_last_characters"
-                                    v-on:focus="nounUndefined = false;
-                                                secondNounUndefined = false;
-                                                lastCharacterDefinition = '';
-                                                firstCharacterUndefined = false;
-                                                firstCharacterDefinition = ''
-                                                firstCharacterDeprecated = false;
-                                                firstCharacterDeprecatedNotifyMessage = '';
-                                                firstCharacterNotRecommend = false;
-                                                firstCharacterNotRecommendNotifyMessage = '';
-                                                firstCharacterSynonym = false;
-                                                firstCharacterSynonymNotifyMessage = '';
-                                                firstCharacterBroadSynonym = false;
-                                                firstCharacterBroadSynonymNotifyMessage = '';
-                                                wholeCharacterUndefined=false;
-                                                wholeCharacterDefinition='';
-                                                firstNounDeprecated=false;
-                                                firstNounDeprecatedNotifyMessage='';
-                                                secondNounDeprecated=false;
-                                                secondNounDeprecatedNotifyMessage='';
-                                                firstNounNotRecommend=false;
-                                                firstNounNotRecommendNotifyMessage='';
-                                                secondNounNotRecommend=false;
-                                                secondNounNotRecommendNotifyMessage='';
-                                                firstNounSynonym=false;
-                                                firstNounSynonymNotifyMessage='';
-                                                firstNounBroadSynonym=false;
-                                                firstNounBroadSynonymNotifyMessage='';
-                                                secondNounSynonym=false;
-                                                secondNounSynonymNotifyMessage='';
-                                                secondNounBroadSynonym=false;
-                                                secondNounBroadSynonymNotifyMessage='';
-                                                input();
-                                                "
-                                    placeholder="enter a singular noun"
-                                  />
-                                  <datalist id="second_last_characters">
+                                <div class="selectDataList width-100">
+                                    <input
+                                        class="width-100"
+                                        v-if="middleCharacter=='between'"
+                                        v-model="secondLastCharacter"
+                                        style="height: 26px;"
+                                        v-on:focus="nounUndefined = false;
+                                                    secondNounUndefined = false;
+                                                    lastCharacterDefinition = '';
+                                                    firstCharacterUndefined = false;
+                                                    firstCharacterDefinition = ''
+                                                    firstCharacterDeprecated = false;
+                                                    firstCharacterDeprecatedNotifyMessage = '';
+                                                    firstCharacterNotRecommend = false;
+                                                    firstCharacterNotRecommendNotifyMessage = '';
+                                                    firstCharacterSynonym = false;
+                                                    firstCharacterSynonymNotifyMessage = '';
+                                                    firstCharacterBroadSynonym = false;
+                                                    firstCharacterBroadSynonymNotifyMessage = '';
+                                                    wholeCharacterUndefined=false;
+                                                    wholeCharacterDefinition='';
+                                                    firstNounDeprecated=false;
+                                                    firstNounDeprecatedNotifyMessage='';
+                                                    secondNounDeprecated=false;
+                                                    secondNounDeprecatedNotifyMessage='';
+                                                    firstNounNotRecommend=false;
+                                                    firstNounNotRecommendNotifyMessage='';
+                                                    secondNounNotRecommend=false;
+                                                    secondNounNotRecommendNotifyMessage='';
+                                                    firstNounSynonym=false;
+                                                    firstNounSynonymNotifyMessage='';
+                                                    firstNounBroadSynonym=false;
+                                                    firstNounBroadSynonymNotifyMessage='';
+                                                    secondNounSynonym=false;
+                                                    secondNounSynonymNotifyMessage='';
+                                                    secondNounBroadSynonym=false;
+                                                    secondNounBroadSynonymNotifyMessage='';
+                                                    input();
+                                                    "
+                                        placeholder="enter a singular noun"
+                                      />
+                                    <ul>
+                                      <li v-on:click="handleSecondLastCharacter(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultSecondLastCharacterQuery">{{nounCharacter}}
+                                      </li>
+                                    </ul>
+                                </div>
+                                      
+                                  <!-- <datalist id="second_last_characters">
                                     <option :value="nounCharacter" v-for="nounCharacter in nounCharacters">{{nounCharacter}}</option>
-                                  </datalist>
+                                  </datalist> -->
                                 </div>
                               </div>    
                             </div>
@@ -3488,6 +3504,7 @@ export default {
       roundsOneUndefined: [],
       roundsTwoUndefined: [],
       nounCharacters: [],
+      nounLastCharacters: [],
       collectionLists: [],
       active_el: 0,
       completeElement:[],
@@ -3501,6 +3518,7 @@ export default {
       branched: '',
       unbranchedUnisexual: '',
       branchedUnisexual: '',
+      changeRoundsOne: '',
     }
   },
   components: {
@@ -7620,6 +7638,15 @@ export default {
         });   
       }
     },
+    handleLastCharacter(val){
+      this.lastCharacter = val;
+    },
+    handleSecondLastCharacter(val) {
+      this.secondLastCharacter = val;
+    },
+    handleRoundOne(val,index) {
+      this.roundsOne[index].fifth = val;
+    },
     onChangeInflorescence($event){
       var val = event.target.value;
       if(val == 'unbranched') {
@@ -11714,6 +11741,7 @@ export default {
       axios.get('api/v1/character/search_character')
         .then(function (resp) {
             app.nounCharacters = resp.data;
+            app.nounLastCharacters = resp.data;
             sessionStorage.setItem("nounCharacters",resp.data)
         });
     }
@@ -11734,7 +11762,7 @@ export default {
     console.log('created');
     app.generateDescriptionTooltip = '<div>Click this button to generate a textual description of the taxon based on the matrix. Use up/down arrow in the matrix to adjust the order of the characters shown in the text</div>';
     app.isLoading = true;
-    app.getStandardCollections();
+   /* app.getStandardCollections();
     await axios.get("http://shark.sbs.arizona.edu:8080/carex/getTree")
       .then(function (resp) {
         app.treeResult = resp.data;
@@ -11770,7 +11798,7 @@ export default {
         console.log('standardCharacters', resp);
         app.defaultCharacters = resp.data;
         app.refreshDefaultCharacters();
-      });
+      });*/
     axios.get("api/v1/character/" + app.user.id)
       .then(function (resp) {
         app.userCharacters = resp.data.characters;
@@ -11891,6 +11919,35 @@ export default {
     app.isLoading = false;
   },
   computed: {
+    resultLastCharacterQuery(){
+      if(this.lastCharacter){
+      return this.nounCharacters.filter((item)=>{
+        return this.lastCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        return this.nounCharacters;
+      }
+    },
+    resultSecondLastCharacterQuery(){
+      if(this.secondLastCharacter){
+      return this.nounCharacters.filter((item)=>{
+        return this.secondLastCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        return this.nounCharacters;
+      }
+    },
+    resultRoundsOneQuery() {
+      var index = this.changeRoundsOne;
+      alert(index);
+      if(this.changeRoundsOne != '' && this.roundsOne != undefined && this.roundsOne.length > 0){
+      return this.nounCharacters.filter((item)=>{
+        return this.roundsOne[index].fifth.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        return this.nounCharacters;
+      }
+    },
     _valid() {
       var result = true;
       var app = this;
