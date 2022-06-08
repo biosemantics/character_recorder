@@ -52,6 +52,67 @@
                                    v-on:blur="changeColumnCountFirst()" style="width: 180px;"
                                    placeholder="3"> specimens / samples.</b>
                 </div>
+                <div class="margin-top-10 decision-tree">
+                  <h3 style="margin-top: auto;">My samples have the following characteristics (Check all that apply):</h3>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label>Inflorescence:</label>
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio" v-bind:value="'unbranched'"  v-model="inflorescenceVal" @change="onChangeInflorescence($event)"/> <label for="unbranched">unbranched</label>        
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio" v-bind:value="'branched'" v-model="inflorescenceVal" @change="onChangeInflorescence($event)"/> <label for="branched">branched</label>
+                      </div>
+                    </div>
+                    <div class="row" v-if="inflorescenceVal == 'unbranched'">
+                      <div class="col-md-2">
+                        <label>Inflorescence:</label>
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio" id="not" v-model="unbranched" v-bind:value="'unisexual'" @change="onChangeUnbranched($event)"/> <label for="unisexual">unisexual</label>        
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio" v-bind:value="'bisexual'"  v-model="unbranched" @change="onChangeUnbranched($event)"/> <label for="bisexual">bisexual</label>
+                      </div>
+                    </div>
+                    <div class="row" v-if="inflorescenceVal == 'branched'">
+                      <div class="col-md-3">
+                        <label>Inflorescence Units:</label>
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio" v-bind:value="'unisexual'" v-model="branched"/> <label for="unisexual" @change="onChangeBranched($event)">unisexual</label>        
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio" v-bind:value="'bisexual'"  v-model="branched" @change="onChangeBranched($event)"/> <label for="bisexual">bisexual</label>
+                      </div>
+                      <div class="col-md-5">
+                        <input type="radio" v-bind:value="'mixed'"  v-model="branched" @change="onChangeBranched($event)"/> <label for="mixed">mixed with unisexual and bisexual units</label>
+                      </div>
+                    </div>
+                    <div class="row" v-if="unbranched == 'unisexual'">
+                      <div class="col-md-3">
+                        <label>Inflorescence Unisexual:</label>
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio"   v-bind:value="'pistillate'" v-model="unbranchedUnisexual"/> <label for="unisexual">pistillate</label>        
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio" v-model="unbranchedUnisexual" v-bind:value="'staminate'"/> <label for="staminate">staminate</label>
+                      </div>
+                    </div>
+                    <div class="row" v-if="branched == 'unisexual'">
+                      <div class="col-md-4">
+                        <label>Inflorescence Unit Unisexual:</label>
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio"  v-model="branchedUnisexual" v-bind:value="'pistillate'"/> <label for="pistillate">pistillate</label>        
+                      </div>
+                      <div class="col-md-2">
+                        <input type="radio" v-bind:value="'staminate'"  v-model="branchedUnisexual"/> <label for="staminate">staminate</label>
+                      </div>
+                    </div>
+                </div>
                 <div class="margin-top-10 row">
                   <div class="col-md-12" style="line-height: 38px;">
                     <b class="some-container">I'm measuring <a class="btn btn-primary"
@@ -786,7 +847,7 @@
                             <div class="row">
                               <div class="col-md-6 subClidField">
                               <div class="custom-character-field">
-                                <div v-if="middleCharacter=='between'" style="width:100%; text-align: center">and
+                                <div v-if="middleCharacter=='between'" style="width:100%; text-align: center; font-weight: bold;">and
                                 </div>
                                   <select v-if="middleCharacter=='between'"  v-model="secondThirdCharacter" style="height: 26px;" class="width-100">
                                     <optgroup label="Dimension">
@@ -816,7 +877,7 @@
                                   </select>
                               </div>
                               <div class="custom-character-field">
-                                <div v-if="middleCharacter=='between'" style="width:100%; text-align: center" :stytle="[(roundValOne == '' ? '-69px' : '-43px')]">and</div>
+                                <div v-if="middleCharacter=='between'" style="width:100%; text-align: center; margin-top: 27px;" :stytle="[(roundValOne == '' ? '-69px' : '-43px')]"></div>
                                   <input
                                     class="width-100"
                                     v-if="middleCharacter=='between'"
@@ -3418,6 +3479,11 @@ export default {
       selectedImage: 0,
       temp_files: [],
       viewImages: [],
+      inflorescenceVal: '',
+      unbranched: '',
+      branched: '',
+      unbranchedUnisexual: '',
+      branchedUnisexual: '',
     }
   },
   components: {
@@ -6546,22 +6612,120 @@ export default {
       console.log('userCharacters', app.userCharacters);
       console.log('defaultCharacters', app.standardCollections);
       var postCharacters = [];
+      console.log('info',app.inflorescenceVal);
+      console.log('unbranched',app.unbranched);
+      console.log('branched',app.branched);
+      console.log('unbranchedUnisexual',app.unbranchedUnisexual);
+      console.log('branchedUnisexual',app.branchedUnisexual);
       for (var i = 0; i < app.standardCollections.length; i++) {
         var character = app.standardCollections[i];
-        if (!app.userCharacters.find(ch => ch.name == character.name)) {
-          postCharacters.push(character);
+        var standard_tag = character.standard_tag.toLowerCase().trim();
+        var lowerCase = character.name.toLowerCase().trim();
+        var splited = lowerCase.match(/\b[\w']+(?:[^\w\n]+[\w']+){0,2}\b/g);
+
+        if(app.inflorescenceVal == 'unbranched') {
+          if(standard_tag == 'inflorescence') {
+            if(app.unbranched == 'unisexual') {
+              if(app.unbranchedUnisexual == 'pistillate') {
+                if(splited[0] == 'length of inflorescence' || splited[0] == 'width of inflorescence' || splited[0] == 'number of perigynia' || splited[0] == 'number of pistillate' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'branching of inflorescence') {
+                  if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                    postCharacters.push(character);
+                  }
+                }
+              }else if(app.unbranchedUnisexual == 'staminate') {
+                if(splited[0] == 'length of inflorescence' || splited[0] == 'width of inflorescence' || splited[0] == 'number of staminate' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'branching of inflorescence') {
+                  if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                    postCharacters.push(character);
+                  }
+                }
+              }else {
+                if(splited[0] == 'length of inflorescence' || splited[0] == 'width of inflorescence' || splited[0] == 'number of staminate' || splited[0] == 'number of perigynia' || splited[0] == 'number of pistillate'  || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'branching of inflorescence') {
+                  if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                    postCharacters.push(character);
+                  }
+                }
+              }
+            }else if(app.unbranched == 'bisexual') {
+              if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                postCharacters.push(character);
+              }
+            }else {
+              if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                postCharacters.push(character);
+              }
+            }
+          }
+          else if(standard_tag == 'inflorescence unit') {
+          }else {
+            if (!app.userCharacters.find(ch => ch.name == character.name)) {
+              postCharacters.push(character);
+            }
+          }
+        }else if(app.inflorescenceVal == 'branched') {
+          if(standard_tag == 'inflorescence') {}
+          else if(standard_tag == 'inflorescence unit') {
+            if(app.branched == 'unisexual') {
+              if(app.branchedUnisexual == 'pistillate') {
+                if(splited[0] == 'number of inflorescence' || splited[0] == 'number of perigynia' || splited[0] == 'number of pistillate' || splited[0] == 'shape of inflorescence' || splited[0] == 'shape of pistillate' || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proxima' || splited[0] == 'sexuality of distal') {
+                  if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                    postCharacters.push(character);
+                  }
+                }
+              }else if(app.branchedUnisexual == 'staminate') {
+                if(splited[0] == 'number of inflorescence' || splited[0] == 'number of staminate' || splited[0] == 'shape of inflorescence' || splited[0] == 'shape of staminate' || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proxima' || splited[0] == 'sexuality of distal') {
+                  if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                    postCharacters.push(character);
+                  }
+                }
+              }else {
+                if(splited[0] == 'number of perigynia' || splited[0] == 'number of pistillate' || splited[0] == 'number of inflorescence' || splited[0] == 'shape of pistillate' ||splited[0] == 'number of staminate' || splited[0] == 'shape of inflorescence' || splited[0] == 'shape of staminate' || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proxima' || splited[0] == 'sexuality of distal') {
+                  if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                    postCharacters.push(character);
+                  }
+                }
+              }
+            }else if(app.branched == 'bisexual') {
+              if(splited[0] == 'shape of pistillate' || splited[0] == 'shape of staminate' ||  splited[0] == 'number of staminate' ||  splited[0] == 'number of pistillate'){
+                 
+              }else {
+                if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                  postCharacters.push(character);
+                }
+              }
+            }else if(app.branched == 'mixed') {
+              if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                postCharacters.push(character);
+              }
+            }else {
+               if (!app.userCharacters.find(ch => ch.name == character.name)) {
+                postCharacters.push(character);
+              }
+            }
+          }else {
+            if (!app.userCharacters.find(ch => ch.name == character.name)) {
+              postCharacters.push(character);
+            }
+          }
+        }else {
+          if (!app.userCharacters.find(ch => ch.name == character.name)) {
+            postCharacters.push(character);
+          }
         }
       }
 
       console.log('postCharacters', postCharacters);
-
-      axios.post('api/v1/character/add-standard', postCharacters)
+      if(postCharacters.length > 0) {
+        axios.post('api/v1/character/add-standard', postCharacters)
         .then(function (resp) {
-          console.log('addStandard resp', resp.data);
-          app.userCharacters = resp.data;
-          app.isLoading = false;
-          app.refreshUserCharacters();
-        });
+            console.log('addStandard resp', resp.data);
+            app.userCharacters = resp.data;
+            app.isLoading = false;
+            app.refreshUserCharacters();
+          });
+      }else {
+        app.userCharacters = [];
+      }
+     
     },
     removeStandardCharacter(characterId) {
       var app = this;
@@ -7476,6 +7640,30 @@ export default {
         });   
       }
     },
+    onChangeInflorescence($event){
+      var val = event.target.value;
+      if(val == 'unbranched') {
+        this.branched = '';
+        this.branchedUnisexual = ''; 
+      }else if(val == 'branched') {
+        this.unbranched = '';
+        this.unbranchedUnisexual = ''; 
+      }
+    },
+    onChangeUnbranched($event){
+      var val = event.target.value;
+      if(val != 'bisexual') {
+        this.branchedUnisexual = ''; 
+        this.unbranchedUnisexual = ''; 
+      }
+    },
+    onChangeBranched($event){
+      var val = event.target.value;
+      if(val != 'unisexual') {
+        this.branchedUnisexual = ''; 
+        this.unbranchedUnisexual = ''; 
+      }
+    },
     valueMiddleCharacter($event){
       var val = event.target.value;
       if(val == 'of'){
@@ -8016,8 +8204,8 @@ export default {
         var defChs = app.defaultCharacters.filter(eachCh => eachCh.standard == 1 && eachCh.name == app.standardCollections[i].name && eachCh.username == app.standardCollections[i].username);
         app.standardCollections[i].usage_count = 0;
         for (var j = 0; j < defChs.length; j++) {
-          console.log('j:', j);
-          console.log('defChs[j]', defChs[j]);
+          /*console.log('j:', j);
+          console.log('defChs[j]', defChs[j]);*/
           app.standardCollections[i].usage_count += parseInt(defChs[j].usage_count);
         }
 
