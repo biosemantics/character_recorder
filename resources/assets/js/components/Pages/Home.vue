@@ -680,6 +680,23 @@
                                   </optgroup>
                                 </select>
                               </div>
+
+                              <!-- custom static datalist start-->                            
+                              <!-- <div class="custom-character-field">
+                                <div class="selectDataList width-100">
+                                  <input type="text" class="width-100" placeholder="Enter a singular noun">
+                                  <ul>
+                                    <li>Option-1</li>
+                                    <li>Option-1</li>
+                                    <li>Option-1</li>
+                                    <li>Option-1</li>
+                                    <li>Option-1</li>
+                                    <li>Option-1</li>
+                                  </ul>
+                                </div>
+                              </div> -->
+                              <!-- custom static datalist end--> 
+
                               <div class="custom-character-field">
                                 <input
                                   class="width-100"

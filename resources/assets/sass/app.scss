@@ -54,6 +54,34 @@ div.dropdown div.item:first-child {
     margin-right: 20px;
 }
 
+.selectDataList{
+  position: relative;
+  input{
+    padding: 3px;
+    height: 26px;
+  }
+  ul{
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #cccccc;
+    position: absolute;
+    width: 100%;
+    display:none; 
+    li{
+      padding: 2px 6px;
+      font-size: 14px;
+      cursor: pointer;
+      &:hover{
+        background-color: #3097D1;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.selectDataList input:focus + ul { display: block; }
+
+
 .custom-character-field:last-child {
     margin-right: 0px;
 }
