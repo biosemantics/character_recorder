@@ -972,7 +972,8 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $order = Character::max('order') + 1;
-        $characters = Character::where('owner_name', '=', $username)->select('name', 'IRI', 'method_from', 'method_to', 'method_include', 'method_exclude', 'method_where', 'owner_name')->get();
+        $characters = Character::where('owner_name', '=', $username)->select('name', 'IRI', 'method_from', 'method_to', 'method_include', 'method_exclude', 'method_where', 'owner_name','standard_tag')->get();
+        Character::where('owner_name', '=', $username)/*->where('standard_tag','inflorescence')->orWhere('standard_tag','inflorescence unit')*/->delete();
         $userTags = UserTag::where('user_id', '=', Auth::id())->get();
         $newCharacters = [];
         $newUserTags = [];
@@ -1001,17 +1002,20 @@ class HomeController extends Controller
         foreach ($standardCharacters as $eachCharacter) {
             $flag = true;
             foreach ($characters as $ch) {
-                if ($eachCharacter['name'] == $ch['name']
-                    && $eachCharacter['IRI'] == $ch['IRI']
-                    && $eachCharacter->method_from == $ch['method_from']
-                    && $eachCharacter->method_to == $ch['method_to']
-                    && $eachCharacter->method_include == $ch['method_include']
-                    && $eachCharacter->method_exclude == $ch['method_exclude']
-                    && $eachCharacter->method_where == $ch['method_where']
-                    && $eachCharacter->method_as == $ch['method_as']) {
-                    $flag = false;
-                    break;
+                if(isset($eachCharacter['name']) && isset($eachCharacter['IRI']) && isset($eachCharacter->method_from) && isset($eachCharacter->method_to) && isset($eachCharacter->method_include) && isset($eachCharacter->method_exclude) && isset($eachCharacter->method_where) && isset($eachCharacter->method_as)){
+                    if ($eachCharacter['name'] == $ch['name']
+                        && $eachCharacter['IRI'] == $ch['IRI']
+                        && $eachCharacter->method_from == $ch['method_from']
+                        && $eachCharacter->method_to == $ch['method_to']
+                        && $eachCharacter->method_include == $ch['method_include']
+                        && $eachCharacter->method_exclude == $ch['method_exclude']
+                        && $eachCharacter->method_where == $ch['method_where']
+                        && $eachCharacter->method_as == $ch['method_as']) {
+                        $flag = false;
+                        break;
+                    }
                 }
+             
             }
             if ($flag) {
                 $stdKeys = array_keys($eachCharacter);
