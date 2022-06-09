@@ -61,12 +61,13 @@ div.dropdown div.item:first-child {
     height: 26px;
   }
   ul{
-    max-height: 150px;
+    height: 150px;
+    transition: all .25s ease-in-out;
     overflow-y: auto;
     border: 1px solid #cccccc;
     position: absolute;
     width: 100%;
-    z-index: 999;
+    z-index:-1;
     opacity: 0;
     background: #ffffff;
     li{
@@ -83,7 +84,7 @@ div.dropdown div.item:first-child {
   }
 }
 
-.selectDataList input:focus + ul { display: block; z-index: 99999; opacity: 1;}
+.selectDataList input:focus + ul { max-height: 150px; height: auto;display: block; z-index: 99999; opacity: 1;}
 
 
 .custom-character-field:last-child {

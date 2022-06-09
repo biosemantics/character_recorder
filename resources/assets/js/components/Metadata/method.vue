@@ -46,11 +46,17 @@
                 </div>
                 <div class="col-md-12" v-if="ch_name != 'Color'"  style="margin-top: 10px;">
                     <label class="col-md-3 text-right">From:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
-                           @keyup="saveMeasureItems" name="methodFrom" list="method_characters"/>
-                    <datalist id="method_characters">
-                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
-                    </datalist>      
+                    <div class="selectDataList width-100"> 
+                      <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
+                             @keyup="saveMeasureItems" name="methodFrom"/>
+                      <!-- <datalist id="method_characters">
+                          <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                      </datalist> -->    
+                      <ul>
+                        <li v-on:click="handleMethodFrom(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodFromQuery">{{nounCharacter}}
+                        </li>
+                      </ul>  
+                    </div>  
                     <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
                     <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
                        v-on:mouseover="needMore('from')">Need info on new terms:</a>
@@ -84,10 +90,16 @@
                 </div>
                 <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">To:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo" list="to_characters"/>
-                    <datalist id="to_characters">
-                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
-                    </datalist>     
+                    <div class="selectDataList width-100"> 
+                      <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
+                      <!-- <datalist id="to_characters">
+                          <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                      </datalist>  -->  
+                      <ul>
+                        <li v-on:click="handleMethodTo(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodToQuery">{{nounCharacter}}
+                        </li>
+                      </ul>   
+                    </div>
                     <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
                     <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
                        v-on:mouseover="needMore('to')">Need info on new terms:</a>
@@ -120,10 +132,16 @@
                 </div>
                 <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Include:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude" list="include_characters"/>
-                    <datalist id="include_characters">
-                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
-                    </datalist>  
+                    <div class="selectDataList width-100"> 
+                      <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
+                      <!-- <datalist id="include_characters">
+                          <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                      </datalist>   -->
+                      <ul>
+                        <li v-on:click="handleMethodInclude(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodIncludeQuery">{{nounCharacter}}
+                        </li>
+                      </ul>   
+                    </div>
                     <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
                     <a v-if="includeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.include }" v-on:mouseover="needMore('include')">Need info on new
@@ -157,10 +175,16 @@
                 </div>
                 <div class="col-md-12" v-if="ch_name != 'Color'" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Exclude:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"  list="exclude_characters"/>
-                    <datalist id="exclude_characters">
-                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
-                    </datalist>  
+                    <div class="selectDataList width-100"> 
+                      <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
+                      <!-- <datalist id="exclude_characters">
+                          <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                      </datalist>   -->
+                      <ul>
+                        <li v-on:click="handleMethodExclude(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodExcludeQuery">{{nounCharacter}}
+                        </li>
+                      </ul>   
+                    </div>
                     <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
                     <a v-if="excludeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.exclude }" v-on:mouseover="needMore('exclude')">Need info on new
@@ -194,10 +218,16 @@
                 </div>
                 <div class="col-md-12" style="margin-top: 10px;">
                     <label class="col-md-3 text-right">Where:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Where')" class="col-md-8" v-model="methodWhere" @keyup="saveMeasureItems" name="methodWhere" list="where_characters"/>
-                    <datalist id="where_characters">
-                        <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
-                    </datalist>  
+                    <div class="selectDataList width-100"> 
+                      <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Where')" class="col-md-8" v-model="methodWhere" @keyup="saveMeasureItems" name="methodWhere"/>
+                      <!-- <datalist id="where_characters">
+                          <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                      </datalist>   -->
+                      <ul>
+                        <li v-on:click="handleMethodWhere(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodWhereQuery">{{nounCharacter}}
+                        </li>
+                      </ul>   
+                    </div>  
                     <p v-if="whereId != null || greenTick.where == true" style="color: green;">&#10004;</p>
                     <a v-if="whereNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.where }"
                        v-on:mouseover="needMore('where')">Need info on new terms:</a>
@@ -354,7 +384,57 @@
                 }
             }
         },
+        computed: {
+          resultMethodFromQuery(){
+            if(this.methodFrom){
+            return this.noun_characters.filter((item)=>{
+              return this.methodFrom.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+          resultMethodToQuery(){
+            if(this.methodTo){
+            return this.noun_characters.filter((item)=>{
+              return this.methodTo.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+          resultMethodIncludeQuery(){
+            if(this.methodInclude){
+            return this.noun_characters.filter((item)=>{
+              return this.methodInclude.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+          resultMethodExcludeQuery(){
+            if(this.methodExclude){
+            return this.noun_characters.filter((item)=>{
+              return this.methodExclude.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+          resultMethodWhereQuery(){
+            if(this.methodWhere){
+            return this.noun_characters.filter((item)=>{
+              return this.methodWhere.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+        },
         methods: {
+            handleMethodFrom(val){
+              this.methodFrom = val;
+            },
             // maybe onchagne may onclick whatever..
             handleDataFc: function () {
                 this.$emit('interface', this.childData); // handle data and give it back to parent by interface
