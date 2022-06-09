@@ -14,6 +14,12 @@ div.dropdown div.item:first-child {
 }
 .character-modal .modal-header { display: none; }
 .character-modal .modal-footer { border-top: none; }
+.mr-2{
+  margin-right: 2rem;
+}
+.mr-1{
+  margin-right: 1rem;
+}
 @media screen and (min-width: 767px ){
     .character-modal .modal-container {
         max-width: 80% !important;
@@ -165,6 +171,87 @@ div.dropdown div.item:first-child {
           color: #ffffff;
         }
       } 
+
+  }
+}
+
+.modal-mask{
+  &.complete-modal{
+    .modal-container {
+      max-width: 1200px;
+      width: 95%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      position: absolute;
+    }
+    .modal-header{
+      color: #000000;
+      padding: 15px 0;
+      p{
+        font-size: 18px;
+        b{
+          font-style: italic;
+        }
+      }
+    }
+    .modal-body{
+      max-height:50vh; 
+      height: auto;
+      overflow-y: auto;
+      margin: 0;
+      padding: 0;
+      table{
+        background-color: #ffffff;
+        margin-bottom: 0;
+        min-width: 750px;
+        thead{
+          background: #c5e0b4;
+          color: #000000;
+          font-size: 16px;
+          text-align: center; 
+          th{
+            text-align: center;
+            font-weight: 500;
+            padding: 15px 5px;
+            border: 1px solid #ffffff;
+          }
+        }
+        tbody{
+          
+          tr{                   
+            td{
+              color: #000000;
+              font-size: 12px;
+              font-weight: 500;
+              background-color: #deebf7;
+              padding: 10px;
+              border: 1px solid #ffffff;
+              b{
+                font-weight: 600;
+              }
+              input[type="radio"], input[type="checkbox"] {
+                transform: scale(1.5);
+              }
+                &:nth-child(1) {
+                  width: 20%;
+              }
+              &:nth-last-child(1), &:nth-last-child(2){
+                text-align: center;
+              }
+            }
+            &.bg-skyblue{
+              td{
+                 background-color: #bdd7ee;
+              }           
+            } 
+          }        
+        }
+      }
+    }
+    .modal-footer {
+      padding: 22px 0 0 0;
+    }
 
   }
 }

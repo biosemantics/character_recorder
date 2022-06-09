@@ -2829,62 +2829,60 @@
         </div>
         <div v-if="completeMatrixDialog" @close="completeMatrixDialog = false" style="z-index: 10000;">
           <transition name="modal">
-            <div class="modal-mask complete-modal">
-              <div class="modal-wrapper">
+            <div class="modal-mask complete-modal">             
                 <div class="modal-container">
-                  <div style="max-height:80vh; overflow-y: auto;">
+                  <div>
                     <div class="modal-header">
-                      <b style="text-align: left">The matrix for <span style="font-style: italic;">{{ taxonName }}</span> contains the following empty cells, please select the appropriate action for each empty cells:</b>
-                      <br/>
+                      <p class="text-left">The matrix for <b>{{ taxonName }}</b> contains the following empty cells, please select the appropriate action for each empty cells:</p>
                     </div>
-                    <div class="modal-body" style="min-height: 25vh;">
-                      <table class="table table-dark">
-                        <thead>
-                          <tr>
-                            <th scope="col">Value to be filled in:</th>
-                            <th scope="col"></th>
-                            <th scope="col">"not applicable"</th>
-                            <th scope="col">"applicable but value not recorded"</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row">All</th>
-                            <td>11 out of 12 cells are empty</td>
-                            <td><input type="checkbox" name=""></td>
-                            <td><input type="checkbox" name=""></td>
-                          </tr>
-                          <template v-for="(eachTag, tagIndex) in standardCharactersTags"  v-if="userCharacters.find(ch => ch.standard_tag == eachTag && ch.standard == 1)">
+                    <div class="modal-body">
+                      <div class="table-responsive-lg">
+                        <table class="table table-dark">
+                          <thead>
                             <tr>
-                              <th scope="row">{{ eachTag }}</th>
-                              <td></td>
-                              <td><input type="checkbox" name=""></td>
-                              <td><input type="checkbox" name=""></td>
-                            <tr>
-                            <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)">
-                              <th scope="row">{{eachCharacter.name}}</th>
+                              <th colspan="2" scope="col">Value to be filled in:</th>
+                              <th scope="col">"not applicable"</th>
+                              <th scope="col">"applicable but value not recorded"</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="bg-skyblue">
+                              <td scope="row"><b>All</b></td>
                               <td>11 out of 12 cells are empty</td>
                               <td><input type="checkbox" name=""></td>
                               <td><input type="checkbox" name=""></td>
                             </tr>
-                          </template>
-                          
-                        </tbody>
-                      </table>
+                            <template v-for="(eachTag, tagIndex) in standardCharactersTags"  v-if="userCharacters.find(ch => ch.standard_tag == eachTag && ch.standard == 1)">
+                              <tr>
+                                <td scope="row"><b>{{ eachTag }}</b></td>
+                                <td></td>
+                                <td><input type="checkbox" name=""></td>
+                                <td><input type="checkbox" name=""></td>
+                              </tr>
+                              <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)">
+                                <td scope="row"><b>{{eachCharacter.name}}</b></td>
+                                <td>11 out of 12 cells are empty</td>
+                                <td><input type="checkbox" name=""></td>
+                                <td><input type="checkbox" name=""></td>
+                              </tr>
+                            </template>
+                            
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                     <div class="modal-footer">
                       <div class="row">
                         <div class="col-md-12">
-                          <a class="btn btn-primary ok-btn">
+                          <a class="btn-lg btn-primary mr-2 ok-btn">
                             Confirm </a>
                           <a v-on:click="completeMatrixDialog=false"
-                             class="btn btn-danger">Cancel</a>
+                             class="btn-lg btn-danger">Cancel</a>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
             </div>
           </transition>
         </div>
