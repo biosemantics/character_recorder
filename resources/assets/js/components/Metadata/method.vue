@@ -479,6 +479,18 @@
             handleMethodFrom(val){
               this.methodFrom = val;
             },
+            handleMethodTo(val){
+              this.methodTo = val;
+            },
+            handleMethodInclude(val){
+              this.methodInclude = val;
+            },
+            handleMethodExclude(val){
+              this.methodExclude = val;
+            },
+            handleMethodWhere(val){
+              this.methodWhere = val;
+            },
             // maybe onchagne may onclick whatever..
             handleDataFc: function () {
                 this.$emit('interface', this.childData); // handle data and give it back to parent by interface
