@@ -266,16 +266,20 @@
           <div class="row">
             <div class="col-md-3">
               <a class="btn btn-primary" v-on:click="resetSystem()"
-                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-if="user.email == 'hong@test.com'">Reset
+                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-if="user.email == 'hong@test.com'" >Reset
                 System</a>
             </div>
             <div class="col-md-6">
               <h4 style="margin-top:3px;">matrix displayed:
                 {{ lastLoadMatrixName ? lastLoadMatrixName : 'unnamed matrix' }}</h4>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-1">
               <a class="btn btn-primary" v-on:click="nameMatrixDialog = true;"
                  style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-tooltip="'Give this matrix a name so you can load it in the future'">Name This Matrix</a>
+            </div>
+            <div class="col-md-2">
+              <a class="btn btn-primary" v-on:click="completeMatrixDialog = true;"
+                 style="height: 27px; font-size: 12px; margin-top: 3px; line-height: 14px;" v-tooltip="'Give this matrix a name so you can load it in the future'">Complete This Matrix</a>
             </div>
           </div>
         </div>
@@ -2823,6 +2827,67 @@
             </div>
           </transition>
         </div>
+        <div v-if="completeMatrixDialog" @close="completeMatrixDialog = false" style="z-index: 10000;">
+          <transition name="modal">
+            <div class="modal-mask complete-modal">
+              <div class="modal-wrapper">
+                <div class="modal-container">
+                  <div style="max-height:80vh; overflow-y: auto;">
+                    <div class="modal-header">
+                      <b style="text-align: left">The matrix for <span style="font-style: italic;">{{ taxonName }}</span> contains the following empty cells, please select the appropriate action for each empty cells:</b>
+                      <br/>
+                    </div>
+                    <div class="modal-body" style="min-height: 25vh;">
+                      <table class="table table-dark">
+                        <thead>
+                          <tr>
+                            <th scope="col">Value to be filled in:</th>
+                            <th scope="col"></th>
+                            <th scope="col">"not applicable"</th>
+                            <th scope="col">"applicable but value not recorded"</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">All</th>
+                            <td>11 out of 12 cells are empty</td>
+                            <td><input type="checkbox" name=""></td>
+                            <td><input type="checkbox" name=""></td>
+                          </tr>
+                          <template v-for="(eachTag, tagIndex) in standardCharactersTags"  v-if="userCharacters.find(ch => ch.standard_tag == eachTag && ch.standard == 1)">
+                            <tr>
+                              <th scope="row">{{ eachTag }}</th>
+                              <td></td>
+                              <td><input type="checkbox" name=""></td>
+                              <td><input type="checkbox" name=""></td>
+                            <tr>
+                            <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)">
+                              <th scope="row">{{eachCharacter.name}}</th>
+                              <td>11 out of 12 cells are empty</td>
+                              <td><input type="checkbox" name=""></td>
+                              <td><input type="checkbox" name=""></td>
+                            </tr>
+                          </template>
+                          
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="modal-footer">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <a class="btn btn-primary ok-btn">
+                            Confirm </a>
+                          <a v-on:click="completeMatrixDialog=false"
+                             class="btn btn-danger">Cancel</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </transition>
+        </div>
         <div v-if="nameMatrixDialog" @close="nameMatrixDialog = false" style="z-index: 10000;">
           <transition name="modal">
             <div class="modal-mask">
@@ -3407,6 +3472,7 @@ export default {
       disputeExampleSentence: '',
       applicableTaxa: '',
       nameMatrixDialog: false,
+      completeMatrixDialog: false,
       loadMatrixDialog: false,
       namesList: [],
       showNamesList: [],
