@@ -88,5 +88,6 @@ Route::group([
         Route::get('{userId}',                          ['as' => 'get_character',               'uses' => 'HomeController@getCharacter']);
         Route::post('check-image',                       ['as' => 'check_image',            'uses' => 'HomeController@checkImage']);
         Route::post('identify',                       ['as' => 'identify',            'uses' => 'HomeController@identify']);
+        Route::post('empty-cells',                           ['as' => 'empty_cells',            'uses' => 'HomeController@emptyCells']);
     });
 });
