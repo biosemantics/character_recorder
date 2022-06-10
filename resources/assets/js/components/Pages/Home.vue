@@ -2835,9 +2835,11 @@
                     <div class="modal-header">
                       <p class="text-left">The matrix for <b>{{ taxonName }}</b> contains the following empty cells, please select the appropriate action for each empty cells:</p>
                     </div>
+                <form id="empty_cells" v-bind:action="postRoute" method="post">
+                  <input type="hidden" name="_token" v-bind:value="formToken">
                     <div class="modal-body">
                       <div class="table-responsive-lg">
-                        <table class="table table-dark">
+                        <table class="table table-dark empty-cell">
                           <thead>
                             <tr>
                               <th colspan="2" scope="col">Value to be filled in:</th>
@@ -2846,27 +2848,30 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr class="bg-skyblue">
+
+             
+                            <tr class="bg-skyblue" v-if="totalCells != ''">
                               <td scope="row"><b>All</b></td>
-                              <td>11 out of 12 cells are empty</td>
-                              <td><input type="checkbox" name=""></td>
-                              <td><input type="checkbox" name=""></td>
+                              <td>{{totalCells}}</td>
+                              <td><input type="checkbox" class="all_not_applicable"  @click="allNotApplicable" ></td>
+                              <td><input type="checkbox" class="all_applicable"   @click="allApplicable" ></td>
                             </tr>
-                            <template v-for="(eachTag, tagIndex) in standardCharactersTags"  v-if="userCharacters.find(ch => ch.standard_tag == eachTag && ch.standard == 1)">
+                            <template v-for="(eachTag, tagIndex) in userTags"  v-if="userCharacters.find(ch => ch.standard_tag == eachTag.tag_name && ch.not_cells != undefined &&  ch.not_cells > 0)">
                               <tr>
-                                <td scope="row"><b>{{ eachTag }}</b></td>
+                                <td scope="row"><b>{{ eachTag.tag_name }}</b></td>
                                 <td></td>
-                                <td><input type="checkbox" name=""></td>
-                                <td><input type="checkbox" name=""></td>
+                                <td><input type="checkbox" class="not_applicable" :class="eachTag.tag_name+'not'"  @click="tagNotApplicable(eachTag.tag_name)"></td>
+                                <td><input type="checkbox" :class="eachTag.tag_name+'yes'" class="applicable"  @click="tagApplicable(eachTag.tag_name)"></td>
                               </tr>
-                              <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)">
+                              <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag.tag_name && eachCharacter.not_cells != undefined &&  eachCharacter.not_cells > 0">
                                 <td scope="row"><b>{{eachCharacter.name}}</b></td>
-                                <td>11 out of 12 cells are empty</td>
-                                <td><input type="checkbox" name=""></td>
-                                <td><input type="checkbox" name=""></td>
+                                <td>{{eachCharacter.not_cells ? eachCharacter.not_cells : 0}} out of {{headers.length }} samples are empty</td>
+                                <td><input type="checkbox" :class="[eachTag.tag_name+'not_applicable',eachCharacter.id+'not']" class="not_applicable" :name="eachCharacter.id" value="not applicable" @click="characterNotApplicable(eachTag.tag_name,eachCharacter.id)"></td>
+                                <td><input type="checkbox" :class="[eachTag.tag_name+'applicable',eachCharacter.id+'yes']" class="applicable" :name="eachCharacter.id" value="applicable but value not recorded" @click="characterApplicable(eachTag.tag_name,eachCharacter.id)"></td>
                               </tr>
                             </template>
-                            
+             
+
                           </tbody>
                         </table>
                       </div>
@@ -2874,13 +2879,14 @@
                     <div class="modal-footer">
                       <div class="row">
                         <div class="col-md-12">
-                          <a class="btn-lg btn-primary mr-2 ok-btn">
-                            Confirm </a>
+                          <button type="submit" class="btn btn-primary mr-2 ok-btn" v-bind:class="{'disabled': totalCells == ''}">
+                            Confirm </button>
                           <a v-on:click="completeMatrixDialog=false"
-                             class="btn-lg btn-danger">Cancel</a>
+                             class="btn btn-danger">Cancel</a>
                         </div>
                       </div>
                     </div>
+                </form>    
                   </div>
                 </div>
             </div>
@@ -3578,7 +3584,11 @@ export default {
       unbranchedUnisexual: '',
       branchedUnisexual: '',
       changeRoundsOne: '',
-      firstNounData: ['Length','Width','Depth','Diameter','Distance','Color','Presence','Shape','Texture','Growth form','Number','Pubescence','Relative Position','Inflation','Orientation']
+      firstNounData: ['Length','Width','Depth','Diameter','Distance','Color','Presence','Shape','Texture','Growth form','Number','Pubescence','Relative Position','Inflation','Orientation'],
+      allEmptyCells: '',
+      totalEmptyCells: '',
+      postRoute:window.location.href+'api/v1/character/empty-cells',
+      formToken: $('meta[name="csrf-token"]').attr('content'),
     }
   },
   components: {
@@ -3589,6 +3599,75 @@ export default {
     'color-palette': ColorPalette
   },
   methods: {
+    allNotApplicable() {
+      if($(".all_not_applicable").prop('checked') == true){
+        $('.not_applicable').prop('checked', true);
+        $('.applicable').prop('checked', false);
+        $('.all_applicable').prop('checked', false);
+      }else {
+        $('.not_applicable').prop('checked', false);
+        $('.applicable').prop('checked', false);
+        $('.all_applicable').prop('checked', false);
+      }
+    },
+    allApplicable() {
+      if($(".all_applicable").prop('checked') == true){
+        $('.not_applicable').prop('checked', false);
+        $('.all_not_applicable').prop('checked', false);
+        $('.applicable').prop('checked', true);
+      }else {
+        $('.applicable').prop('checked', false);
+        $('.not_applicable').prop('checked', false);
+        $('.all_not_applicable').prop('checked', false);
+      }
+    },
+    tagNotApplicable(tag){
+      if($('.'+tag+'not').prop('checked') == true){
+        console.log('false');
+        $('.all_not_applicable').prop('checked', false);
+        $('.all_applicable').prop('checked', false);
+        $("."+tag+"yes").prop('checked', false);
+        $("."+tag+"applicable").prop('checked', false);
+        $("."+tag+"not_applicable").prop('checked', true);
+      }else {
+         console.log('true');
+        $('.all_not_applicable').prop('checked', false);
+        $('.all_applicable').prop('checked', false);
+        $("."+tag+"yes").prop('checked', false);
+        $("."+tag+"applicable").prop('checked', false);
+        $("."+tag+"not_applicable").prop('checked', false);
+      }
+    },
+    tagApplicable(tag){
+      if($('.'+tag+'yes').prop('checked') == true){
+        $('.all_not_applicable').prop('checked', false);
+        $('.all_applicable').prop('checked', false);
+        $("."+tag+"no").prop('checked', false);
+        $("."+tag+"not_applicable").prop('checked', false);
+        $("."+tag+"applicable").prop('checked', true);
+      }else {
+        $('.all_not_applicable').prop('checked', false);
+        $('.all_applicable').prop('checked', false);
+        $("."+tag+"no").prop('checked', false);
+        $("."+tag+"not_applicable").prop('checked', false);
+        $("."+tag+"applicable").prop('checked', false);
+      }
+    },
+    characterNotApplicable(tag,id){
+      $('.all_not_applicable').prop('checked', false);
+      $('.all_applicable').prop('checked', false);
+      $('.'+tag+'not').prop('checked', false);
+      $('.'+tag+'yes').prop('checked', false);
+      $('.'+id+'yes').prop('checked', false);
+      
+    },
+    characterApplicable(tag,id){
+      $('.all_not_applicable').prop('checked', false);
+      $('.all_applicable').prop('checked', false);
+      $('.'+tag+'yes').prop('checked', false);
+      $('.'+tag+'not').prop('checked', false);
+      $('.'+id+'not').prop('checked', false);
+    },
     cancelTemporaryStore() {
       var app = this;
       app.selectedImage = 0;
@@ -3597,29 +3676,6 @@ export default {
       var app = this;
       var filename = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '')
       var data = {'name':filename, 'content':app.previewImage};
-      /*axios.post('api/v1/checkImage', data)
-          .then(function (resp) {
-            if(resp.data == 1) {
-              if($('.slider_image').hasClass('active')){
-                $('.slider_image').removeClass('active');
-              }
-              app.active_image = app.previewImage;
-              if(app.character.images == undefined){
-                app.character.images = [];
-                app.character.images.push(app.previewImage);
-              }else {
-                app.character.images.push(app.previewImage);
-              }
-              if(app.character.temp_files == undefined) {
-                app.character.temp_files = [];
-                app.character.temp_files.push(app.previewImage);
-              }else {
-                app.character.temp_files.push(app.previewImage);
-              }
-            }else {
-              alert('Same image name is already exists.');
-            }
-      })*/
       if($('.slider_image').hasClass('active')){
         $('.slider_image').removeClass('active');
       }
@@ -8029,6 +8085,7 @@ export default {
       if (!isNaN(value.value)) {
         var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
         if (app.checkHaveUnit(currentCharacter.name) || currentCharacter.name.startsWith("Number ")) {
+          app.isLoading = true;
           axios.post('api/v1/character/update', value)
             .then(function (resp) {
               console.log('saveItem', resp.data);
@@ -8050,6 +8107,7 @@ export default {
                 app.refreshDefaultCharacters();
                 app.refreshUserCharacters();
                 app.showTableForTab(app.currentTab);
+                app.isLoading = false;
               }
             });
         }
@@ -12045,6 +12103,56 @@ export default {
     app.isLoading = false;
   },
   computed: {
+    totalCells() {
+      var app =  this;
+      app.allEmptyCells = "";
+      app.totalEmptyCells = "";
+      if(app.headers.length > 0) {
+        $.each(app.headers, function (i, item) {
+            if(item.id == 1) {
+              app.headers.splice(i, 1);
+              return false; 
+            }
+        });
+      }
+      if(app.values.length > 0 && app.userCharacters.length > 0) {
+        $.each(app.userCharacters, function (j, value) {
+          app.userCharacters[j].count_cells = 0;
+          app.userCharacters[j].not_cells = 0;
+          app.userCharacters[j].total_cells = 0;
+          $.each(app.values, function (i, item) {
+
+            if(value.id == item[0].character_id) {
+              
+              var info = item;
+              for (var k = 0; k < info.length; k++) {
+                if(info[k].header_id != 1) {
+                  
+                  app.userCharacters[j].total_cells = app.userCharacters[j].total_cells + 1;
+                  if(info[k].value != undefined && info[k].value != null && info[k].value != '') {
+                    app.userCharacters[j].count_cells = app.userCharacters[j].count_cells + 1;
+                  }else {
+                    app.userCharacters[j].not_cells = app.userCharacters[j].not_cells + 1;
+                  }
+                }
+              }
+              
+            }
+
+          }); 
+          if(app.userCharacters[j].not_cells != undefined && app.userCharacters[j].not_cells != '') {
+            app.allEmptyCells = Number( app.headers.length ) + Number(app.allEmptyCells);
+            app.totalEmptyCells = Number( app.userCharacters[j].not_cells) + Number( app.totalEmptyCells);
+          } 
+        });
+        
+      }
+      if(app.totalEmptyCells == '' || app.totalEmptyCells == null) {
+        return ''; 
+      }else {
+        return app.totalEmptyCells+' out of '+app.allEmptyCells+' cells are empty';
+      }
+    },
     resultFirstCharacterQuery() {
       if(this.firstCharacter){
       return this.firstNounData.filter((item)=>{

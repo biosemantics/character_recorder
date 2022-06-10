@@ -3888,4 +3888,16 @@ class HomeController extends Controller
         sort($characters);
         return $characters;
     }
+
+    public function emptyCells(Request $request) {
+        $input = $request->all();
+        if(!empty($input)) {
+           foreach ($input as $key => $value) {
+            if($key != '_token'){
+                Value::where('character_id',$key)->where('header_id','!=',1)->where('value',null)->orWhere('value','')->update(['value'=>$value]);
+            } 
+           }
+        }
+        return redirect('/');
+    }
 }
