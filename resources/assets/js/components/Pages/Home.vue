@@ -2879,7 +2879,7 @@
                     <div class="modal-footer">
                       <div class="row">
                         <div class="col-md-12">
-                          <button type="submit" class="btn btn-primary mr-2 ok-btn" v-bind:class="{'disabled': totalCells == ''}">
+                          <button :type="[totalCells == '' ? 'button':'submit']" class="btn btn-primary mr-2 ok-btn" v-bind:class="{'disabled': totalCells == ''}">
                             Confirm </button>
                           <a v-on:click="completeMatrixDialog=false"
                              class="btn btn-danger">Cancel</a>
