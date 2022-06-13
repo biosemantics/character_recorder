@@ -174,7 +174,7 @@ class HomeController extends Controller
 
         foreach ($values as $val) {
             //$val->value = substr($val->value, 0, -1);
-            if (!$val->value) {
+            if (strlen($val->value) == 0) {
                 $val->value = '';
             }
             $characters[$character_id[$val->character_id]][$header_id[$val->header_id]] = $val;

@@ -410,7 +410,7 @@
                       <div v-if="checkHaveUnit(row.find(v => v.header_id == 1).value) || row.find(v => v.header_id == 1).value.startsWith('Number ')" style="width: 80%; float:left">
                         <input class="td-input" v-model="value.value" v-on:focus="focusedValue(value)"
                                v-bind:style="{ 'background-color': row.findIndex(value => value.id == editingValueID) >= 0 ? '#f5f5f5' : 'white' }"
-                               v-on:blur="saveItem($event, value)"/>
+                               v-on:change="saveItem($event, value)"/>
                       </div>
                       <div v-else style="width: 80%; float:left; text-align: center"
                            v-on:click.self="focusedValue(value)">
