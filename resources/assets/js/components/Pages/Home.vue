@@ -1739,7 +1739,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit ValueA</b><span> (<span style="color: red">"*"</span> indicates a required field) </span>
+                          <b style="text-decoration: underline">Create/Edit Value</b><span> (<span style="color: red">"*"</span> indicates a required field) </span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -2003,7 +2003,7 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-md-2">
-                                      Sample SentenceA:
+                                      Sample Sentence:
                                     </div>
                                     <div class="col-md-10">
                                       <input
@@ -2147,7 +2147,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit ValueB</b> <span>(<span style="color: red">"*"</span> indicates a required field)</span>
+                          <b style="text-decoration: underline">Create/Edit Value</b> <span>(<span style="color: red">"*"</span> indicates a required field)</span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -2348,7 +2348,7 @@
                                 </div>
                                 <div class="row">
                                   <div class="col-md-2">
-                                    Sample SentenceB:
+                                    Sample Sentence:
                                   </div>
                                   <div class="col-md-10">
                                     <input
