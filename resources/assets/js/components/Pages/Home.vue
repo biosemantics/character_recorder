@@ -1739,7 +1739,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit Value</b><span> (<span style="color: red">"*"</span> indicates a required field) </span>
+                          <b style="text-decoration: underline">Create/Edit ValueA</b><span> (<span style="color: red">"*"</span> indicates a required field) </span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -2003,7 +2003,7 @@
                                   </div>
                                   <div class="row">
                                     <div class="col-md-2">
-                                      Sample Sentence:
+                                      Sample SentenceA:
                                     </div>
                                     <div class="col-md-10">
                                       <input
@@ -2147,7 +2147,7 @@
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
                         <div>
-                          <b style="text-decoration: underline">Create/Edit Value</b> <span>(<span style="color: red">"*"</span> indicates a required field)</span>
+                          <b style="text-decoration: underline">Create/Edit ValueB</b> <span>(<span style="color: red">"*"</span> indicates a required field)</span>
                         </div>
                         <div>
                           <div style="display: inline-block;">
@@ -2348,7 +2348,7 @@
                                 </div>
                                 <div class="row">
                                   <div class="col-md-2">
-                                    Sample Sentence:
+                                    Sample SentenceB:
                                   </div>
                                   <div class="col-md-10">
                                     <input
@@ -9965,8 +9965,6 @@ export default {
     },
     removeColorValue() {
       var app = this;
-
-      console.log('app.colorDetails[0].value_id', app.colorDetails[0].value_id);
       axios.post('api/v1/remove-color-value', {value_id: app.colorDetails[0].value_id})
         .then(function (resp) {
           app.values = resp.data.values;
@@ -9988,7 +9986,7 @@ export default {
       }
 
       app.currentTermForBracket = '';
-      if (app.currentNonColorValue['main_value'].indexOf('(') > -1 || app.currentNonColorValue['main_value'].indexOf(')') > -1) {
+      if (app.currentNonColorValue['main_value'] != undefined && (app.currentNonColorValue['main_value'].indexOf('(') > -1 || app.currentNonColorValue['main_value'].indexOf(')')) > -1) {
         app.currentTermForBracket = app.currentNonColorValue['main_value'];
       }
       if (app.currentTermForBracket != '') {
@@ -10068,9 +10066,7 @@ export default {
           postValue['main_value'] = app.currentNonColorValue.main_value.split(' -')[0];
           var requestBody = {};
           if (app.currentNonColorValue['main_value'] != null && app.currentNonColorValue['main_value'] != '' && !app.currentNonColorDeprecated && !app.searchTreeData(app.textureTreeData, app.currentNonColorValue.main_value)) {
-            console.log('a1');
             if ((app.searchNonColorFlag == 0 || app.searchNonColorFlag == 1 && app.currentNonColorValue['main_value'] == app.defaultNonColorValue) && postFlag == true) {
-              console.log('a2');
               if (!app.nonColorExistFlag) {
                 if (app.userNonColorDefinition['main_value'] == '' || app.userNonColorDefinition['main_value'] == null || app.userNonColorDefinition['main_value'] == undefined) {
                   alert('please enter definition');
@@ -10085,7 +10081,6 @@ export default {
                   return;
                 }
               }
-
               // postValue['main_value'] = app.currentNonColorValue['main_value'].split(' -')[0];
               var date = new Date();
               requestBody = {
@@ -10139,8 +10134,6 @@ export default {
               };
               await axios.post('http://shark.sbs.arizona.edu:8080/setSuperclass', requestBody);
             } else if (app.searchNonColorFlag == 1 && postFlag == true) {
-              console.log('a3');
-              console.log('a5');
               var synonym = app.nonColorSynonyms.find(eachSynonym => eachSynonym.term == postValue['main_value']);
               var date = new Date();
               requestBody = {
@@ -10259,7 +10252,6 @@ export default {
                       }
                     }
                   });
-                console.log('test12345');
                 app.saveNonColorButtonFlag = false;
                 app.values = resp.data.values;
                 app.preList = resp.data.preList;
@@ -11079,7 +11071,9 @@ export default {
       app.nonColorMainValue = nonColor[flag];
       app.nonColorSynonyms = [];
       app.colorExistFlag = false;
-
+          if(nonColor[flag] != undefined && nonColor[flag] != null && nonColor[flag] != '') {
+            app.nonColorSampleText[app.currentNonColorValue.detailFlag] = "In a "+app.nonColorTaxon[app.currentNonColorValue.detailFlag]+", "+ app.currentCharacter.name+" can be described  as "+nonColor[flag];
+          }
       console.log(nonColor[flag]);
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + nonColor[flag])
         .then(function (resp) {
