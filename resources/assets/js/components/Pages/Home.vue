@@ -414,126 +414,140 @@
                       </div>
                       <div v-else style="width: 80%; float:left; text-align: center"
                            v-on:click.self="focusedValue(value)">
+                        <div v-if="allColorValues.some(function(item){ return item.value_id != value.id && (value.value == 'not applicable' || value.value == 'applicable but value not recorded')})" style="text-align: left" v-on:click.self="focusedValue(value)"
+                          >
+
+                           {{value.value}}
+                        </div>
+                      
                         <div v-for="cv in allColorValues" v-if="cv.value_id == value.id" style="text-align: left"
                              :key="cv.id">
-<!--                           {{colorValueText(cv)}} -->
+
                           <span v-if="cv.colored">
                             <span v-if="cv.colored.includes('(') && cv.colored.includes(')')"
                                   :set="tempColor = cv.colored.split('(')[1].substring(0, cv.colored.split('(')[1].length - 1).split(', ')">
                             <div
                               v-bind:style="{backgroundColor: 'RGB(' + tempColor[0] + ',' + tempColor[1] + ', ' + tempColor[2] + ')', height: 15 + 'px', width: 15 + 'px', display: 'inline-block'}"/>
-                          </span>
+                            </span>
                           </span>
 
                           <span style="color:#636b6f;" v-if="cv.negation && cv.negation != ''">{{ cv.negation }} </span>
                           <span style="color:#636b6f;"
-                                v-if="cv.pre_constraint && cv.pre_constraint != ''">{{ cv.pre_constraint }} </span>
+                                v-if="cv.pre_constraint && cv.pre_constraint != ''">
+                          {{ cv.pre_constraint }} 
+                          </span>
                           <span style="color:#636b6f;" v-if="cv.certainty_constraint && cv.certainty_constraint != ''">{{ cv.certainty_constraint }} </span>
                           <span style="color:#636b6f;"
-                                v-if="cv.degree_constraint && cv.degree_constraint != ''">{{ cv.degree_constraint }} </span>
+                                v-if="cv.degree_constraint && cv.degree_constraint != ''">{{ cv.degree_constraint }} 
+                          </span>
                           <span
                             v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI) >= 0 ? 'bold' : 'linear'}"
                             style="color:#636b6f;"
                             v-if="cv.brightness && cv.brightness != ''">
-                                                        {{ cv.brightness }}
-                                                        <a
-                                                          class="btn btn-add display-block"
-                                                          style="padding: 0px"
-                                                          v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI), 'colorBrightness')"
-                                                          v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI) >= 0">
-                                                            <span class="glyphicon glyphicon-wrench">
-                                                            </span>
-                                                        </a>
-                                                    </span>
+                            {{ cv.brightness }}
+                            <a
+                              class="btn btn-add display-block"
+                              style="padding: 0px"
+                              v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI), 'colorBrightness')"
+                              v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.brightness_IRI) >= 0">
+                                <span class="glyphicon glyphicon-wrench">
+                                </span>
+                            </a>
+                          </span>
 
                           <span
                             v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI) >= 0 ? 'bold' : 'linear'}"
                             style="color:#636b6f;"
                             v-if="cv.reflectance && cv.reflectance != ''">
-                                                        {{ cv.reflectance }}
-                                                        <a
-                                                          class="btn btn-add display-block"
-                                                          style="padding: 0px"
-                                                          v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI), 'colorReflectance')"
-                                                          v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI) >= 0">
-                                                            <span class="glyphicon glyphicon-wrench">
-                                                            </span>
-                                                        </a>
-                                                    </span>
+                              {{ cv.reflectance }}
+                              <a
+                                class="btn btn-add display-block"
+                                style="padding: 0px"
+                                v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI), 'colorReflectance')"
+                                v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.reflectance_IRI) >= 0">
+                                  <span class="glyphicon glyphicon-wrench">
+                                  </span>
+                              </a>
+                          </span>
                           <span
                             v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI) >= 0 ? 'bold' : 'linear'}"
                             style="color:#636b6f;"
                             v-if="cv.saturation && cv.saturation != ''">
-                                                        {{ cv.saturation }}
-                                                        <a
-                                                          class="btn btn-add display-block"
-                                                          style="padding: 0px"
-                                                          v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI), 'colorSaturation')"
-                                                          v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI) >= 0">
-                                                            <span class="glyphicon glyphicon-wrench">
-                                                            </span>
-                                                        </a>
-                                                    </span>
+                              {{ cv.saturation }}
+                              <a
+                                class="btn btn-add display-block"
+                                style="padding: 0px"
+                                v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI), 'colorSaturation')"
+                                v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.saturation_IRI) >= 0">
+                                  <span class="glyphicon glyphicon-wrench">
+                                  </span>
+                              </a>
+                          </span>
                           <span
                             v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI) >= 0 ? 'bold' : 'linear'}"
                             style="color:#636b6f;"
                             v-if="cv.colored && cv.colored != ''">
-                                                        {{ cv.colored.split('(')[0] }}
-                                                        <a
-                                                          class="btn btn-add display-block"
-                                                          style="padding: 0px"
-                                                          v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI), 'colorColored')"
-                                                          v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI) >= 0">
-                                                            <span class="glyphicon glyphicon-wrench">
-                                                            </span>
-                                                        </a>
-                                                    </span>
+                            {{ cv.colored.split('(')[0] }}
+                            <a
+                              class="btn btn-add display-block"
+                              style="padding: 0px"
+                              v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI), 'colorColored')"
+                              v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.colored_IRI) >= 0">
+                                <span class="glyphicon glyphicon-wrench">
+                                </span>
+                            </a>
+                          </span>
+
                           <span
                             v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI) >= 0 ? 'bold' : 'linear'}"
                             style="color:#636b6f;"
                             v-if="cv.multi_colored && cv.multi_colored != ''">
-                                                        {{ cv.multi_colored }}
-                                                        <a
-                                                          class="btn btn-add display-block"
-                                                          style="padding: 0px"
-                                                          v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI), 'colorMultiColored')"
-                                                          v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI) >= 0">
-                                                            <span class="glyphicon glyphicon-wrench">
-                                                            </span>
-                                                        </a>
-                                                    </span>
+                              {{ cv.multi_colored }}
+                              <a
+                                class="btn btn-add display-block"
+                                style="padding: 0px"
+                                v-on:click="onResolveColor(deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI), 'colorMultiColored')"
+                                v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == cv.multi_colored_IRI) >= 0">
+                                  <span class="glyphicon glyphicon-wrench">
+                                  </span>
+                              </a>
+                          </span>
                           <span style="color:#636b6f;" v-if="cv.post_constraint && cv.post_constraint != ''">{{ cv.post_constraint }} </span>
                           <a class="btn btn-add display-block" style="padding: 0px"
                              v-on:click="confirmRemoveEachColor(cv)">
-                                                        <span class="glyphicon glyphicon-remove">
-                                                        </span>
+                            <span class="glyphicon glyphicon-remove">
+                            </span>
                           </a>
                         </div>
+                        
                         <div v-for="ncv in allNonColorValues" style="text-align: left"
                              :key="ncv.id">
                           <span v-if="ncv.value_id == value.id"
                                 v-bind:style="{'font-weight': deprecatedTerms.findIndex(value => value['deprecated IRI'] == ncv.main_value_IRI) >= 0 ? 'bold' : 'linear'}">
                             {{ nonColorValueText(ncv) }}
-                                                        <a
-                                                          class="btn btn-add display-block"
-                                                          style="padding: 0px"
-                                                          v-on:click="onResolveNonColorValue(ncv)"
-                                                          v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == ncv.main_value_IRI) >= 0">
-                                                        <span class="glyphicon glyphicon-wrench">
-                                                        </span>
-                                                      </a>
-                            <a class="btn btn-add display-block" style="padding: 0px"
-                               v-on:click="confirmRemoveEachNonColor(ncv)">
-                                                        <span class="glyphicon glyphicon-remove">
-                                                        </span>
+                            <a
+                              class="btn btn-add display-block"
+                              style="padding: 0px"
+                              v-on:click="onResolveNonColorValue(ncv)"
+                              v-if="deprecatedTerms.findIndex(value => value['deprecated IRI'] == ncv.main_value_IRI) >= 0">
+                              <span class="glyphicon glyphicon-wrench">
+                              </span>
                             </a>
-                          </span>
-
-
+                            <a class="btn btn-add display-block" style="padding: 0px"
+                                 v-on:click="confirmRemoveEachNonColor(ncv)">
+                              <span class="glyphicon glyphicon-remove">
+                              </span>
+                            </a>
+                        </span>
 
                         </div>
+                        <div>
+                          
+                        </div>
                         &nbsp;
+                       
                       </div>
+                      
                       <a style="width: 20%;"
                        v-tooltip="{ content:'<div>copy this value to cells in the current row</div>' }"
                       v-on:click="copyValuesToOther(value)">
@@ -2856,14 +2870,14 @@
                               <td><input type="checkbox" class="all_not_applicable"  @click="allNotApplicable" ></td>
                               <td><input type="checkbox" class="all_applicable"   @click="allApplicable" ></td>
                             </tr>
-                            <template v-for="(eachTag, tagIndex) in userTags"  v-if="userCharacters.find(ch => ch.standard_tag == eachTag.tag_name && ch.not_cells != undefined &&  ch.not_cells > 0)">
-                              <tr>
+                            <template v-for="(eachTag, tagIndex) in userTags"  v-if="userCharacters.find(ch => ch.standard_tag == eachTag.tag_name && ch.not_cells != undefined &&  ch.not_cells > 0)" >
+                              <tr  v-bind:class= '{"bg-skyblue": eachTag.color != undefined}'>
                                 <td scope="row"><b>{{ eachTag.tag_name }}</b></td>
                                 <td></td>
                                 <td><input type="checkbox" class="not_applicable" :class="eachTag.tag_name+'not'"  @click="tagNotApplicable(eachTag.tag_name)"></td>
                                 <td><input type="checkbox" :class="eachTag.tag_name+'yes'" class="applicable"  @click="tagApplicable(eachTag.tag_name)"></td>
                               </tr>
-                              <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag.tag_name && eachCharacter.not_cells != undefined &&  eachCharacter.not_cells > 0">
+                              <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag.tag_name && eachCharacter.not_cells != undefined &&  eachCharacter.not_cells > 0" v-bind:class= '{"bg-skyblue": eachTag.color != undefined}'>
                                 <td scope="row"><b>{{eachCharacter.name}}</b></td>
                                 <td>{{eachCharacter.not_cells ? eachCharacter.not_cells : 0}} out of {{headers.length }} samples are empty</td>
                                 <td><input type="checkbox" :class="[eachTag.tag_name+'not_applicable',eachCharacter.id+'not']" class="not_applicable" :name="eachCharacter.id" value="not applicable" @click="characterNotApplicable(eachTag.tag_name,eachCharacter.id)"></td>
@@ -12116,18 +12130,17 @@ export default {
         });
       }
       if(app.values.length > 0 && app.userCharacters.length > 0) {
+        var sum = 1;
+        var tags = []
         $.each(app.userCharacters, function (j, value) {
           app.userCharacters[j].count_cells = 0;
           app.userCharacters[j].not_cells = 0;
           app.userCharacters[j].total_cells = 0;
           $.each(app.values, function (i, item) {
-
             if(value.id == item[0].character_id) {
-              
               var info = item;
               for (var k = 0; k < info.length; k++) {
                 if(info[k].header_id != 1) {
-                  
                   app.userCharacters[j].total_cells = app.userCharacters[j].total_cells + 1;
                   if(info[k].value != undefined && info[k].value != null && info[k].value != '') {
                     app.userCharacters[j].count_cells = app.userCharacters[j].count_cells + 1;
@@ -12141,12 +12154,27 @@ export default {
 
           }); 
           if(app.userCharacters[j].not_cells != undefined && app.userCharacters[j].not_cells != '') {
+            tags.push(app.userCharacters[j].standard_tag);
             app.allEmptyCells = Number( app.headers.length ) + Number(app.allEmptyCells);
             app.totalEmptyCells = Number( app.userCharacters[j].not_cells) + Number( app.totalEmptyCells);
           } 
-        });
-        
+        }); 
       }
+
+      if(app.userTags.length > 0 && app.userCharacters.length > 0){
+        var color = 1;
+        $.each(app.userTags, function (i, tags) {
+          if(app.userCharacters.find(ch => ch.standard_tag == tags.tag_name && ch.not_cells != undefined &&  ch.not_cells > 0)) {
+            if(color != 1) {
+              app.userTags[i].color = 'bg-skyblue';
+              color = 1;
+            }else {
+              color = 0;
+            }
+          }
+        });      
+      }
+
       if(app.totalEmptyCells == '' || app.totalEmptyCells == null) {
         return ''; 
       }else {
