@@ -10051,7 +10051,6 @@ export default {
               app.nonColorDetailsFlag = false;
             });
         } else {
-          console.log('postFlag', postFlag);
           var postValue = {};
           app.saveInProgress = true;
           postValue['value_id'] = app.currentNonColorValue['value_id'];
@@ -10223,6 +10222,8 @@ export default {
           }
 
           if (postFlag == true) {
+            var info = postValue.main_value.split(' ')[0];
+            postValue.main_value =  info.length == 1 ? postValue.main_value.charAt(0).toUpperCase() + postValue.main_value.slice(1) : postValue.main_value.toLowerCase();
             axios.post('api/v1/save-non-color-value', postValue)
               .then(async function (resp) {
                 await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + postValue['main_value'])
@@ -10238,7 +10239,6 @@ export default {
                             for (var k = 0; k < resp.data.allNonColorValues.length; k++) {
                               if (resp.data.allNonColorValues[k].id == resp.data.id) {
                                 resp.data.allNonColorValues[k].main_value_IRI = methodEntry.resultAnnotations[j].value;
-                                console.log('test67890');
                               }
                             }
                             axios.post("api/v1/setNonColorValueIRI", {
@@ -10838,7 +10838,6 @@ export default {
     changeNonColorSection(nonColor, flag, event) {
       var app = this;
       app.nonColorSearchText = '';
-
       let treeFlag = app.currentNonColorValue.detailsFlag == null && app.nonColorExistFlag && !(!app.textureTreeData);
       app.currentNonColorValue.detailsFlag = flag;
       app.currentNonColorDeprecated = null;
@@ -10884,7 +10883,6 @@ export default {
               console.log('resultData', resultData);
               app.textureTreeData = resultData;
               app.getImageFromColorTreeData(app.textureTreeData);
-
               app.currentNonColorValue.detailFlag = flag;
               if (app.nonColorDetailsFlag) {
                 app.nonColorDetailsFlag = false;
@@ -11064,7 +11062,8 @@ export default {
     },
     searchNonColorSelection(nonColor, flag) {
       var app = this;
-      nonColor[flag] = nonColor[flag].toLowerCase();
+      var info = nonColor[flag].split(' ')[0];
+      nonColor[flag] =  info.length == 1 ? nonColor[flag].charAt(0).toUpperCase() + nonColor[flag].slice(1) : nonColor[flag].toLowerCase();
       app.nonColorExistFlag = false;
       app.defaultNonColorValue = nonColor[flag];
       app.deprecateNonColorValue[flag] = nonColor[flag];
