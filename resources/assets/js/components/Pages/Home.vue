@@ -2874,14 +2874,14 @@
                               <tr  v-bind:class= '{"bg-skyblue": eachTag.color != undefined}'>
                                 <td scope="row"><b>{{ eachTag.tag_name }}</b></td>
                                 <td></td>
-                                <td><input type="checkbox" class="not_applicable" :class="eachTag.tag_name+'not'"  @click="tagNotApplicable(eachTag.tag_name)"></td>
-                                <td><input type="checkbox" :class="eachTag.tag_name+'yes'" class="applicable"  @click="tagApplicable(eachTag.tag_name)"></td>
+                                <td><input type="checkbox" class="not_applicable" :class="eachTag.tag_name.replace(/\s/g, '')+'not'"  @click="tagNotApplicable(eachTag.tag_name.replace(/\s/g, ''))"></td>
+                                <td><input type="checkbox" :class="eachTag.tag_name.replace(/\s/g, '')+'yes'" class="applicable"  @click="tagApplicable(eachTag.tag_name.replace(/\s/g, ''))"></td>
                               </tr>
                               <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag.tag_name && eachCharacter.not_cells != undefined &&  eachCharacter.not_cells > 0" v-bind:class= '{"bg-skyblue": eachTag.color != undefined}'>
                                 <td scope="row"><b>{{eachCharacter.name}}</b></td>
                                 <td>{{eachCharacter.not_cells ? eachCharacter.not_cells : 0}} out of {{headers.length }} samples are empty</td>
-                                <td><input type="checkbox" :class="[eachTag.tag_name+'not_applicable',eachCharacter.id+'not']" class="not_applicable" :name="eachCharacter.id" value="not applicable" @click="characterNotApplicable(eachTag.tag_name,eachCharacter.id)"></td>
-                                <td><input type="checkbox" :class="[eachTag.tag_name+'applicable',eachCharacter.id+'yes']" class="applicable" :name="eachCharacter.id" value="applicable but value not recorded" @click="characterApplicable(eachTag.tag_name,eachCharacter.id)"></td>
+                                <td><input type="checkbox" :class="[eachTag.tag_name.replace(/\s/g, '')+'not_applicable',eachCharacter.id+'not']" class="not_applicable" :name="eachCharacter.id" value="not applicable" @click="characterNotApplicable(eachTag.tag_name.replace(/\s/g, ''),eachCharacter.id)"></td>
+                                <td><input type="checkbox" :class="[eachTag.tag_name.replace(/\s/g, '')+'applicable',eachCharacter.id+'yes']" class="applicable" :name="eachCharacter.id" value="applicable but value not recorded" @click="characterApplicable(eachTag.tag_name.replace(/\s/g, ''),eachCharacter.id)"></td>
                               </tr>
                             </template>
              
@@ -3656,13 +3656,13 @@ export default {
       if($('.'+tag+'yes').prop('checked') == true){
         $('.all_not_applicable').prop('checked', false);
         $('.all_applicable').prop('checked', false);
-        $("."+tag+"no").prop('checked', false);
+        $("."+tag+"not").prop('checked', false);
         $("."+tag+"not_applicable").prop('checked', false);
         $("."+tag+"applicable").prop('checked', true);
       }else {
         $('.all_not_applicable').prop('checked', false);
         $('.all_applicable').prop('checked', false);
-        $("."+tag+"no").prop('checked', false);
+        $("."+tag+"not").prop('checked', false);
         $("."+tag+"not_applicable").prop('checked', false);
         $("."+tag+"applicable").prop('checked', false);
       }
