@@ -8096,7 +8096,9 @@ export default {
     },
     saveItem(event, value) {
       var app = this;
-      if (!isNaN(value.value)) {
+      var info = value.value.split(',');
+      if(!info.some(isNaN)) {
+      //if (!isNaN(value.value)) {
         var currentCharacter = app.userCharacters.find(ch => ch.id == value.character_id);
         if (app.checkHaveUnit(currentCharacter.name) || currentCharacter.name.startsWith("Number ")) {
           app.isLoading = true;
@@ -11595,8 +11597,13 @@ export default {
           var tempRpArray = [];
           for (var i = 0; i < row.length; i++) {
             if (row[i].header_id != 1 && row[i].value != null && row[i].value != '' && row[i].value != undefined) {
-              sum += parseFloat(row[i].value, 10); //don't forget to add the base
-              tempRpArray.push(row[i].value);
+              /*sum += parseFloat(row[i].value, 10); //don't forget to add the base
+              tempRpArray.push(row[i].value);*/
+              var info = row[i].value.split(',');
+              for (var k = 0; k < info.length; k++) {
+                sum += parseFloat(info[k], 10); //don't forget to add the base
+                tempRpArray.push(info[k]);
+              }
             }
           }
 
@@ -11604,11 +11611,7 @@ export default {
           tempRpArray.sort((a, b) => a - b);
           var minValue = tempRpArray[0];
           var maxValue = tempRpArray[tempRpArray.length - 1];
-
           var range;
-
-
-
           //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
 
           if (tempRpArray.length >= 10) {

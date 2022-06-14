@@ -1962,6 +1962,7 @@ class HomeController extends Controller
         $nonColorValues = $request->all();
         $nonColorDetails = NonColorDetails::where('id', '=', $request->input('id'))->first();
         $id = 0;
+        Value::where('id', '=', $request->input('value_id'))->where('header_id', '!=', 1)->update(['value'=>'']);
         if ($request->input('id') && $nonColorDetails) {
             $nonColorDetails->value_id = $request->input('value_id');
             $nonColorDetails->negation = $request->input('negation');
