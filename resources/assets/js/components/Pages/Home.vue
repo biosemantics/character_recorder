@@ -11601,8 +11601,10 @@ export default {
               tempRpArray.push(row[i].value);*/
               var info = row[i].value.split(',');
               for (var k = 0; k < info.length; k++) {
-                sum += parseFloat(info[k], 10); //don't forget to add the base
-                tempRpArray.push(info[k]);
+                if(info[k] != '' && info[k] != null) {
+                  sum += parseFloat(info[k], 10); //don't forget to add the base
+                  tempRpArray.push(info[k]);
+                }
               }
             }
           }
