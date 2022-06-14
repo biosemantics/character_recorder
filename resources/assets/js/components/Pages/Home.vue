@@ -518,8 +518,9 @@
                             <span class="glyphicon glyphicon-remove">
                             </span>
                           </a>
+                          
                         </div>
-                        
+                       
                         <div v-for="ncv in allNonColorValues" style="text-align: left"
                              :key="ncv.id">
                           <span v-if="ncv.value_id == value.id"
@@ -538,8 +539,14 @@
                               <span class="glyphicon glyphicon-remove">
                               </span>
                             </a>
-                        </span>
-
+  
+                          </span>
+                        </div>
+                        <div v-if="NonColorValuesExists(allNonColorValues,value.id)" style="float:left;" v-on:click="focusedValue(value)">
+                            <a class="btn btn-add display-block" style="padding: 0px">
+                              <span class="glyphicon glyphicon-plus">
+                              </span>
+                            </a>
                         </div>
                         <div>
                           
@@ -10450,6 +10457,20 @@ export default {
 
       }); // end arr.forEach()
 
+      return result;
+    },
+    NonColorValuesExists(allNonColorValues,id){
+      var result = false;
+      if(allNonColorValues.length >0 ){
+        $.each(allNonColorValues, function (i, item) {
+          if(item.value_id == id) {
+            result = true;
+            return false;
+          }
+        });
+      }else {
+        result = false;
+      }
       return result;
     },
     focusedValue(value) {
