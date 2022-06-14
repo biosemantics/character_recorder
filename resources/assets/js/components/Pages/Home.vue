@@ -542,6 +542,12 @@
   
                           </span>
                         </div>
+                        <div v-if="colorValuesExists(allColorValues,value.id)" style="float:left;" v-on:click="focusedValue(value)">
+                            <a class="btn btn-add display-block" style="padding: 0px">
+                              <span class="glyphicon glyphicon-plus">
+                              </span>
+                            </a>
+                        </div>
                         <div v-if="NonColorValuesExists(allNonColorValues,value.id)" style="float:left;" v-on:click="focusedValue(value)">
                             <a class="btn btn-add display-block" style="padding: 0px">
                               <span class="glyphicon glyphicon-plus">
@@ -1660,7 +1666,7 @@
                 <div class="modal-container">
                   <div style="max-height:80vh; overflow-y:scroll;">
                     <div class="modal-header">
-                      <b>Add a Value for <font style="color: #0070C0; font-style: italic">{{
+                      <b>Add a Value for1 <font style="color: #0070C0; font-style: italic">{{
                           currentCharacter.name
                         }}:</font></b> {{ currentColorValue.value.slice(0, -2) }}
                       <br/>
@@ -1728,9 +1734,9 @@
                                     {{ eachDetails.post_constraint }}
                                 </span>
                               </b>
-                              <span>
+                              <!-- <span>
                                   , usages = {{ eachDetails.count }}
-                              </span>
+                              </span> -->
                               <span>
                                   , used by = {{ eachDetails.username }}
                               </span>
@@ -2087,7 +2093,7 @@
                 <div class="modal-container">
                   <div style="max-height:80vh; overflow-y:scroll;">
                     <div class="modal-header">
-                      <b>Add a Value for <font style="color: #0070C0; font-style: italic">{{
+                      <b>Add a Value for2 <font style="color: #0070C0; font-style: italic">{{
                           currentCharacter.name
                         }}:</font></b> {{ currentNonColorValue.value.slice(0, -2) }}
                       <br/>
@@ -2138,9 +2144,9 @@
                                   {{ eachDetails.post_constraint }}
                                 </span>
                               </b>
-                              <span>
+                              <!-- <span>
                                   , usages = {{ eachDetails.count }}
-                              </span>
+                              </span> -->
                               <span>
                                   , used by = {{ eachDetails.username }}
                               </span>
@@ -10464,6 +10470,20 @@ export default {
 
       return result;
     },
+    colorValuesExists(colorValues,id){
+      var result = false;
+      if(colorValues.length >0 ){
+        $.each(colorValues, function (i, item) {
+          if(item.value_id == id) {
+            result = true;
+            return false;
+          }
+        });
+      }else {
+        result = false;
+      }
+      return result;
+    },
     NonColorValuesExists(allNonColorValues,id){
       var result = false;
       if(allNonColorValues.length >0 ){
@@ -11026,6 +11046,9 @@ export default {
         'colored',
         'multi_colored'
       ];
+      if(color[flag] != undefined && color[flag] != null && color[flag] != '') {
+        app.colorSampleText[app.currentColorValue.detailFlag] = "In a "+app.colorTaxon[app.currentColorValue.detailFlag]+", "+ app.currentCharacter.name+" can be described  as "+color[flag];
+      }
 
       // if (app.searchTreeData(app.colTreeData[flag], color[flag])) {
       //   app.currentColorValue.confirmedFlag[flag] = true;
@@ -11098,9 +11121,9 @@ export default {
       app.nonColorMainValue = nonColor[flag];
       app.nonColorSynonyms = [];
       app.colorExistFlag = false;
-          if(nonColor[flag] != undefined && nonColor[flag] != null && nonColor[flag] != '') {
-            app.nonColorSampleText[app.currentNonColorValue.detailFlag] = "In a "+app.nonColorTaxon[app.currentNonColorValue.detailFlag]+", "+ app.currentCharacter.name+" can be described  as "+nonColor[flag];
-          }
+      if(nonColor[flag] != undefined && nonColor[flag] != null && nonColor[flag] != '') {
+        app.nonColorSampleText[app.currentNonColorValue.detailFlag] = "In a "+app.nonColorTaxon[app.currentNonColorValue.detailFlag]+", "+ app.currentCharacter.name+" can be described  as "+nonColor[flag];
+      }
       console.log(nonColor[flag]);
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + nonColor[flag])
         .then(function (resp) {

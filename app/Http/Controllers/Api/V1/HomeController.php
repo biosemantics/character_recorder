@@ -1760,13 +1760,14 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
 
         $selectedCharacter = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first();
-        $users = User::where('taxon', '=', $user->taxon)->get();
-
-        $userIdList = [];
-        foreach ($users as $eachUser) {
-            array_push($userIdList, $eachUser['id']);
+        $users = User::where('taxon', '=', $user->taxon)->pluck('email')->toArray();
+        $username = array();
+        if(count($users) > 0) {
+            foreach ($users as $key => $value) {
+                $username[] = explode('@', $value)[0];
+            }
         }
-        $characterList = Character::where('name', '=', $selectedCharacter->name)->get()->toArray();
+        $characterList = Character::where('name', '=', $selectedCharacter->name)->whereIn('owner_name',$username)->get()->toArray();
 
         $existDetails = [];
 
@@ -1795,7 +1796,7 @@ class HomeController extends Controller
     {
         $colorValues = $request->all();
         $id = 0;
-
+        Value::where('id', '=', $request->input('value_id'))->where('header_id', '!=', 1)->update(['value'=>'']);
         $colorDetails = ColorDetails::where('id', '=', $request->input('id'))->first();
         if ($request->input('id') && $colorDetails) {
             $colorDetails->value_id = $request->input('value_id');
@@ -1930,9 +1931,15 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
 
         $selectedCharacter = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first();
-        $users = User::where('taxon', '=', $user->taxon)->get();
+        $users = User::where('taxon', '=', $user->taxon)->pluck('email')->toArray();
+        $username = array();
+        if(count($users) > 0) {
+            foreach ($users as $key => $value) {
+                $username[] = explode('@', $value)[0];
+            }
+        }
 
-        $characterList = Character::where('name', '=', $selectedCharacter->name)->get()->toArray();
+        $characterList = Character::where('name', '=', $selectedCharacter->name)->whereIn('owner_name',$username)->get()->toArray();
 
         $existDetails = [];
 
