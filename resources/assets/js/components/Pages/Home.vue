@@ -8041,6 +8041,11 @@ export default {
                   app.showTableForTab(app.currentTab);
                 });
               app.refreshUserCharacters(true);
+              app.inflorescenceVal = "";
+              app.unbranched = '';
+              app.branched = '';
+              app.unbranchedUnisexual = '';
+              app.branchedUnisexual = '';
               console.log('userCharacters', app.userCharacters);
             });
         } else {
