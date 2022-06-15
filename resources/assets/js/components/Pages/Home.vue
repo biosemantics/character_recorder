@@ -673,6 +673,7 @@
                               </div>
                               <div class="custom-character-field">
                                 <select v-model="thirdCharacter" style="height: 26px;" class="width-100">
+                                  <option value=""></option>
                                   <optgroup label="Dimension">
                                     <option value="longest">longest</option>
                                     <option value="widest">widest</option>
@@ -897,6 +898,7 @@
                                 <div v-if="middleCharacter=='between'" style="width:100%; text-align: center; font-weight: bold;">and
                                 </div>
                                   <select v-if="middleCharacter=='between'"  v-model="secondThirdCharacter" style="height: 26px;" class="width-100">
+                                    <option value=""></option>
                                     <optgroup label="Dimension">
                                       <option value="longest">longest</option>
                                       <option value="widest">widest</option>
