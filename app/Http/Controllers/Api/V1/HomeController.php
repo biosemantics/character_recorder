@@ -3901,9 +3901,13 @@ class HomeController extends Controller
         $input = $request->all();
         if(!empty($input)) {
            foreach ($input as $key => $value) {
-            if($key != '_token'){
-                Value::where('character_id',$key)->where('header_id','!=',1)->where('value',null)->orWhere('value','')->update(['value'=>$value]);
-            } 
+                if($key != '_token'){
+                    Value::where('character_id',$key)
+                    ->where('header_id','!=',1)
+                    ->where(function($q) { 
+                        $q->whereNull('value')->orWhere('value','=','');
+                    })->update(['value'=>$value]);
+                } 
            }
         }
         return redirect('/');
