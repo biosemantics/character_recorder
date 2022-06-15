@@ -792,6 +792,7 @@
                               </div>
                               <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
                                 <select style="height: 26px;" class="width-100" v-model="round.fourth">
+                                  <option value=""></option>
                                   <optgroup label="Dimension">
                                     <option value="longest">longest</option>
                                     <option value="widest">widest</option>
@@ -1011,6 +1012,7 @@
                                 </div>
                                 <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
                                   <select style="height: 26px;" class="width-100" v-model="round.fourth">
+                                    <option value=""></option>
                                     <optgroup label="Dimension">
                                       <option value="longest">longest</option>
                                       <option value="widest">widest</option>
@@ -3289,6 +3291,145 @@ export default {
       'nonColorTreeData',
     ]),
     ...mapGetters([]),
+
+    totalCells() {
+      var app =  this;
+      app.allEmptyCells = "";
+      app.totalEmptyCells = "";
+      if(app.headers.length > 0) {
+        $.each(app.headers, function (i, item) {
+            if(item.id == 1) {
+              app.headers.splice(i, 1);
+              return false; 
+            }
+        });
+      }
+      if(app.values.length > 0 && app.userCharacters.length > 0) {
+        var sum = 1;
+        var tags = []
+        $.each(app.userCharacters, function (j, value) {
+          app.userCharacters[j].count_cells = 0;
+          app.userCharacters[j].not_cells = 0;
+          app.userCharacters[j].total_cells = 0;
+          $.each(app.values, function (i, item) {
+            if(value.id == item[0].character_id) {
+              var info = item;
+              for (var k = 0; k < info.length; k++) {
+                if(info[k].header_id != 1) {
+                  app.userCharacters[j].total_cells = app.userCharacters[j].total_cells + 1;
+                  if(info[k].value != undefined && info[k].value != null && info[k].value != '') {
+                    app.userCharacters[j].count_cells = app.userCharacters[j].count_cells + 1;
+                  }else {
+                    app.userCharacters[j].not_cells = app.userCharacters[j].not_cells + 1;
+                  }
+                }
+              }
+              
+            }
+
+          }); 
+          if(app.userCharacters[j].not_cells != undefined && app.userCharacters[j].not_cells != '') {
+            tags.push(app.userCharacters[j].standard_tag);
+            app.allEmptyCells = Number( app.headers.length ) + Number(app.allEmptyCells);
+            app.totalEmptyCells = Number( app.userCharacters[j].not_cells) + Number( app.totalEmptyCells);
+          } 
+        }); 
+      }
+
+      if(app.userTags.length > 0 && app.userCharacters.length > 0){
+        var color = 1;
+        $.each(app.userTags, function (i, tags) {
+          if(app.userCharacters.find(ch => ch.standard_tag == tags.tag_name && ch.not_cells != undefined &&  ch.not_cells > 0)) {
+            if(color != 1) {
+              app.userTags[i].color = 'bg-skyblue';
+              color = 1;
+            }else {
+              color = 0;
+            }
+          }
+        });      
+      }
+
+      if(app.totalEmptyCells == '' || app.totalEmptyCells == null) {
+        return ''; 
+      }else {
+        return app.totalEmptyCells+' out of '+app.allEmptyCells+' cells are empty';
+      }
+    },
+    resultFirstCharacterQuery() {
+      if(this.firstCharacter){
+      return this.firstNounData.filter((item)=>{
+        return this.firstCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        return this.firstNounData;
+      }
+    },
+    resultLastCharacterQuery(){
+      if(this.lastCharacter){
+      return this.nounCharacters.filter((item)=>{
+        return this.lastCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        return this.nounCharacters;
+      }
+    },
+    resultSecondLastCharacterQuery(){
+      if(this.secondLastCharacter){
+      return this.nounCharacters.filter((item)=>{
+        return this.secondLastCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        return this.nounCharacters;
+      }
+    },
+    _valid() {
+      var result = true;
+      var app = this;
+      if (app.roundsOne != undefined && app.roundsOne.length > 0) {
+          $.each(app.roundsOne, function (i, item) {
+              if (item.round_val == 'S') {
+                if(/*item.second == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)/*)*/ {
+                  result = false;
+                  return false;
+                }
+              }else if(item.round_val == 'P') {
+                if(item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition) {
+                  result = false;
+                  return false;
+                }
+              }else if(item.round_val == 'D') {
+                if(/*item.first == '' || item.third == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)/*)*/ {
+                  result = false;
+                  return false;
+                }
+                
+              }
+          });   
+      } 
+      if (app.middleCharacter == 'between' && app.roundsTwo != undefined && app.roundsTwo.length > 0) {
+          $.each(app.roundsTwo, function (i, item) {
+              if (item.round_val == 'S') {
+                if(/*item.second == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)/*)*/ {
+                  result = false;
+                  return false;
+                }
+              }else if(item.round_val == 'P') {
+                if(item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition) {
+                  result = false;
+                  return false;
+                }
+              }else if(item.round_val == 'D') {
+                if(/*item.first == '' || item.third == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)/*)*/ {
+                  result = false;
+                  return false;
+                }
+                
+              }
+          });   
+      } 
+      return result;
+    }
 
   },
   data: function () {
@@ -12197,146 +12338,6 @@ export default {
       }
     });
     app.isLoading = false;
-  },
-  computed: {
-    totalCells() {
-      var app =  this;
-      app.allEmptyCells = "";
-      app.totalEmptyCells = "";
-      if(app.headers.length > 0) {
-        $.each(app.headers, function (i, item) {
-            if(item.id == 1) {
-              app.headers.splice(i, 1);
-              return false; 
-            }
-        });
-      }
-      if(app.values.length > 0 && app.userCharacters.length > 0) {
-        var sum = 1;
-        var tags = []
-        $.each(app.userCharacters, function (j, value) {
-          app.userCharacters[j].count_cells = 0;
-          app.userCharacters[j].not_cells = 0;
-          app.userCharacters[j].total_cells = 0;
-          $.each(app.values, function (i, item) {
-            if(value.id == item[0].character_id) {
-              var info = item;
-              for (var k = 0; k < info.length; k++) {
-                if(info[k].header_id != 1) {
-                  app.userCharacters[j].total_cells = app.userCharacters[j].total_cells + 1;
-                  if(info[k].value != undefined && info[k].value != null && info[k].value != '') {
-                    app.userCharacters[j].count_cells = app.userCharacters[j].count_cells + 1;
-                  }else {
-                    app.userCharacters[j].not_cells = app.userCharacters[j].not_cells + 1;
-                  }
-                }
-              }
-              
-            }
-
-          }); 
-          if(app.userCharacters[j].not_cells != undefined && app.userCharacters[j].not_cells != '') {
-            tags.push(app.userCharacters[j].standard_tag);
-            app.allEmptyCells = Number( app.headers.length ) + Number(app.allEmptyCells);
-            app.totalEmptyCells = Number( app.userCharacters[j].not_cells) + Number( app.totalEmptyCells);
-          } 
-        }); 
-      }
-
-      if(app.userTags.length > 0 && app.userCharacters.length > 0){
-        var color = 1;
-        $.each(app.userTags, function (i, tags) {
-          if(app.userCharacters.find(ch => ch.standard_tag == tags.tag_name && ch.not_cells != undefined &&  ch.not_cells > 0)) {
-            if(color != 1) {
-              app.userTags[i].color = 'bg-skyblue';
-              color = 1;
-            }else {
-              color = 0;
-            }
-          }
-        });      
-      }
-
-      if(app.totalEmptyCells == '' || app.totalEmptyCells == null) {
-        return ''; 
-      }else {
-        return app.totalEmptyCells+' out of '+app.allEmptyCells+' cells are empty';
-      }
-    },
-    resultFirstCharacterQuery() {
-      if(this.firstCharacter){
-      return this.firstNounData.filter((item)=>{
-        return this.firstCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
-      })
-      }else{
-        return this.firstNounData;
-      }
-    },
-    resultLastCharacterQuery(){
-      if(this.lastCharacter){
-      return this.nounCharacters.filter((item)=>{
-        return this.lastCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
-      })
-      }else{
-        return this.nounCharacters;
-      }
-    },
-    resultSecondLastCharacterQuery(){
-      if(this.secondLastCharacter){
-      return this.nounCharacters.filter((item)=>{
-        return this.secondLastCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
-      })
-      }else{
-        return this.nounCharacters;
-      }
-    },
-    _valid() {
-      var result = true;
-      var app = this;
-      if (app.roundsOne != undefined && app.roundsOne.length > 0) {
-          $.each(app.roundsOne, function (i, item) {
-              if (item.round_val == 'S') {
-                if(item.second == '' || item.fourth == '' || (item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)) {
-                  result = false;
-                  return false;
-                }
-              }else if(item.round_val == 'P') {
-                if(item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition) {
-                  result = false;
-                  return false;
-                }
-              }else if(item.round_val == 'D') {
-                if(item.first == '' || item.third == '' || item.fourth == '' || (item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)) {
-                  result = false;
-                  return false;
-                }
-                
-              }
-          });   
-      } 
-      if (app.middleCharacter == 'between' && app.roundsTwo != undefined && app.roundsTwo.length > 0) {
-          $.each(app.roundsTwo, function (i, item) {
-              if (item.round_val == 'S') {
-                if(item.second == '' || item.fourth == '' || (item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)) {
-                  result = false;
-                  return false;
-                }
-              }else if(item.round_val == 'P') {
-                if(item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition) {
-                  result = false;
-                  return false;
-                }
-              }else if(item.round_val == 'D') {
-                if(item.first == '' || item.third == '' || item.fourth == '' || (item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)) {
-                  result = false;
-                  return false;
-                }
-                
-              }
-          });   
-      } 
-      return result;
-    }
   },
   mounted() {
     console.log('mounted');
