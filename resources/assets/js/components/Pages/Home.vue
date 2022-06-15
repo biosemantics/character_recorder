@@ -6811,6 +6811,37 @@ export default {
       app.standardShowFlag = !app.standardShowFlag;
       var postCharacters = [];
       app.userCharacters = [];
+      if(app.inflorescenceVal == 'unbranched') {
+        if(app.unbranched == 'unisexual') {
+          if(app.unbranchedUnisexual == 'pistillate') {
+          }else if( app.unbranchedUnisexual == 'staminate') {
+          }else{
+            alert('Please select all options from following characteristics.');
+            return false;
+          }
+        }else if(app.unbranched == 'bisexual') {
+        }else {
+          alert('Please select all options from following characteristics.');
+          return false;
+        }
+      } else if(app.inflorescenceVal == 'branched') {
+        if(app.branched == 'unisexual') {
+          if(app.branchedUnisexual == 'pistillate') {
+          }else if( app.branchedUnisexual == 'staminate') {
+          }else{
+            alert('Please select all options from following characteristics.');
+            return false;
+          }
+        }else if(app.branched == 'bisexual'){
+        }else if(app.branched == 'mixed'){
+        }else {
+          alert('Please select all options from following characteristics.');
+          return false;
+        }
+      }else {
+        alert('Please select all options from following characteristics.');
+        return false;
+      }
       for (var i = 0; i < app.standardCollections.length; i++) {
         var character = app.standardCollections[i];
         var standard_tag = character.standard_tag.toLowerCase().trim();
