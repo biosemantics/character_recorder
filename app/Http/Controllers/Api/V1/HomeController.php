@@ -405,11 +405,12 @@ class HomeController extends Controller
                 $explodeImage = explode("image/", $base64Image[0]);
                 $imageType = $explodeImage[1];
                 $image_base64 = base64_decode($base64Image[1]);
-                $imageName = date('Y-m-d').'_'.time().'.'.$imageType;
+                $imageName = date('Y-m-d').'_'.$key.'_'.time().'.'.$imageType;
                 Storage::disk('public')->put($imageName, $image_base64);
                 $allImageName[] = $imageName;
             }
         }
+
         $character = new Character([
             'name' => $request->input('name'),
             'IRI' => $request->input('IRI'),
@@ -799,7 +800,7 @@ class HomeController extends Controller
                 $explodeImage = explode("image/", $base64Image[0]);
                 $imageType = $explodeImage[1];
                 $image_base64 = base64_decode($base64Image[1]);
-                $imageName = date('Y-m-d').'_'.time().'.'.$imageType;
+                $imageName = date('Y-m-d').'_'.$key.'_'.time().'.'.$imageType;
                 Storage::disk('public')->put($imageName, $image_base64);
                 $allImageName[] = $imageName;
             }
@@ -1586,7 +1587,7 @@ class HomeController extends Controller
     
     // check image and size
     public function checkImage(Request $request) {
-        $validatedData = validator($request->all(),['image' => 'required|image|max:2048']);
+        $validatedData = validator($request->all(),['image' => 'required|mimes:jpeg,jpg,png|max:2048']);
         if($validatedData->fails()){
             return $validatedData->errors()->first();
         }else {
@@ -1623,7 +1624,7 @@ class HomeController extends Controller
                 $explodeImage = explode("image/", $base64Image[0]);
                 $imageType = $explodeImage[1];
                 $image_base64 = base64_decode($base64Image[1]);
-                $imageName = date('Y-m-d').'_'.time().'.'.$imageType;
+                $imageName = date('Y-m-d').'_'.$key.'_'.time().'.'.$imageType;
                 Storage::disk('public')->put($imageName, $image_base64);
                 $allImageName[] = $imageName;
             }

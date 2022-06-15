@@ -1415,7 +1415,7 @@
                             </div>
                             <div class="SelectUpload">
                               <form id= "imageForm" method="post">
-                                <input type="file" max-size="2000" name="image" ref="fileInput" class="custom-file-input" @input="pickFile">
+                                <input type="file" id="file-upload" max-size="2000" name="image" ref="fileInput" class="custom-file-input" @input="pickFile">
                               </form>
                                 
                             </div> 
@@ -3840,12 +3840,14 @@ export default {
     },
     cancelTemporaryStore() {
       var app = this;
+      const file = document.getElementById('file-upload');
+      // clear input field
+      file.value = '';
       app.selectedImage = 0;
     },
     temporayStore(){
       var app = this;
-      var filename = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '')
-      var data = {'name':filename, 'content':app.previewImage};
+      //var filename = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '')
       if($('.slider_image').hasClass('active')){
         $('.slider_image').removeClass('active');
       }
@@ -3862,7 +3864,6 @@ export default {
       var formData = new FormData($('#imageForm')[0]);
       axios.post('api/v1/character/check-image', formData)
           .then(function (resp) {
-        console.log(resp.data);
         let input = app.$refs.fileInput
         let file = input.files
         if(resp.data == 1) {
@@ -3885,11 +3886,17 @@ export default {
             } 
           }
         }else {
+          const file = document.getElementById('file-upload');
+          // clear input field
+          file.value = '';
           app.selectedImage = 0;
           alert(resp.data);
         }
         
       }).catch(function (error) {
+        const file = document.getElementById('file-upload');
+        // clear input field
+        file.value = '';
         app.selectedImage = 0;
         alert('Something went wrong.');
       }); 
