@@ -11836,7 +11836,7 @@ export default {
               tempRpArray.push(row[i].value);*/
               var info = row[i].value.split(',');
               for (var k = 0; k < info.length; k++) {
-                if(info[k] != '' && info[k] != null) {
+                if(info[k] != '' && info[k] != null && !isNaN(info[k])) {
                   sum += parseFloat(info[k], 10); //don't forget to add the base
                   tempRpArray.push(info[k]);
                 }
@@ -11844,11 +11844,11 @@ export default {
             }
           }
 
-          var mean = parseFloat(sum / tempRpArray.length).toFixed(2);
+          var mean = tempRpArray.length > 0 ? parseFloat(sum / tempRpArray.length).toFixed(2) : '';
           tempRpArray.sort((a, b) => a - b);
-          var minValue = tempRpArray[0];
-          var maxValue = tempRpArray[tempRpArray.length - 1];
-          var range;
+          var minValue = tempRpArray[0] ? tempRpArray[0] : '';
+          var maxValue = tempRpArray[tempRpArray.length - 1] ? tempRpArray[tempRpArray.length - 1] : '';
+          var range = "";
           //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
 
           if (tempRpArray.length >= 10) {
@@ -11858,7 +11858,9 @@ export default {
           // } else if (tempRpArray.length == 1 || minValue == maxValue) {
           //   range = minValue;
            } else {
+            if(tempRpArray.length > 0) {
              range = minValue + '-' + maxValue;
+            }
            }
 
           let median;
