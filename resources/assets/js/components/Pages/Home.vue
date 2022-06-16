@@ -615,8 +615,8 @@
                         <br>
                         <br>
                         <div class="row custom-flex">
-                          <div class="col-md-9">
-                            <div class="row custom-flex">
+                          <div class="col-md-10">
+                            <div class="row custom-flex justify-content-between">
                               <div class="custom-character-field">
                                 <div class="selectDataList width-100"> 
                                   <input
@@ -882,8 +882,7 @@
                               <i class="fa fa-times-circle custom-close" aria-hidden="true" @click="removeRoundOne(index)"></i>        
                             </div>
                           </div>
-                          <div class="col-md-3">
-                            
+                          <div class="col-md-2">                            
                             <div class="custom-character-field round-button-one" v-bind:style="[middleCharacter == 'between' ? {'margin-top': '-80px'} : {'margin-top':-'29px'}]">
                               <button  type="button" @click="roundButtonOne('S')" title="Strutural Constraint" class="button button5 roundedBtn blueBtn">+S</button>
                               <button  type="button" @click="roundButtonOne('P')" title="Positional Constraint" class="button button5 roundedBtn pinkBtn">+P</button>
@@ -892,7 +891,7 @@
                           </div>
                         </div> 
                         <div class="row">
-                          <div class="col-md-9">
+                          <div class="col-md-10">
                             <div class="row">
                               <div class="col-md-6 subClidField">
                               <div class="custom-character-field">
@@ -982,9 +981,9 @@
                               </div>    
                             </div>
                           </div>
-                          </div>
+                        </div>
                         <div class="row custom-flex">
-                          <div class="col-md-9">
+                          <div class="col-md-10">
                               <div class="row custom-flex" v-if="middleCharacter=='between'">
                                 <div class="col-md-8"></div>
                                
@@ -1102,15 +1101,14 @@
                                 <i class="fa fa-times-circle custom-close" aria-hidden="true" @click="removeRoundTwo(index)"></i>      
                               </div>
                           </div>
-                          <div class="col-md-3">
+                          <div class="col-md-2">
                             <div class="custom-character-field round-button-two" v-if="middleCharacter == 'between'" v-bind:style="[middleCharacter == 'between' ? {'margin-top': '-31px'} : {'margin-top': '0px'}]">
                               <button  type="button" @click="roundButtonTwo('S')" title="Strutural Constraint" class="button button5 roundedBtn blueBtn">+S</button>
                               <button  type="button" @click="roundButtonTwo('P')" title="Positional Constraint" class="button button5 roundedBtn pinkBtn">+P</button>
                               <button  type="button" @click="roundButtonTwo('D')" title="Distance Constraint" class="button button5 roundedBtn orangeBtn">+D</button>
                             </div>
                           </div>
-                        </div>
-                        
+                        </div>                
                         
                         
                         

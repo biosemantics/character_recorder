@@ -9,6 +9,12 @@
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 @import url("https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css");
 
+.modal-container{
+  max-height: 80vh;
+  overflow-y: auto;
+  max-width: 1200px;
+  width: 98% !important;
+}
 div.dropdown div.item:first-child {
     font-weight: 600!important;
 }
@@ -20,16 +26,19 @@ div.dropdown div.item:first-child {
 .mr-1{
   margin-right: 1rem;
 }
-@media screen and (min-width: 767px ){
-    .character-modal .modal-container {
-        max-width: 80% !important;
-        margin:0 auto;
-        display: inline-block;
-        width: auto;
-        text-align:left;
-    }
-    .character-modal .modal-wrapper{text-align:center;}
+.justify-content-between {
+  justify-content: space-between;
 }
+.character-modal{
+  .modal-container{
+    .custom-character-field{
+      .width-100 {
+        width: auto;
+      }
+    }
+  }
+}
+
 .tooltip {
     &.standard-tooltip {
       .tooltip-inner {
@@ -128,7 +137,7 @@ div.dropdown div.item:first-child {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
     justify-content: space-between;
@@ -184,6 +193,9 @@ div.dropdown div.item:first-child {
       left: 50%;
       transform: translate(-50%, -50%);
       position: absolute;
+      max-height: 80vh;
+      overflow-y: auto;
+      height: auto;
     }
     .modal-header{
       color: #000000;
@@ -253,29 +265,6 @@ div.dropdown div.item:first-child {
       padding: 22px 0 0 0;
     }
 
-  }
-}
-
-
-
-@media (max-width: 1024px) {
-  .character-modal .modal-container {
-    width: 95% !important;
-  }
-}
-
-@media (max-width: 991px) {
-  .custom-flex {
-    flex-direction: column;
-  }
-
-  .character-modal .modal-container {
-    width: 100% !important;
-  }
-
-  .custom-character-field {
-    margin-bottom: 15px;
-    margin-right: 0px !important; 
   }
 }
 
@@ -366,6 +355,47 @@ div.dropdown div.item:first-child {
   border-width: thin;
   padding: 27px;
 }
+
+@media (max-width: 1100px) {
+  .customTabbing{
+    li {
+      font-size: 13px;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .character-modal .modal-container {
+    width: 95% !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .custom-flex {
+    flex-direction: column;
+  }
+
+  .character-modal .modal-container {
+    width: 100% !important;
+  }
+
+  .custom-character-field {
+    margin-bottom: 15px;
+    margin-right: 0px !important; 
+  }
+}
+
+@media screen and (min-width: 767px ){
+  .character-modal .modal-container {
+      max-width: 950px !important;
+      margin:0 auto;
+      display: inline-block;
+      width: 90%;
+      text-align:left;
+  }
+  .character-modal .modal-wrapper{text-align:center;}
+}
+
 
 
 
