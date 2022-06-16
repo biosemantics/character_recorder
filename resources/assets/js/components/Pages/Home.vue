@@ -4332,7 +4332,17 @@ export default {
     editCharacter(character, editFlag = false, standardFlag = false, enhanceFlag = false) {
       var app = this;
       app.editFlag = editFlag;
-            axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
+        
+      if (editFlag) {
+        app.viewFlag = !editFlag;
+        sessionStorage.setItem('viewFlag', !editFlag);
+        sessionStorage.setItem('edit_created_other', !editFlag);
+        sessionStorage.setItem('editFlag', editFlag);
+        app.character = app.userCharacters.find(ch => ch.id == character.character_id);
+      } else {
+        app.character = character;
+      }
+      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
       .then(function (resp) {
         if (resp.data.entries.length > 0) {
           var methodEntry = resp.data.entries.filter(function(each) {
@@ -4354,7 +4364,7 @@ export default {
           } 
 
         } 
-        if(app.character.images != undefined && app.character.images != null) {
+        /*if(app.character.images != undefined && app.character.images != null) {
           var persons_data =  JSON.parse(app.character.images);
           var origin   = window.location.href; 
           var url = origin+'/storage/';
@@ -4364,7 +4374,7 @@ export default {
             }
           }
           
-        }else {
+        }else {*/
           var send_data = [];
           send_data.push(app.character.name);
           send_data.push(app.character.owner_name);
@@ -4380,17 +4390,8 @@ export default {
                 }
               }
             });
-        }
+       /* }*/
       });  
-      if (editFlag) {
-        app.viewFlag = !editFlag;
-        sessionStorage.setItem('viewFlag', !editFlag);
-        sessionStorage.setItem('edit_created_other', !editFlag);
-        sessionStorage.setItem('editFlag', editFlag);
-        app.character = app.userCharacters.find(ch => ch.id == character.character_id);
-      } else {
-        app.character = character;
-      }
 
       if (standardFlag || (editFlag && !app.character.owner_name.includes(app.user.name))) {
         // app.editFlag = false;
@@ -7086,7 +7087,7 @@ export default {
     confirmRemoveCharacter() {
       var app = this;
       console.log('confirmRemoveCharacter');
-
+      app.isLoading = true;
       axios.post("api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
         .then(function (resp) {
           app.toRemoveCharacterId = null;
@@ -7104,7 +7105,7 @@ export default {
             app.userTags = resp.data.userTags;
             if (app.userTags[0]) app.showTableForTab(app.userTags[0].tag_name);
           } else app.showTableForTab(app.currentTab);
-
+          app.isLoading = false;
         });
 
     },
