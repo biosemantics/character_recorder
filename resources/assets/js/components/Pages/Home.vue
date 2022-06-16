@@ -1670,7 +1670,7 @@
                 <div class="modal-container">
                   <div style="max-height:80vh; overflow-y:scroll;">
                     <div class="modal-header">
-                      <b>Add a Value for1 <font style="color: #0070C0; font-style: italic">{{
+                      <b>Add a Value for <font style="color: #0070C0; font-style: italic">{{
                           currentCharacter.name
                         }}:</font></b> {{ currentColorValue.value.slice(0, -2) }}
                       <br/>
@@ -2097,7 +2097,7 @@
                 <div class="modal-container">
                   <div style="max-height:80vh; overflow-y:scroll;">
                     <div class="modal-header">
-                      <b>Add a Value for2 <font style="color: #0070C0; font-style: italic">{{
+                      <b>Add a Value for <font style="color: #0070C0; font-style: italic">{{
                           currentCharacter.name
                         }}:</font></b> {{ currentNonColorValue.value.slice(0, -2) }}
                       <br/>
@@ -9611,13 +9611,18 @@ export default {
     saveHeader(header) {
       var app = this;
       console.log('header', header.header);
-      axios.post('api/v1/update-header', header)
-        .then(function (resp) {
-          app.headers = resp.data.headers;
-          app.values = resp.data.values;
-          app.getDeprecatedValue();
-          showTableForTab(app.currentTab);
-        });
+      if(header.header != '' && header.header != null) {
+        axios.post('api/v1/update-header', header)
+          .then(function (resp) {
+            app.headers = resp.data.headers;
+            app.values = resp.data.values;
+            app.getDeprecatedValue();
+            app.showTableForTab(app.currentTab);
+          });
+      }else {
+        alert('The following section can not be empty.');
+      }
+     
     },
     async saveColorValue(newFlag = false) {
       var app = this;
