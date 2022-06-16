@@ -319,6 +319,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <a class="btn btn-primary" v-on:click="confirmTerm(newTermDefinition)">Add</a>
+                                        <a v-on:click="cancelConfirmTerm()" class="btn btn-danger">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -515,6 +516,10 @@
                 app.newTerm = definition;
                 app.currentSetting = setting;
                 app.modalFlag = true;
+            },
+            cancelConfirmTerm() {
+              var app = this;
+              app.modalFlag = false;
             },
             confirmTerm: function (definition) {
                 var app = this;
