@@ -3389,7 +3389,7 @@ export default {
       if (app.roundsOne != undefined && app.roundsOne.length > 0) {
           $.each(app.roundsOne, function (i, item) {
               if (item.round_val == 'S') {
-                if(/*item.second == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)/*)*/ {
+                if(item.second == '' || /*item.fourth == '' ||*/ (item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)) {
                   result = false;
                   return false;
                 }
@@ -3399,7 +3399,7 @@ export default {
                   return false;
                 }
               }else if(item.round_val == 'D') {
-                if(/*item.first == '' || item.third == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)/*)*/ {
+                if(item.first == '' || item.third == '' || /*item.fourth == '' ||*/ (item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)) {
                   result = false;
                   return false;
                 }
@@ -3410,7 +3410,7 @@ export default {
       if (app.middleCharacter == 'between' && app.roundsTwo != undefined && app.roundsTwo.length > 0) {
           $.each(app.roundsTwo, function (i, item) {
               if (item.round_val == 'S') {
-                if(/*item.second == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)/*)*/ {
+                if(item.second == '' || /*item.fourth == '' ||*/ (item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)) {
                   result = false;
                   return false;
                 }
@@ -3420,7 +3420,7 @@ export default {
                   return false;
                 }
               }else if(item.round_val == 'D') {
-                if(/*item.first == '' || item.third == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)/*)*/ {
+                if(item.first == '' || item.third == '' || /*item.fourth == '' ||*/ (item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)) {
                   result = false;
                   return false;
                 }
