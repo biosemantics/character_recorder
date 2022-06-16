@@ -3387,7 +3387,7 @@ export default {
       if (app.roundsOne != undefined && app.roundsOne.length > 0) {
           $.each(app.roundsOne, function (i, item) {
               if (item.round_val == 'S') {
-                if(/*item.second == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)/*)*/ {
+                if(item.second == '' || /*item.fourth == '' ||*/ (item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)) {
                   result = false;
                   return false;
                 }
@@ -3397,7 +3397,7 @@ export default {
                   return false;
                 }
               }else if(item.round_val == 'D') {
-                if(/*item.first == '' || item.third == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)/*)*/ {
+                if(item.first == '' || item.third == '' || /*item.fourth == '' ||*/ (item.fifth == '' || app.roundsOne[i].undefined && !app.roundsOne[i].definition)) {
                   result = false;
                   return false;
                 }
@@ -3408,7 +3408,7 @@ export default {
       if (app.middleCharacter == 'between' && app.roundsTwo != undefined && app.roundsTwo.length > 0) {
           $.each(app.roundsTwo, function (i, item) {
               if (item.round_val == 'S') {
-                if(/*item.second == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)/*)*/ {
+                if(item.second == '' || /*item.fourth == '' ||*/ (item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)) {
                   result = false;
                   return false;
                 }
@@ -3418,7 +3418,7 @@ export default {
                   return false;
                 }
               }else if(item.round_val == 'D') {
-                if(/*item.first == '' || item.third == '' || item.fourth == '' || (*/item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)/*)*/ {
+                if(item.first == '' || item.third == '' || /*item.fourth == '' ||*/ (item.fifth == '' || app.roundsTwo[i].undefined && !app.roundsTwo[i].definition)) {
                   result = false;
                   return false;
                 }
@@ -7028,11 +7028,11 @@ export default {
           if(standard_tag == 'inflorescence unit') {
             if(app.branched == 'unisexual') {
               if(app.branchedUnisexual == 'pistillate') {
-                if(splited[0] == 'number of inflorescence' || splited[0] == 'number of perigynia' || splited[0] == 'number of pistillate' || splited[0] == 'shape of inflorescence' || splited[0] == 'shape of pistillate' || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proximalmost' || splited[0] == 'sexuality of distalmost' || splited[0] == 'width of proximalmost' || splited[0] == 'length of proximalmost' || splited[0] == 'width of distalmost' || splited[0] == 'length of distalmost' || splited[0] == 'branching of inflorescence' ) {
+                if(splited[0] == 'number of inflorescence' || splited[0] == 'number of perigynia' || splited[0] == 'number of pistillate' || splited[0] == 'shape of inflorescence' || lowerCase == 'shape of pistillate inflorescence unit' || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proximalmost' || splited[0] == 'sexuality of distalmost' || splited[0] == 'width of proximalmost' || splited[0] == 'length of proximalmost' || splited[0] == 'width of distalmost' || splited[0] == 'length of distalmost' || splited[0] == 'branching of inflorescence' ) {
                     postCharacters.push(character);
                 }
               }else if(app.branchedUnisexual == 'staminate') {
-                if(splited[0] == 'number of inflorescence' || splited[0] == 'number of staminate' || splited[0] == 'shape of inflorescence' || splited[0] == 'shape of staminate' || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' ||  splited[0] == 'sexuality of proximalmost' || splited[0] == 'sexuality of distalmost' || splited[0] == 'width of proximalmost' || splited[0] == 'length of proximalmost' || splited[0] == 'width of distalmost' || splited[0] == 'length of distalmost' || splited[0] == 'branching of inflorescence') {
+                if(splited[0] == 'number of inflorescence' || splited[0] == 'number of staminate' || splited[0] == 'shape of inflorescence' || lowerCase == 'shape of staminate inflorescence unit' || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' ||  splited[0] == 'sexuality of proximalmost' || splited[0] == 'sexuality of distalmost' || splited[0] == 'width of proximalmost' || splited[0] == 'length of proximalmost' || splited[0] == 'width of distalmost' || splited[0] == 'length of distalmost' || splited[0] == 'branching of inflorescence') {
                     postCharacters.push(character);
                 }
               }else {
