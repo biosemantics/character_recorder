@@ -1761,7 +1761,10 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
 
         $selectedCharacter = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first();
-        $users = User::where('taxon', '=', $user->taxon)->pluck('email')->toArray();
+        $users = array();
+        if(isset($user->taxon) && !empty($user->taxon)) {
+          $users = User::where('taxon', '=', $user->taxon)->pluck('email')->toArray();
+        }
         $username = array();
         if(count($users) > 0) {
             foreach ($users as $key => $value) {
@@ -1928,11 +1931,12 @@ class HomeController extends Controller
     {
         $nonColorDetails = NonColorDetails::where('value_id', '=', $valueId)->get();
         $returnValues = $this->getValuesByCharacter();
-
         $user = User::where('id', '=', Auth::id())->first();
-
         $selectedCharacter = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first();
-        $users = User::where('taxon', '=', $user->taxon)->pluck('email')->toArray();
+        $users = array();
+        if(isset($user->taxon) && !empty($user->taxon)) {
+          $users = User::where('taxon', '=', $user->taxon)->pluck('email')->toArray();
+        }
         $username = array();
         if(count($users) > 0) {
             foreach ($users as $key => $value) {

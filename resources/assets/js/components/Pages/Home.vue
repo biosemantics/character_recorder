@@ -3995,11 +3995,67 @@ export default {
       var app = this;
       app.searchText = searchText;
     },
+    async getCharacterImage(name) {
+      var app = this;
+      if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+        for (let t = 0; t < app.treeResult.children.length; t++) {
+          if(app.treeResult.children[t].text == 'quality') {
+            if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
+              var parentChild = app.treeResult.children[t].children;
+              for (let p = 0; p < parentChild.length; p++) {
+                if(parentChild[p].text == 'perceived quality' && parentChild[p].children != undefined && parentChild[p].children.length > 0) {
+                  let parent = parentChild[p].children;
+                  for(let sp = 0; sp < parent.length; sp++){
+                    if(parent[sp].children != undefined && parent[sp].children.length > 0){
+                      let child = parent[sp].children;
+                      if(child.length > 0) {
+                        for(let cc = 0; cc < child.length; cc++) {
+                          if(child[cc].text != undefined && child[cc].text == name.toLowerCase()) {
+                            if(child[cc].data != undefined && child[cc].data.details != undefined && child[cc].data.details.length > 0){
+                              let finalChilds = child[cc].data.details;
+                              $.each(finalChilds, function (indexs, items) {
+                                if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
+                                  var newUrl = items.elucidation.slice(items.elucidation.indexOf('file/d/') + 7, items.elucidation.indexOf('/view?usp='));
+                                  app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
+                                }  
+                              });
+                            }
+                          }
+                          if(child[cc].children != undefined && child[cc].children.length > 0)
+                          {
+                            let subChild = child[cc].children
+                            for(let sub = 0; sub < subChild.length; sub++) {
+                              if(subChild[sub].text != undefined && subChild[sub].text == name.toLowerCase()) {
+                                if(subChild[sub].data != undefined && subChild[sub].data.details != undefined && subChild[sub].data.details.length > 0) {
+                                  let finalChild = subChild[sub].data.details;
+                                  $.each(finalChild, function (index, item) {
+                                    if(item.elucidation != undefined && item.elucidation != '' && item.elucidation != null) {
+                                      var newUrl = item.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view?usp='));
+                                      app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
+                                    }
+                                  });
+                                }
+                                break;
+                              }
+                            }
+                          }
+
+                        }
+                      } 
+                    }
+                  }
+                }
+              }
+            }
+          }   
+        }   
+      }
+    },
     async getTooltipImage(name, index) {
       var methodEntry = null;
       var src = '';
       var app = this;
-      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
+      /*axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
         .then(function (resp) {
           if (resp.data.entries.length > 0) {
             methodEntry = resp.data.entries.filter(function (each) {
@@ -4028,48 +4084,181 @@ export default {
         })
         .catch(function (resp) {
           console.log('exp search resp error', resp);
-        });
+        });*/
+      if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+        for (let t = 0; t < app.treeResult.children.length; t++) {
+          if(app.treeResult.children[t].text == 'quality') {
+            if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
+              var parentChild = app.treeResult.children[t].children;
+              for (let p = 0; p < parentChild.length; p++) {
+                if(parentChild[p].text == 'perceived quality' && parentChild[p].children != undefined && parentChild[p].children.length > 0) {
+                  let parent = parentChild[p].children;
+                  for(let sp = 0; sp < parent.length; sp++){
+                    if(parent[sp].children != undefined && parent[sp].children.length > 0){
+                      let child = parent[sp].children;
+                      if(child.length > 0) {
+                        for(let cc = 0; cc < child.length; cc++) {
+                          if(child[cc].text != undefined && child[cc].text == name.toLowerCase()) {
+                            if(child[cc].data != undefined && child[cc].data.details != undefined && child[cc].data.details.length > 0){
+                              let finalChilds = child[cc].data.details;
+                              $.each(finalChilds, function (indexs, items) {
+                                  if (src == '') {
+                                    src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                  }
+                                  if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
+                                    var id = items.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view'));
+
+                                    src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                  }
+                                  
+                              });
+                            }
+                          }
+                          if(child[cc].children != undefined && child[cc].children.length > 0)
+                          {
+                            let subChild = child[cc].children
+                            for(let sub = 0; sub < subChild.length; sub++) {
+                              if(subChild[sub].text != undefined && subChild[sub].text == name.toLowerCase()) {
+                                if(subChild[sub].data != undefined && subChild[sub].data.details != undefined && subChild[sub].data.details.length > 0) {
+
+                                  let finalChild = subChild[sub].data.details;
+                                  $.each(finalChild, function (index, item) {
+                                    if (src == '') {
+                                      src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                    }
+                                    if(item.elucidation != undefined && item.elucidation != '' && item.elucidation != null) {
+                                      var id = item.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view'));
+
+                                      src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                    }
+                                  });
+                                }
+                                break;
+                              }
+                            }
+                          }
+
+                        }
+                      } 
+                    }
+                  }
+                }
+              }
+            }
+          }   
+        }   
+      }
+      if (src != '') {
+        src += "</div>";
+        app.standardCharacters[index].tooltip = src + app.standardCharacters[index].tooltip;
+      }
     },
     async getTooltipImageString(name) {
       var methodEntry = null;
       var src = '';
       var app = this;
-      await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
-        .then(function (resp) {
-          if (resp.data.entries.length > 0) {
-            methodEntry = resp.data.entries.filter(function (each) {
-              return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
-            })[0];
-            if (methodEntry) {
-              for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
-                  if (src == '') {
-                    src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
-                  }
-                  if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
-                    var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view'));
-                    src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
-                  } else {
-                    src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+     /* await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
+      .then(function (resp) {
+        if (resp.data.entries.length > 0) {
+          methodEntry = resp.data.entries.filter(function (each) {
+            return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#elucidation") == true;
+          })[0];
+          if (methodEntry) {
+            for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+              if (methodEntry.resultAnnotations[i].property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation') {
+                if (src == '') {
+                  src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                }
+                if (methodEntry.resultAnnotations[i].value.indexOf('id=') < 0) {
+                  var id = methodEntry.resultAnnotations[i].value.slice(methodEntry.resultAnnotations[i].value.indexOf('file/d/') + 7, methodEntry.resultAnnotations[i].value.indexOf('/view'));
+                  src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                } else {
+                  src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1) + "'/></div>";
+                }
+              }
+            }
+            if (src != '') {
+              src += '</div>';
+            }
+          }
+        }
+      })
+      .catch(function (resp) {
+        console.log('exp search resp error', resp);
+      });*/
+      if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+        for (let t = 0; t < app.treeResult.children.length; t++) {
+          if(app.treeResult.children[t].text == 'quality') {
+            if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
+              var parentChild = app.treeResult.children[t].children;
+              for (let p = 0; p < parentChild.length; p++) {
+                if(parentChild[p].text == 'perceived quality' && parentChild[p].children != undefined && parentChild[p].children.length > 0) {
+                  let parent = parentChild[p].children;
+                  for(let sp = 0; sp < parent.length; sp++){
+                    if(parent[sp].children != undefined && parent[sp].children.length > 0){
+                      let child = parent[sp].children;
+                      if(child.length > 0) {
+                        for(let cc = 0; cc < child.length; cc++) {
+                          if(child[cc].text != undefined && child[cc].text == name.toLowerCase()) {
+                            if(child[cc].data != undefined && child[cc].data.details != undefined && child[cc].data.details.length > 0){
+                              let finalChilds = child[cc].data.details;
+                              $.each(finalChilds, function (indexs, items) {
+                                  if (src == '') {
+                                    src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                  }
+                                  if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
+                                    var id = items.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view'));
+
+                                    src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                  }
+                                  
+                              });
+                            }
+                          }
+                          if(child[cc].children != undefined && child[cc].children.length > 0)
+                          {
+                            let subChild = child[cc].children
+                            for(let sub = 0; sub < subChild.length; sub++) {
+                              if(subChild[sub].text != undefined && subChild[sub].text == name.toLowerCase()) {
+                                if(subChild[sub].data != undefined && subChild[sub].data.details != undefined && subChild[sub].data.details.length > 0) {
+
+                                  let finalChild = subChild[sub].data.details;
+                                  $.each(finalChild, function (index, item) {
+                                    if (src == '') {
+                                      src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                    }
+                                    if(item.elucidation != undefined && item.elucidation != '' && item.elucidation != null) {
+                                      var id = item.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view'));
+
+                                      src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                    }
+                                  });
+                                }
+                                break;
+                              }
+                            }
+                          }
+
+                        }
+                      } 
+                    }
                   }
                 }
               }
-              if (src != '') {
-                src += '</div>';
-              }
             }
-          }
-        })
-        .catch(function (resp) {
-          console.log('exp search resp error', resp);
-        });
+          }   
+        }   
+      }
+      if (src != '') {
+        src += '</div>';
+      }
       return src;
     },
     async getTooltipImageUserChracter(name, index) {
       var methodEntry = null;
       var src = '';
       var app = this;
-      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
+     /* axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + name.toLowerCase())
         .then(function (resp) {
           if (resp.data.entries.length > 0) {
             methodEntry = resp.data.entries.filter(function (each) {
@@ -4098,7 +4287,75 @@ export default {
         })
         .catch(function (resp) {
           console.log('exp search resp error', resp);
-        });
+        });*/
+      if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+        for (let t = 0; t < app.treeResult.children.length; t++) {
+          if(app.treeResult.children[t].text == 'quality') {
+            if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
+              var parentChild = app.treeResult.children[t].children;
+              for (let p = 0; p < parentChild.length; p++) {
+                if(parentChild[p].text == 'perceived quality' && parentChild[p].children != undefined && parentChild[p].children.length > 0) {
+                  let parent = parentChild[p].children;
+                  for(let sp = 0; sp < parent.length; sp++){
+                    if(parent[sp].children != undefined && parent[sp].children.length > 0){
+                      let child = parent[sp].children;
+                      if(child.length > 0) {
+                        for(let cc = 0; cc < child.length; cc++) {
+                          if(child[cc].text != undefined && child[cc].text == name.toLowerCase()) {
+                            if(child[cc].data != undefined && child[cc].data.details != undefined && child[cc].data.details.length > 0){
+                              let finalChilds = child[cc].data.details;
+                              $.each(finalChilds, function (indexs, items) {
+                                  if (src == '') {
+                                    src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                  }
+                                  if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
+                                    var id = items.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view'));
+
+                                    src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                  }
+                                  
+                              });
+                            }
+                          }
+                          if(child[cc].children != undefined && child[cc].children.length > 0)
+                          {
+                            let subChild = child[cc].children
+                            for(let sub = 0; sub < subChild.length; sub++) {
+                              if(subChild[sub].text != undefined && subChild[sub].text == name.toLowerCase()) {
+                                if(subChild[sub].data != undefined && subChild[sub].data.details != undefined && subChild[sub].data.details.length > 0) {
+
+                                  let finalChild = subChild[sub].data.details;
+                                  $.each(finalChild, function (index, item) {
+                                    if (src == '') {
+                                      src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                                    }
+                                    if(item.elucidation != undefined && item.elucidation != '' && item.elucidation != null) {
+                                      var id = item.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view'));
+
+                                      src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+                                    }
+                                  });
+                                }
+                                break;
+                              }
+                            }
+                          }
+
+                        }
+                      } 
+                    }
+                  }
+                }
+              }
+            }
+          }   
+        }   
+      }
+
+      if (src != '') {
+        src += '</div>';
+        app.userCharacters[index].tooltip = src + app.userCharacters[index].tooltip;
+      }
     },
     onSelect(selectedItem) {
       var app = this;
@@ -4342,7 +4599,7 @@ export default {
       } else {
         app.character = character;
       }
-      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
+      /*axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
       .then(function (resp) {
         if (resp.data.entries.length > 0) {
           var methodEntry = resp.data.entries.filter(function(each) {
@@ -4363,7 +4620,7 @@ export default {
               }
           } 
 
-        } 
+        } */
         /*if(app.character.images != undefined && app.character.images != null) {
           var persons_data =  JSON.parse(app.character.images);
           var origin   = window.location.href; 
@@ -4375,6 +4632,7 @@ export default {
           }
           
         }else {*/
+          app.getCharacterImage(app.character.name);
           var send_data = [];
           send_data.push(app.character.name);
           send_data.push(app.character.owner_name);
@@ -4391,7 +4649,7 @@ export default {
               }
             });
        /* }*/
-      });  
+      /*}); */ 
 
       if (standardFlag || (editFlag && !app.character.owner_name.includes(app.user.name))) {
         // app.editFlag = false;
@@ -10898,7 +11156,6 @@ export default {
     },
     async changeColorSection(color, flag, event) {
       var app = this;
-
       app.colorSearchText = '';
       app.nonColorSearchText = '';
 
@@ -11032,13 +11289,13 @@ export default {
       }
       console.log('flag', flag);
     },
-    getImageFromColorTreeData(tData) {
+    getImageFromColorTreeData(tData,parentData) {
       var app = this;
       var methodEntry = null;
       if (!tData) return;
       if (!tData.data) return;
       tData.data["images"] = [];
-      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
+      /*axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
         .then(function (resp) {
           if (resp.data.entries.length > 0) {
             methodEntry = resp.data.entries.filter(function (each) {
@@ -11053,8 +11310,6 @@ export default {
                   } else {
                     id = methodEntry.resultAnnotations[i].value.split('id=')[1].substring(0, methodEntry.resultAnnotations[i].value.split('id=')[1].length - 1);
                   }
-                  // console.log(tData.text);
-                  // console.log(('https://drive.google.com/uc?id=' + id));
                   tData.data["images"].push('https://drive.google.com/uc?id=' + id);
                 }
               }
@@ -11063,10 +11318,56 @@ export default {
         })
         .catch(function (resp) {
           console.log('exp search resp error', resp);
-        });
+        });*/
+      if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+        for (let t = 0; t < app.treeResult.children.length; t++) {
+          if(app.treeResult.children[t].text == 'quality') {
+            if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
+              let parentChild = app.treeResult.children[t].children;
+              for (let c = 0; c < parentChild.length; c++) {
+                if(parentData != undefined && parentData != null && parentData != '') {
+                  if(parentChild[c].text == parentData.replace(' ', '_').replace('-', '_')) {
+                    if(parentChild[c].children != undefined && parentChild[c].children.length > 0) {
+                      for (var fk = 0; fk < parentChild[c].children.length; fk++) {
+                        let finalC = parentChild[c].children;
+                        if(finalC[fk].text == tData.text.replace(' ', '_').replace('-', '_').toLowerCase() && finalC[fk].data != undefined && finalC[fk].data.details != undefined && finalC[fk].data.details.length > 0){
+                          let finalChilds = finalC[fk].data.details;
+                          $.each(finalChilds, function (indexs, items) {
+                            if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
+                              var id = items.elucidation.slice(items.elucidation.indexOf('open?id=') + 8);
+                              id = id.slice(0, -1);
+                              tData.data["images"].push('https://drive.google.com/uc?id=' + id);
+                            }  
+                          });
+                          break;
+                        }
+                      }
+                    }
+                    break;   
+                  }  
+                }else {
+                  if(parentChild[c].text == tData.text.replace(' ', '_').replace('-', '_').toLowerCase()) {
+                    if(parentChild[c].data != undefined && parentChild[c].data.details != undefined && parentChild[c].data.details.length > 0){
+                      let finalChilds = parentChild[c].data.details;
+                      $.each(finalChilds, function (indexs, items) {
+                        if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
+                          var id = items.elucidation.slice(items.elucidation.indexOf('open?id=') + 8);
+                          id = id.slice(0, -1);
+                          tData.data["images"].push('https://drive.google.com/uc?id=' + id);
+                        }  
+                      });
+                    }
+                    break;
+                  }  
+                }
+              }
+            }
+          }
+        }
+      }   
 
       for (let i = 0; tData.children && i < tData.children.length; i++) {
-        app.getImageFromColorTreeData(tData.children[i]);
+        app.getImageFromColorTreeData(tData.children[i],tData.text.replace(' ', '_').replace('-', '_'));
       }
       return;
     },
@@ -11104,7 +11405,55 @@ export default {
 
         app.currentNonColorValue.confirmedFlag['main_value'] = false;
         if (!app.textureTreeData) {
-          axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText.replace('-', '_'))
+          if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+            for (let t = 0; t < app.treeResult.children.length; t++) {
+              if(app.treeResult.children[t].text == 'quality') {
+                if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
+                  let parentChild = app.treeResult.children[t].children;
+                  for (let c = 0; c < parentChild.length; c++) {
+                    if(parentChild[c].text == searchText.replace('-', ' ') && parentChild[c].children != undefined && parentChild[c].children.length > 0) {
+                        var resultData = {};
+                        var tempNonColorData = parentChild[c];
+                        if (tempNonColorData.children) {
+                          tempNonColorData.children = app.sortTreeData(tempNonColorData.children);
+                        }
+                        app.$store.state.colorTreeData = tempNonColorData;
+                        app.removeDeprecatedTerms(tempNonColorData, resultData);
+                        app.textureTreeData = resultData;
+                        app.getImageFromColorTreeData(app.textureTreeData);
+                        app.currentNonColorValue.detailFlag = flag;
+                        if (app.nonColorDetailsFlag) {
+                          app.nonColorDetailsFlag = false;
+                          app.nonColorDetailsFlag = true;
+                        }
+                        app.filterFlag = false;
+                        app.nonColorExistFlag = true;
+                        const timerID = setTimeout(() => {
+                          app.filterFlag = true;
+                        }, 50)
+                        if (nonColor.id) {
+                          app.nonColorDetailId = nonColor.id;
+                          for (var i = 0; i < app.nonColorDetails.length; i++) {
+                            if (app.nonColorDetails[i].id == nonColor.id) {
+                              app.nonColorDetails[i].detailFlag = flag;
+                              app.nonColorDetails[i][flag] = app.nonColorDetails[i][flag] + ';';
+                              app.nonColorDetails[i][flag] = app.nonColorDetails[i][flag].substring(0, app.nonColorDetails[i][flag].length - 1);
+                              if (app.nonColorDetails[i][flag] == 'null' || app.nonColorDetails[i][flag] == null) {
+                                app.nonColorDetails[i][flag] = '';
+                              }
+                            }
+                          }
+                        }
+                      break;  
+                    }
+                  }
+                  
+                }
+              }
+            }
+          }
+
+          /*axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText.replace('-', '_'))
             .then(function (resp) {
               var resultData = {};
               console.log('resp.data', resp.data);
@@ -11143,7 +11492,7 @@ export default {
                   }
                 }
               }
-            });
+            });*/
         } else if (treeFlag) {
           app.currentNonColorValue.detailFlag = flag;
           if (app.nonColorDetailsFlag) {
@@ -12201,9 +12550,78 @@ export default {
       .then(function (resp) {
         app.treeResult = resp.data;
         console.log("treeResult", app.treeResult);
+        if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+          for (let t = 0; t < app.treeResult.children.length; t++) {
+            // for review info
+            if(app.treeResult.children[t].text == 'toreview') {
+              let toReview = app.treeResult.children[t].children;
+              if (toReview) {
+                for (let r = 0; r < toReview.length; r++) {
+                  app.toReviewedTerms.push(toReview[r].text);
+                }
+              }
+            }
+            // for color info
+            if(app.treeResult.children[t].text == 'quality') {
+              if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
+                let parentChild = app.treeResult.children[t].children;
+                for (let c = 0; c < parentChild.length; c++) {
+                  if(parentChild[c].text == 'color' && parentChild[c].children != undefined && parentChild[c].children.length > 0) {
+                    let child = parentChild[c].children;
+                    for (let cc = 0; cc < child.length; cc++) {
+                      if(child[cc].text == 'colored' && child[cc].children != undefined && child[cc].children.length > 0) {
+                        let tempOriginalData = child[cc];
+                        let originalResultData = {};
+                        app.removeDeprecatedTerms(tempOriginalData, originalResultData);
+                        app.originalColorTreeData = originalResultData;
+                        break;
+                      }
+                    } 
+                    var colorData = parentChild[c].children[0].children;
+                    for (var i = 0; i < colorData.length; i++) {
+                      app.colorationData[colorData[i]['text']] = [];
+                      app.colorationData[colorData[i]['text']].push(colorData[i]['text']);
+                      if ('children' in colorData[i]) {
+                        for (var j = 0; j < colorData[i].children.length; j++) {
+                          app.colorationData[colorData[i]['text']].push(colorData[i].children[j].text);
+                        }
+                      }
+                    }
+                  }
+                }
+                var qualityData = app.treeResult.children[t].children;
+                for (var i = 0; i < qualityData.length; i++) {
+                  if (qualityData[i].text == 'color') {
+                    continue;
+                  }
+                  app.nonColorationData[qualityData[i]['text']] = {};
+                  if ('children' in qualityData[i]) {
+                    for (var j = 0; j < qualityData[i].children.length; j++) {
+                      app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text] = [];
+                      app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text].push(qualityData[i].children[j].text);
+                      if ('children' in qualityData[i].children[j]) {
+                        for (var k = 0; k < qualityData[i].children[j].children.length; k++) {
+                          app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text].push(qualityData[i].children[j].children[k].text);
+
+                          if ('children' in qualityData[i].children[j].children[k]) {
+                            for (var l = 0; l < qualityData[i].children[j].children[k].children.length; l++) {
+                              app.nonColorationData[qualityData[i]['text']][qualityData[i].children[j].text].push(qualityData[i].children[j].children[k].children[l].text);
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
         app.getDefinition(app.treeResult);
       });
-    await axios.get("http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=toreview")
+
+      
+    /*await axios.get("http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=toreview")
       .then(function (resp) {
         console.log('toreviewed', resp.data);
         let data = resp.data.children;
@@ -12213,15 +12631,15 @@ export default {
           }
         }
 
-      });
-    await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=colored')
+      });*/
+   /* await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=colored')
     .then(function(resp) {
       let tempOriginalData = resp.data;
       let originalResultData = {};
       app.removeDeprecatedTerms(tempOriginalData, originalResultData);
 
       app.originalColorTreeData = originalResultData;
-    });
+    });*/
     await axios.get("http://shark.sbs.arizona.edu:8080/carex/getDeprecatedClasses")
       .then(function (resp) {
         app.deprecatedTerms = resp.data['deprecated classes'];
@@ -12270,9 +12688,10 @@ export default {
         }
       });
 
-    axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=quality')
+   /* axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=quality')
       .then(function (resp) {
         var colorData = resp.data.children.find(ch => ch.text == "color").children[0].children;
+
         for (var i = 0; i < colorData.length; i++) {
           app.colorationData[colorData[i]['text']] = [];
           app.colorationData[colorData[i]['text']].push(colorData[i]['text']);
@@ -12282,7 +12701,6 @@ export default {
             }
           }
         }
-
         var qualityData = resp.data.children;
         for (var i = 0; i < qualityData.length; i++) {
           if (qualityData[i].text == 'color') {
@@ -12308,7 +12726,7 @@ export default {
             }
           }
         }
-      });
+      });*/
     axios.get("api/v1/user-tag/" + app.user.id)
       .then(function (resp) {
         resp.data.sort((a, b) => app.tagOrder(a) - app.tagOrder(b));
