@@ -892,9 +892,6 @@ class HomeController extends Controller
         $returnCharacters = $this->getArrayCharacters();
         $returnDefaultCharacters = $this->getDefaultCharacters();
         $returnTaxon = $user->taxon;
-
-        $returnTaxon = $user->taxon;
-
         $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,

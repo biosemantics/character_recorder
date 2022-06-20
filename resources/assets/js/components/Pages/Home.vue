@@ -11188,7 +11188,84 @@ export default {
         color.detailFlag = ' ';
         if (!app.colTreeData[flag]) {
           app.colorExistFlag = false;
-          await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
+          var finalColor =  app.changeToSubClassName(flag);
+          if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+            for (let t = 0; t < app.treeResult.children.length; t++) {
+              if(app.treeResult.children[t].text == 'quality') {
+                if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
+                  let parentChild = app.treeResult.children[t].children;
+                  for (let c = 0; c < parentChild.length; c++) {
+                    if(finalColor == 'colored' || finalColor == 'multicolored') {
+                      if(parentChild[c].text == 'color' && parentChild[c].children != undefined && parentChild[c].children.length > 0) {
+                        let child = parentChild[c].children;
+                        for (let cc = 0; cc < child.length; cc++) {
+                          if(child[cc].text == finalColor && child[cc].children != undefined && child[cc].children.length > 0) {
+                            var resultData = {};
+                            var tempColorData = child[cc];
+                            if (tempColorData.children) {
+                              for (var i = 0; i < tempColorData.children.length; i++) {
+                                if (app.hasColorPalette(tempColorData.children[i].text)) {
+                                  delete tempColorData.children[i]['children'];
+                                }
+                              }
+                              tempColorData.children = app.sortTreeData(tempColorData.children);
+                            }
+                            break;
+                          }
+                        }
+                      }
+                    }else {
+                      if(parentChild[c].text == finalColor && parentChild[c].children != undefined && parentChild[c].children.length > 0) {
+                        var resultData = {};
+                        var tempColorData = parentChild[c];
+                        if (tempColorData.children) {
+                          for (var i = 0; i < tempColorData.children.length; i++) {
+                            if (app.hasColorPalette(tempColorData.children[i].text)) {
+                              delete tempColorData.children[i]['children'];
+                            }
+                          }
+                          tempColorData.children = app.sortTreeData(tempColorData.children);
+                        }
+                        break;
+                      }
+                    }
+                    app.$store.state.colorTreeData = tempColorData;
+                    app.removeDeprecatedTerms(tempColorData, resultData);
+                    app.colTreeData[flag] = resultData;
+                    app.getImageFromColorTreeData(resultData);
+                    color.detailFlag = flag;
+                    app.colorExistFlag = true;
+                    app.filterFlag = false;
+                    const timerID = setTimeout(() => {
+                      app.filterFlag = true;
+                    }, 50)
+                    if (app.colorDetailsFlag) {
+                      app.colorDetailsFlag = false;
+                      app.colorDetailsFlag = true;
+                    }
+                    console.log('color', color);
+                    if (color.id) {
+                      app.colorDetailId = color.id;
+                      //    color.detailFlag = flag;
+                      app.colorDetails.find(eachColor => eachColor.id === app.colorDetailId).detailFlag = flag;
+                      for (var i = 0; i < app.colorDetails.length; i++) {
+                        if (app.colorDetails[i].id === color.id) {
+                          app.colorDetails[i].detailFlag = flag;
+                          app.colorDetails[i][flag] = app.colorDetails[i][flag] + ';';
+                          app.colorDetails[i][flag] = app.colorDetails[i][flag].substring(0, app.colorDetails[i][flag].length - 1);
+                          if (app.colorDetails[i][flag] === 'null' || app.colorDetails[i][flag] == null) {
+                            app.colorDetails[i][flag] = '';
+                          }
+                        }
+                      }
+
+                    }
+                  }
+                }
+              }      
+            }
+          }       
+         /* await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
             .then(async function (resp) {
               var resultData = {};
               var tempColorData = resp.data;
@@ -11233,7 +11310,7 @@ export default {
                 }
 
               }
-            });
+            });*/
         } else {
           console.log('flag', flag);
           color.detailFlag = flag;
