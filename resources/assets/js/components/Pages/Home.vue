@@ -2158,10 +2158,10 @@
                         </div>
                       </div>
                     </div>
-                    <div class="modal-body">
+                    <div class="create-edit-value modal-body">
 
                       <div style="border-radius: 5px; border: 1px solid; padding: 15px;">
-                        <div>
+                        <div class="create-edit-value-heading">
                           <b style="text-decoration: underline">Create/Edit Value</b> <span>(<span style="color: red">"*"</span> indicates a required field)</span>
                         </div>
                         <div>

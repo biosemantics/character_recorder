@@ -355,6 +355,16 @@ div.dropdown div.item:first-child {
   border-width: thin;
   padding: 27px;
 }
+.create-edit-value .create-edit-value-heading{
+	margin-bottom: 15px;
+}
+
+.modal-body.create-edit-value h5 {
+    text-align: left;
+    width: 90px;
+    display: flex;
+    margin: 5px 10px 0 0;
+}
 
 @media (max-width: 1100px) {
   .customTabbing{
