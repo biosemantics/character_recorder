@@ -120,8 +120,8 @@
                     >
                       the recommended set of characters
                     </a>
-                      <!-- <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}"> -->
-                        <b>(what
+                      <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">
+                        (what
                         are they?) </b><br/> Or Choose more set of characters to add in this Matrix below</b>
                   </div>
                   <div class="col-md-12 margin-top-10">
