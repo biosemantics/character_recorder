@@ -130,8 +130,8 @@ class HomeController extends Controller
     public function getAllDetails()
     {
 
-        $colorValues = ColorDetails::all();
-        $nonColorValues = NonColorDetails::all();
+        $colorValues = DB::table('color_details')->get();
+        $nonColorValues = DB::table('non_color_details')->get();
 
         $data = [
             'colorValues' => $colorValues,
@@ -430,6 +430,7 @@ class HomeController extends Controller
             'show_flag' => $request->input('show_flag'),
             'standard_tag' => $request->input('standard_tag'),
             'summary' => $request->input('summary'),
+            'images' => json_encode($allImageName),
         ]);
 
         $character->save();
@@ -458,10 +459,9 @@ class HomeController extends Controller
             ]);
 
             $defaultCharacter->save();
-            $character->images = json_encode($allImageName); 
             
         }else {
-            $defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
+            /*$defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
             if(!empty($allImageName) && !empty($defaultCharacter)) {
                 if(!empty($defaultCharacter->images)) {
                     $img = json_decode($defaultCharacter->images,true);
@@ -472,11 +472,11 @@ class HomeController extends Controller
                 }
             }else {
                 $character->images = json_encode($allImageName); 
-            } 
+            } */
         }
 
         
-
+        $character->images = json_encode($allImageName); 
         $character->order = $character->id;
         $character->save();
 
@@ -796,6 +796,17 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
         $allImageName = array();
+        if(isset($request->temp_files) && count($request->temp_files) > 0) {
+          foreach ($request->temp_files as $key => $img) {
+              $base64Image = explode(";base64,", $img);
+              $explodeImage = explode("image/", $base64Image[0]);
+              $imageType = $explodeImage[1];
+              $image_base64 = base64_decode($base64Image[1]);
+              $imageName = date('Y-m-d').'_'.$key.'_'.time().'.'.$imageType;
+              Storage::disk('public')->put($imageName, $image_base64);
+              $allImageName[] = $imageName;
+          }
+        }
         $character = new Character([
             'name' => $request->input('name'),
             'IRI' => $request->input('IRI'),
@@ -815,23 +826,9 @@ class HomeController extends Controller
             'show_flag' => $request->input('show_flag'),
             'standard_tag' => $request->input('standard_tag'),
             'summary' => $request->input('summary'),
+            'images' => json_encode($allImageName),
         ]);
-
         $character->save();
-        $character->order = $character->id;
-
-        if(isset($request->temp_files) && count($request->temp_files) > 0) {
-            foreach ($request->temp_files as $key => $img) {
-                $base64Image = explode(";base64,", $img);
-                $explodeImage = explode("image/", $base64Image[0]);
-                $imageType = $explodeImage[1];
-                $image_base64 = base64_decode($base64Image[1]);
-                $imageName = date('Y-m-d').'_'.$key.'_'.time().'.'.$imageType;
-                Storage::disk('public')->put($imageName, $image_base64);
-                $allImageName[] = $imageName;
-            }
-        }
-       
         if (DefaultCharacter::where('name', '=', $request->input('name'))->count() == 0) {
             $defaultCharacter = new DefaultCharacter([
                 'name' => $request->input('name'),
@@ -854,10 +851,9 @@ class HomeController extends Controller
                 'summary' => $request->input('summary'),
                 'images' => json_encode($allImageName),
             ]);
-            $character->images = json_encode($allImageName); 
             $defaultCharacter->save();
         }else {
-            $defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
+            /*$defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
             if(!empty($allImageName) && !empty($defaultCharacter)) {
                 if(!empty($defaultCharacter->images)) {
                     $img = json_decode($defaultCharacter->images,true);
@@ -868,12 +864,12 @@ class HomeController extends Controller
                 }
             }else {
                 $character->images = json_encode($allImageName); 
-            } 
+            } */
         }
-       
+        $character->images = json_encode($allImageName); 
+        $character->order = $character->id;  
         $character->save();
         $headers = Header::where('user_id', '=', Auth::id())->get();
-
         $value = Value::create([
             'header_id' => 1,
             'character_id' => $character->id,
@@ -1595,11 +1591,53 @@ class HomeController extends Controller
     // identify character
     public function identify(Request $request) {
         $data =$request->all();
-        $info = Character::where('name',$data[0])->where('owner_name',$data[1])->first();
-        if(!empty($info) && !empty($info->images)) {
-            return json_decode($info->images,true);
+        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->first();
+        $info2 = defaultCharacter::where('name',$data[0])->where('owner_name','!=',$data[1])->first();
+        $mainImage = array();
+        $uploadedImage = array();
+        if(!empty($info2) && !empty($info2->images)) {
+          $mainImage = json_decode($info2->images,true);
         }
+        if(!empty($info1) && !empty($info1->images)) {
+          $uploadedImage = json_decode($info1->images,true);
+        }
+        return array_merge($mainImage,$uploadedImage);
+    }
 
+    // update image, if character is already used.
+    public function updateImage(Request $request) {
+      $data = $request->all();
+      $allImageName = array();
+      if(isset($request->temp_files) && count($request->temp_files) > 0) {
+        foreach ($request->temp_files as $key => $img) {
+            $base64Image = explode(";base64,", $img);
+            $explodeImage = explode("image/", $base64Image[0]);
+            $imageType = $explodeImage[1];
+            $image_base64 = base64_decode($base64Image[1]);
+            $imageName = date('Y-m-d').'_'.$key.'_'.time().'.'.$imageType;
+            Storage::disk('public')->put($imageName, $image_base64);
+            $allImageName[] = $imageName;
+        }
+        $info1 = Character::where('name',$request->input('name'))->where('owner_name',$request->owner_name)->first();
+        if(!empty($info1)) {
+          $prevImages = array();
+          if(!empty($info1->images)) {
+            $prevImages = json_decode($info1->images,true);
+          }
+          $info1->images = json_encode(array_merge($prevImages,$allImageName));
+          $info1->save();
+        }
+        
+        $info2 = DefaultCharacter::where('name', '=', $request->input('name'))->where('owner_name',$request->owner_name)->where('username',$request->owner_name)->first();
+        if(!empty($info2)) {
+          $oldImages = array();
+          if(!empty($info2->images)) {
+            $oldImages = json_decode($info->images,true);
+          }
+          $info2->images = json_encode(array_merge($oldImages,$allImageName));
+          $info2->save();
+        } 
+      }
     }
 
     public function updateCharacter(Request $request)

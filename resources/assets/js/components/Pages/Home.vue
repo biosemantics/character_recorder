@@ -355,7 +355,7 @@
                     </div>
                     <div>
                       <a class="btn btn-add"
-                         v-on:click="editCharacter(row[row.length - 1], true, true)"
+                         v-on:click="editCharacter(row[row.length - 1], true, true,false,true)"
                          style="line-height: 30px;">
                         <span class="glyphicon glyphicon-eye-open"></span>
                       </a>
@@ -1411,7 +1411,7 @@
                                 <h2 style="text-align: center; margin-top:167px;">No image</h2>
                               </div>                        
                             </div>
-                            <div class="SelectUpload">
+                            <div class="SelectUpload" v-if="viewCharacter == false">
                               <form id= "imageForm" method="post">
                                 <input type="file" id="file-upload" max-size="2000" name="image" ref="fileInput" class="custom-file-input" @input="pickFile">
                               </form>
@@ -3464,6 +3464,7 @@ export default {
       secondLastCharacterDefinition: null,
       newCharacterFlag: false,
       detailsFlag: false,
+      viewCharacter: false,
       metadataFlag: null,
       currentMetadata: null,
       parentData: null,
@@ -4015,6 +4016,7 @@ export default {
                               let finalChilds = child[cc].data.details;
                               $.each(finalChilds, function (indexs, items) {
                                 if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
+                                  console.log(items.elucidation);
                                   var newUrl = items.elucidation.slice(items.elucidation.indexOf('file/d/') + 7, items.elucidation.indexOf('/view?usp='));
                                   app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
                                 }  
@@ -4030,6 +4032,8 @@ export default {
                                   let finalChild = subChild[sub].data.details;
                                   $.each(finalChild, function (index, item) {
                                     if(item.elucidation != undefined && item.elucidation != '' && item.elucidation != null) {
+                                  console.log(item.elucidation);
+
                                       var newUrl = item.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view?usp='));
                                       app.viewImages.push('https://drive.google.com/uc?id=' + newUrl);
                                     }
@@ -4361,7 +4365,7 @@ export default {
       var app = this;
       console.log('selectedItem', selectedItem);
       var selectedCharacter = app.defaultCharacters.find(ch => ch.id == selectedItem)
-       
+      app.viewCharacter = false;
       app.editFlag = false;
       sessionStorage.setItem('editFlag', false);
       if (!selectedCharacter) {
@@ -4586,10 +4590,10 @@ export default {
           })
       }
     },
-    editCharacter(character, editFlag = false, standardFlag = false, enhanceFlag = false) {
+    editCharacter(character, editFlag = false, standardFlag = false, enhanceFlag = false,view = false) {
       var app = this;
       app.editFlag = editFlag;
-        
+      app.viewCharacter = view;
       if (editFlag) {
         app.viewFlag = !editFlag;
         sessionStorage.setItem('viewFlag', !editFlag);
@@ -4599,7 +4603,7 @@ export default {
       } else {
         app.character = character;
       }
-      /*axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
+      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
       .then(function (resp) {
         if (resp.data.entries.length > 0) {
           var methodEntry = resp.data.entries.filter(function(each) {
@@ -4620,7 +4624,7 @@ export default {
               }
           } 
 
-        } */
+        } 
         /*if(app.character.images != undefined && app.character.images != null) {
           var persons_data =  JSON.parse(app.character.images);
           var origin   = window.location.href; 
@@ -4632,13 +4636,12 @@ export default {
           }
           
         }else {*/
-          app.getCharacterImage(app.character.name);
+          //app.getCharacterImage(app.character.name);
           var send_data = [];
           send_data.push(app.character.name);
           send_data.push(app.character.owner_name);
           axios.post('api/v1/character/identify', send_data)
             .then(function (resp) {
-              console.log(resp);
               var origin   = window.location.href; 
               var url = origin+'/storage/';
               var persons_data =  resp.data;
@@ -4649,7 +4652,7 @@ export default {
               }
             });
        /* }*/
-      /*}); */ 
+      });  
 
       if (standardFlag || (editFlag && !app.character.owner_name.includes(app.user.name))) {
         // app.editFlag = false;
@@ -7861,7 +7864,6 @@ export default {
     },
     use(characterId) {
       var app = this;
-      console.log('use', characterId);
       app.character = app.userCharacters.find(ch => ch.id == characterId);
       if (!app.character) {
         app.character = app.defaultCharacters.find(ch => ch.id == characterId);
@@ -7874,6 +7876,7 @@ export default {
           && ch.method_exclude == app.character.method_exclude
           && ch.method_where == app.character.method_where
         )) {
+
           console.log('app.character', app.character);
           //    app.character.show_flag = false;
           //             app.character.standard = 1;
@@ -7905,20 +7908,24 @@ export default {
             app.showDetails('unit', app.metadataFlag);
           }
         } else {
-          alert("The character already exists for this user!!");
-          app.detailsFlag = false;
-          app.active_el = 0;
-          app.temp_files = [];
-          app.viewImages = [];
-          app.roundValOne = "";
-          app.roundValTwo = "";
-          app.roundsOne = [];
-          app.roundsTwo = [];
-          app.active_image = null;
-          app.character.temp_files = [];
+          alert("The character already exists for this user, but if you upload any image then it will be uploaded.!!");
+          app.character.temp_files = app.temp_files;
+          axios.post('api/v1/character/update-image', app.character)
+                .then(function (resp) {
+            app.detailsFlag = false;
+            app.active_el = 0;
+            app.temp_files = [];
+            app.viewImages = [];
+            app.roundValOne = "";
+            app.roundValTwo = "";
+            app.roundsOne = [];
+            app.roundsTwo = [];
+            app.active_image = null;
+            app.character.temp_files = [];
+          });
         }
       } else {
-        alert("The character already exists for this user!!");
+        alert("The character already exists for this user2!!");
         app.detailsFlag = false;
         app.active_el = 0;
         app.temp_files = [];
@@ -8080,7 +8087,7 @@ export default {
                   app.character.temp_files = [];
                 });
             } else {
-              alert("The character already exists for this user!!");
+              alert("The character already exists for this user3!!");
             }
           } else {
             if (app.character.standard_tag == app.currentTab) {
@@ -12073,6 +12080,7 @@ export default {
     },
     removeEachColor() {
       var app = this;
+      app.isLoading = true;
       axios.post('api/v1/remove-each-color-details', app.removeEachColorValue)
         .then(function (resp) {
           app.toRemoveColorValueConfirmFlag = false;
@@ -12085,6 +12093,7 @@ export default {
           app.defaultCharacters = resp.data.defaultCharacters;
           app.refreshDefaultCharacters();
           app.getDeprecatedValue();
+          app.isLoading = false;
         });
     },
     editEachNonColor(value) {
@@ -12105,6 +12114,7 @@ export default {
     },
     removeEachNonColor() {
       var app = this;
+      app.isLoading = true;
       axios.post('api/v1/remove-each-non-color-details', app.removeEachNonColorValue)
         .then(function (resp) {
           app.toRemoveNonColorValueConfirmFlag = false;
@@ -12117,6 +12127,7 @@ export default {
           app.defaultCharacters = resp.data.defaultCharacters;
           app.refreshDefaultCharacters();
           app.getDeprecatedValue();
+          app.isLoading = false;
         });
     },
     getUserTag: async () => {
