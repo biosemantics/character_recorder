@@ -4757,7 +4757,6 @@ export default {
           var type = "";
         }
         if (app.checkHaveUnit(app.character.name,type) || app.character.summary) {
-          console.log('app.charactersss', app.character);
           // Initializing the methodFieldData //
           app.methodFieldData.fromTerm = null;
           app.methodFieldData.fromId = null;
@@ -5312,7 +5311,6 @@ export default {
           "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
           "definitionSrc": app.user.name,
         };
-        console.log('1', requestBody);
         await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
           .then(function (resp) {
             console.log('shark api class resp', resp);
@@ -11195,7 +11193,7 @@ export default {
         color.detailFlag = ' ';
         if (!app.colTreeData[flag]) {
           app.colorExistFlag = false;
-          var finalColor =  app.changeToSubClassName(flag);
+         /* var finalColor =  app.changeToSubClassName(flag);
           if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
             for (let t = 0; t < app.treeResult.children.length; t++) {
               if(app.treeResult.children[t].text == 'quality') {
@@ -11271,8 +11269,8 @@ export default {
                 }
               }      
             }
-          }       
-         /* await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
+          } */      
+          await axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + app.changeToSubClassName(flag))
             .then(async function (resp) {
               var resultData = {};
               var tempColorData = resp.data;
@@ -11300,7 +11298,6 @@ export default {
                 app.colorDetailsFlag = false;
                 app.colorDetailsFlag = true;
               }
-              console.log('color', color);
               if (color.id) {
                 app.colorDetailId = color.id;
                 //    color.detailFlag = flag;
@@ -11317,9 +11314,8 @@ export default {
                 }
 
               }
-            });*/
+            });
         } else {
-          console.log('flag', flag);
           color.detailFlag = flag;
           if (app.colTreeData[flag].text != app.$store.state.colorTreeData.text) {
             app.colorExistFlag = false;
@@ -11362,7 +11358,6 @@ export default {
               }
             }
           }
-          console.log('app.colorDetails', app.colorDetails);
         } else {
           if (app.colorDetails.length > 0) {
             app.colorDetails[app.colorDetails.length - 1].detailFlag = flag;
@@ -11418,9 +11413,18 @@ export default {
                           let finalChilds = finalC[fk].data.details;
                           $.each(finalChilds, function (indexs, items) {
                             if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
-                              var id = items.elucidation.slice(items.elucidation.indexOf('open?id=') + 8);
-                              id = id.slice(0, -1);
-                              tData.data["images"].push('https://drive.google.com/uc?id=' + id);
+                              var id  = '';
+                              if(items.elucidation.includes('open?id=') == true) {
+                                id = items.elucidation.slice(items.elucidation.indexOf('open?id=') + 8);
+                                id = id.slice(0, -1);
+                              }else if(items.elucidation.includes('/view?usp=') == true) {
+                                id = items.elucidation.slice(items.elucidation.indexOf('file/d/') + 7, items.elucidation.indexOf('/view?usp='));
+                              }
+                              if(id != '') {
+                                tData.data["images"].push('https://drive.google.com/uc?id=' + id);
+                              }else {
+                                tData.data["images"].push('');
+                              } 
                             }  
                           });
                           break;
@@ -11435,9 +11439,18 @@ export default {
                       let finalChilds = parentChild[c].data.details;
                       $.each(finalChilds, function (indexs, items) {
                         if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
-                          var id = items.elucidation.slice(items.elucidation.indexOf('open?id=') + 8);
-                          id = id.slice(0, -1);
-                          tData.data["images"].push('https://drive.google.com/uc?id=' + id);
+                            var id  = '';
+                            if(items.elucidation.includes('open?id=') == true) {
+                              id = items.elucidation.slice(items.elucidation.indexOf('open?id=') + 8);
+                              id = id.slice(0, -1);
+                            }else if(items.elucidation.includes('/view?usp=') == true) {
+                              id = items.elucidation.slice(items.elucidation.indexOf('file/d/') + 7, items.elucidation.indexOf('/view?usp='));
+                            }
+                            if(id != '') {
+                              tData.data["images"].push('https://drive.google.com/uc?id=' + id);
+                            }else {
+                              tData.data["images"].push('');
+                            } 
                         }  
                       });
                     }
@@ -11489,7 +11502,7 @@ export default {
 
         app.currentNonColorValue.confirmedFlag['main_value'] = false;
         if (!app.textureTreeData) {
-          if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+          /*if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
             for (let t = 0; t < app.treeResult.children.length; t++) {
               if(app.treeResult.children[t].text == 'quality') {
                 if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
@@ -11535,9 +11548,9 @@ export default {
                 }
               }
             }
-          }
+          }*/
 
-          /*axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText.replace('-', '_'))
+          axios.get('http://shark.sbs.arizona.edu:8080/carex/getSubclasses?baseIri=http://biosemantics.arizona.edu/ontologies/carex&term=' + searchText.replace('-', '_'))
             .then(function (resp) {
               var resultData = {};
               console.log('resp.data', resp.data);
@@ -11576,7 +11589,7 @@ export default {
                   }
                 }
               }
-            });*/
+            });
         } else if (treeFlag) {
           app.currentNonColorValue.detailFlag = flag;
           if (app.nonColorDetailsFlag) {
