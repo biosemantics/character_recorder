@@ -223,7 +223,7 @@
             <div v-if="collapsedFlag == true" class="row">
               <div style="max-width: 1000px; margin-right: auto; margin-left: auto;">
                 <div class="col-md-2">
-                  <input v-model="taxonName" v-on:blur="changeTaxonName()"
+                  <input class="width-100" v-model="taxonName" v-on:blur="changeTaxonName()"
                          style="line-height: 38px; border: none;">
                 </div>
                 <div class="col-md-3">
