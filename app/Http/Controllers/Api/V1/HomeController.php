@@ -1588,7 +1588,7 @@ class HomeController extends Controller
     // identify character
     public function identify(Request $request) {
         $data =$request->all();
-        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('images','!=',null)->where('images','!=','')->where('id',$data[2])->first();
+        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('id',$data[2])->first();
         $info2 = defaultCharacter::where('name',$data[0])->where('owner_name','!=',$data[1])->first();
         $mainImage = array();
         $uploadedImage = array();
@@ -1603,7 +1603,7 @@ class HomeController extends Controller
 
     public function editView(Request $request) {
         $data =$request->all();
-        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('images','!=',null)->where('images','!=','')->first();
+        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('images','!=','')->first();
        // $info2 = defaultCharacter::where('name',$data[0])->where('owner_name','!=',$data[1])->first();
         $mainImage = array();
         $uploadedImage = array();
@@ -1630,7 +1630,7 @@ class HomeController extends Controller
             Storage::disk('public')->put($imageName, $image_base64);
             $allImageName[] = $imageName;
         }
-        $info1 = Character::where('name',$request->input('name'))->where('owner_name',$request->owner_name)->orderBy('id','desc')->first();
+        $info1 = Character::where('name',$request->input('name'))->where('owner_name',$request->other_name)->orderBy('id','desc')->first();
         if(!empty($info1)) {
           $prevImages = array();
           if(!empty($info1->images)) {
@@ -1640,7 +1640,7 @@ class HomeController extends Controller
           $info1->save();
         }
         
-        $info2 = DefaultCharacter::where('name', '=', $request->input('name'))->where('owner_name',$request->owner_name)->where('username',$request->owner_name)->first();
+        $info2 = DefaultCharacter::where('name', '=', $request->input('name'))->where('owner_name',$request->other_name)->where('username',$request->owner_name)->first();
         if(!empty($info2)) {
           $oldImages = array();
           if(!empty($info2->images)) {

@@ -673,6 +673,26 @@
                                 </select>
                               </div>
                               <div class="custom-character-field">
+                                <div class="selectDataList width-100"> 
+                                  <input
+                                    style="height: 26px;"
+                                    class="width-100"
+                                    type="text"
+                                    v-model="thirdCharacter"
+                                    >
+                                   <ul> 
+                                      <template v-for="val in resultThirdCharacterQuery" >
+                                        <li v-if="thirdNounHeadings.includes(val)" v-on:click="handleThirdCharacter('')">
+                                          <b>{{val}}</b>
+                                        </li>
+                                        <li v-else :value="val" v-on:click="handleThirdCharacter(val)">
+                                          {{val}}
+                                        </li>
+                                      </template> 
+                                  </ul>  
+                                </div>
+                              </div>
+                              <!-- <div class="custom-character-field">
                                 <select v-model="thirdCharacter" style="height: 26px;" class="width-100">
                                   <option value=""></option>
                                   <optgroup label="Dimension">
@@ -700,7 +720,7 @@
                                     <option value="total">total</option>
                                   </optgroup>
                                 </select>
-                              </div>
+                              </div> -->
 
                               <!-- custom static datalist start-->                            
                               <!-- <div class="custom-character-field">
@@ -792,7 +812,25 @@
                                 </select>
                               </div>
                               <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
-                                <select style="height: 26px;" class="width-100" v-model="round.fourth">
+                                <div class="selectDataList width-100"> 
+                                   <input
+                                    v-model="round.fourth"
+                                    class="width-100"
+                                    style="height: 26px;"
+                                    @input="onChangeRoundsOneThird(index,round.fourth)"
+                                  />
+                                  <ul>
+                                    <template v-for="(nounCharacter,key) in roundsOne[index].thirdCh">
+                                        <li v-if="thirdNounHeadings.includes(nounCharacter)" v-on:click="handleRoundOneThird('',index)">
+                                          <b>{{nounCharacter}}</b>
+                                        </li>
+                                        <li v-else :value="nounCharacter" v-on:click="handleRoundOneThird(nounCharacter,index)">
+                                          {{nounCharacter}}
+                                        </li>
+                                    </template> 
+                                  </ul>
+                                </div>
+                                <!-- <select style="height: 26px;" class="width-100" v-model="round.fourth">
                                   <option value=""></option>
                                   <optgroup label="Dimension">
                                     <option value="longest">longest</option>
@@ -818,7 +856,7 @@
                                     <option value="distinct">distinct</option>
                                     <option value="total">total</option>
                                   </optgroup>
-                                </select>
+                                </select> -->
                               </div>
                               <div class="custom-character-field">
                                 <div class="selectDataList width-100">
@@ -898,7 +936,26 @@
                               <div class="custom-character-field">
                                 <div v-if="middleCharacter=='between'" style="width:100%; text-align: center; font-weight: bold;">and
                                 </div>
-                                  <select v-if="middleCharacter=='between'"  v-model="secondThirdCharacter" style="height: 26px;" class="width-100">
+                                  <div class="selectDataList width-100" v-if="middleCharacter=='between'"> 
+                                    <input
+                                      style="height: 26px;"
+                                      class="width-100"
+                                      type="text"
+                                      v-model="secondThirdCharacter"
+                                      >
+                                     <ul> 
+                                        <template v-for="val in resultSecondThirdCharacterQuery" >
+                                          <li v-if="thirdNounHeadings.includes(val)" v-on:click="handleSecondThirdCharacter('')">
+                                            <b>{{val}}</b>
+                                          </li>
+                                          <li v-else :value="val" v-on:click="handleSecondThirdCharacter(val)">
+                                            {{val}}
+                                          </li>
+                                        </template> 
+                                    </ul>  
+                                  </div>
+
+                                  <!-- <select v-if="middleCharacter=='between'"  v-model="secondThirdCharacter" style="height: 26px;" class="width-100">
                                     <option value=""></option>
                                     <optgroup label="Dimension">
                                       <option value="longest">longest</option>
@@ -924,7 +981,7 @@
                                       <option value="distinct">distinct</option>
                                       <option value="total">total</option>
                                     </optgroup>
-                                  </select>
+                                  </select> -->
                               </div>
                               <div class="custom-character-field">
                                 <div v-if="middleCharacter=='between'" style="width:100%; text-align: center; margin-top: 27px;" :stytle="[(roundValOne == '' ? '-69px' : '-43px')]"></div>
@@ -1011,7 +1068,25 @@
                                   </select>
                                 </div>
                                 <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
-                                  <select style="height: 26px;" class="width-100" v-model="round.fourth">
+                                    <div class="selectDataList width-100"> 
+                                       <input
+                                        v-model="round.fourth"
+                                        class="width-100"
+                                        style="height: 26px;"
+                                        @input="onChangeRoundsTwoThird(index,round.fourth)"
+                                      />
+                                      <ul>
+                                        <template v-for="(nounCharacter,key) in roundsTwo[index].thirdCh">
+                                            <li v-if="thirdNounHeadings.includes(nounCharacter)" v-on:click="handleRoundTwoThird('',index)">
+                                              <b>{{nounCharacter}}</b>
+                                            </li>
+                                            <li v-else :value="nounCharacter" v-on:click="handleRoundTwoThird(nounCharacter,index)">
+                                              {{nounCharacter}}
+                                            </li>
+                                        </template> 
+                                      </ul>
+                                    </div>
+                                  <!-- <select style="height: 26px;" class="width-100" v-model="round.fourth">
                                     <option value=""></option>
                                     <optgroup label="Dimension">
                                       <option value="longest">longest</option>
@@ -1037,7 +1112,7 @@
                                       <option value="distinct">distinct</option>
                                       <option value="total">total</option>
                                     </optgroup>
-                                  </select>
+                                  </select> -->
                                 </div>
                                 <div class="custom-character-field">
                                   <div class="selectDataList width-100">
@@ -3364,6 +3439,32 @@ export default {
         return this.firstNounData;
       }
     },
+    resultThirdCharacterQuery() {
+      if(this.thirdCharacter){
+       /* if(this.thirdCharacter.toLowerCase() == 'dimension') {
+          return ['Dimension','longest','widest','shorest','narrowest'];
+        }else if(this.thirdCharacter.toLowerCase() == 'position') {
+          return ['Position','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal'];
+        }else if(this.thirdCharacter.toLowerCase() == 'prominence') {
+          return ['Prominence','distinct','total'];
+        }else {*/
+          return this.thirdNounData.filter((item)=>{
+            return this.thirdCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+          })
+        /*}*/
+      }else{
+        return this.thirdNounData;
+      }
+    },
+    resultSecondThirdCharacterQuery() {
+      if(this.secondThirdCharacter){
+        return this.thirdNounData.filter((item)=>{
+          return this.secondThirdCharacter.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+        })
+      }else{
+        return this.thirdNounData;
+      }
+    },
     resultLastCharacterQuery(){
       if(this.lastCharacter){
       return this.nounCharacters.filter((item)=>{
@@ -3755,6 +3856,8 @@ export default {
       branchedUnisexual: '',
       changeRoundsOne: '',
       firstNounData: ['Length','Width','Depth','Diameter','Distance','Color','Presence','Shape','Texture','Growth form','Number','Pubescence','Relative Position','Inflation','Orientation'],
+      thirdNounData: ['','Dimension','longest','widest','shorest','narrowest','Position','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal','Prominence','distinct','total'],
+      thirdNounHeadings: ['Dimension','Position','Prominence'],
       allEmptyCells: '',
       totalEmptyCells: '',
       postRoute:window.location.href+'api/v1/character/empty-cells',
@@ -4559,6 +4662,7 @@ export default {
                 app.roundsOne[i].broadSynonymNotifyMessage = '';
                 app.roundsOne[i].definition = '';
                 app.roundsOne[i].characters = app.nounCharacters;
+                app.roundsOne[i].thirdCh = app.thirdNounData;
               });   
         }
         if(app.roundsTwo.length > 0) {
@@ -4574,6 +4678,7 @@ export default {
                 app.roundsTwo[i].broadSynonymNotifyMessage = '';
                 app.roundsTwo[i].definition = '';
                 app.roundsTwo[i].characters = app.nounCharacters;
+                app.roundsTwo[i].thirdCh = app.thirdNounData;
               });   
         }
         sessionStorage.setItem('viewFlag', false);
@@ -8026,6 +8131,7 @@ export default {
         } else {
           alert("The character already exists for this user, but if you upload any image then it will be uploaded.!!");
           app.character.temp_files = app.temp_files;
+          app.character.other_name = app.user.name
           axios.post('api/v1/character/update-image', app.character)
                 .then(function (resp) {
             app.detailsFlag = false;
@@ -8367,11 +8473,39 @@ export default {
     handleFirstCharacter(val){
       this.firstCharacter = val;
     },
+    handleThirdCharacter(val){
+      this.thirdCharacter = val;
+    },
+    handleSecondThirdCharacter(val){
+      this.secondThirdCharacter = val;
+    },
     handleLastCharacter(val){
       this.lastCharacter = val;
     },
     handleSecondLastCharacter(val) {
       this.secondLastCharacter = val;
+    },
+    handleRoundOneThird(val,index) {
+      this.roundsOne[index].fourth = val;
+      var app = this;
+      if(val != '' && this.roundsOne != undefined && this.roundsOne.length > 0){
+      app.roundsOne[index].thirdCh = this.thirdNounData.filter((item)=>{
+        return val.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        app.roundsOne[index].thirdCh = this.thirdNounData;
+      }
+    },
+    handleRoundTwoThird(val,index) {
+      this.roundsTwo[index].fourth = val;
+      var app = this;
+      if(val != '' && this.roundsTwo != undefined && this.roundsTwo.length > 0){
+      app.roundsTwo[index].thirdCh = this.thirdNounData.filter((item)=>{
+        return val.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        app.roundsTwo[index].thirdCh = this.thirdNounData;
+      }
     },
     handleRoundOne(val,index) {
       this.roundsOne[index].fifth = val;
@@ -8404,6 +8538,28 @@ export default {
       })
       }else{
         app.roundsOne[index].characters = this.nounCharacters;
+      }
+    },
+    onChangeRoundsOneThird(index,val) {
+      val = this.roundsOne[index].fourth;
+      var app = this;
+      if(val != '' && this.roundsOne != undefined && this.roundsOne.length > 0){
+      app.roundsOne[index].thirdCh = this.thirdNounData.filter((item)=>{
+        return val.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        app.roundsOne[index].thirdCh = this.thirdNounData;
+      }
+    },
+    onChangeRoundsTwoThird(index,val) {
+      val = this.roundsTwo[index].fourth;
+      var app = this;
+      if(val != '' && this.roundsTwo != undefined && this.roundsTwo.length > 0){
+      app.roundsTwo[index].thirdCh = this.thirdNounData.filter((item)=>{
+        return val.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+      })
+      }else{
+        app.roundsTwo[index].thirdCh = this.thirdNounData;
       }
     },
     onChangeRoundsTwo(index,val) {
@@ -8477,7 +8633,7 @@ export default {
           var textConstraint = "enter a singular noun";
         }
 
-        let values = {text:textConstraint, round_val:app.roundValOne,first: '', second:'', third:'', fourth:'', fifth:'' , undefined: false, deprecated: false, recommend: false, synonym: false, broadSynonym: false, deprecatedNotifyMessage: '', recommendNotifyMessage: '', synonymNotifyMessage: '', broadSynonymNotifyMessage: '', definition: '', characters: app.nounCharacters};
+        let values = {text:textConstraint, round_val:app.roundValOne,first: '', second:'', third:'', fourth:'', fifth:'' , undefined: false, deprecated: false, recommend: false, synonym: false, broadSynonym: false, deprecatedNotifyMessage: '', recommendNotifyMessage: '', synonymNotifyMessage: '', broadSynonymNotifyMessage: '', definition: '', characters: app.nounCharacters, thirdCh: app.thirdNounData};
 
         this.roundsOne.push(values);
       }
@@ -8494,7 +8650,7 @@ export default {
           var textConstraint = "enter a singular noun";
         }
 
-        let values = {text:textConstraint, round_val:app.roundValTwo,first: '', second:'', third:'', fourth:'', fifth:'' , undefined: false, deprecated: false, recommend: false, synonym: false, broadSynonym: false, deprecatedNotifyMessage: '', recommendNotifyMessage: '', synonymNotifyMessage: '', broadSynonymNotifyMessage: '', definition: '', characters: app.nounCharacters};
+        let values = {text:textConstraint, round_val:app.roundValTwo,first: '', second:'', third:'', fourth:'', fifth:'' , undefined: false, deprecated: false, recommend: false, synonym: false, broadSynonym: false, deprecatedNotifyMessage: '', recommendNotifyMessage: '', synonymNotifyMessage: '', broadSynonymNotifyMessage: '', definition: '', characters: app.nounCharacters, thirdCh: app.thirdNounData};
 
         this.roundsTwo.push(values);
       }
