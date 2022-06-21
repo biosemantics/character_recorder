@@ -71,6 +71,7 @@ Route::group([
         Route::post('update',                           ['as' => 'update_value',                'uses' => 'HomeController@updateValue']);
         Route::post('update-character',                 ['as' => 'update_character',            'uses' => 'HomeController@updateCharacter']);
         Route::post('update-image',                 ['as' => 'update_image',            'uses' => 'HomeController@updateImage']);
+        Route::post('edit-view',                 ['as' => 'edit_view',            'uses' => 'HomeController@editView']);
         Route::post('update-unit',                      ['as' => 'update_unit',                 'uses' => 'HomeController@updateUnit']);
         Route::post('update-summary',                   ['as' => 'update_summary',              'uses' => 'HomeController@updateSummary']);
         Route::post('delete/{userId}/{characterId}',    ['as' => 'delete_character',            'uses' => 'HomeController@deleteCharacter']);

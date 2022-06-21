@@ -132,6 +132,7 @@
                                   @searchchange="printSearchText"
                                   @select="onSelect"
                                   @resolve="onResolve"
+                                  @click="refresh"
                     />
 
                   </div>
@@ -232,10 +233,10 @@
                          style="width: 40px; margin-left: 30px; line-height: 38px; border:none;">
                   Samples
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-5" @click="refreshEntries">
                   <model-select :options="standardCharacters"
                                 v-model="item"
-                                placeholder="Search/create character here"
+                                placeholder="Search/create character here1"
                                 @searchchange="printSearchText"
                                 @select="onSelect"
                                 @resolve="onResolve"
@@ -3758,6 +3759,8 @@ export default {
       totalEmptyCells: '',
       postRoute:window.location.href+'api/v1/character/empty-cells',
       formToken: $('meta[name="csrf-token"]').attr('content'),
+      refreshData: false,
+
     }
   },
   components: {
@@ -4211,7 +4214,7 @@ export default {
                                     src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
                                   }
                                   if(items.elucidation != undefined && items.elucidation != '' && items.elucidation != null) {
-                                    var id = items.elucidation.slice(item.elucidation.indexOf('file/d/') + 7, item.elucidation.indexOf('/view'));
+                                    var id = items.elucidation.slice(items.elucidation.indexOf('file/d/') + 7, items.elucidation.indexOf('/view'));
 
                                     src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
                                   }
@@ -4361,6 +4364,105 @@ export default {
         app.userCharacters[index].tooltip = src + app.userCharacters[index].tooltip;
       }
     },
+    refreshEntries(event) {
+      var app = this;
+      if(app.refreshData ==  true) {
+        var tempDefaultCharacters = [];
+        app.standardCharacters = [];
+        for (var i = 0; i < app.standardCollections.length; i++) {
+          var temp = {};
+          var defChs = app.defaultCharacters.filter(eachCh => eachCh.standard == 1 && eachCh.name == app.standardCollections[i].name && eachCh.username == app.standardCollections[i].username);
+          app.standardCollections[i].usage_count = 0;
+          for (var j = 0; j < defChs.length; j++) {
+            app.standardCollections[i].usage_count += parseInt(defChs[j].usage_count);
+          }
+
+          temp.name = app.standardCollections[i].name;
+          temp.text = app.standardCollections[i].name + ' by ' + app.standardCollections[i].username + ' (' + app.standardCollections[i].usage_count + ')';
+          temp.tooltip = '';
+          temp.value = app.standardCollections[i].id;
+
+          if (app.standardCollections[i].method_from != null && app.standardCollections[i].method_from != '') {
+            temp.tooltip = temp.tooltip + 'From: ' + app.standardCollections[i].method_from + ', ';
+          }
+          if (app.standardCollections[i].method_to != null && app.standardCollections[i].method_to != '') {
+            temp.tooltip = temp.tooltip + 'To: ' + app.standardCollections[i].method_to + ', ';
+          }
+          if (app.standardCollections[i].method_include != null && app.standardCollections[i].method_include != '') {
+            temp.tooltip = temp.tooltip + 'Include: ' + app.standardCollections[i].method_include + ', ';
+          }
+          if (app.standardCollections[i].method_exclude != null && app.standardCollections[i].method_exclude != '') {
+            temp.tooltip = temp.tooltip + 'Exclude: ' + app.standardCollections[i].method_exclude + ', ';
+          }
+          if (app.standardCollections[i].method_where != null && app.standardCollections[i].method_where != '') {
+            temp.tooltip = temp.tooltip + 'Where: ' + app.standardCollections[i].method_where;
+          }
+
+          temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.standardCollections[i].IRI);
+
+          var src = '';
+          if (app.standardCollections[i].elucidation != '' && app.standardCollections[i].elucidation != null) {
+            if (src == '') {
+              src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+            }
+            var imgUrls = app.standardCollections[i].elucidation.split(',');
+            for (var j = 0; j < imgUrls.length; j++) {
+              if (imgUrls[j].indexOf('id=') < 0) {
+                var id = imgUrls[j].slice(imgUrls[j].indexOf('file/d/') + 7, imgUrls[j].indexOf('/view'));
+                src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + id + "'/></div>";
+              } else {
+                src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + imgUrls[j].split('id=')[1].substring(0, imgUrls[j].split('id=')[1].length - 1) + "'/></div>";
+              }
+            }
+            if (src != '') {
+              src += '</div>';
+            }
+          }
+          temp.tooltip = src + temp.tooltip;
+          if (app.containsObject(temp, app.standardCharacters)) {
+            app.standardCharacters.push(temp);
+          }
+          tempDefaultCharacters.push(app.standardCollections[i]);
+        }
+        for (var i = 0; i < app.defaultCharacters.length; i++) {
+          var temp = {};
+          // need to be removed later *** start ***
+          if (app.defaultCharacters[i].standard == 0) {
+            temp.name = app.defaultCharacters[i].name;
+            temp.text = app.defaultCharacters[i].name + ' by ' + app.defaultCharacters[i].username + ' (' + app.defaultCharacters[i].usage_count + ')';
+            temp.value = app.defaultCharacters[i].id;
+            temp.tooltip = '';
+            if (app.defaultCharacters[i].method_from != null && app.defaultCharacters[i].method_from != '') {
+              temp.tooltip = temp.tooltip + 'From: ' + app.defaultCharacters[i].method_from + ', ';
+            }
+            if (app.defaultCharacters[i].method_to != null && app.defaultCharacters[i].method_to != '') {
+              temp.tooltip = temp.tooltip + 'To: ' + app.defaultCharacters[i].method_to + ', ';
+            }
+            if (app.defaultCharacters[i].method_include != null && app.defaultCharacters[i].method_include != '') {
+              temp.tooltip = temp.tooltip + 'Include: ' + app.defaultCharacters[i].method_include + ', ';
+            }
+            if (app.defaultCharacters[i].method_exclude != null && app.defaultCharacters[i].method_exclude != '') {
+              temp.tooltip = temp.tooltip + 'Exclude: ' + app.defaultCharacters[i].method_exclude + ', ';
+            }
+            if (app.defaultCharacters[i].method_where != null && app.defaultCharacters[i].method_where != '') {
+              temp.tooltip = temp.tooltip + 'Where: ' + app.defaultCharacters[i].method_where;
+            }
+
+            temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.defaultCharacters[i].IRI);
+            // temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
+            var imageSrc = app.getTooltipImageString(temp.name);
+            temp.tooltip = imageSrc + temp.tooltip;
+            // need to be removed later *** end ***
+            if (app.containsObject(temp, app.standardCharacters)) {
+              app.standardCharacters.push(temp);
+              tempDefaultCharacters.push(app.defaultCharacters[i]);
+            }
+          }
+        }
+        app.defaultCharacters = tempDefaultCharacters;
+        app.refreshData = false;
+      }
+    },
     onSelect(selectedItem) {
       var app = this;
       console.log('selectedItem', selectedItem);
@@ -4487,6 +4589,7 @@ export default {
       }
     },
     onResolve(resolveItem) {
+      alert('l');
       var app = this;
       var selectedCharacter = app.defaultCharacters.find(ch => ch.id == resolveItem.value)
       app.resolveItemFlag = true;
@@ -4640,7 +4743,10 @@ export default {
           var send_data = [];
           send_data.push(app.character.name);
           send_data.push(app.character.owner_name);
-          axios.post('api/v1/character/identify', send_data)
+          send_data.push(app.character.id);
+          console.log(app.character);
+          if(app.viewCharacter == true){
+            axios.post('api/v1/character/identify', send_data)
             .then(function (resp) {
               var origin   = window.location.href; 
               var url = origin+'/storage/';
@@ -4651,6 +4757,20 @@ export default {
                 }
               }
             });
+          }else {
+            axios.post('api/v1/character/edit-view', send_data)
+            .then(function (resp) {
+              var origin   = window.location.href; 
+              var url = origin+'/storage/';
+              var persons_data =  resp.data;
+              if(persons_data.length > 0) {
+                for (let p = 0; p < persons_data.length; p++) {
+                  app.viewImages.push(url + persons_data[p]);
+                }
+              }
+            });
+          }
+          
        /* }*/
       });  
 
@@ -7369,7 +7489,6 @@ export default {
 
     },
     removeUserCharacter(characterId) {
-      console.log('removeUserCharacter');
       var app = this;
       var oldUserTag = app.userCharacters.find(ch => ch.id == characterId).standard_tag;
       axios.post("api/v1/character/delete/" + app.user.id + "/" + characterId)
@@ -7387,7 +7506,6 @@ export default {
               user_id: app.user.id,
               user_tag: oldUserTag
             };
-            console.log('remove jsonUserTag', jsonUserTag);
             axios.post("api/v1/user-tag/remove", jsonUserTag)
               .then(function (resp) {
                 console.log("remove UserTag", resp.data);
@@ -7875,36 +7993,36 @@ export default {
           && ch.method_where == app.character.method_where
         )) {
 
-          console.log('app.character', app.character);
-          //    app.character.show_flag = false;
-          //             app.character.standard = 1;
-          app.characterUsername = app.character.username;
+              //    app.character.show_flag = false;
+              //             app.character.standard = 1;
+              app.characterUsername = app.character.username;
 
-          var checkFields = true;
-          if (((this.character['method_from'] == null || this.character['method_from'] == '') &&
-            (this.character['method_to'] == null || this.character['method_to'] == '') &&
-            (this.character['method_include'] == null || this.character['method_include'] == '') &&
-            (this.character['method_exclude'] == null || this.character['method_exclude'] == '') &&
-            (this.character['method_where'] == null || this.character['method_where'] == '')) &&
-            app.checkHaveUnit(app.character.name)) {
-            checkFields = false;
-          }
+              var checkFields = true;
+              if (((app.character['method_from'] == null || app.character['method_from'] == '') &&
+                (app.character['method_to'] == null || app.character['method_to'] == '') &&
+                (app.character['method_include'] == null || app.character['method_include'] == '') &&
+                (app.character['method_exclude'] == null || app.character['method_exclude'] == '') &&
+                (app.character['method_where'] == null || app.character['method_where'] == '')) &&
+                app.checkHaveUnit(app.character.name)) {
+                checkFields = false;
+              }
 
-          if (!app.character['unit'] && app.checkHaveUnit(app.character.name)) {
-            if (!app.character.name.startsWith('Number') && !app.character.name.startsWith('Count')) {
-              app.character.unit = 'mm';
-            }
-            if (!app.character['summary']) {
-              app.character.summary = 'range-percentile';
-            }
-          }
+              if (!app.character['unit'] && app.checkHaveUnit(app.character.name)) {
+                if (!app.character.name.startsWith('Number') && !app.character.name.startsWith('Count')) {
+                  app.character.unit = 'mm';
+                }
+                if (!app.character['summary']) {
+                  app.character.summary = 'range-percentile';
+                }
+              }
 
-          if (checkFields) {
-            app.confirmSave(app.metadataFlag);
+              if (checkFields) {
+                app.confirmSave(app.metadataFlag);
 
-          } else {
-            app.showDetails('unit', app.metadataFlag);
-          }
+              } else {
+                app.showDetails('unit', app.metadataFlag);
+              }
+          
         } else {
           alert("The character already exists for this user, but if you upload any image then it will be uploaded.!!");
           app.character.temp_files = app.temp_files;
@@ -7940,12 +8058,10 @@ export default {
     enhance(characterId) {
       var app = this;
       app.item = characterId;
-      console.log('characterId', characterId);
       var selectedCharacter = app.defaultCharacters.find(ch => ch.id == characterId);
       if (!selectedCharacter) {
         selectedCharacter = app.userCharacters.find(ch => ch.id == characterId);
       }
-      console.log('selectedCharacter.username', selectedCharacter.username);
       app.oldCharacter.method_from = selectedCharacter.method_from;
       app.oldCharacter.method_to = selectedCharacter.method_to;
       app.oldCharacter.method_include = selectedCharacter.method_include;
@@ -8567,6 +8683,8 @@ export default {
           app.isLoading = true;
           axios.post('api/v1/character/update', value)
             .then(function (resp) {
+              app.refreshData = true;
+              app.isLoading = false;
               console.log('saveItem', resp.data);
               if (resp.data.error_input == 1) {
                 event.target.style.color = 'red';
@@ -8583,10 +8701,9 @@ export default {
                 }
                 app.defaultCharacters = resp.data.defaultCharacters;
                 app.matrixSaved = false;
-                app.refreshDefaultCharacters();
+                //app.refreshDefaultCharacters();
                 app.refreshUserCharacters();
                 app.showTableForTab(app.currentTab);
-                app.isLoading = false;
               }
             });
         }
@@ -8683,14 +8800,11 @@ export default {
           }
         }
         app.userCharacters[i].tooltip = src + app.userCharacters[i].tooltip;
-
-
       }
       for (var i = 0; i < app.userTags.length; i++) {
         app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
       }
       app.characterUsername = app.user.name;
-      console.log(app.userCharacters);
     },
     tagOrder(tag) {
       var app = this;
@@ -8868,7 +8982,6 @@ export default {
       var app = this;
       var tempDefaultCharacters = [];
       app.standardCharacters = [];
-      console.log('app.defaultCharacters', app.defaultCharacters);
       for (var i = 0; i < app.standardCollections.length; i++) {
         var temp = {};
         var defChs = app.defaultCharacters.filter(eachCh => eachCh.standard == 1 && eachCh.name == app.standardCollections[i].name && eachCh.username == app.standardCollections[i].username);
@@ -8968,7 +9081,7 @@ export default {
           }
         }
       }
-      console.log('app.standardCharacters', app.standardCharacters);
+
       app.defaultCharacters = tempDefaultCharacters;
     },
     expandDescription() {
@@ -9872,10 +9985,12 @@ export default {
     },
     saveHeader(header) {
       var app = this;
+      app.isLoading = true;
       console.log('header', header.header);
       if(header.header != '' && header.header != null) {
         axios.post('api/v1/update-header', header)
           .then(function (resp) {
+            app.isLoading = false;
             app.headers = resp.data.headers;
             app.values = resp.data.values;
             app.getDeprecatedValue();
@@ -10279,7 +10394,7 @@ export default {
           if (postFlag == true) {
             axios.post('api/v1/save-color-value', postValue)
               .then(async function (resp) {
-
+               
                 if (postValue['brightness'] && postValue['brightness'] != '') {
                   await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + postValue['brightness'].toLowerCase().replace('-', ' ')).then(resultsp => {
                     if (resultsp.data.entries.length > 0) {
@@ -10412,8 +10527,9 @@ export default {
                 app.allNonColorValues = resp.data.allNonColorValues;
                 app.currentColorValue['value_id'] = app.currentColorValue.value_id;
                 app.defaultCharacters = resp.data.defaultCharacters;
-                app.refreshDefaultCharacters();
-                app.getDeprecatedValue();
+                app.refreshData = true;
+                //app.refreshDefaultCharacters();
+               // app.getDeprecatedValue();
               }).then(() => {
               axios.post('api/v1/getAllDetails')
                 .then(function (respColor) {
@@ -10732,8 +10848,9 @@ export default {
                 app.currentNonColorValue.detailsFlag = null;
                 app.defaultCharacters = resp.data.defaultCharacters;
                 app.matrixSaved = false;
-                app.refreshDefaultCharacters();
-                app.getDeprecatedValue();
+                app.refreshData = true;
+                //app.refreshDefaultCharacters();
+                //app.getDeprecatedValue();
                 if (newFlag == false) {
                   app.nonColorDetailsFlag = false;
                 } else {
@@ -12096,6 +12213,7 @@ export default {
       app.isLoading = true;
       axios.post('api/v1/remove-each-color-details', app.removeEachColorValue)
         .then(function (resp) {
+          app.refreshData = true;
           app.toRemoveColorValueConfirmFlag = false;
           app.colorDetails = resp.data.colorDetails;
           app.values = resp.data.values;
@@ -12104,7 +12222,7 @@ export default {
           app.allColorValues = resp.data.allColorValues;
           app.allNonColorValues = resp.data.allNonColorValues;
           app.defaultCharacters = resp.data.defaultCharacters;
-          app.refreshDefaultCharacters();
+          //app.refreshDefaultCharacters();
           app.getDeprecatedValue();
           app.isLoading = false;
         });
@@ -12130,6 +12248,7 @@ export default {
       app.isLoading = true;
       axios.post('api/v1/remove-each-non-color-details', app.removeEachNonColorValue)
         .then(function (resp) {
+          app.isLoading = false;
           app.toRemoveNonColorValueConfirmFlag = false;
           app.nonColorDetails = resp.data.nonColorDetails;
           app.values = resp.data.values;
@@ -12138,9 +12257,9 @@ export default {
           app.allColorValues = resp.data.allColorValues;
           app.allNonColorValues = resp.data.allNonColorValues;
           app.defaultCharacters = resp.data.defaultCharacters;
-          app.refreshDefaultCharacters();
+          //app.refreshDefaultCharacters();
+          app.refreshData = true;
           app.getDeprecatedValue();
-          app.isLoading = false;
         });
     },
     getUserTag: async () => {
@@ -12643,14 +12762,12 @@ export default {
   },
   async created() {
     var app = this;
-    console.log('created');
     app.generateDescriptionTooltip = '<div>Click this button to generate a textual description of the taxon based on the matrix. Use up/down arrow in the matrix to adjust the order of the characters shown in the text</div>';
     app.isLoading = true;
     app.getStandardCollections();
     await axios.get("http://shark.sbs.arizona.edu:8080/carex/getTree")
       .then(function (resp) {
         app.treeResult = resp.data;
-        console.log("treeResult", app.treeResult);
         if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
           for (let t = 0; t < app.treeResult.children.length; t++) {
             // for review info
@@ -12758,8 +12875,6 @@ export default {
         app.headers = resp.data.headers;
         app.values = resp.data.values;
         app.lastLoadMatrixName = resp.data.lastMatrix;
-        console.log('headers', app.headers);
-        console.log('values', app.values);
         app.allColorValues = resp.data.allColorValues;
         app.allNonColorValues = resp.data.allNonColorValues;
         if (resp.data.taxon != null) {
@@ -12872,7 +12987,6 @@ export default {
     app.isLoading = false;
   },
   mounted() {
-    console.log('mounted');
     var app = this;
     app.searchCharacter();
     app.user.name = app.user.email.split('@')[0];
@@ -12885,7 +12999,6 @@ export default {
     let detailChannel = window.Echo.channel('my-channel');
     detailChannel.listen('.my-event', function(data) {
       // $('#top-user').text(data['topUser']);
-      console.log('broadcast - data', data);
       axios.get('api/v1/standard_characters').then(function(resp) {
         app.defaultCharacters = resp.data;
         app.refreshDefaultCharacters();

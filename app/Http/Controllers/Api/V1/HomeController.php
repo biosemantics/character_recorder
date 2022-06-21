@@ -83,10 +83,10 @@ class HomeController extends Controller
 
     public function getHeaders()
     {
-        $headers = Header::where('user_id', Auth::id())
+        $headers = DB::table('headers')->where('user_id', Auth::id())
             ->orWhere('user_id', NULL)
-            ->orderBy('header', 'desc')->get()->toArray();
-
+            ->orderBy('header', 'desc')->get();
+        $headers = json_decode($headers,true);
         $beforeResult = array();
         foreach ($headers as $header) {
             array_push($beforeResult, $header['header']);
@@ -106,10 +106,10 @@ class HomeController extends Controller
 
     public function getHeadersByUserId($userID)
     {
-        $headers = Header::where('user_id', $userID)
+        $headers = DB::table('headers')->where('user_id', $userID)
             ->orWhere('user_id', NULL)
-            ->orderBy('header', 'desc')->get()->toArray();
-
+            ->orderBy('header', 'desc')->get();
+        $headers = json_decode($headers,true);
         $beforeResult = array();
         foreach ($headers as $header) {
             array_push($beforeResult, $header['header']);
@@ -123,7 +123,6 @@ class HomeController extends Controller
                 }
             }
         }
-
         return array_reverse($result, false);
     }
 
@@ -146,11 +145,12 @@ class HomeController extends Controller
         $user = User::where('id', '=', $userID)->first();
         $username = explode('@', $user['email'])[0];
 
-        $allCharacters = Character::where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
+        $allCharacters = DB::table('characters')->where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
+    
         $headers = $this->getHeadersByUserId($userID);
-        $values = Value::join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->select('values.id as id', 'values.character_id as character_id', 'values.header_id as header_id', 'values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
-        $colorDetails = ColorDetails::join('values', 'values.id', '=', 'color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
-        $nonColorDetails = NonColorDetails::join('values', 'values.id', '=', 'non_color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
+        $values = DB::table('values')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->select('values.id as id', 'values.character_id as character_id', 'values.header_id as header_id', 'values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
+        $colorDetails = DB::table('color_details')->join('values', 'values.id', '=', 'color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
+        $nonColorDetails = DB::table('non_color_details')->join('values', 'values.id', '=', 'non_color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
 
         $characters = [];
         $valueFlag = [];
@@ -279,9 +279,8 @@ class HomeController extends Controller
 
     public function getDefaultCharacters()
     {
-        $standardCharacters = Character::where('standard', '=', 1)->get()->toArray();
-
-        $dfCharacters = DefaultCharacter::all();
+        $standardCharacters = DB::table('characters')->where('standard', '=', 1)->get()->toArray();
+        $dfCharacters = DB::table('default_characters')->get();
         $userUsages = DB::select(DB::raw('SELECT A.name AS name, SUM(B.usage_count) AS usage_count
                                     FROM default_characters AS A
                                     INNER JOIN characters AS B ON A.name COLLATE utf8mb4_general_ci = B.name
@@ -555,7 +554,7 @@ class HomeController extends Controller
 
 
 //        $characters = Character::where('owner_name', '=', $username)->orderBy('standard_tag', 'ASC')->get();
-        $characters = Character::where('owner_name', '=', $username)->get();
+        $characters = DB::table('characters')->where('owner_name', '=', $username)->get();
 
         $usedCharacters = Character::where('owner_name', '=', $username)->get();
         foreach ($usedCharacters as $usedCharacter) {
@@ -568,12 +567,10 @@ class HomeController extends Controller
         }
 
         $defaultCharacters = $this->getDefaultCharacters();
-
-
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
-        $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
+        $returnUserTags = DB::table('user_tags')->where('user_id', '=', Auth::id())->get();
         $returnAllDetailValues = $this->getAllDetails();
         $data = [
             'headers' => $returnHeaders,
@@ -929,7 +926,7 @@ class HomeController extends Controller
 
         $character = Character::where('id', '=', $value->character_id)->first();
 
-        $valueCount = Value::where('character_id', '=', $character->id)
+        $valueCount = DB::table('values')->where('character_id', '=', $character->id)
             ->where('value', '<>', '')
             ->where('value', '<>', null)
             ->where('value', '<>', $character->name)
@@ -1591,13 +1588,28 @@ class HomeController extends Controller
     // identify character
     public function identify(Request $request) {
         $data =$request->all();
-        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->first();
+        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('images','!=',null)->where('images','!=','')->where('id',$data[2])->first();
         $info2 = defaultCharacter::where('name',$data[0])->where('owner_name','!=',$data[1])->first();
         $mainImage = array();
         $uploadedImage = array();
         if(!empty($info2) && !empty($info2->images)) {
           $mainImage = json_decode($info2->images,true);
         }
+        if(!empty($info1) && !empty($info1->images)) {
+          $uploadedImage = json_decode($info1->images,true);
+        }
+        return array_merge($mainImage,$uploadedImage);
+    }
+
+    public function editView(Request $request) {
+        $data =$request->all();
+        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('images','!=',null)->where('images','!=','')->first();
+       // $info2 = defaultCharacter::where('name',$data[0])->where('owner_name','!=',$data[1])->first();
+        $mainImage = array();
+        $uploadedImage = array();
+       /* if(!empty($info2) && !empty($info2->images)) {
+          $mainImage = json_decode($info2->images,true);
+        }*/
         if(!empty($info1) && !empty($info1->images)) {
           $uploadedImage = json_decode($info1->images,true);
         }
@@ -1618,7 +1630,7 @@ class HomeController extends Controller
             Storage::disk('public')->put($imageName, $image_base64);
             $allImageName[] = $imageName;
         }
-        $info1 = Character::where('name',$request->input('name'))->where('owner_name',$request->owner_name)->first();
+        $info1 = Character::where('name',$request->input('name'))->where('owner_name',$request->owner_name)->orderBy('id','desc')->first();
         if(!empty($info1)) {
           $prevImages = array();
           if(!empty($info1->images)) {
@@ -1632,7 +1644,7 @@ class HomeController extends Controller
         if(!empty($info2)) {
           $oldImages = array();
           if(!empty($info2->images)) {
-            $oldImages = json_decode($info->images,true);
+            $oldImages = json_decode($info2->images,true);
           }
           $info2->images = json_encode(array_merge($oldImages,$allImageName));
           $info2->save();
@@ -2066,7 +2078,7 @@ class HomeController extends Controller
 
         $returnValues = $this->getValuesByCharacter();
         $returnAllDetailValues = $this->getAllDetails();
-        $returnNonColorDetails = NonColorDetails::where('value_id', '=', $request->input('value_id'))->get();
+        $returnNonColorDetails = DB::table('non_color_details')->where('value_id', '=', $request->input('value_id'))->get();
         $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'id' => $id,
@@ -2084,14 +2096,14 @@ class HomeController extends Controller
 
     public function getDefaultConstraint($characterName)
     {
-        $characters = Character::where('name', 'like', $characterName)->get();
+        $characters = DB::table('characters')->where('name', 'like', $characterName)->get();
 
         $preList = ['longitudinally'];
         $postList = ['when young'];
         foreach ($characters as $eachCharacter) {
-            $values = Value::where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
+            $values = DB::table('values')->where('character_id', '=', $eachCharacter->id)->where('header_id', '<>', 1)->get();
             foreach ($values as $eachValue) {
-                $details = ColorDetails::where('value_id', '=', $eachValue->id)->get();
+                $details = DB::table('color_details')->where('value_id', '=', $eachValue->id)->get();
                 foreach ($details as $each) {
                     if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
                         if (!in_array($each->pre_constraint, $preList)) {
@@ -2104,7 +2116,7 @@ class HomeController extends Controller
                         }
                     }
                 }
-                $details = NonColorDetails::where('value_id', '=', $eachValue->id)->get();
+                $details = DB::table('non_color_details')->where('value_id', '=', $eachValue->id)->get();
                 foreach ($details as $each) {
                     if ($each->pre_constraint != null && $each->pre_constraint != '' && $each->pre_constraint != 'undefined' && $each->pre_constraint != 'null') {
                         if (!in_array($each->pre_constraint, $preList)) {
@@ -2226,10 +2238,10 @@ class HomeController extends Controller
         if ($eachColorDetails) {
             $eachColorDetails->delete();
             $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
-            $characterValues = Value::where('character_id', '=', $character->id)->get();
+            $characterValues = DB::table('values')->where('character_id', '=', $character->id)->get();
             $tempCount = 0;
             foreach ($characterValues as $eachValue) {
-                if (ColorDetails::where('value_id', '=', $eachValue->id)->count() > 0) {
+                if (DB::table('color_details')->where('value_id', '=', $eachValue->id)->count() > 0) {
                     $tempCount++;
                 }
             }
@@ -2239,7 +2251,7 @@ class HomeController extends Controller
             }
         }
 
-        $returnColorDetails = ColorDetails::where('value_id', '=', $request->input('value_id'))->get();
+        $returnColorDetails = DB::table('color_details')->where('value_id', '=', $request->input('value_id'))->get();
         $returnValues = $this->getValuesByCharacter();
         $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
 
@@ -2267,10 +2279,10 @@ class HomeController extends Controller
         if ($eachNonColorDetails) {
             $eachNonColorDetails->delete();
             $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
-            $characterValues = Value::where('character_id', '=', $character->id)->get();
+            $characterValues = DB::table('values')->where('character_id', '=', $character->id)->get();
             $tempCount = 0;
             foreach ($characterValues as $eachValue) {
-                if (NonColorDetails::where('value_id', '=', $eachValue->id)->count() > 0) {
+                if (DB::table('non_color_details')->where('value_id', '=', $eachValue->id)->count() > 0) {
                     $tempCount++;
                 }
             }
@@ -2281,8 +2293,8 @@ class HomeController extends Controller
         }
         $returnValues = $this->getValuesByCharacter();
 
-        $returnNonColorDetails = NonColorDetails::where('value_id', '=', $request->input('value_id'))->get();
-        $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
+        $returnNonColorDetails = DB::table('non_color_details')->where('value_id', '=', $request->input('value_id'))->get();
+        $characterName = DB::table('characters')->where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
 
         $constraints = $this->getDefaultConstraint($characterName);
 
@@ -3097,21 +3109,21 @@ class HomeController extends Controller
     {
         $id = $request->input('id');
         $main_value_IRI = $request->input('main_value_IRI');
-        NonColorDetails::where('id', '=', $id)->update(['main_value_IRI' => $main_value_IRI]);
+        DB::table('non_color_details')->where('id', '=', $id)->update(['main_value_IRI' => $main_value_IRI]);
     }
 
     public function setColorBrightnessIRI(Request $request)
     {
         $id = $request->input('id');
         $main_value_IRI = $request->input('IRI');
-        ColorDetails::where('id', '=', $id)->update(['brightness_IRI' => $main_value_IRI]);
+        DB::table('color_details')->where('id', '=', $id)->update(['brightness_IRI' => $main_value_IRI]);
     }
 
     public function setColorReflectanceIRI(Request $request)
     {
         $id = $request->input('id');
         $main_value_IRI = $request->input('IRI');
-        ColorDetails::where('id', '=', $id)->update(['reflectance_IRI' => $main_value_IRI]);
+        DB::table('color_details')->where('id', '=', $id)->update(['reflectance_IRI' => $main_value_IRI]);
     }
 
     public function setColorSaturationIRI(Request $request)
