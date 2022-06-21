@@ -673,10 +673,10 @@
                                 </select>
                               </div>
                               <div class="custom-character-field">
-                                <div class="selectDataList width-100"> 
+                                <div class="selectDataList w-full"> 
                                   <input
                                     style="height: 26px;"
-                                    class="width-100"
+                                    class="w-full"
                                     type="text"
                                     v-model="thirdCharacter"
                                     >
@@ -739,9 +739,9 @@
                               <!-- custom static datalist end--> 
 
                               <div class="custom-character-field">
-                                <div class="selectDataList width-100">
+                                <div class="selectDataList w-full">
                                   <input
-                                    class="width-100"
+                                    class="w-full"
                                     v-model="lastCharacter"
                                     style='height: 26px;'
                                     v-on:focus="nounUndefined = false;
@@ -812,10 +812,10 @@
                                 </select>
                               </div>
                               <div class="custom-character-field" v-if="round.round_val == 'S' || round.round_val == 'D' ">
-                                <div class="selectDataList width-100"> 
+                                <div class="selectDataList w-full"> 
                                    <input
                                     v-model="round.fourth"
-                                    class="width-100"
+                                    class="w-full"
                                     style="height: 26px;"
                                     @input="onChangeRoundsOneThird(index,round.fourth)"
                                   />
@@ -859,10 +859,10 @@
                                 </select> -->
                               </div>
                               <div class="custom-character-field">
-                                <div class="selectDataList width-100">
+                                <div class="selectDataList w-full">
                                   <input
                                     v-model="round.fifth"
-                                    class="width-100"
+                                    class="w-full"
                                     v-bind:style="{ 'width': round.text == 'enter a positional phrases,e.g at middle length' ? 340 + 'px' : ''}"
                                     style="height: 26px;"
                                     @input="onChangeRoundsOne(index,round.fifth)"
@@ -936,10 +936,10 @@
                               <div class="custom-character-field">
                                 <div v-if="middleCharacter=='between'" style="width:100%; text-align: center; font-weight: bold;">and
                                 </div>
-                                  <div class="selectDataList width-100" v-if="middleCharacter=='between'"> 
+                                  <div class="selectDataList w-full" v-if="middleCharacter=='between'"> 
                                     <input
                                       style="height: 26px;"
-                                      class="width-100"
+                                      class="w-full"
                                       type="text"
                                       v-model="secondThirdCharacter"
                                       >
