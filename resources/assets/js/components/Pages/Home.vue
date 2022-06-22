@@ -1396,17 +1396,17 @@
                                   Method
                                   </a>
                                 </li>
-                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),((!checkHaveUnit(character.name) || firstCharacter == 'Color' || firstCharacter == 'Number') ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
-                                  <div v-if="firstCharacter != 'Color' && firstCharacter != 'Number'">
+                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),((!checkHaveUnit(character.name) ||  firstCharacterChange == 'color' || firstCharacterChange  == 'number' || firstCharacterChange  == 'arrangement') ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
+                                  <div v-if="firstCharacterChange  != 'color' && firstCharacterChange  != 'number' && firstCharacterChange  != 'arrangement'">
                                     <a 
-                                    :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color' || firstCharacter == 'Number')"
+                                    :disabled="(!checkHaveUnit(character.name) || firstCharacterChange  == 'color' || firstCharacterChange  == 'number' || firstCharacterChange  == 'arrangement')"
                                     v-on:click="showDetails('unit', metadataFlag)">
                                     Unit
                                     </a>
                                   </div>
                                   <div v-else>
                                     <a 
-                                      :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color' || firstCharacter == 'Number')">
+                                      :disabled="(!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'number' || firstCharacterChange == 'arrangement')">
                                       Unit
                                     </a>
                                   </div></li>
@@ -1414,17 +1414,17 @@
                                   v-on:click="showDetails('tag', metadataFlag)">
                                   Tag</a>
                                 </li>
-                                <li  :class="['summary',(completeElement.includes('summary') ? 'back-green' : ''),((!checkHaveUnit(character.name) || firstCharacter == 'Color') ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
-                                    <div v-if="firstCharacter != 'Color'">
+                                <li  :class="['summary',(completeElement.includes('summary') ? 'back-green' : ''),((!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'arrangement') ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
+                                    <div v-if="firstCharacterChange != 'color'">
                                       <a 
-                                      :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')"
+                                      :disabled="(!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'arrangement')"
                                       v-on:click="showDetails('summary', metadataFlag)">
                                        Summary Function
                                       </a>
                                     </div>
                                     <div v-else>
                                       <a 
-                                        :disabled="(!checkHaveUnit(character.name) || firstCharacter == 'Color')">
+                                        :disabled="(!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'arrangement')">
                                          Summary Function
                                       </a>
                                     </div>
@@ -3483,6 +3483,13 @@ export default {
         return this.nounCharacters;
       }
     },
+    firstCharacterChange() {
+      if(this.firstCharacter != undefined && this.firstCharacter != null && this.firstCharacter != '') {
+        return this.firstCharacter.toLowerCase();
+      }else {
+        return '';
+      }
+    },
     _valid() {
       var result = true;
       var app = this;
@@ -4967,16 +4974,16 @@ export default {
             break;
         }
       } else {
-        var ch = app.character.name.split(" ");
+        var ch = app.character.name.toLowerCase().split(" ");
         if(ch[0] != undefined && ch[1] !== undefined){
-          if(ch[0]+' '+ch[1] == 'Length of' || ch[0]+' '+ch[1] == "Width of" || ch[0]+' '+ch[1] == 'Depth of' || ch[0]+' '+ch[1] == 'Diameter of' || ch[0]+' '+ch[1] == 'Distance of' || ch[0]+' '+ch[1] == 'Distance between' || ch[0]+' '+ch[1] == 'Count of' || ch[0]+' '+ch[1] == 'Number of' || ch[0] == "Color") {
+          if(ch[0]+' '+ch[1] == 'length of' || ch[0]+' '+ch[1] == "width of" || ch[0]+' '+ch[1] == 'depth of' || ch[0]+' '+ch[1] == 'diameter of' || ch[0]+' '+ch[1] == 'distance of' || ch[0]+' '+ch[1] == 'distance between' || ch[0]+' '+ch[1] == 'count of' || ch[0]+' '+ch[1] == 'number of' || ch[0] == "color" || ch[0] == "arrangement") {
             app.active_el = 'method';
           }else {
             app.active_el = 'tag'
           }
         }
         
-        if(ch[0] != 'undefined' && ch[0] == 'Color') {
+        if(ch[0] != 'undefined' && (ch[0] == 'color' || ch[0] == 'arrangement')) {
           var type = 'method';
         }else {
           var type = "";
@@ -7119,7 +7126,7 @@ export default {
       app.character.creator = app.user.name + ' via CR';
       app.editFlag = false;
       app.newCharacterFlag = false;
-      if(app.firstCharacter == 'Color') {
+      if(app.firstCharacter.toLowerCase() == 'color' || app.firstCharacter.toLowerCase() == 'arrangement') {
         var type = 'method';
       }else {
         var type = '';
@@ -7164,8 +7171,9 @@ export default {
         app.metadataFlag = 'tag';
         app.currentMetadata = tag;
       }
-      var ch_name = app.character.name.split(' ')[0];
-      if(ch_name+' '+app.middleCharacter == 'Length of' || ch_name+' '+app.middleCharacter == "Width of" || ch_name+' '+app.middleCharacter == 'Depth of' || ch_name+' '+app.middleCharacter == 'Diameter of' || ch_name+' '+app.middleCharacter == 'Distance of' || ch_name+' '+app.middleCharacter == 'Distance between' || ch_name+' '+app.middleCharacter == 'Count of' || ch_name+' '+app.middleCharacter == 'Number of' || ch_name == "Color") {
+      var ch_name = app.character.name.split(' ')[0].toLowerCase();
+      var joinCharacter = (ch_name+' '+app.middleCharacter).toLowerCase();
+      if(joinCharacter == 'length of' || joinCharacter == "width of" || joinCharacter == 'depth of' || joinCharacter == 'diameter of' || joinCharacter == 'distance of' || joinCharacter == 'distance between' || joinCharacter == 'count of' || joinCharacter == 'number of' || ch_name == "color" || ch_name == "arrangement") {
         app.active_el = 'method';
       }else {
         app.active_el = 'tag';
@@ -9250,7 +9258,7 @@ export default {
     checkHaveUnit(string,type) {
       var app = this;
       var ch = string.split(" ");
-      if(app.firstCharacter == 'Color'  && ( type == 'method' || type == "tag")) {
+      if(app.firstCharacter != undefined && (app.firstCharacter.toLowerCase() == 'color' || app.firstCharacter.toLowerCase() == 'arrangement')  && ( type == 'method' || type == "tag")) {
         var character = app.userCharacters.find(each => each.name === string);
         if (string.startsWith('Length of')
           || string.startsWith('Width of')
@@ -9261,6 +9269,9 @@ export default {
           || string.startsWith('Count of')
           || string.startsWith('Number of')
           || string.startsWith('Color')
+         // || string.startsWith('color')
+          || string.startsWith('Arrangement')
+          //|| string.startsWith('arrangement')
           || app.numericalFlag === true
           && app.newCharacterFlag == false) {
           return true;
@@ -9273,7 +9284,7 @@ export default {
         } else {
           return false;
         }
-      }else if(ch[0] != 'undefined' && ch[0] == 'Color' && (type == 'method' || type == "tag"))
+      }else if(ch[0] != 'undefined' && (ch[0].toLowerCase() == 'color' || ch[0].toLowerCase() == 'arrangement') && (type == 'method' || type == "tag"))
       {
         var character = app.userCharacters.find(each => each.name === string);
         if (string.startsWith('Length of')
@@ -9285,6 +9296,9 @@ export default {
           || string.startsWith('Count of')
           || string.startsWith('Number of')
           || string.startsWith('Color')
+         // || string.startsWith('color')
+          || string.startsWith('Arrangement')
+         // || string.startsWith('arrangement')
           || app.numericalFlag === true
           && app.newCharacterFlag == false) {
           return true;
