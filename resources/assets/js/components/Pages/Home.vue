@@ -236,7 +236,7 @@
                 <div class="col-md-5" @click="refreshEntries">
                   <model-select :options="standardCharacters"
                                 v-model="item"
-                                placeholder="Search/create character here1"
+                                placeholder="Search/create character here"
                                 @searchchange="printSearchText"
                                 @select="onSelect"
                                 @resolve="onResolve"
@@ -9151,8 +9151,6 @@ export default {
         var defChs = app.defaultCharacters.filter(eachCh => eachCh.standard == 1 && eachCh.name == app.standardCollections[i].name && eachCh.username == app.standardCollections[i].username);
         app.standardCollections[i].usage_count = 0;
         for (var j = 0; j < defChs.length; j++) {
-          /*console.log('j:', j);
-          console.log('defChs[j]', defChs[j]);*/
           app.standardCollections[i].usage_count += parseInt(defChs[j].usage_count);
         }
 
@@ -9198,9 +9196,7 @@ export default {
           }
         }
 
-
-
-        // var imageSrc = await app.getTooltipImageString(temp.name);
+        //var imageSrc = await app.getTooltipImageString(temp.name);
         temp.tooltip = src + temp.tooltip;
 
         if (app.containsObject(temp, app.standardCharacters)) {
@@ -9382,8 +9378,10 @@ export default {
       app.descriptionText = '';
 
       for (var i = 0; i < app.userTags.length; i++) {
+        console.log(i);
         var char_names = [];
         app.descriptionText += '<b>' + app.userTags[i].tag_name + ': ' + '</b>';
+
         var filteredCharacters = app.userCharacters.filter(function (eachCharacter) {
           return eachCharacter.standard_tag == app.userTags[i].tag_name;
         });
@@ -9391,16 +9389,22 @@ export default {
         if (presenceIndex > 0) {
           filteredCharacters = app.moveArrayItemToNewIndex(filteredCharacters, presenceIndex, 0);
         }
+
+        if(filteredCharacters != undefined){
+
         for (var j = 0; j < filteredCharacters.length; j++) {
           var filteredValues = app.values.filter(function (eachValue) {
             return eachValue[0].character_id == filteredCharacters[j].id;
           })[0];
           var tempValueArray = [];
-          for (var k = 0; k < filteredValues.length; k++) {
-            if (filteredValues[k].header_id != 1) {
-              tempValueArray.push(filteredValues[k].value);
+
+          if(filteredValues != undefined){
+            for (var k = 0; k < filteredValues.length; k++) {
+              if (filteredValues[k].header_id != 1) {
+                tempValueArray.push(filteredValues[k].value);
+              }
             }
-          }
+         
           if (app.checkValueArray(tempValueArray)) {
             var currentCharacter = app.userCharacters.find(ch => ch.id == filteredValues[0].character_id);
             if (!currentCharacter.name.split(' of ')[1]) {
@@ -9994,10 +9998,12 @@ export default {
               }
             }
           }
+           }
         }
         if (app.descriptionText.slice(-2) == '; ') {
           app.descriptionText = app.descriptionText.substring(0, app.descriptionText.length - 2);
         }
+      }
         app.descriptionText += '. ';
         app.descriptionText += '<br/>';
 
