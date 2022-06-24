@@ -7845,7 +7845,7 @@ export default {
           var toolTopIndex = 0;
           for (var keyVal in standardCharacters) {
             app.standardCharactersTags.push(keyVal);
-            for (var i = 0; i < standardCharacters[keyVal].length; i++) {
+            /*for (var i = 0; i < standardCharacters[keyVal].length; i++) {
               if (toolTopIndex % 12 == 0) {
                 app.standardCharactersTooltip += '<div class="row">';
               }
@@ -7856,9 +7856,9 @@ export default {
                 app.standardCharactersTooltip += '</div>';
               }
               toolTopIndex++;
-            }
+            }*/
           }
-
+          app.standardCharactersTooltip = "Please answer 'My samples have the following characteristics' before clicking on the Recommended Set of Characters.";
           var orderList = JSON.parse(resp.data.replaceAll("'", '"'));
 
 
@@ -8064,10 +8064,29 @@ export default {
           }  
         }
       }
+      
 
       axios.post('api/v1/character/add-standard', postCharacters)
       .then(function (resp) {
           app.userCharacters = resp.data;
+          var toolTopIndex = 0;
+          app.standardCharactersTooltip = "";
+          for (var j = 0; j < app.standardCharactersTags.length; j++) {
+            for (var i = 0; i < resp.data.length; i++) {
+              if(app.standardCharactersTags[j] == resp.data[i].standard_tag){
+              if (toolTopIndex % 12 == 0) {
+                app.standardCharactersTooltip += '<div class="row">';
+              }
+              app.standardCharactersTooltip += '<div class="col-md-1" style="padding: 0px 2px !important;">';
+              app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0">' + resp.data[i].name + '</h6>';
+              app.standardCharactersTooltip += '</div>';
+              if (toolTopIndex % 12 == 11) {
+                app.standardCharactersTooltip += '</div>';
+              }
+              toolTopIndex++;
+              } 
+            }
+          }  
           app.isLoading = false;
           app.refreshUserCharacters();
         });
@@ -9308,12 +9327,10 @@ export default {
       } else {
         if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
           var txt;
-          if (confirm("I'm measuring"+app.taxonName)) {
+          if (confirm("I'm measuring "+app.taxonName)) {
             txt = "Yes";
-            console.log(txt);
           } else {
             txt = "No";
-            console.log(txt);
             return false;
           }
           app.isLoading = true;
