@@ -45,7 +45,7 @@
               <div style="max-width: 1000px; margin-left: auto; margin-right: auto; margin-top:50px;">
                 <div>
                   <b>I'm measuring <input class="" v-model="taxonName" style="width: 330px;"
-                                          placeholder="Carex capitata"/>.</b>
+                                          placeholder="Carex capitata"/>.<span style="color:red; font-size: 30px;">*</span></b>
                 </div>
                 <div class="margin-top-10">
                   <b>I have <input v-model="columnCount" v-on:keyup.enter="changeColumnCountFirst()"
@@ -224,8 +224,9 @@
             <div v-if="collapsedFlag == true" class="row">
               <div style="max-width: 1000px; margin-right: auto; margin-left: auto;">
                 <div class="col-md-2">
-                  <input class="width-100" v-model="taxonName" v-on:blur="changeTaxonName()"
-                         style="line-height: 38px; border: none;">
+                  <!-- <input class="width-100" v-model="taxonName" v-on:blur="changeTaxonName()"
+                         style="line-height: 38px; border: none;"> -->
+                  {{taxonName}}
                 </div>
                 <div class="col-md-3">
                   <input v-model="columnCount" v-on:keyup.enter="changeColumnCount()"
@@ -7969,12 +7970,12 @@ export default {
           if(app.unbranchedUnisexual == 'pistillate') {
           }else if( app.unbranchedUnisexual == 'staminate') {
           }else{
-            alert('Please select all options from following characteristics.');
+            alert("Please answer 'My samples have the following characteristics' before clicking on the Recommended Set of Characters.");
             return false;
           }
         }else if(app.unbranched == 'bisexual') {
         }else {
-          alert('Please select all options from following characteristics.');
+          alert("Please answer 'My samples have the following characteristics' before clicking on the Recommended Set of Characters.");
           return false;
         }
       } else if(app.inflorescenceVal == 'branched') {
@@ -7982,17 +7983,17 @@ export default {
           if(app.branchedUnisexual == 'pistillate') {
           }else if( app.branchedUnisexual == 'staminate') {
           }else{
-            alert('Please select all options from following characteristics.');
+            alert("Please answer 'My samples have the following characteristics' before clicking on the Recommended Set of Characters.");
             return false;
           }
         }else if(app.branched == 'bisexual'){
         }else if(app.branched == 'mixed'){
         }else {
-          alert('Please select all options from following characteristics.');
+          alert("Please answer 'My samples have the following characteristics' before clicking on the Recommended Set of Characters.");
           return false;
         }
       }else {
-        alert('Please select all options from following characteristics.');
+        alert("Please answer 'My samples have the following characteristics' before clicking on the Recommended Set of Characters.");
         return false;
       }
       for (var i = 0; i < app.standardCollections.length; i++) {
@@ -9301,13 +9302,21 @@ export default {
     },*/
     generateMatrix() {
       var app = this;
-      app.isLoading = true;
       console.log('app.userCharacters', app.userCharacters);
       if (app.userCharacters.length === 0) {
-        app.isLoading = false;
         alert("You need to select characters before you can go to matrix")
       } else {
         if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
+          var txt;
+          if (confirm("I'm measuring"+app.taxonName)) {
+            txt = "Yes";
+            console.log(txt);
+          } else {
+            txt = "No";
+            console.log(txt);
+            return false;
+          }
+          app.isLoading = true;
           var jsonMatrix = {
             'user_id': app.user.id,
             'column_count': app.columnCount,
@@ -9340,7 +9349,6 @@ export default {
               console.log('userCharacters', app.userCharacters);
             });
         } else {
-          app.isLoading = false;
           alert("You need to fill the taxon name and specimen count in the input box!")
         }
       }
