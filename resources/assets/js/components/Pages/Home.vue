@@ -3075,7 +3075,7 @@
                               <tr  v-bind:class= '{"bg-skyblue": eachTag.color != undefined}'>
                                 <td scope="row"><b>{{ eachTag.tag_name }}</b></td>
                                 <td></td>
-                                <td><input type="checkbox" class="not_applicable" :class="eachTag.tag_name.replace(/\s/g, '')+'not'"  @click="tagNotApplicable(eachTag.tag_name.replace(/\s/g, ''))"></td>
+                                <td><input type="checkbox" class="not_applicable" :class="eachTag.tag_name.replace(/\s/g, '')+'not'"  @click="tagNotApplicable(eachTag.tag_name.replace(/\s/g, ''))" :id="eachTag.tag_name.replace(/\s/g, '')+'nots'"></td>
                                 <td><input type="checkbox" :class="eachTag.tag_name.replace(/\s/g, '')+'yes'" class="applicable"  @click="tagApplicable(eachTag.tag_name.replace(/\s/g, ''))"></td>
                               </tr>
                               <tr v-for="(eachCharacter, index) in userCharacters" :key="index" v-if="eachCharacter.standard_tag == eachTag.tag_name && eachCharacter.not_cells != undefined &&  eachCharacter.not_cells > 0" v-bind:class= '{"bg-skyblue": eachTag.color != undefined}'>
@@ -4027,19 +4027,22 @@ export default {
     },
     tagNotApplicable(tag){
       if($('.'+tag+'not').prop('checked') == true){
-        console.log('false');
         $('.all_not_applicable').prop('checked', false);
         $('.all_applicable').prop('checked', false);
         $("."+tag+"yes").prop('checked', false);
         $("."+tag+"applicable").prop('checked', false);
         $("."+tag+"not_applicable").prop('checked', true);
       }else {
-         console.log('true');
         $('.all_not_applicable').prop('checked', false);
         $('.all_applicable').prop('checked', false);
         $("."+tag+"yes").prop('checked', false);
         $("."+tag+"applicable").prop('checked', false);
         $("."+tag+"not_applicable").prop('checked', false);
+      }
+      var totalCheckedBranch = $('input.not_applicable:checked').length;
+      var totalChlidBranch = document.getElementsByClassName('not_applicable').length
+      if (totalCheckedBranch == totalChlidBranch){
+        $('.all_not_applicable').prop('checked', true); 
       }
     },
     tagApplicable(tag){
@@ -4056,19 +4059,46 @@ export default {
         $("."+tag+"not_applicable").prop('checked', false);
         $("."+tag+"applicable").prop('checked', false);
       }
+      var totalCheckedBranch = $('input.applicable:checked').length;
+      var totalChlidBranch = document.getElementsByClassName('applicable').length
+      if (totalCheckedBranch == totalChlidBranch){
+        $('.all_applicable').prop('checked', true); 
+      }
     },
     characterNotApplicable(tag,id){
-      $('.all_not_applicable').prop('checked', false);
+      var totalChecked = $('input.'+tag+'not_applicable:checked').length;
+      var totalChlid = document.getElementsByClassName(tag+'not_applicable').length
+      if( totalChecked == totalChlid){
+        $('.'+tag+'not').prop('checked', true);
+      }else{
+        $('.'+tag+'not').prop('checked', false);
+      }
+      var totalCheckedBranch = $('input.not_applicable:checked').length;
+      var totalChlidBranch = document.getElementsByClassName('not_applicable').length
+      if (totalCheckedBranch == totalChlidBranch){
+        $('.all_not_applicable').prop('checked', true); 
+      }else {
+        $('.all_not_applicable').prop('checked', false);
+      }
       $('.all_applicable').prop('checked', false);
-      $('.'+tag+'not').prop('checked', false);
       $('.'+tag+'yes').prop('checked', false);
       $('.'+id+'yes').prop('checked', false);
       
     },
     characterApplicable(tag,id){
+      if($('input.'+tag+'applicable:checked').length == document.getElementsByClassName(tag+'applicable').length){
+        $('.'+tag+'yes').prop('checked', true);
+      }else {
+        $('.'+tag+'yes').prop('checked', false);
+      }
+      var totalCheckedBranch = $('input.applicable:checked').length;
+      var totalChlidBranch = document.getElementsByClassName('applicable').length
+      if (totalCheckedBranch == totalChlidBranch){
+        $('.all_applicable').prop('checked', true); 
+      }else {
+        $('.all_applicable').prop('checked', false);
+      }
       $('.all_not_applicable').prop('checked', false);
-      $('.all_applicable').prop('checked', false);
-      $('.'+tag+'yes').prop('checked', false);
       $('.'+tag+'not').prop('checked', false);
       $('.'+id+'not').prop('checked', false);
     },
