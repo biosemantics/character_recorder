@@ -132,7 +132,7 @@
                                   @searchchange="printSearchText"
                                   @select="onSelect"
                                   @resolve="onResolve"
-                                  @click="refresh"
+                                  @click="refreshEntries"
                     />
 
                   </div>
@@ -1396,17 +1396,17 @@
                                   Method
                                   </a>
                                 </li>
-                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),((!checkHaveUnit(character.name) ||  firstCharacterChange == 'color' || firstCharacterChange  == 'number' || firstCharacterChange  == 'arrangement') ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
-                                  <div v-if="firstCharacterChange  != 'color' && firstCharacterChange  != 'number' && firstCharacterChange  != 'arrangement'">
+                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),(((!checkHaveUnit(character.name) ||  firstCharacterChange == 'color' || firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'growth' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation')) ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
+                                  <div v-if="firstCharacterChange  != 'color' && firstCharacterChange  != 'number' && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'growth' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation')">
                                     <a 
-                                    :disabled="(!checkHaveUnit(character.name) || firstCharacterChange  == 'color' || firstCharacterChange  == 'number' || firstCharacterChange  == 'arrangement')"
+                                    :disabled="((!checkHaveUnit(character.name) || firstCharacterChange  == 'color' || firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'growth' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation'))"
                                     v-on:click="showDetails('unit', metadataFlag)">
                                     Unit
                                     </a>
                                   </div>
                                   <div v-else>
                                     <a 
-                                      :disabled="(!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'number' || firstCharacterChange == 'arrangement')">
+                                      :disabled="((!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'number') && ((firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'growth' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation') && numericalFlag == false))">
                                       Unit
                                     </a>
                                   </div></li>
@@ -1414,17 +1414,17 @@
                                   v-on:click="showDetails('tag', metadataFlag)">
                                   Tag</a>
                                 </li>
-                                <li  :class="['summary',(completeElement.includes('summary') ? 'back-green' : ''),((!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'arrangement') ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
+                                <li  :class="['summary',(completeElement.includes('summary') ? 'back-green' : ''),(((!checkHaveUnit(character.name) || firstCharacterChange == 'color') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'growth' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation')) ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
                                     <div v-if="firstCharacterChange != 'color'">
                                       <a 
-                                      :disabled="(!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'arrangement')"
+                                      :disabled="((!checkHaveUnit(character.name) || firstCharacterChange == 'color') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'growth' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation'))"
                                       v-on:click="showDetails('summary', metadataFlag)">
                                        Summary Function
                                       </a>
                                     </div>
                                     <div v-else>
                                       <a 
-                                        :disabled="(!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'arrangement')">
+                                        :disabled="((!checkHaveUnit(character.name) || firstCharacterChange == 'color') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'growth' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation'))">
                                          Summary Function
                                       </a>
                                     </div>
@@ -4818,6 +4818,11 @@ export default {
       } else {
         app.character = character;
       }
+      if(app.character.numeric_flag == 1) {
+        app.numericalFlag = true;
+      }else {
+        app.numericalFlag = false;
+      }
       axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.character.name.toLowerCase())
       .then(function (resp) {
         if (resp.data.entries.length > 0) {
@@ -4897,7 +4902,6 @@ export default {
       sessionStorage.setItem("characterName", app.character.name);
 
       if (enhanceFlag) {
-
         switch (app.metadataFlag) {
           case 'method':
             app.methodFieldData.fromTerm = null;
@@ -4976,65 +4980,119 @@ export default {
       } else {
         var ch = app.character.name.toLowerCase().split(" ");
         if(ch[0] != undefined && ch[1] !== undefined){
-          if(ch[0]+' '+ch[1] == 'length of' || ch[0]+' '+ch[1] == "width of" || ch[0]+' '+ch[1] == 'depth of' || ch[0]+' '+ch[1] == 'diameter of' || ch[0]+' '+ch[1] == 'distance of' || ch[0]+' '+ch[1] == 'distance between' || ch[0]+' '+ch[1] == 'count of' || ch[0]+' '+ch[1] == 'number of' || ch[0] == "color" || ch[0] == "arrangement") {
+          if(ch[0]+' '+ch[1] == 'length of' || ch[0]+' '+ch[1] == "width of" || ch[0]+' '+ch[1] == 'depth of' || ch[0]+' '+ch[1] == 'diameter of' || ch[0]+' '+ch[1] == 'distance of' || ch[0]+' '+ch[1] == 'distance between' || ch[0]+' '+ch[1] == 'count of' || ch[0]+' '+ch[1] == 'number of' || ch[0] == "color" || ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'color' && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' && ch[0]!= 'growth' && ch[0]!= 'number' && ch[0]!= 'pubescence' && ch[0]!= 'relative' && ch[0]!= 'inflation' && ch[0]!= 'orientation') ){
             app.active_el = 'method';
           }else {
             app.active_el = 'tag'
           }
         }
-        
-        if(ch[0] != 'undefined' && (ch[0] == 'color' || ch[0] == 'arrangement')) {
+        var checkTab = 0;
+        if(ch[0] != 'undefined' && (ch[0] == 'color' || ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'color' && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' && ch[0]!= 'growth' && ch[0]!= 'number' && ch[0]!= 'pubescence' && ch[0]!= 'relative' && ch[0]!= 'inflation' && ch[0]!= 'orientation'))) {
           var type = 'method';
+        }else if(app.numericalFlag == true && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'color' && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' && ch[0]!= 'growth' && ch[0]!= 'number' && ch[0]!= 'pubescence' && ch[0]!= 'relative' && ch[0]!= 'inflation' && ch[0]!= 'orientation'){
+          var type = 'tag';
+          checkTab = 1;
         }else {
           var type = "";
         }
-        if (app.checkHaveUnit(app.character.name,type) || app.character.summary) {
-          // Initializing the methodFieldData //
-          app.methodFieldData.fromTerm = null;
-          app.methodFieldData.fromId = null;
-          app.methodFieldData.toTerm = null;
-          app.methodFieldData.toId = null;
-          app.methodFieldData.includeTerm = null;
-          app.methodFieldData.includeId = null;
-          app.methodFieldData.excludeTerm = null;
-          app.methodFieldData.excludeId = null;
-          app.methodFieldData.whereTerm = null;
-          app.methodFieldData.whereId = null;
-          app.methodFieldData.fromNeedMore = false;
-          app.methodFieldData.toNeedMore = false;
-          app.methodFieldData.includeNeedMore = false;
-          app.methodFieldData.excludeNeedMore = false;
-          app.methodFieldData.whereNeedMore = false;
-          app.methodFieldData.fromSynonyms = [];
-          app.methodFieldData.toSynonyms = [];
-          app.methodFieldData.includeSynonyms = [];
-          app.methodFieldData.excludeSynonyms = [];
-          app.methodFieldData.whereSynonyms = [];
-          app.methodFieldData.noneSynonymFlag = {
-            from: false,
-            to: false,
-            include: false,
-            exclude: false,
-            where: false,
-          };
-          //
-          app.parentData = [];
-          app.parentData.push(app.character.method_as);
-          app.parentData[3] = app.user;
-          app.parentData[4] = app.character.method_from;
-          app.parentData[5] = app.character.method_to;
-          app.parentData[6] = app.character.method_include;
-          app.parentData[7] = app.character.method_exclude;
-          app.parentData[8] = app.character.method_where;
-          app.parentData[9] = app.methodFieldData;
-          app.metadataFlag = 'method';
-          app.currentMetadata = method;
-        } else {
-          app.parentData = app.character.standard_tag;
-          app.metadataFlag = 'tag';
-          app.currentMetadata = tag;
+        if(app.viewCharacter == true) {
+          if (checkTab != 1 && (app.checkHaveUnit(app.character.name,type) || app.character.summary)) {
+            // Initializing the methodFieldData //
+            app.methodFieldData.fromTerm = null;
+            app.methodFieldData.fromId = null;
+            app.methodFieldData.toTerm = null;
+            app.methodFieldData.toId = null;
+            app.methodFieldData.includeTerm = null;
+            app.methodFieldData.includeId = null;
+            app.methodFieldData.excludeTerm = null;
+            app.methodFieldData.excludeId = null;
+            app.methodFieldData.whereTerm = null;
+            app.methodFieldData.whereId = null;
+            app.methodFieldData.fromNeedMore = false;
+            app.methodFieldData.toNeedMore = false;
+            app.methodFieldData.includeNeedMore = false;
+            app.methodFieldData.excludeNeedMore = false;
+            app.methodFieldData.whereNeedMore = false;
+            app.methodFieldData.fromSynonyms = [];
+            app.methodFieldData.toSynonyms = [];
+            app.methodFieldData.includeSynonyms = [];
+            app.methodFieldData.excludeSynonyms = [];
+            app.methodFieldData.whereSynonyms = [];
+            app.methodFieldData.noneSynonymFlag = {
+              from: false,
+              to: false,
+              include: false,
+              exclude: false,
+              where: false,
+            };
+            //
+            app.parentData = [];
+            app.parentData.push(app.character.method_as);
+            app.parentData[3] = app.user;
+            app.parentData[4] = app.character.method_from;
+            app.parentData[5] = app.character.method_to;
+            app.parentData[6] = app.character.method_include;
+            app.parentData[7] = app.character.method_exclude;
+            app.parentData[8] = app.character.method_where;
+            app.parentData[9] = app.methodFieldData;
+            app.metadataFlag = 'method';
+            app.currentMetadata = method;
+          } else {
+            app.parentData = app.character.standard_tag;
+            app.metadataFlag = 'tag';
+            app.currentMetadata = tag;
+          }
+        }else {
+          if (app.checkHaveUnit(app.character.name,type) || app.character.summary) {
+            // Initializing the methodFieldData //
+            app.methodFieldData.fromTerm = null;
+            app.methodFieldData.fromId = null;
+            app.methodFieldData.toTerm = null;
+            app.methodFieldData.toId = null;
+            app.methodFieldData.includeTerm = null;
+            app.methodFieldData.includeId = null;
+            app.methodFieldData.excludeTerm = null;
+            app.methodFieldData.excludeId = null;
+            app.methodFieldData.whereTerm = null;
+            app.methodFieldData.whereId = null;
+            app.methodFieldData.fromNeedMore = false;
+            app.methodFieldData.toNeedMore = false;
+            app.methodFieldData.includeNeedMore = false;
+            app.methodFieldData.excludeNeedMore = false;
+            app.methodFieldData.whereNeedMore = false;
+            app.methodFieldData.fromSynonyms = [];
+            app.methodFieldData.toSynonyms = [];
+            app.methodFieldData.includeSynonyms = [];
+            app.methodFieldData.excludeSynonyms = [];
+            app.methodFieldData.whereSynonyms = [];
+            app.methodFieldData.noneSynonymFlag = {
+              from: false,
+              to: false,
+              include: false,
+              exclude: false,
+              where: false,
+            };
+            //
+            app.parentData = [];
+            app.parentData.push(app.character.method_as);
+            app.parentData[3] = app.user;
+            app.parentData[4] = app.character.method_from;
+            app.parentData[5] = app.character.method_to;
+            app.parentData[6] = app.character.method_include;
+            app.parentData[7] = app.character.method_exclude;
+            app.parentData[8] = app.character.method_where;
+            app.parentData[9] = app.methodFieldData;
+            app.metadataFlag = 'method';
+            app.currentMetadata = method;
+          } else {
+            app.parentData = app.character.standard_tag;
+            app.metadataFlag = 'tag';
+            app.currentMetadata = tag;
+          }
         }
+        
       }
+      
       app.detailsFlag = true;
     },
     trimInputString(inputString) {
@@ -7126,11 +7184,18 @@ export default {
       app.character.creator = app.user.name + ' via CR';
       app.editFlag = false;
       app.newCharacterFlag = false;
-      if(app.firstCharacter.toLowerCase() == 'color' || app.firstCharacter.toLowerCase() == 'arrangement') {
+      if(app.firstCharacterChange == 'color' || (app.numericalFlag == false && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'color' && app.firstCharacterChange!= 'presence' && app.firstCharacterChange!= 'shape' && app.firstCharacterChange!= 'texture' && app.firstCharacterChange!= 'growth' && app.firstCharacterChange!= 'number' && app.firstCharacterChange!= 'pubescence' && app.firstCharacterChange!= 'relative' && app.firstCharacterChange!= 'inflation' && app.firstCharacterChange!= 'orientation')) {
         var type = 'method';
+      }else if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'color' && app.firstCharacterChange!= 'presence' && app.firstCharacterChange!= 'shape' && app.firstCharacterChange!= 'texture' && app.firstCharacterChange!= 'growth' && app.firstCharacterChange!= 'number' && app.firstCharacterChange!= 'pubescence' && app.firstCharacterChange!= 'relative' && app.firstCharacterChange!= 'inflation' && app.firstCharacterChange!= 'orientation'){
+        var type = 'tag';
       }else {
         var type = '';
       }
+     if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'color' && app.firstCharacterChange!= 'presence' && app.firstCharacterChange!= 'shape' && app.firstCharacterChange!= 'texture' && app.firstCharacterChange!= 'growth' && app.firstCharacterChange!= 'number' && app.firstCharacterChange!= 'pubescence' && app.firstCharacterChange!= 'relative' && app.firstCharacterChange!= 'inflation' && app.firstCharacterChange!= 'orientation'){
+        app.parentData = '';
+        app.metadataFlag = 'tag';
+        app.currentMetadata = tag;
+     }else {
       if (app.checkHaveUnit(app.character.name,type)) {
         // Initializing the methodFieldData //
         app.methodFieldData.fromTerm = null;
@@ -7171,15 +7236,21 @@ export default {
         app.metadataFlag = 'tag';
         app.currentMetadata = tag;
       }
+     }
+     
       var ch_name = app.character.name.split(' ')[0].toLowerCase();
       var joinCharacter = (ch_name+' '+app.middleCharacter).toLowerCase();
-      if(joinCharacter == 'length of' || joinCharacter == "width of" || joinCharacter == 'depth of' || joinCharacter == 'diameter of' || joinCharacter == 'distance of' || joinCharacter == 'distance between' || joinCharacter == 'count of' || joinCharacter == 'number of' || ch_name == "color" || ch_name == "arrangement") {
+      if(joinCharacter == 'length of' || joinCharacter == "width of" || joinCharacter == 'depth of' || joinCharacter == 'diameter of' || joinCharacter == 'distance of' || joinCharacter == 'distance between' || joinCharacter == 'count of' || joinCharacter == 'number of' || joinCharacter == "color" || ( app.numericalFlag == false && joinCharacter!= 'length' && joinCharacter!= 'width' && joinCharacter!= 'depth' && joinCharacter!= 'distance' && joinCharacter!= 'color' && joinCharacter!= 'presence' && joinCharacter!= 'shape' && joinCharacter!= 'texture' && joinCharacter!= 'growth' && joinCharacter!= 'number' && joinCharacter!= 'pubescence' && joinCharacter!= 'relative' && joinCharacter!= 'inflation' && joinCharacter!= 'orientation')) {
         app.active_el = 'method';
+      }else if(app.numericalFlag == true && joinCharacter!= 'length' && joinCharacter!= 'width' && joinCharacter!= 'depth' && joinCharacter!= 'distance' && joinCharacter!= 'color' && joinCharacter!= 'presence' && joinCharacter!= 'shape' && joinCharacter!= 'texture' && joinCharacter!= 'growth' && joinCharacter!= 'number' && joinCharacter!= 'pubescence' && joinCharacter!= 'relative' && joinCharacter!= 'inflation' && joinCharacter!= 'orientation'){
+        app.active_el = 'tag';
+         
       }else {
         app.active_el = 'tag';
       }
       sessionStorage.setItem("characterName", app.character.name);
       sessionStorage.setItem("firstCharacterName", app.firstCharacter);
+
       app.detailsFlag = true;
     },
     cancelNewCharacter() {
@@ -7220,6 +7291,11 @@ export default {
 /*      if(app.firstCharacter == 'Color' && (metadata == 'unit' || metadata == 'summary')) {
 
       }else {*/
+     /* var ch = app.character.name.toLowerCase().split();
+       if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation'){
+          app.parentData = app.character.standard_tag;
+          app.currentMetadata = tag;
+       }else{*/
         if ((app.checkHaveUnit(app.character.name,metadata)) || (metadata != 'method' && metadata != 'unit' && metadata != 'summary')) {
           app.metadataFlag = metadata;
           switch (metadata) {
@@ -7299,9 +7375,7 @@ export default {
               break;
           }
         }
-      //}
-      
-
+      /*}*/
     },
     checkNumericalCharacter(characterName) {
       var result = false;
@@ -8066,9 +8140,13 @@ export default {
           }
 
           if (!app.checkHaveUnit(app.character.name)) {
-            checkFields = true;
+            console.log('asd');
+              checkFields = true;
           }
-
+          var ch = app.character.name.toLowerCase().split();
+          if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation'){
+               checkFields = true;
+            }
 
           if (checkFields) {
             if ((app.character.standard_tag == null
@@ -8088,8 +8166,10 @@ export default {
             app.showDetails('unit', app.metadataFlag);
           }
         }
+        console.log('checkFields',checkFields);
         app.saveCharacterButtonFlag = false;
       }, 100)
+      
     },
     use(characterId) {
       var app = this;
@@ -8151,6 +8231,7 @@ export default {
             app.roundsOne = [];
             app.roundsTwo = [];
             app.active_image = null;
+            app.numericalFlag = false;
             app.character.temp_files = [];
           });
         }
@@ -8344,7 +8425,8 @@ export default {
               app.isLoading = true;
               
               app.character.temp_files = app.temp_files;
-
+              app.character.numeric_flag = app.numericalFlag;
+              
               axios.post('api/v1/character/add-character', app.character)
                 .then(function (resp) {
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
@@ -8395,7 +8477,7 @@ export default {
               app.isLoading = true;
               
               app.character.temp_files = app.temp_files;
-
+              app.character.numeric_flag = app.numericalFlag;
               axios.post("api/v1/character/create", app.character)
                 .then(function (resp) {
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
@@ -9254,60 +9336,24 @@ export default {
     checkHaveUnit(string,type) {
       var app = this;
       var ch = string.split(" ");
-      if(app.firstCharacter != undefined && (app.firstCharacter.toLowerCase() == 'color' || app.firstCharacter.toLowerCase() == 'arrangement')  && ( type == 'method' || type == "tag")) {
-        var character = app.userCharacters.find(each => each.name === string);
-        if (string.startsWith('Length of')
-          || string.startsWith('Width of')
-          || string.startsWith('Depth of')
-          || string.startsWith('Diameter of')
-          || string.startsWith('Distance between')
-          || string.startsWith('Distance of')
-          || string.startsWith('Count of')
-          || string.startsWith('Number of')
-          || string.startsWith('Color')
-         // || string.startsWith('color')
-          || string.startsWith('Arrangement')
-          //|| string.startsWith('arrangement')
-          || app.numericalFlag === true
-          && app.newCharacterFlag == false) {
-          return true;
-        } else if (character) {
-          if (character.summary && !string.startsWith('Number of')) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      }else if(ch[0] != 'undefined' && (ch[0].toLowerCase() == 'color' || ch[0].toLowerCase() == 'arrangement') && (type == 'method' || type == "tag"))
+      if(app.firstCharacter != undefined && (app.firstCharacter.toLowerCase() == 'color')  && ( type == 'method' || type == "tag")) {
+        return true;
+      }else if(ch[0] != 'undefined' && (ch[0].toLowerCase() == 'color') && (type == 'method' || type == "tag"))
       {
-        var character = app.userCharacters.find(each => each.name === string);
-        if (string.startsWith('Length of')
-          || string.startsWith('Width of')
-          || string.startsWith('Depth of')
-          || string.startsWith('Diameter of')
-          || string.startsWith('Distance between')
-          || string.startsWith('Distance of')
-          || string.startsWith('Count of')
-          || string.startsWith('Number of')
-          || string.startsWith('Color')
-         // || string.startsWith('color')
-          || string.startsWith('Arrangement')
-         // || string.startsWith('arrangement')
-          || app.numericalFlag === true
-          && app.newCharacterFlag == false) {
+        return true;  
+      }/* if(app.numericalFlag == true && app.firstCharacter != 'undefined' && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'color' && app.firstCharacterChange!= 'presence' && app.firstCharacterChange!= 'shape' && app.firstCharacterChange!= 'texture' && app.firstCharacterChange!= 'growth' && app.firstCharacterChange!= 'number' && app.firstCharacterChange!= 'pubescence' && app.firstCharacterChange!= 'relative' && app.firstCharacterChange!= 'inflation' && app.firstCharacterChange!= 'orientation' && (type == 'method' || type == "unit" || type == 'summary')) {
+        console.log('F');
+
+        return false;
+      }*/else if(app.numericalFlag == false && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation' && (type == 'method' || type == 'tag')){
+        console.log('E1');
+
           return true;
-        } else if (character) {
-          if (character.summary && !string.startsWith('Number of')) {
-            return true;
-          } else {
-            return false;
-          }
-        } else {
-          return false;
-        }
-      }else {
+      }/*if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation' && (type == 'method' || type == "unit" || type == 'summary')){
+        console.log('E');
+
+         return false;
+      }*/else {
         var character = app.userCharacters.find(each => each.name === string);
         if(type == 'unit' ) {
           if (string.startsWith('Length of')
@@ -9340,7 +9386,11 @@ export default {
           || string.startsWith('Count of')
           || app.numericalFlag === true
           && app.newCharacterFlag == false) {
-          return true;
+          if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation'){
+            return false;
+          }else {
+            return true;
+          }
         } else if (character) {
           if (character.summary && !string.startsWith('Number of')) {
             return true;

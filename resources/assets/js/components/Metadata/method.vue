@@ -45,7 +45,7 @@
                 <!--</div>-->
                 <div class="col-md-12">
                 </div>
-                <div class="col-md-12" v-if="ch_name.toLowerCase() != 'color' && ch_name.toLowerCase() != 'arrangement'"  style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name != 'color' && ( ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'presence' || ch_name == 'shape' || ch_name == 'texture' || ch_name == 'growth' || ch_name == 'number' || ch_name == 'pubescence' || ch_name == 'relative'|| ch_name == 'inflation' || ch_name == 'orientation')"  style="margin-top: 10px;">
                     <div class="row">
                         <label class="col-md-3 text-right">From:</label>
                         <div class="col-md-8"> 
@@ -96,7 +96,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" v-if="ch_name.toLowerCase() != 'color' && ch_name.toLowerCase() != 'arrangement'" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name != 'color' && ( ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'presence' || ch_name == 'shape' || ch_name == 'texture' || ch_name == 'growth' || ch_name == 'number' || ch_name == 'pubescence' || ch_name == 'relative'|| ch_name == 'inflation' || ch_name == 'orientation')" style="margin-top: 10px;">
                     <div class="row">
                         <label class="col-md-3 text-right">To:</label>
                         <div class="col-md-8"> 
@@ -149,7 +149,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" v-if="ch_name.toLowerCase() != 'color' && ch_name.toLowerCase() != 'arrangement'" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name != 'color' && ( ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'presence' || ch_name == 'shape' || ch_name == 'texture' || ch_name == 'growth' || ch_name == 'number' || ch_name == 'pubescence' || ch_name == 'relative'|| ch_name == 'inflation' || ch_name == 'orientation')" style="margin-top: 10px;">
                     <div class="row">
                         <label class="col-md-3 text-right">Include:</label>
                         <div class="col-md-8"> 
@@ -203,7 +203,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" v-if="ch_name.toLowerCase() != 'color' && ch_name.toLowerCase() != 'arrangement'" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name != 'color' && ( ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'presence' || ch_name == 'shape' || ch_name == 'texture' || ch_name == 'growth' || ch_name == 'number' || ch_name == 'pubescence' || ch_name == 'relative'|| ch_name == 'inflation' || ch_name == 'orientation')" style="margin-top: 10px;">
                     <div class="row">
                         <label class="col-md-3 text-right">Exclude:</label>
                         <div class="col-md-8">
@@ -1046,8 +1046,8 @@
             this.character_name = sessionStorage.getItem("characterName");
             this.noun_characters = sessionStorage.getItem("nounCharacters").split(',');
             var ch = this.character_name.split(" ");
-            if(ch[0] != undefined && (ch[0].toLowerCase() == 'color' || ch[0].toLowerCase() == 'arrangement')) {
-                app.ch_name = ch[0];
+            if(ch[0] != undefined) {
+                app.ch_name = ch[0].toLowerCase();
             }else {
                 app.ch_name = '';
             }

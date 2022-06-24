@@ -27,6 +27,7 @@ class DefaultCharacter extends Model
         'show_flag',
         'summary',
         'images',
+        'numeric_flag',
     ];
     //
 }
