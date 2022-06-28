@@ -1373,6 +1373,168 @@ class HomeController extends Controller
 
 
         $htmlString = '<table>';
+        $units = array();
+        $summary = array();
+        $sample = array();
+        if (count($headers) > 0) {
+            $htmlString .= '<tr><th>Character</th>';
+            //$htmlString .= '<tr><th>Character</th><th>Unit</th><th>Summary</th>';
+            /*foreach ($headers as $eachHeader) {
+                if ($eachHeader['header'] != 'Character') {
+                    $htmlString .= '<th>' . $eachHeader['header'] . '</th>';
+                }
+            }*/
+          foreach ($userTags as $eachTag) {
+            foreach ($userCharacters as $eachUserCharacter) {
+              if ($eachUserCharacter['standard_tag'] == $eachTag['tag_name']) {
+                foreach ($values as $eachRow) {
+                  foreach ($eachRow as $eachValue) {
+                    if ($eachValue['header_id'] == 1) {
+                      if ($eachUserCharacter['id'] == $eachRow[0]['character_id']) {
+                        $htmlString .= '<th>' . $eachValue['value'] . '</th>';
+                        $units[] = $eachValue['unit'];
+                        if (substr($eachValue['value'], 0, 6) == 'Length' ||
+                            substr($eachValue['value'], 0, 5) == 'Width' ||
+                            substr($eachValue['value'], 0, 5) == 'Depth' ||
+                            substr($eachValue['value'], 0, 8) == 'Diameter' ||
+                            substr($eachValue['value'], 0, 5) == 'Count' ||
+                            substr($eachValue['value'], 0, 8) == 'Distance' ||
+                            substr($eachValue['value'], 0, 6) == 'Number' ||
+                            substr($eachValue['value'], 0, 5) == 'Ratio') {
+                            $summary[]= $this->calcSummary($eachRow);
+                        } else {
+                            $summary[]= '';
+                        }
+                      }
+                    }
+                  } 
+                  $number = count($headers)-1;
+                  foreach ($eachRow as $eachKey => $eachValue) {
+                    if ($eachUserCharacter['id'] == $eachValue['character_id']) {
+                      if ($eachValue['header_id'] != 1) {
+                        $sample[$number][] = $eachValue['value'];
+                        $number = $number -1;
+                      }
+                    }
+                  }   
+                }
+              }
+            }
+          }
+          $htmlString .= '</tr>';
+        }
+        ksort($sample);
+        $htmlString .= '<tr><td>Unit</td>';
+        if(count($units) > 0) {
+          foreach ($units as $ukey => $uvalue) {
+            $htmlString .= '<td>'.$uvalue.'</td>';
+          }
+        }
+        $htmlString .= '</tr>';
+        $htmlString .= '<tr><td>Summary</td>';
+        if(count($summary) > 0) {
+          foreach ($summary as $skey => $svalue) {
+            $htmlString .= '<td>'.$svalue.'</td>';
+          }
+        }
+        $htmlString .= '</tr>';
+        
+        if (count($headers) > 0) {
+          $header = array();
+          foreach ($headers as $nkey => $new)
+          {
+            $header[$nkey] = $new['header'];
+          }
+          array_multisort($header, SORT_ASC, $headers);
+          foreach ($headers as $h=>$newHeader) {
+            if ($newHeader['header'] != 'Character') {
+              $htmlString .= '<tr><td>' . $newHeader['header'] . '</td>';
+              if(count($sample)>0) {
+                foreach ($sample as $samkey => $samvalue) {
+                  if(count($samvalue)>0 && $samkey == $h) {
+                    foreach ($samvalue as $fkey => $fvalue) {
+                      $htmlString .= '<td>'.$fvalue.'</td>';
+                    }
+                  }
+                }
+              }
+              $htmlString .= '</tr>';
+            }
+          }
+        }
+
+
+        $htmlString = $htmlString . '</table>';
+
+        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Html();
+        $spreadsheet = $reader->loadFromString($htmlString);
+
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Csv');
+        $writer->save($fileName . '.csv');
+
+
+        $user = User::where('id', '=', Auth::id())->first();
+
+        $fileName = $user->taxon;
+        $file = fopen($fileName . ".trig", "w") or die("Unable to open file!");
+
+        $taxons = [];
+        $result = $this->getTrigDescription(Auth::id(), $taxons)['description'];
+
+        fwrite($file, $result);
+
+        fclose($file);
+
+
+        $zipper = new \Chumper\Zipper\Zipper;
+
+        $zipper->make($fileName . '.zip')->folder($fileName)->add(array(
+            $fileName . '.docx',
+            $fileName . '.csv',
+            $fileName . '.trig'
+        ));
+
+        $zipper->close();
+
+        return array(
+            'is_success' => 1,
+            'doc_url' => config('constants.root_path') . $fileName . '.zip',
+        );
+    }
+
+    public function exportDescriptionOld(Request $request)
+    {
+
+        $fileName = $request->input('taxon');
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWord->addSection();
+
+        $textLines = explode('<br/>', $request->input('template'));
+        $textrun = $section->addTextRun();
+        foreach ($textLines as $eachText) {
+            $eachText = str_replace('<b>', '', $eachText);
+            $eachText = str_replace('</b>', '', $eachText);
+            $separatedTexts = explode(':', $eachText);
+            if (count($separatedTexts) > 1) {
+                if ($separatedTexts[1] != ' . ') {
+                    $textrun->addText($separatedTexts[0] . ': ', ['bold' => true]);
+                    $textrun->addText($separatedTexts[1]);
+                    $textrun->addTextBreak();
+                }
+
+            }
+        }
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+        $objWriter->save($fileName . '.docx');
+
+
+        $userCharacters = $request->input('userCharacters');
+        $headers = $request->input('headers');
+        $values = $request->input('values');
+        $userTags = $request->input('userTags');
+
+
+        $htmlString = '<table>';
 
         if (count($headers) > 0) {
             $htmlString .= '<tr><th>Character</th><th>Unit</th><th>Summary</th>';
@@ -1535,12 +1697,12 @@ class HomeController extends Controller
                 $info = explode(",",$eachValue['value']);
                 if(count($info) > 0){
                   foreach ($info as $ikey => $infoValue) {
-                    if(strlen($infoValue) > 0 && is_numeric($infoValue)) {
+                    if(is_numeric($infoValue)) {
                       $sum = $sum + (float)$infoValue;
-                      if (number_format((float)$infoValue, 2, '.', '') != 0.00) {
+                      //if (number_format((float)$infoValue, 2, '.', '') != 0.00) {
                           array_push($tempRpArray, number_format((float)$infoValue, 2, '.', ''));
                           $arrayLength++;
-                      }
+                      //}
                     }
                   }
                 }
