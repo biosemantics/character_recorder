@@ -17,6 +17,7 @@ use App\Value;
 use App\ColorDetails;
 use App\NonColorDetails;
 use App\Matrix;
+use App\CharacterValue;
 use DB;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
@@ -478,7 +479,17 @@ class HomeController extends Controller
         $character->images = json_encode($allImageName); 
         $character->order = $character->id;
         $character->save();
-
+        if(!empty($request->input('third_character'))){
+          $newEntry = $request->input('third_character');
+          foreach ($newEntry as $ekey => $entry) {
+            $checkValue = CharacterValue::where('value',$entry)->count();
+            if($checkValue == 0) {
+              $addvalue = new CharacterValue;
+              $addvalue->value = $entry;
+              $addvalue->save();
+            }
+          }   
+        }
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
@@ -879,7 +890,17 @@ class HomeController extends Controller
                 'value' => '',
             ]);
         }
-
+        if(!empty($request->input('third_character'))){
+          $newEntry = $request->input('third_character');
+          foreach ($newEntry as $ekey => $entry) {
+            $checkValue = CharacterValue::where('value',$entry)->count();
+            if($checkValue == 0) {
+              $addvalue = new CharacterValue;
+              $addvalue->value = $entry;
+              $addvalue->save();
+            }
+          }   
+        }
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
@@ -3963,5 +3984,9 @@ class HomeController extends Controller
            }
         }
         return redirect('/');
+    }
+
+    public function characterValues() {
+      return CharacterValue::pluck('value');
     }
 }
