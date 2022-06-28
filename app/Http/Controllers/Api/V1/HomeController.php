@@ -577,7 +577,7 @@ class HomeController extends Controller
             Header::where('user_id', '=', Auth::id())->delete();
         }
 
-        $defaultCharacters = $this->getDefaultCharacters();
+        /*$defaultCharacters = $this->getDefaultCharacters();
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
@@ -593,7 +593,8 @@ class HomeController extends Controller
             'defaultCharacters' => $defaultCharacters
         ];
 
-        return $data;
+        return $data;*/
+        return [];
     }
     
     // delete non select values during add matrix
@@ -1531,11 +1532,19 @@ class HomeController extends Controller
         $range = '';
         foreach ($arrayRow as $eachValue) {
             if ($eachValue['header_id'] != 1) {
-                $sum = $sum + (float)$eachValue['value'];
-                if (number_format((float)$eachValue['value'], 2, '.', '') != 0.00) {
-                    array_push($tempRpArray, number_format((float)$eachValue['value'], 2, '.', ''));
-                    $arrayLength++;
+                $info = explode(",",$eachValue['value']);
+                if(count($info) > 0){
+                  foreach ($info as $ikey => $infoValue) {
+                    if(strlen($infoValue) > 0 && is_numeric($infoValue)) {
+                      $sum = $sum + (float)$infoValue;
+                      if (number_format((float)$infoValue, 2, '.', '') != 0.00) {
+                          array_push($tempRpArray, number_format((float)$infoValue, 2, '.', ''));
+                          $arrayLength++;
+                      }
+                    }
+                  }
                 }
+               
             }
         }
         if (count($tempRpArray) > 0) {
@@ -2917,7 +2926,9 @@ class HomeController extends Controller
                             if (strpos($charName, 'distance_of_') !== false) {
                                 $charName = str_replace('distance_of_', 'distance_between_', $charName);
                             }
-                            $sample->value = $sample->value + 0.0;
+                            if(is_numeric($sample->value)){
+                              $sample->value = $sample->value + 0.0;
+                            }
 
                             $writer->addTriple($specimenName . "$index:$charName", ":has_value", "\"$sample->value\"^^xsd:float", $graph);
                             if (!startsWith($charName, 'number_of_')

@@ -8650,7 +8650,9 @@ export default {
       app.isLoading = true;
       axios.post("api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
         .then(function (resp) {
-          app.toRemoveCharacterId = null;
+          app.isLoading = false;
+          location.reload();
+         /* app.toRemoveCharacterId = null;
           app.toRemoveStandardConfirmFlag = false;
           app.userCharacters = resp.data.characters;
           app.headers = resp.data.headers;
@@ -8664,8 +8666,7 @@ export default {
           if (app.userTags.length != resp.data.userTags.length && !resp.data.userTags.find(ch => ch == app.currentTab)) {
             app.userTags = resp.data.userTags;
             if (app.userTags[0]) app.showTableForTab(app.userTags[0].tag_name);
-          } else app.showTableForTab(app.currentTab);
-          app.isLoading = false;
+          } else app.showTableForTab(app.currentTab);*/
         });
 
     },
@@ -10182,7 +10183,6 @@ export default {
     },
     removeRowTable(characterId) {
       var app = this;
-
       app.toRemoveCharacterId = characterId;
       app.matrixSaved = false;
       app.toRemoveStandardConfirmFlag = true;
@@ -10488,7 +10488,9 @@ export default {
           if(filteredValues != undefined){
             for (var k = 0; k < filteredValues.length; k++) {
               if (filteredValues[k].header_id != 1) {
-                tempValueArray.push(filteredValues[k].value);
+                if(filteredValues[k].value != 'not applicable' && filteredValues[k].value != 'applicable but value not recorded') {
+                  tempValueArray.push(filteredValues[k].value);
+                }
               }
             }
          
@@ -10526,62 +10528,81 @@ export default {
                   var tempRpArray = [];
                   for (var l = 0; l < tempValueArray.length; l++) {
                     if (tempValueArray[l] != null && tempValueArray[l] != '' && tempValueArray[l] != undefined) {
-                      tempRpArray.push(tempValueArray[l]);
+                      var info = tempValueArray[l].split(',');
+                      for (var k = 0; k < info.length; k++) {
+                        if(info[k] != '' && info[k] != null && !isNaN(info[k])) {
+                          tempRpArray.push(info[k]);
+                        }
+                      }
                     }
                   }
 
-                  tempRpArray.sort((a, b) => a - b);
-                  var minValue = tempRpArray[0];
-                  var maxValue = tempRpArray[tempRpArray.length - 1];
-                  var range;
+                  if(tempRpArray.length > 0) {
+                    tempRpArray.sort((a, b) => a - b);
+                    var minValue = tempRpArray[0];
+                    var maxValue = tempRpArray[tempRpArray.length - 1];
+                    var range;
 
 
 
-                  //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
-                  //
-                  if (tempRpArray.length >= 10) {
-                    let firstQu = app.quantile(tempRpArray, 0.25);
-                    let secondQu = app.quantile(tempRpArray, 0.75);
-                    range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
-                  } else {
-                     range = minValue + '-' + maxValue;
+                    //range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
+                    //
+                    if (tempRpArray.length >= 10) {
+                      let firstQu = app.quantile(tempRpArray, 0.25);
+                      let secondQu = app.quantile(tempRpArray, 0.75);
+                      range = '(' + minValue + '-)' + firstQu + '-' + secondQu + '(-' + maxValue + ')';
+                    } else {
+                       range = minValue + '-' + maxValue;
+                    }
+
+                    app.descriptionText += range;
+
+                    if (filteredCharacters[j].unit) {
+                      app.descriptionText += ' ' + filteredCharacters[j].unit
+                    }
                   }
-
-                  app.descriptionText += range;
-
-                  if (filteredCharacters[j].unit) {
-                    app.descriptionText += ' ' + filteredCharacters[j].unit
-                  }
-
                   break;
                 case "median":
                   var tempMedianArray = [];
                   for (var l = 0; l < tempValueArray.length; l++) {
                     if (tempValueArray[l] != null && tempValueArray[l] != '' && tempValueArray[l] != undefined) {
-                      tempMedianArray.push(tempValueArray[l]);
+                      var info = tempValueArray[l].split(',');
+                      for (var k = 0; k < info.length; k++) {
+                        if(info[k] != '' && info[k] != null && !isNaN(info[k])) {
+                          tempMedianArray.push(info[k]);
+                        }
+                      }
                     }
                   }
-                  tempMedianArray.sort((a, b) => a - b);
-                  if (tempMedianArray.length % 2 == 0) {
-                    app.descriptionText += (parseFloat(tempMedianArray[tempMedianArray.length / 2 - 1]) + parseFloat(tempMedianArray[tempMedianArray.length / 2])) / 2;
-                  } else {
-                    app.descriptionText += tempMedianArray[tempMedianArray.length / 2 - 0.5];
+                  if(tempMedianArray.length > 0){
+                     tempMedianArray.sort((a, b) => a - b);
+                    if (tempMedianArray.length % 2 == 0) {
+                      app.descriptionText += (parseFloat(tempMedianArray[tempMedianArray.length / 2 - 1]) + parseFloat(tempMedianArray[tempMedianArray.length / 2])) / 2;
+                    } else {
+                      app.descriptionText += tempMedianArray[tempMedianArray.length / 2 - 0.5];
+                    }
+                    if (filteredCharacters[j].unit && !filteredCharacters[j].name.startsWith('Number of') && !filteredCharacters[j].name.startsWith('Ratio of')) {
+                      app.descriptionText += filteredCharacters[j].unit
+                    }
                   }
-                  if (filteredCharacters[j].unit && !filteredCharacters[j].name.startsWith('Number of') && !filteredCharacters[j].name.startsWith('Ratio of')) {
-                    app.descriptionText += filteredCharacters[j].unit
-                  }
+                 
                   break;
                 case "mean":
                   var sum = 0;
                   var arrayLength = 0;
                   for (var l = 0; l < tempValueArray.length; l++) {
                     if (tempValueArray[l] != null && tempValueArray[l] != '' && tempValueArray[l] != undefined) {
-                      sum += parseInt(tempValueArray[l], 10); //don't forget to add the base
-                      arrayLength++;
+                      var info = row[i].value.split(',');
+                      for (var k = 0; k < info.length; k++) {
+                        if(info[k] != '' && info[k] != null && !isNaN(info[k])) {
+                          sum += parseFloat(info[k], 10); //don't forget to add the base
+                          arrayLength++;
+                        }
+                      } 
                     }
                   }
 
-                  var avg = parseFloat(sum / arrayLength).toFixed(1);
+                  var avg = parseFloat(sum / arrayLength).toFixed(2);
                   app.descriptionText += avg;
                   if (filteredCharacters[j].unit) {
                     app.descriptionText += ' ' + filteredCharacters[j].unit
