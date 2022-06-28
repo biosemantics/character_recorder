@@ -8500,6 +8500,7 @@ export default {
         });
       });
     },
+
     showStandardCharacters() {
       var app = this;
       app.standardShowFlag = !app.standardShowFlag;
@@ -9166,17 +9167,20 @@ export default {
     },
     use(characterId) {
       var app = this;
+      console.log(app.userCharacters);
+      console.log(app.character);
+      
       app.character = app.userCharacters.find(ch => ch.id == characterId);
       if (!app.character) {
         app.character = app.defaultCharacters.find(ch => ch.id == characterId);
         app.character.name = app.character.name.toLowerCase();
         app.character.name = app.character.name.charAt(0).toUpperCase() + app.character.name.slice(1);
         if (!app.userCharacters.find(ch => ch.name.toLowerCase() == app.character.name.toLowerCase()
-          && ch.method_from == app.character.method_from
+         /* && ch.method_from == app.character.method_from
           && ch.method_to == app.character.method_to
           && ch.method_include == app.character.method_include
           && ch.method_exclude == app.character.method_exclude
-          && ch.method_where == app.character.method_where
+          && ch.method_where == app.character.method_where*/
         )) {
 
               //    app.character.show_flag = false;
@@ -9229,7 +9233,7 @@ export default {
           });
         }
       } else {
-        alert("The character already exists for this user2!!");
+        alert("The character already exists for this user!!");
         app.detailsFlag = false;
         app.active_el = 0;
         app.temp_files = [];
@@ -10384,19 +10388,9 @@ export default {
       }else if(ch[0] != 'undefined' && (ch[0].toLowerCase() == 'color') && (type == 'method' || type == "tag"))
       {
         return true;  
-      }/* if(app.numericalFlag == true && app.firstCharacter != 'undefined' && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'color' && app.firstCharacterChange!= 'presence' && app.firstCharacterChange!= 'shape' && app.firstCharacterChange!= 'texture' && app.firstCharacterChange!= 'growth' && app.firstCharacterChange!= 'number' && app.firstCharacterChange!= 'pubescence' && app.firstCharacterChange!= 'relative' && app.firstCharacterChange!= 'inflation' && app.firstCharacterChange!= 'orientation' && (type == 'method' || type == "unit" || type == 'summary')) {
-        console.log('F');
-
-        return false;
-      }*/else if(app.numericalFlag == false && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation' && (type == 'method' || type == 'tag')){
-        console.log('E1');
-
+      }else if(app.numericalFlag == false && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation' && (type == 'method' || type == 'tag')){
           return true;
-      }/*if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation' && (type == 'method' || type == "unit" || type == 'summary')){
-        console.log('E');
-
-         return false;
-      }*/else {
+      }else {
         var character = app.userCharacters.find(each => each.name === string);
         if(type == 'unit' ) {
           if (string.startsWith('Length of')

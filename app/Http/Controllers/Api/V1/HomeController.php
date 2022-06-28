@@ -1609,7 +1609,7 @@ class HomeController extends Controller
     // identify character
     public function identify(Request $request) {
         $data =$request->all();
-        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('id',$data[2])->first();
+        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])/*->where('id',$data[2])*/->first();
         $info2 = defaultCharacter::where('name',$data[0])->where('owner_name','!=',$data[1])->first();
         $mainImage = array();
         $uploadedImage = array();
