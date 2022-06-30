@@ -461,21 +461,19 @@ class HomeController extends Controller
             $defaultCharacter->save();
             
         }else {
-            /*$defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
-            if(!empty($allImageName) && !empty($defaultCharacter)) {
-                if(!empty($defaultCharacter->images)) {
-                    $img = json_decode($defaultCharacter->images,true);
-                    $final_array = array_merge($img,$allImageName);
-                    $character->images = json_encode($final_array);
-                }else {
-                    $character->images = json_encode($allImageName);
-                }
+          $defaultCharacter = DefaultCharacter::where('name', '=', $request->input('name'))->first();
+          if(!empty($allImageName)) {
+            if(!empty($defaultCharacter->images)) {
+                $img = json_decode($defaultCharacter->images,true);
+                $final_array = array_merge($img,$allImageName);
+                $defaultCharacter->images = json_encode($final_array);
             }else {
-                $character->images = json_encode($allImageName); 
-            } */
+                $defaultCharacter->images = json_encode($allImageName);
+            }
+            $defaultCharacter->save();   
+          }  
         }
 
-        
         $character->images = json_encode($allImageName); 
         $character->order = $character->id;
         $character->save();
@@ -862,18 +860,17 @@ class HomeController extends Controller
             ]);
             $defaultCharacter->save();
         }else {
-            /*$defaultCharacter = DefaultCharacter::where('id', '=', $request->input('id'))->first();
-            if(!empty($allImageName) && !empty($defaultCharacter)) {
-                if(!empty($defaultCharacter->images)) {
-                    $img = json_decode($defaultCharacter->images,true);
-                    $final_array = array_merge($img,$allImageName);
-                    $character->images = json_encode($final_array);
-                }else {
-                    $character->images = json_encode($allImageName);
-                }
+          $defaultCharacter = DefaultCharacter::where('name', '=', $request->input('name'))->first();
+          if(!empty($allImageName)) {
+            if(!empty($defaultCharacter->images)) {
+                $img = json_decode($defaultCharacter->images,true);
+                $final_array = array_merge($img,$allImageName);
+                $defaultCharacter->images = json_encode($final_array);
             }else {
-                $character->images = json_encode($allImageName); 
-            } */
+                $defaultCharacter->images = json_encode($allImageName);
+            }
+            $defaultCharacter->save();   
+          }
         }
         $character->images = json_encode($allImageName); 
         $character->order = $character->id;  
@@ -1780,32 +1777,35 @@ class HomeController extends Controller
     // identify character
     public function identify(Request $request) {
         $data =$request->all();
-        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])/*->where('id',$data[2])*/->first();
-        $info2 = defaultCharacter::where('name',$data[0])->where('owner_name','!=',$data[1])->first();
+        //$info1 = Character::where('name',$data[0])->where('owner_name',$data[1])/*->where('id',$data[2])*/->first();
+        $info2 = defaultCharacter::where('name',$data[0])/*->where('owner_name','!=',$data[1])*/->first();
         $mainImage = array();
         $uploadedImage = array();
         if(!empty($info2) && !empty($info2->images)) {
           $mainImage = json_decode($info2->images,true);
         }
-        if(!empty($info1) && !empty($info1->images)) {
+        /*if(!empty($info1) && !empty($info1->images)) {
           $uploadedImage = json_decode($info1->images,true);
         }
-        return array_merge($mainImage,$uploadedImage);
+        return array_merge($mainImage,$uploadedImage);*/
+        return $mainImage;
     }
 
     public function editView(Request $request) {
         $data =$request->all();
-        $info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('images','!=','')->first();
+        /*$info1 = Character::where('name',$data[0])->where('owner_name',$data[1])->where('images','!=','')->first();*/
        // $info2 = defaultCharacter::where('name',$data[0])->where('owner_name','!=',$data[1])->first();
+        $info2 = defaultCharacter::where('name',$data[0])/*->where('owner_name','!=',$data[1])*/->first();
         $mainImage = array();
         $uploadedImage = array();
-       /* if(!empty($info2) && !empty($info2->images)) {
+        if(!empty($info2) && !empty($info2->images)) {
           $mainImage = json_decode($info2->images,true);
-        }*/
-        if(!empty($info1) && !empty($info1->images)) {
-          $uploadedImage = json_decode($info1->images,true);
         }
-        return array_merge($mainImage,$uploadedImage);
+       /* if(!empty($info1) && !empty($info1->images)) {
+          $uploadedImage = json_decode($info1->images,true);
+         return array_merge($mainImage,$uploadedImage);
+        }*/
+        return $mainImage;
     }
 
     // update image, if character is already used.
@@ -1832,7 +1832,7 @@ class HomeController extends Controller
           $info1->save();
         }
         
-        $info2 = DefaultCharacter::where('name', '=', $request->input('name'))->where('owner_name',$request->other_name)->where('username',$request->owner_name)->first();
+        $info2 = DefaultCharacter::where('name', '=', $request->input('name'))/*->where('owner_name',$request->other_name)->where('username',$request->owner_name)*/->first();
         if(!empty($info2)) {
           $oldImages = array();
           if(!empty($info2->images)) {
@@ -1897,6 +1897,20 @@ class HomeController extends Controller
         }
         
         $character->save();
+
+        $defaultCharacter = DefaultCharacter::where('name', '=', $request->input('name'))->first();
+        if(!empty($defaultCharacter)) {
+          if(!empty($allImageName)) {
+            if(!empty($defaultCharacter->images)) {
+              $img = json_decode($defaultCharacter->images,true);
+              $final_array = array_merge($img,$allImageName);
+              $defaultCharacter->images = json_encode($final_array);
+            }else {
+              $defaultCharacter->images = json_encode($allImageName);
+            }
+            $defaultCharacter->save();   
+          }
+        }
 
         if ($oldTag) {
             if ($oldTag != $character->standard_tag) {

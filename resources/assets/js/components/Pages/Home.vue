@@ -4798,16 +4798,6 @@ export default {
     },
     refreshEntries(event) {
       var app = this;
-      app.thirdNounData = ['','Dimension','longest','widest','shortest','narrowest','Position','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal','Prominence','distinct','total','Other'];
-      axios.get('api/v1/character/character-values').then(function(resp) {
-        if(resp.data.length > 0) {
-            $.each(resp.data, function (i, item) {
-              if(!app.thirdNounInfo.includes(item)) {
-                app.thirdNounData.push(item);
-              }
-            });   
-        }
-      });
       if(app.refreshData ==  true) {
         var tempDefaultCharacters = [];
         app.standardCharacters = [];
@@ -4904,6 +4894,16 @@ export default {
         app.defaultCharacters = tempDefaultCharacters;
         app.refreshData = false;
       }
+      app.thirdNounData = ['','Dimension','longest','widest','shortest','narrowest','Position','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal','Prominence','distinct','total','Other'];
+      axios.get('api/v1/character/character-values').then(function(resp) {
+        if(resp.data.length > 0) {
+            $.each(resp.data, function (i, item) {
+              if(!app.thirdNounInfo.includes(item)) {
+                app.thirdNounData.push(item);
+              }
+            });   
+        }
+      });
     },
     onSelect(selectedItem) {
       var app = this;
