@@ -8426,7 +8426,7 @@ export default {
               toolTopIndex++;
             }*/
           }
-          app.standardCharactersTooltip = "Please answer 'My samples have the following characteristics' before clicking on the Recommended Set of Characters.";
+          /*app.standardCharactersTooltip = "Please answer 'My samples have the following characteristics' before clicking on the Recommended Set of Characters.";*/
           var orderList = JSON.parse(resp.data.replaceAll("'", '"'));
 
 
