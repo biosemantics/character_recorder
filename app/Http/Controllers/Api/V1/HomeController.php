@@ -295,6 +295,16 @@ class HomeController extends Controller
                 }
             }
         }
+
+        foreach ($dfCharacters as $df=>$uc) {
+          foreach ($standardCharacters as $k=>$stChar) {
+            if ($uc->name == $stChar->name) {
+              $standardCharacters[$k]->final_images = json_decode($uc->images,true);
+              break;
+            }
+          } 
+          $dfCharacters[$df]->final_images = json_decode($uc->images,true);
+        }
         $dfCharacters = $dfCharacters->toArray();
         $defaultCharacters = array_merge($standardCharacters, $dfCharacters);
 
@@ -1842,6 +1852,7 @@ class HomeController extends Controller
           $info2->save();
         } 
       }
+      return $this->getDefaultCharacters();
     }
 
     public function updateCharacter(Request $request)

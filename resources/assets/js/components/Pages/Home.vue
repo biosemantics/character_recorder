@@ -3829,6 +3829,7 @@ export default {
       character: {temp_files:[]},
       userCharacters: [],
       defaultCharacters: [],
+      finalDefaultCharacters: [],
       defaultCharactersToolTip: [],
       standardCharacters: [],
       item: null,
@@ -8659,7 +8660,9 @@ export default {
           app.isLoading = false;
           app.refreshUserCharacters();
         });
+      
     },
+
     removeStandardCharacter(characterId) {
       var app = this;
       console.log('characterId', characterId);
@@ -9248,6 +9251,8 @@ export default {
           app.character.other_name = app.user.name
           axios.post('api/v1/character/update-image', app.character)
                 .then(function (resp) {
+            app.finalDefaultCharacters = resp.data;
+            app.refreshUserCharacters();
             app.detailsFlag = false;
             app.active_el = 0;
             app.temp_files = [];
@@ -9400,6 +9405,7 @@ export default {
               axios.post('api/v1/character/update-character', app.character)
                 .then(function (resp) {
                   app.userTags = resp.data.userTags;
+                  app.finalDefaultCharacters = resp.data.defaultCharacters;
                   app.userCharacters = resp.data.characters;
                   app.headers = resp.data.headers;
                   app.values = resp.data.values;
@@ -9497,6 +9503,7 @@ export default {
                         app.userTags = resp.data;
                       });
                   }
+                  app.finalDefaultCharacters = resp.data.defaultCharacters;
                   app.userCharacters = resp.data.characters;
                   app.headers = resp.data.headers;
                   app.values = resp.data.values;
@@ -9562,6 +9569,7 @@ export default {
                         console.log("create UserTag", resp.data);
                       });
                   }
+                  app.finalDefaultCharacters = resp.data.defaultCharacters;
                   app.userCharacters = resp.data.characters;
                   app.refreshUserCharacters();
                   app.defaultCharacters = resp.data.defaultCharacters;
@@ -10011,6 +10019,7 @@ export default {
                 event.target.style.color = 'red';
               } else {
                 event.target.style.color = 'black';
+                app.finalDefaultCharacters = resp.data.defaultCharacters;
                 app.userCharacters = resp.data.characters;
                 app.headers = resp.data.headers;
                 for (var i = 0; i < app.values.length; i++) {
@@ -10061,6 +10070,8 @@ export default {
     },
     async refreshUserCharacters(showTabFlag = false) {
       var app = this;
+      var origin   = window.location.href; 
+      var url = origin+'/storage/';
       for (var i = 0; i < app.userCharacters.length; i++) {
         app.userCharacters[i].tooltip = '';
         app.userCharacters[i].use_character = 0;
@@ -10116,12 +10127,31 @@ export default {
               src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + imgUrls[j].split('id=')[1].substring(0, imgUrls[j].split('id=')[1].length - 1) + "'/></div>";
             }
           }
-          if (src != '') {
-            src += '</div>';
+         
+        }
+        for(var getInfo = 0; getInfo < app.finalDefaultCharacters.length; getInfo ++) {
+          if(app.userCharacters[i].name == app.finalDefaultCharacters[getInfo].name) {
+            if(app.finalDefaultCharacters[getInfo].final_images != undefined){
+              var imgArray = app.finalDefaultCharacters[getInfo].final_images;
+              if(imgArray.length > 0) {
+                if (src == '') {
+                  src = "<div style='display:flex; flex-direction: row;justify-content: center;'>";
+                }
+                for (var imgs = 0; imgs < imgArray.length; imgs++) {
+                  src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + url + imgArray[imgs] + "'/></div>";
+                }
+              }
+            }
+            break;
           }
+        }
+
+        if (src != '') {
+          src += '</div>';
         }
         app.userCharacters[i].tooltip = src + app.userCharacters[i].tooltip;
       }
+      
       for (var i = 0; i < app.userTags.length; i++) {
         app.tagDeprecated[app.userTags[i].tag_name] = app.isDeprecatedExistOnTab(app.userTags[i].tag_name);
       }
@@ -10347,9 +10377,6 @@ export default {
               src = src + "<div><img alt='image' style='width: 128px; height: auto;margin-top:10px;margin-bottom:10px;margin-left:8px;margin-right:8px;' src='" + 'https://drive.google.com/uc?id=' + imgUrls[j].split('id=')[1].substring(0, imgUrls[j].split('id=')[1].length - 1) + "'/></div>";
             }
           }
-          if (src != '') {
-            src += '</div>';
-          }
         }
 
         //var imageSrc = await app.getTooltipImageString(temp.name);
@@ -10360,6 +10387,8 @@ export default {
         }
         tempDefaultCharacters.push(app.standardCollections[i]);
       }
+      var origin   = window.location.href; 
+      var url = origin+'/storage/';
       for (var i = 0; i < app.defaultCharacters.length; i++) {
         var temp = {};
 
@@ -10369,7 +10398,6 @@ export default {
           temp.text = app.defaultCharacters[i].name + ' by ' + app.defaultCharacters[i].username + ' (' + app.defaultCharacters[i].usage_count + ')';
           temp.value = app.defaultCharacters[i].id;
           temp.tooltip = '';
-
           if (app.defaultCharacters[i].method_from != null && app.defaultCharacters[i].method_from != '') {
             temp.tooltip = temp.tooltip + 'From: ' + app.defaultCharacters[i].method_from + ', ';
           }
@@ -10384,7 +10412,8 @@ export default {
           }
           if (app.defaultCharacters[i].method_where != null && app.defaultCharacters[i].method_where != '') {
             temp.tooltip = temp.tooltip + 'Where: ' + app.defaultCharacters[i].method_where;
-          }
+          }        
+          temp.tooltip = src + temp.tooltip;
 
           temp.deprecated = app.deprecatedTerms.findIndex(value => value['deprecated IRI'] == app.defaultCharacters[i].IRI);
           // temp.tooltip = temp.tooltip + '<br/>Image Here</div>';
@@ -14179,6 +14208,7 @@ export default {
       .then(async function (resp) {
         console.log('standardCharacters', resp);
         app.defaultCharacters = resp.data;
+        app.finalDefaultCharacters = resp.data
         app.refreshDefaultCharacters();
       });
     axios.get("api/v1/character/" + app.user.id)
@@ -14313,6 +14343,7 @@ export default {
       // $('#top-user').text(data['topUser']);
       axios.get('api/v1/standard_characters').then(function(resp) {
         app.defaultCharacters = resp.data;
+        app.finalDefaultCharacters = resp.data
         app.refreshDefaultCharacters();
       });
 
