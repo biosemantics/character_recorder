@@ -5795,7 +5795,7 @@ export default {
           });
       }
 
-      if (app.thirdCharacter != '' && app.thirdCharacterUndefined) {
+      /*if (app.thirdCharacter != '' && app.thirdCharacterUndefined) {
         var date = new Date();
         requestBody = {
           "user": app.sharedFlag ? '' : app.user.name,
@@ -5818,7 +5818,7 @@ export default {
                 app.thirdCharacterUndefined = false;
               });
           });
-      }
+      }*/
 
       if (app.middleCharacter == 'between' && app.secondThirdCharacter != '' && app.secondThirdCharacterUndefined) {
         var date = new Date();
@@ -6290,7 +6290,7 @@ export default {
           });
       }
       
-      if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+      /*if(app.thirdCharacter != '' && app.thirdCharacter != null) {
         var thirdDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == app.thirdCharacter.toLowerCase());
         if (thirdDeprecatedValue) {
           if (thirdDeprecatedValue['replacement term']) {
@@ -6586,7 +6586,7 @@ export default {
               }
             });
         }
-      } 
+      } */
 
       var nounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == app.lastCharacter.toLowerCase());
       if (nounDeprecatedValue) {
@@ -7150,7 +7150,7 @@ export default {
       }
 
       if (app.middleCharacter == 'between') {
-        if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+       /* if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
           var secondThirdDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == app.secondThirdCharacter.toLowerCase());
           if (secondThirdDeprecatedValue) {
             if (secondThirdDeprecatedValue['replacement term']) {
@@ -7452,7 +7452,7 @@ export default {
                 }
               });
           }
-        }  
+        }  */
        
         var secondNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == app.secondLastCharacter.toLowerCase());
         if (secondNounDeprecatedValue) {
