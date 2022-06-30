@@ -12802,7 +12802,7 @@ export default {
       if (!tData) return;
       if (!tData.data) return;
       tData.data["images"] = [];
-      /*axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
+      axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tData.text.replace(' ', '_').replace('-', '_').toLowerCase())
         .then(function (resp) {
           if (resp.data.entries.length > 0) {
             methodEntry = resp.data.entries.filter(function (each) {
@@ -12825,8 +12825,8 @@ export default {
         })
         .catch(function (resp) {
           console.log('exp search resp error', resp);
-        });*/
-      if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
+        });
+     /* if(app.treeResult.children != undefined && app.treeResult.children.length > 0) {
         for (let t = 0; t < app.treeResult.children.length; t++) {
           if(app.treeResult.children[t].text == 'quality') {
             if(app.treeResult.children[t].children != undefined && app.treeResult.children[t].children.length > 0) {
@@ -12889,10 +12889,14 @@ export default {
             }
           }
         }
-      }   
-
+      }
       for (let i = 0; tData.children && i < tData.children.length; i++) {
         app.getImageFromColorTreeData(tData.children[i],tData.text.replace(' ', '_').replace('-', '_'));
+      }
+      */   
+
+      for (let i = 0; tData.children && i < tData.children.length; i++) {
+        app.getImageFromColorTreeData(tData.children[i]);
       }
       return;
     },
@@ -13303,11 +13307,9 @@ export default {
             && app.nonColorSynonyms[i].parentTerm == synonym.parentTerm) {
             var tempTermName = app.nonColorSynonyms[i].term;
             if (!app.nonColorSynonyms[i].commentFlag) {
-              app.nonColorSynonyms[i].term = 'test1';
               app.nonColorSynonyms[i].commentFlag = true;
               app.nonColorSynonyms[i].term = tempTermName;
             } else {
-              app.nonColorSynonyms[i].term = 'test2';
               app.nonColorSynonyms[i].commentFlag = false;
               app.nonColorSynonyms[i].term = tempTermName;
             }
@@ -13317,7 +13319,6 @@ export default {
         for (var i = 0; i < app.colorSynonyms.length; i++) {
           if (app.colorSynonyms[i].term == synonym.term
             && app.colorSynonyms[i].parentTerm == synonym.parentTerm) {
-            console.log('123');
             console.log('app.colorSynonyms[i].commentFlag', app.colorSynonyms[i].commentFlag);
             var tempTermName = app.colorSynonyms[i].term;
             if (!app.colorSynonyms[i].commentFlag) {
