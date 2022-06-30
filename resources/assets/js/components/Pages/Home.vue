@@ -45,7 +45,7 @@
               <div style="max-width: 1000px; margin-left: auto; margin-right: auto; margin-top:50px;">
                 <div>
                   <b>I'm measuring <input class="" v-model="taxonName" style="width: 330px;"
-                                          placeholder="Carex capitata"/>.<span style="color:red; font-size: 30px;">*</span></b>
+                                          placeholder="taxon name"/>.<span style="color:red; font-size: 30px;">*</span></b>
                 </div>
                 <div class="margin-top-10">
                   <b>I have <input v-model="columnCount" v-on:keyup.enter="changeColumnCountFirst()"
@@ -53,7 +53,7 @@
                                    placeholder="3"> specimens / samples.</b>
                 </div>
                 <div class="margin-top-10 decision-tree">
-                  <h3 style="margin-top: auto;">My samples have the following characteristics (Check all that apply):</h3>
+                  <h3 style="margin-top: auto;">My samples have the following characteristics (Check all that apply):<span style="color:red; font-size: 30px;">*</span></h3>
                     <div class="row">
                       <div class="col-md-2">
                         <label>Inflorescence:</label>
@@ -122,9 +122,9 @@
                     </a>
                       <b v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">
                         (what
-                        are they?) </b><br/> Or Choose more set of characters to add in this Matrix below</b>
+                        are they?) </b><br/> Or You can also add other characters below.</b>
                   </div>
-                  <div class="col-md-12 margin-top-10">
+                  <div class="col-md-12 margin-top-10" @click="refreshEntries">
                     <b>Search/create another character:&nbsp;</b>
                     <model-select :options="standardCharacters"
                                   v-model="item"
@@ -132,7 +132,7 @@
                                   @searchchange="printSearchText"
                                   @select="onSelect"
                                   @resolve="onResolve"
-                                  @click="refreshEntries"
+                                  
                     />
 
                   </div>
@@ -771,7 +771,7 @@
                                   <optgroup label="Dimension">
                                     <option value="longest">longest</option>
                                     <option value="widest">widest</option>
-                                    <option value="shorest">shorest</option>
+                                    <option value="shortest">shortest</option>
                                     <option value="narrowest">narrowest</option>
                                   </optgroup> 
                                   <optgroup label="Position">
@@ -928,7 +928,7 @@
                                   <optgroup label="Dimension">
                                     <option value="longest">longest</option>
                                     <option value="widest">widest</option>
-                                    <option value="shorest">shorest</option>
+                                    <option value="shortest">shortest</option>
                                     <option value="narrowest">narrowest</option>
                                   </optgroup> 
                                   <optgroup label="Position">
@@ -1116,7 +1116,7 @@
                                     <optgroup label="Dimension">
                                       <option value="longest">longest</option>
                                       <option value="widest">widest</option>
-                                      <option value="shorest">shorest</option>
+                                      <option value="shortest">shortest</option>
                                       <option value="narrowest">narrowest</option>
                                     </optgroup> 
                                     <optgroup label="Position">
@@ -1267,7 +1267,7 @@
                                     <optgroup label="Dimension">
                                       <option value="longest">longest</option>
                                       <option value="widest">widest</option>
-                                      <option value="shorest">shorest</option>
+                                      <option value="shortest">shortest</option>
                                       <option value="narrowest">narrowest</option>
                                     </optgroup> 
                                     <optgroup label="Position">
@@ -1958,6 +1958,31 @@
                         &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
                       <a v-on:click="cancelConfirmSummary()" class="btn btn-danger">Cancel</a>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </transition>
+        </div>
+        <div v-if="taxonNameConfirm" @close="taxonNameConfirm = false">
+          <transition name="modal">
+            <div class="modal-mask">
+              <div class="modal-wrapper">
+                <div class="modal-container">
+                  <div class="modal-header">
+                    <b>Confirmation</b>
+                  </div>
+                  <div class="modal-body">
+                    <div>
+                      Please confirm that you are measuring <b>{{ taxonName }}</b>.
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <a class="btn btn-primary ok-btn"
+                       v-on:click="taxonNameConfirmed()">
+                      &nbsp; &nbsp; Confirm &nbsp; &nbsp; </a>
+                    <a v-on:click="taxonNameConfirm = false;"
+                       class="btn btn-danger">Cancel</a>
                   </div>
                 </div>
               </div>
@@ -3694,7 +3719,7 @@ export default {
     resultThirdCharacterQuery() {
       if(this.thirdCharacter){
        /* if(this.thirdCharacter.toLowerCase() == 'dimension') {
-          return ['Dimension','longest','widest','shorest','narrowest'];
+          return ['Dimension','longest','widest','shortest','narrowest'];
         }else if(this.thirdCharacter.toLowerCase() == 'position') {
           return ['Position','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal'];
         }else if(this.thirdCharacter.toLowerCase() == 'prominence') {
@@ -4130,12 +4155,13 @@ export default {
       firstNounData: ['Length','Width','Depth','Diameter','Distance','Color','Presence','Shape','Texture','Growth form','Number','Pubescence','Relative Position','Inflation','Orientation'],
       thirdNounData: [],
       thirdNounHeadings: ['Dimension','Position','Prominence','Other'],
-      thirdNounInfo: ['longest','widest','shorest','narrowest','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal','distinct','total'],
+      thirdNounInfo: ['longest','widest','shortest','narrowest','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal','distinct','total'],
       allEmptyCells: '',
       totalEmptyCells: '',
       postRoute:window.location.href+'api/v1/character/empty-cells',
       formToken: $('meta[name="csrf-token"]').attr('content'),
       refreshData: false,
+      taxonNameConfirm: false,
 
     }
   },
@@ -4772,11 +4798,13 @@ export default {
     },
     refreshEntries(event) {
       var app = this;
-      app.thirdNounData = ['','Dimension','longest','widest','shorest','narrowest','Position','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal','Prominence','distinct','total','Other'];
+      app.thirdNounData = ['','Dimension','longest','widest','shortest','narrowest','Position','anterior','posterior','abaxial','adaxial','proximal','distal','distallmost','lateral','medial','inner','outer','terminal','Prominence','distinct','total','Other'];
       axios.get('api/v1/character/character-values').then(function(resp) {
         if(resp.data.length > 0) {
             $.each(resp.data, function (i, item) {
-              app.thirdNounData.push(item);
+              if(!app.thirdNounInfo.includes(item)) {
+                app.thirdNounData.push(item);
+              }
             });   
         }
       });
@@ -9394,7 +9422,7 @@ export default {
                   app.character.temp_files = [];
                 });
             } else {
-              alert("The character already exists for this user3!!");
+              alert("The character already exists for this user!!");
             }
           } else {
             if (app.character.standard_tag == app.currentTab) {
@@ -9864,6 +9892,42 @@ export default {
         return false;
       }   
     },*/
+    taxonNameConfirmed() {
+      var app = this;
+      app.taxonNameConfirm = false;
+      app.isLoading = true;
+      var jsonMatrix = {
+        'user_id': app.user.id,
+        'column_count': app.columnCount,
+        'taxon': app.taxonName
+      };
+      app.oldUserTags = [];
+      axios.post('api/v1/matrix-store', jsonMatrix)
+        .then(function (resp) {
+          app.isLoading = false;
+          console.log('resp storeMatrix', resp.data);
+          app.matrixShowFlag = true;
+          app.collapsedFlag = true;
+          app.showSetupArea = false;
+          app.userCharacters = resp.data.characters;
+          app.headers = resp.data.headers;
+          app.values = resp.data.values;
+          app.matrixSaved = false;
+          console.log('app.userTags', app.userTags);
+          axios.get('api/v1/user-tag/' + app.user.id)
+            .then(function (resp) {
+              app.userTags = resp.data;
+              app.showTableForTab(app.currentTab);
+            });
+          app.refreshUserCharacters(true);
+          app.inflorescenceVal = "";
+          app.unbranched = '';
+          app.branched = '';
+          app.unbranchedUnisexual = '';
+          app.branchedUnisexual = '';
+          console.log('userCharacters', app.userCharacters);
+        });
+    },
     generateMatrix() {
       var app = this;
       console.log('app.userCharacters', app.userCharacters);
@@ -9872,44 +9936,7 @@ export default {
       } else {
         if ((isNaN(app.columnCount) == false) && app.columnCount > 0 && app.taxonName != "") {
           var txt;
-          if (confirm("I'm measuring "+app.taxonName)) {
-            txt = "Yes";
-          } else {
-            txt = "No";
-            return false;
-          }
-          app.isLoading = true;
-          var jsonMatrix = {
-            'user_id': app.user.id,
-            'column_count': app.columnCount,
-            'taxon': app.taxonName
-          };
-          app.oldUserTags = [];
-          axios.post('api/v1/matrix-store', jsonMatrix)
-            .then(function (resp) {
-              app.isLoading = false;
-              console.log('resp storeMatrix', resp.data);
-              app.matrixShowFlag = true;
-              app.collapsedFlag = true;
-              app.showSetupArea = false;
-              app.userCharacters = resp.data.characters;
-              app.headers = resp.data.headers;
-              app.values = resp.data.values;
-              app.matrixSaved = false;
-              console.log('app.userTags', app.userTags);
-              axios.get('api/v1/user-tag/' + app.user.id)
-                .then(function (resp) {
-                  app.userTags = resp.data;
-                  app.showTableForTab(app.currentTab);
-                });
-              app.refreshUserCharacters(true);
-              app.inflorescenceVal = "";
-              app.unbranched = '';
-              app.branched = '';
-              app.unbranchedUnisexual = '';
-              app.branchedUnisexual = '';
-              console.log('userCharacters', app.userCharacters);
-            });
+          app.taxonNameConfirm = true;
         } else {
           alert("You need to fill the taxon name and specimen count in the input box!")
         }
