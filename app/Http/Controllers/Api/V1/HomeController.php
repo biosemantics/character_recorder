@@ -280,9 +280,9 @@ class HomeController extends Controller
 
     public function getDefaultCharacters()
     {
-        $standardCharacters = DB::table('characters')->where('standard', '=', 1)->get()->toArray();
+        $standardCharacters = DB::table('characters')->get()->toArray();
         $dfCharacters = DB::table('default_characters')->get();
-        $userUsages = DB::select(DB::raw('SELECT A.name AS name, SUM(B.usage_count) AS usage_count
+        /*$userUsages = DB::select(DB::raw('SELECT A.name AS name, SUM(B.usage_count) AS usage_count
                                     FROM default_characters AS A
                                     INNER JOIN characters AS B ON A.name COLLATE utf8mb4_general_ci = B.name
                                     WHERE A.username = B.username
@@ -297,18 +297,55 @@ class HomeController extends Controller
         }
 
         foreach ($dfCharacters as $df=>$uc) {
-          foreach ($standardCharacters as $k=>$stChar) {
-            if ($uc->name == $stChar->name) {
-              $standardCharacters[$k]->final_images = json_decode($uc->images,true);
-              break;
-            }
-          } 
+          
           $dfCharacters[$df]->final_images = json_decode($uc->images,true);
-        }
-        $dfCharacters = $dfCharacters->toArray();
-        $defaultCharacters = array_merge($standardCharacters, $dfCharacters);
+        }*/
+        $users = DB::table('characters')->pluck('owner_name')->unique()->toArray();
+        if(!empty($dfCharacters)) {
+          foreach ($dfCharacters as $key => $dfCharacter) {
+            $total = 0;
+            if(count($users)){
+              foreach ($users as $u => $username) {
+                if(strrchr($username,"_ver_") == ''){    
+                  $tem_total = 0;
+                  $clone = 0;
+                  foreach ($standardCharacters as $s => $st_character) {
+ 
+                    if($st_character->name == $dfCharacter->name) { 
+                      if(strpos($st_character->owner_name, $username.'_ver_' ) === 0){
+                        $clone = 1;
+                        if($tem_total == 1) {
+                          $total = $total - 1;
+                          $tem_total = 0;
+                        }
+                        if($st_character->usage_count > 0) {
+                          $total = $total +1;
+                          break;
+                        } 
+                      }
+                      else if($st_character->owner_name == $username && $st_character->usage_count>0 && $clone == 0){
+                        $tem_total = 1;
+                        $total = $total + 1;
+                      }
 
-        return $defaultCharacters;
+                    }
+                  }
+                   
+                }
+              } 
+
+            }
+            $dfCharacters[$key]->usage_count = $total;
+            $dfCharacters[$key]->final_images = json_decode($dfCharacter->images,true);
+          }
+        }
+
+        $dfCharacters = $dfCharacters->toArray();
+        /*echo "<pre>";
+        print_r($dfCharacters); die;*/
+        return $dfCharacters;
+       /* $defaultCharacters = array_merge($standardCharacters, $dfCharacters);
+        return $defaultCharacters;*/
     }
 
     public function removeString($string, $compareStr)
@@ -932,11 +969,12 @@ class HomeController extends Controller
 
     public function updateValue(Request $request)
     {
-        $value = Value::where('id', '=', $request->input('id'))->first();
-
-        $oldValue = $value->value;
-        $v = $request->input('value');
-        $value->value = $v;
+     
+      $data = $request->all();
+      $value = Value::where('id', '=', $request->input('id'))->first();
+      $oldValue = $value->value;
+      $v = $request->input('value');
+      $value->value = $v;
 //        if (is_numeric($v)) {
 //            $value->value = $v;
 //        } else {
@@ -951,38 +989,73 @@ class HomeController extends Controller
 //            }
 //        }
 
-        $value->save();
-
-        $character = Character::where('id', '=', $value->character_id)->first();
-
-        $valueCount = DB::table('values')->where('character_id', '=', $character->id)
-            ->where('value', '<>', '')
-            ->where('value', '<>', null)
-            ->where('value', '<>', $character->name)
-            ->count();
-        if ($valueCount > 0) {
-            $character->usage_count = 1;
-        } else {
-            $character->usage_count = 0;
+      $value->save();
+      $character = Character::where('id', '=', $value->character_id)->first();
+      $allValues = Value::where('character_id',$value->character_id)->where('header_id','!=',1)->get();
+      $valueCount = DB::table('values')->where('character_id', '=', $character->id)
+          ->where('value', '<>', '')
+          ->where('value', '<>', null)
+          ->where('value', '<>', $character->name)
+          ->count();
+      if ($valueCount > 0) {
+          $character->usage_count = 1;
+      } else {
+          $character->usage_count = 0;
+      }
+      $character->save();
+      if(!empty($data['last_load_matrix'])){
+        $final_key = '';
+        $final_id = '';
+        $final_header_id = '';
+        $copyCharacter = Character::where('name',$character->name)->where('owner_name',$data['username'].'_ver_'.$data['last_load_matrix'])->first();
+        if(!empty($copyCharacter)){
+          foreach ($allValues as $vKey => $allValue) {
+            if($allValue->id == $data['id']) {
+              $final_key = $vKey;
+              break;
+            }
+          }
+          $copyAllValues = Value::where('character_id',$copyCharacter->id)->where('header_id','!=',1)->get();
+          foreach ($copyAllValues as $cKey => $copyValue) {
+            if($final_key == $cKey) {
+              $final_id = $copyValue->id;
+              $final_header_id = $copyValue->header_id;
+              break;
+            }
+          }
+          $value = Value::where('id', '=', $final_id)->first();
+          $v = $request->input('value');
+          $value->value = $v;
+          $value->save();
+          $valueCount = DB::table('values')->where('character_id', '=', $copyCharacter->id)
+              ->where('value', '<>', '')
+              ->where('value', '<>', null)
+              ->where('value', '<>', $character->name)
+              ->count();
+          if ($valueCount > 0) {
+              $copyCharacter->usage_count = 1;
+          } else {
+              $copyCharacter->usage_count = 0;
+          }
+          $copyCharacter->save();
         }
-        $character->save();
-
-        $returnHeaders = $this->getHeaders();
-        $returnValues = $this->getValuesByCharacter();
-        $returnCharacters = $this->getArrayCharacters();
-        $returnDefaultCharacters = $this->getDefaultCharacters();
-        $returnAllDetailValues = $this->getAllDetails();
-        $data = [
-            'error_input' => 0,
-            'headers' => $returnHeaders,
-            'characters' => $returnCharacters,
-            'values' => $returnValues,
-            'allColorValues' => $returnAllDetailValues['colorValues'],
-            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
-            'defaultCharacters' => $returnDefaultCharacters,
-        ];
-
-        return $data;
+        
+      }
+      $returnHeaders = $this->getHeaders();
+      $returnValues = $this->getValuesByCharacter();
+      $returnCharacters = $this->getArrayCharacters();
+      $returnDefaultCharacters = $this->getDefaultCharacters();
+      $returnAllDetailValues = $this->getAllDetails();
+      $data = [
+        'error_input' => 0,
+        'headers' => $returnHeaders,
+        'characters' => $returnCharacters,
+        'values' => $returnValues,
+        'allColorValues' => $returnAllDetailValues['colorValues'],
+        'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+        'defaultCharacters' => $returnDefaultCharacters,
+      ];
+      return $data;
     }
 
     public function addStandardCharacter(Request $request)
@@ -1079,7 +1152,19 @@ class HomeController extends Controller
         }
         Character::insert($newCharacters);
         UserTag::insert($newUserTags);
-
+        $finalCharacters = array();
+        if(!empty($newCharacters)) {
+          foreach ($newCharacters as $new => $addDefault) {
+            if(DefaultCharacter::where('name',$addDefault['name'])->count() == 0 ){
+              $addDefault['order'] = null;
+              $addDefault['standard'] = 0;
+              $finalCharacters[] = $addDefault;
+            }
+          }
+        }
+        if(count($finalCharacters)>0){
+          DefaultCharacter::insert($finalCharacters);
+        }
         $returnCharacters = $this->getArrayCharacters();
 
         return $returnCharacters;
@@ -2104,6 +2189,57 @@ class HomeController extends Controller
         $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
         $character->usage_count = 1;
         $character->save();
+        $allValues = Value::where('character_id',$character->id)->where('header_id','!=',1)->get();
+        
+        if(!empty($colorValues['last_load_matrix'])) {
+          $final_key = '';
+          $final_id = '';
+          $final_header_id = '';
+          $copyCharacter = Character::where('name',$character->name)->where('owner_name',$colorValues['username'].'_ver_'.$colorValues['last_load_matrix'])->first();
+          if(!empty($copyCharacter)){
+            foreach ($allValues as $vKey => $allValue) {
+              if($allValue->id == $colorValues['value_id']) {
+                $final_key = $vKey;
+                break;
+              }
+            }
+
+            $copyAllValues = Value::where('character_id',$copyCharacter->id)->where('header_id','!=',1)->get();
+            foreach ($copyAllValues as $cKey => $copyValue) {
+              if($final_key == $cKey) {
+                $final_id = $copyValue->id;
+                $final_header_id = $copyValue->header_id;
+                break;
+              }
+            }
+            
+            Value::where('id', '=', $final_id)->where('header_id', '!=', 1)->update(['value'=>'']);
+
+            if (Value::where('id', '=', $final_id)->first()->header_id != 1) {
+                $color = new ColorDetails([
+                  'value_id' => $final_id,
+                  'negation' => $request->input('negation') ? $request->input('negation') : null,
+                  'pre_constraint' => $request->input('pre_constraint') ? $request->input('pre_constraint') : null,
+                  'certainty_constraint' => $request->input('certainty_constraint') ? $request->input('certainty_constraint') : null,
+                  'degree_constraint' => $request->input('degree_constraint') ? $request->input('degree_constraint') : null,
+                  'brightness' => $request->input('brightness') ? $request->input('brightness') : null,
+                  'reflectance' => $request->input('reflectance') ? $request->input('reflectance') : null,
+                  'saturation' => $request->input('saturation') ? $request->input('saturation') : null,
+                  'colored' => $request->input('colored') ? $request->input('colored') : null,
+                  'multi_colored' => $request->input('multi_colored') ? $request->input('multi_colored') : null,
+                  'post_constraint' => $request->input('post_constraint') ? $request->input('post_constraint') : null,
+                ]);
+
+                $color->save();
+
+                $id = $color->id;
+            }
+            
+            $copyCharacter->usage_count = 1;
+            $copyCharacter->save();
+          }
+
+        }
 
 //        $characterValues = Value::where('character_id', '=', $character->id)->get()->toArray();
 //
@@ -2273,6 +2409,54 @@ class HomeController extends Controller
         $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
         $character->usage_count = 1;
         $character->save();
+        $allValues = Value::where('character_id',$character->id)->where('header_id','!=',1)->get();
+        if(!empty($nonColorValues['last_load_matrix'])) {
+          $final_key = '';
+          $final_id = '';
+          $final_header_id = '';
+          $copyCharacter = Character::where('name',$character->name)->where('owner_name',$nonColorValues['username'].'_ver_'.$nonColorValues['last_load_matrix'])->first();
+          if(!empty($copyCharacter)){
+            foreach ($allValues as $vKey => $allValue) {
+              if($allValue->id == $nonColorValues['value_id']) {
+                $final_key = $vKey;
+                break;
+              }
+            }
+
+            $copyAllValues = Value::where('character_id',$copyCharacter->id)->where('header_id','!=',1)->get();
+            foreach ($copyAllValues as $cKey => $copyValue) {
+              if($final_key == $cKey) {
+                $final_id = $copyValue->id;
+                $final_header_id = $copyValue->header_id;
+                break;
+              }
+            }
+            
+            Value::where('id', '=', $final_id)->where('header_id', '!=', 1)->update(['value'=>'']);
+
+            if (Value::where('id', '=', $final_id)->first()->header_id != 1) {
+                $nonColorDetails = new NonColorDetails([
+                    'value_id' => $final_id,
+                    'negation' => $request->input('negation') ? $request->input('negation') : null,
+                    'pre_constraint' => $request->input('pre_constraint') ? $request->input('pre_constraint') : null,
+                    'certainty_constraint' => $request->input('certainty_constraint') ? $request->input('certainty_constraint') : null,
+                    'degree_constraint' => $request->input('degree_constraint') ? $request->input('degree_constraint') : null,
+                    'main_value' => $request->input('main_value') ? $request->input('main_value') : null,
+                    'main_value_IRI' => $request->input('main_value_IRI') ? $request->input('main_value_IRI') : null,
+                    'post_constraint' => $request->input('post_constraint') ? $request->input('post_constraint') : null,
+                ]);
+
+                $nonColorDetails->save();
+
+                $id = $nonColorDetails->id;
+            }
+            
+            $copyCharacter->usage_count = 1;
+            $copyCharacter->save();
+          }
+
+        }
+   
 
 //        $characterValues = Value::where('character_id', '=', $character->id)->get()->toArray();
 //
@@ -2295,7 +2479,11 @@ class HomeController extends Controller
 
         $returnValues = $this->getValuesByCharacter();
         $returnAllDetailValues = $this->getAllDetails();
-        $returnNonColorDetails = DB::table('non_color_details')->where('value_id', '=', $request->input('value_id'))->get();
+        /*if(!empty($nonColorValues['last_load_matrix']) && !empty($copyCharacter)) {
+          $returnNonColorDetails = DB::table('non_color_details')->where('value_id', '=', $final_id)->get();
+        }else {*/
+          $returnNonColorDetails = DB::table('non_color_details')->where('value_id', '=', $request->input('value_id'))->get();
+        //}
         $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'id' => $id,
@@ -2450,11 +2638,12 @@ class HomeController extends Controller
     }
 
     public function removeEachColorDetails(Request $request)
-    {
+    {   
+        $data = $request->all();
         $eachColorDetails = ColorDetails::find($request->input('id'));
+        $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
         if ($eachColorDetails) {
             $eachColorDetails->delete();
-            $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
             $characterValues = DB::table('values')->where('character_id', '=', $character->id)->get();
             $tempCount = 0;
             foreach ($characterValues as $eachValue) {
@@ -2471,6 +2660,48 @@ class HomeController extends Controller
         $returnColorDetails = DB::table('color_details')->where('value_id', '=', $request->input('value_id'))->get();
         $returnValues = $this->getValuesByCharacter();
         $characterName = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
+
+        if(!empty($data['last_load_matrix'])) {
+          $allValues = Value::where('character_id',$character->id)->where('header_id','!=',1)->get();
+          $final_key = '';
+          $final_id = '';
+          $final_header_id = '';
+          $copyCharacter = Character::where('name',$character->name)->where('owner_name',$data['username'].'_ver_'.$data['last_load_matrix'])->first();
+          if(!empty($copyCharacter)) {
+            foreach ($allValues as $vKey => $allValue) {
+              if($allValue->id == $data['value_id']) {
+                $final_key = $vKey;
+                break;
+              }
+            }
+
+            $copyAllValues = Value::where('character_id',$copyCharacter->id)->where('header_id','!=',1)->get();
+            foreach ($copyAllValues as $cKey => $copyValue) {
+              if($final_key == $cKey) {
+                $final_id = $copyValue->id;
+                $final_header_id = $copyValue->header_id;
+                break;
+              }
+            }
+            
+            $color = ColorDetails::where('value_id',$final_id)->where('colored',$data['colored'])->first();
+            if ($color) {
+              $color->delete();
+              $characterColorValues = DB::table('values')->where('character_id', '=', $copyCharacter->id)->get();
+              $tempCount = 0;
+              foreach ($characterColorValues as $eachColorValue) {
+                  if (DB::table('color_details')->where('value_id', '=', $eachColorValue->id)->count() > 0) {
+                      $tempCount++;
+                  }
+              }
+              if ($tempCount == 0) {
+                  $copyCharacter->usage_count = 0;
+                  $copyCharacter->save();
+              }
+            }
+
+          }
+        }
 
         $constraints = $this->getDefaultConstraint($characterName);
 
@@ -2491,11 +2722,13 @@ class HomeController extends Controller
 
     public function removeEachNonColorDetails(Request $request)
     {
-        $eachNonColorDetails = NonColorDetails::find($request->input('id'));
 
+        $data = $request->all();
+        $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
+        $eachNonColorDetails = NonColorDetails::find($request->input('id'));
+       
         if ($eachNonColorDetails) {
             $eachNonColorDetails->delete();
-            $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
             $characterValues = DB::table('values')->where('character_id', '=', $character->id)->get();
             $tempCount = 0;
             foreach ($characterValues as $eachValue) {
@@ -2508,9 +2741,56 @@ class HomeController extends Controller
                 $character->save();
             }
         }
-        $returnValues = $this->getValuesByCharacter();
 
-        $returnNonColorDetails = DB::table('non_color_details')->where('value_id', '=', $request->input('value_id'))->get();
+        if(!empty($data['last_load_matrix'])) {
+          $allValues = Value::where('character_id',$character->id)->where('header_id','!=',1)->get();
+          $final_key = '';
+          $final_id = '';
+          $final_header_id = '';
+          $copyCharacter = Character::where('name',$character->name)->where('owner_name',$data['username'].'_ver_'.$data['last_load_matrix'])->first();
+          if(!empty($copyCharacter)) {
+            foreach ($allValues as $vKey => $allValue) {
+              if($allValue->id == $data['value_id']) {
+                $final_key = $vKey;
+                break;
+              }
+            }
+
+            $copyAllValues = Value::where('character_id',$copyCharacter->id)->where('header_id','!=',1)->get();
+            foreach ($copyAllValues as $cKey => $copyValue) {
+              if($final_key == $cKey) {
+                $final_id = $copyValue->id;
+                $final_header_id = $copyValue->header_id;
+                break;
+              }
+            }
+            
+            $nonColor = NonColorDetails::where('value_id',$final_id)->where('main_value',$data['main_value'])->first();
+            if ($nonColor) {
+              $nonColor->delete();
+              $characterNonValues = DB::table('values')->where('character_id', '=', $copyCharacter->id)->get();
+              $tempCount = 0;
+              foreach ($characterNonValues as $eachNonValue) {
+                  if (DB::table('non_color_details')->where('value_id', '=', $eachNonValue->id)->count() > 0) {
+                      $tempCount++;
+                  }
+              }
+              if ($tempCount == 0) {
+                  $copyCharacter->usage_count = 0;
+                  $copyCharacter->save();
+              }
+            }
+
+          }
+        }
+
+
+        $returnValues = $this->getValuesByCharacter();
+        /*if(!empty($data['last_load_matrix']) && !empty($copyCharacter)) {
+          $returnNonColorDetails = DB::table('non_color_details')->where('value_id', '=', $final_id)->get();
+        }else {*/
+          $returnNonColorDetails = DB::table('non_color_details')->where('value_id', '=', $request->input('value_id'))->get();
+        /*}*/
         $characterName = DB::table('characters')->where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first()->name;
 
         $constraints = $this->getDefaultConstraint($characterName);
@@ -2532,6 +2812,7 @@ class HomeController extends Controller
 
     public function removeNonColorValue(Request $request)
     {
+        $data = $request->all();
         $valueId = $request->input('value_id');
 
         $character = Character::where('id', '=', Value::where('id', '=', $request->input('value_id'))->first()->character_id)->first();
@@ -2552,20 +2833,59 @@ class HomeController extends Controller
         }
 
         NonColorDetails::where('value_id', '=', $valueId)->delete();
-
-
         $characterName = Character::where('id', '=', Value::where('id', '=', $valueId)->first()->character_id)->first()->name;
 
-        $returnValues = $this->getValuesByCharacter();
+        if(!empty($last_load_matrix)) {
+          $allValues = Value::where('character_id',$character->id)->where('header_id','!=',1)->get();
+          $final_key = '';
+          $final_id = '';
+          $final_header_id = '';
+          $copyCharacter = Character::where('name',$characterName)->where('owner_name',$data['username'].'_ver_'.$data['last_load_matrix'])->first();
+          if(!empty($copyCharacter)) {
+            foreach ($allValues as $vKey => $allValue) {
+              if($allValue->id == $data['value_id']) {
+                $final_key = $vKey;
+                break;
+              }
+            }
+            
+            $copyAllValues = Value::where('character_id',$copyCharacter->id)->where('header_id','!=',1)->get();
+            foreach ($copyAllValues as $cKey => $copyValue) {
+              if($final_key == $cKey) {
+                $final_id = $copyValue->id;
+                $final_header_id = $copyValue->header_id;
+                break;
+              }
+            }
 
+            $copyCharacterValues = Value::where('character_id', '=', $copyCharacter->id)->get()->toArray();
+
+            $tempCount = 0;
+
+            foreach ($copyCharacterValues as $eachValue) {
+                if (NonColorDetails::where('value_id', '=', $eachValue['id'])->count() > 0) {
+                    $tempCount++;
+                }
+            }
+
+            if ($tempCount == 0) {
+                $copyCharacter->usage_count = 0;
+                $copyCharacter->save();
+            }
+
+            NonColorDetails::where('value_id', '=', $final_id)->delete();
+          }
+        }
+
+        $returnValues = $this->getValuesByCharacter();
         $constraints = $this->getDefaultConstraint($characterName);
         $returnAllDetailValues = $this->getAllDetails();
         $data = [
-            'values' => $returnValues,
-            'allColorValues' => $returnAllDetailValues['colorValues'],
-            'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
-            'preList' => $constraints['preList'],
-            'postList' => $constraints['postList'],
+          'values' => $returnValues,
+          'allColorValues' => $returnAllDetailValues['colorValues'],
+          'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
+          'preList' => $constraints['preList'],
+          'postList' => $constraints['postList'],
         ];
 
         return $data;
