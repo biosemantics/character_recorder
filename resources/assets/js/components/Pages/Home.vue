@@ -4163,7 +4163,7 @@ export default {
       formToken: $('meta[name="csrf-token"]').attr('content'),
       refreshData: false,
       taxonNameConfirm: false,
-
+      usageTaxons: [],
     }
   },
   components: {
@@ -5131,6 +5131,16 @@ export default {
                 }
               }
             });
+            axios.post('api/v1/character/get-usage-taxons', send_data)
+            .then(function (resp) {
+              var usage_taxon =  resp.data;
+              if(usage_taxon.length > 0) {
+                for (let u = 0; u < usage_taxon.length; u++) {
+                  app.usageTaxons.push(usage_taxon[u]);
+                }
+                sessionStorage.setItem("usageTaxons",app.usageTaxons);
+              }
+            });
           }else {
             axios.post('api/v1/character/edit-view', send_data)
             .then(function (resp) {
@@ -5143,6 +5153,17 @@ export default {
                 }
               }
             });
+            axios.post('api/v1/character/get-usage-taxons', send_data)
+            .then(function (resp) {
+              var usage_taxon =  resp.data;
+              if(usage_taxon.length > 0) {
+                for (let u = 0; u < usage_taxon.length; u++) {
+                  app.usageTaxons.push(usage_taxon[u]);
+                }
+                sessionStorage.setItem("usageTaxons",app.usageTaxons);
+              }
+            });
+
           }
           
        /* }*/
@@ -8175,6 +8196,8 @@ export default {
       app.roundsTwo = [];
       app.completeElement = [];
       app.viewImages = [];
+      app.usageTaxons = [];
+      sessionStorage.setItem("usageTaxons",app.usageTaxons);
       app.temp_files = [];
       app.active_image = null;
       app.character.temp_files = [];
@@ -8190,6 +8213,8 @@ export default {
       app.completeElement = [];
       app.temp_files = [];
       app.viewImages = [];
+      app.usageTaxons = [];
+      sessionStorage.setItem("usageTaxons",app.usageTaxons);
       app.active_image = null;
       app.character.temp_files = [];
     },
@@ -9172,6 +9197,8 @@ export default {
             app.active_el = 0;
             app.temp_files = [];
             app.viewImages = [];
+            app.usageTaxons = [];
+            sessionStorage.setItem("usageTaxons",app.usageTaxons);
             app.roundValOne = "";
             app.roundValTwo = "";
             app.roundsOne = [];
@@ -9187,6 +9214,8 @@ export default {
         app.active_el = 0;
         app.temp_files = [];
         app.viewImages = [];
+        app.usageTaxons = [];
+        sessionStorage.setItem("usageTaxons",app.usageTaxons);
         app.roundValOne = "";
         app.roundValTwo = "";
         app.roundsOne = [];
@@ -9214,6 +9243,8 @@ export default {
       app.active_el = 0;
       app.temp_files = [];
       app.viewImages = [];
+      app.usageTaxons = [];
+      sessionStorage.setItem("usageTaxons",app.usageTaxons);
       app.roundValOne = "";
       app.roundValTwo = "";
       app.roundsOne = [];
@@ -9335,6 +9366,8 @@ export default {
                   app.active_el = 0;
                   app.temp_files = [];
                   app.viewImages = [];
+                  app.usageTaxons = [];
+                  sessionStorage.setItem("usageTaxons",app.usageTaxons);
                   app.roundValOne = "";
                   app.roundValTwo = "";
                   app.roundsOne = [];
@@ -9436,6 +9469,8 @@ export default {
                   app.active_el = 0;
                   app.temp_files = [];
                   app.viewImages = [];
+                  app.usageTaxons = [];
+                  sessionStorage.setItem("usageTaxons",app.usageTaxons);
                   app.roundValOne = "";
                   app.roundValTwo = "";
                   app.roundsOne = [];
@@ -9496,6 +9531,8 @@ export default {
                   app.active_el = 0;
                   app.temp_files = [];
                   app.viewImages = [];
+                  app.usageTaxons = [];
+                  sessionStorage.setItem("usageTaxons",app.usageTaxons);
                   app.active_image = null;
                   app.character.temp_files = [];
                   app.roundValOne = "";

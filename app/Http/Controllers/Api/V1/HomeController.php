@@ -1903,6 +1903,52 @@ class HomeController extends Controller
         return $mainImage;
     }
 
+    public function getUsageTaxons(Request $request){
+      $character = $request->all();
+      $users = DB::table('characters')->pluck('owner_name')->unique()->toArray();
+      $dfCharacter = DB::table('default_characters')->where('name',$character[0])->count();
+      $standardCharacters = DB::table('characters')->where('name',$character[0])->get()->toArray();
+      if($dfCharacter > 0) {
+        $total_names = array();
+        foreach ($users as $u => $username) {
+          if(strrchr($username,"_ver_") == ''){    
+            $tem_total = 0;
+            $clone = 0;
+            foreach ($standardCharacters as $s => $st_character) {
+                if(strpos($st_character->owner_name, $username.'_ver_' ) === 0){
+                  $clone = 1;
+                  if($tem_total == 1) {
+                    $tem_total = 0;
+                    $taxon = '';
+                    $final_name = '';
+                    if(count($total_names)>0) {
+                      unset($total_names[array_key_last($total_names)]); 
+                    }
+                  }
+                  if($st_character->usage_count > 0) {
+                    $taxon = DB::table('users')->where('email', 'like', '%' . $username . '%')->pluck('taxon')->first();
+                    $final_name = 'Used for '.$taxon.' by '.$username;
+                    $total_names[] = $final_name;
+                
+                    break;
+                  } 
+                }
+                else if($st_character->owner_name == $username && $st_character->usage_count>0 && $clone == 0){
+                  $tem_total = 1;
+                  $taxon = DB::table('users')->where('email', 'like', '%' . $username . '%')->pluck('taxon')->first();
+                  $final_name = 'Used for '.$taxon.' by '.$username;
+                  $total_names[] = $final_name;
+                }
+            }
+          }
+        } 
+
+      }
+
+      return array_values($total_names);
+
+    }
+
     // update image, if character is already used.
     public function updateImage(Request $request) {
       $data = $request->all();

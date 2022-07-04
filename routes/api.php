@@ -92,6 +92,7 @@ Route::group([
         Route::post('check-image',                       ['as' => 'check_image',            'uses' => 'HomeController@checkImage']);
         Route::post('identify',                       ['as' => 'identify',            'uses' => 'HomeController@identify']);
         Route::post('empty-cells',                           ['as' => 'empty_cells',            'uses' => 'HomeController@emptyCells']);
+        Route::post('get-usage-taxons',                          ['as' => 'get_usage_taxons',               'uses' => 'HomeController@getUsageTaxons']);
 
     });
 });
