@@ -1221,6 +1221,8 @@
                 app.postList = resp.data.postList;
                 console.log(app.preList);
                 console.log(app.postList);
+            }).catch(error => {
+                window.location.reload()
             });
             // axios.get('api/v1/getTaxons').then(function(resp){
             //     console.log(resp);
@@ -1230,6 +1232,8 @@
             axios.get('api/v1/getUsers').then(function(resp){
                 console.log(resp);
                 app.usersData = resp.data;
+            }).catch(error => {
+                window.location.reload()
             });
 
             var query=` PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

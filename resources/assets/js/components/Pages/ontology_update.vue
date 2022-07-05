@@ -450,11 +450,15 @@ export default {
         app.values = resp.data.values;
         app.allColorValues = resp.data.allColorValues;
         app.allNonColorValues = resp.data.allNonColorValues;
+      }).catch(error => {
+          window.location.reload()
       });
     await axios.get("api/v1/user-tag/" + app.user.id)
       .then(function (resp) {
         app.userTags = resp.data;
         console.log('userTags', app.userTags);
+      }).catch(error => {
+          window.location.reload()
       });
     app.currentTermType = 1;
     axios.get("http://shark.sbs.arizona.edu:8080/carex/getDeprecatedClasses")

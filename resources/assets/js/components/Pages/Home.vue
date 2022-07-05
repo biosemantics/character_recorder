@@ -8688,9 +8688,9 @@ export default {
         }
       }
       
-   /* try{*/
       axios.post('api/v1/character/add-standard', postCharacters)
       .then(function (resp) {
+         window.location.reload()
           app.userCharacters = resp.data;
           var toolTopIndex = 0;
           app.standardCharactersTooltip = "";
@@ -8712,20 +8712,10 @@ export default {
           }  
           app.isLoading = false;
           app.refreshUserCharacters();
+        }).catch(error => {
+          window.location.reload()
         });
-      /*}catch (error) {
-        const err = error
-        if (err.response) {
-           console.log(err.response)
-        }
-        this.handleAxiosError(error)
-      }*/
     },
-
-    handleAxiosError() {
-      window.location.reload()
-    },
-
     removeStandardCharacter(characterId) {
       var app = this;
       console.log('characterId', characterId);
@@ -8761,6 +8751,8 @@ export default {
             app.userTags = resp.data.userTags;
             if (app.userTags[0]) app.showTableForTab(app.userTags[0].tag_name);
           } else app.showTableForTab(app.currentTab);*/
+        }).catch(error => {
+          window.location.reload()
         });
 
     },
@@ -8786,10 +8778,14 @@ export default {
               .then(function (resp) {
                 console.log("remove UserTag", resp.data);
                 app.showTableForTab(app.currentTab);
+              }).catch(error => {
+                window.location.reload()
               });
           }
           app.refreshUserCharacters();
           app.showTableForTab(app.currentTab);
+        }).catch(error => {
+          window.location.reload()
         });
     },
     removeAllCharacters() {
@@ -8805,6 +8801,8 @@ export default {
           }
           app.refreshUserCharacters();
           app.showTableForTab(app.currentTab);
+        }).catch(error => {
+          window.location.reload()
         });
     },
 
@@ -9326,6 +9324,8 @@ export default {
             app.active_image = null;
             app.numericalFlag = false;
             app.character.temp_files = [];
+          }).catch(error => {
+            window.location.reload()
           });
         }
       } else {
@@ -9494,6 +9494,8 @@ export default {
                   app.roundsTwo = [];
                   app.active_image = null;
                   app.character.temp_files = [];
+                }).catch(error => {
+                  window.location.reload()
                 });
             } else {
               alert("The character already exists for this user!!");
@@ -9562,13 +9564,19 @@ export default {
                         axios.get('api/v1/user-tag/' + app.user.id)
                           .then(function (resp) {
                             app.userTags = resp.data;
+                          }).catch(error => {
+                            window.location.reload()
                           });
                         console.log("create UserTag", resp.data);
+                      }).catch(error => {
+                        window.location.reload()
                       });
                   } else {
                     axios.get('api/v1/user-tag/' + app.user.id)
                       .then(function (resp) {
                         app.userTags = resp.data;
+                      }).catch(error => {
+                        window.location.reload()
                       });
                   }
                   app.finalDefaultCharacters = resp.data.defaultCharacters;
@@ -9597,6 +9605,8 @@ export default {
                   app.roundsTwo = [];
                   app.active_image = null;
                   app.character.temp_files = [];
+                }).catch(error => {
+                  window.location.reload()
                 });
             } else {
               app.isLoading = true;
@@ -9637,6 +9647,8 @@ export default {
                     axios.post("api/v1/user-tag/create", jsonUserTag)
                       .then(function (resp) {
                         console.log("create UserTag", resp.data);
+                      }).catch(error => {
+                        window.location.reload()
                       });
                   }
                   app.finalDefaultCharacters = resp.data.defaultCharacters;
@@ -9659,10 +9671,14 @@ export default {
                   app.roundValTwo = "";
                   app.roundsOne = [];
                   app.roundsTwo = [];
+                }).catch(error => {
+                  window.location.reload()
                 });
             }
           }
 
+        }).catch(error => {
+          window.location.reload()
         });
       console.log("app.character", app.character);
       app.completeElement = [];
@@ -10020,6 +10036,8 @@ export default {
             .then(function (resp) {
               app.userTags = resp.data;
               app.showTableForTab(app.currentTab);
+            }).catch(error => {
+              window.location.reload()
             });
           app.refreshUserCharacters(true);
           app.inflorescenceVal = "";
@@ -10028,6 +10046,8 @@ export default {
           app.unbranchedUnisexual = '';
           app.branchedUnisexual = '';
           console.log('userCharacters', app.userCharacters);
+        }).catch(error => {
+          window.location.reload()
         });
     },
     generateMatrix() {
@@ -10064,6 +10084,8 @@ export default {
           app.refreshUserCharacters();
           app.showTableForTab(app.currentTab);
 
+        }).catch(error => {
+          window.location.reload()
         });
     },
     changeTaxonName() {
@@ -10071,6 +10093,8 @@ export default {
       axios.post('api/v1/change-taxon/' + app.taxonName)
         .then(function (resp) {
           app.taxonName = resp.data.taxon;
+        }).catch(error => {
+          window.location.reload()
         });
     },
     changeColumnCount() {
@@ -10131,6 +10155,8 @@ export default {
                 app.refreshUserCharacters();
                 app.showTableForTab(app.currentTab);
               }
+            }).catch(error => {
+              window.location.reload()
             });
         }
       } else {
@@ -10156,6 +10182,8 @@ export default {
           app.refreshUserCharacters();
           app.showTableForTab(app.currentTab);
           app.isLoading = false;
+        }).catch(error => {
+          window.location.reload()
         });
     },
     getDeprecatedValue() {
@@ -10369,6 +10397,8 @@ export default {
           app.values = resp.data.values;
           app.refreshUserCharacters();
           app.showTableForTab(app.currentTab);
+        }).catch(error => {
+          window.location.reload()
         });
     },
     changeSummary(characterId, summary) {
@@ -10385,6 +10415,8 @@ export default {
           app.values = resp.data.values;
           app.refreshUserCharacters();
           app.showTableForTab(app.currentTab);
+        }).catch(error => {
+          window.location.reload()
         });
     },
     upUserValue(valueId) {
@@ -10427,6 +10459,8 @@ export default {
             console.log('app.userCharacters', app.userCharacters);
             app.refreshUserCharacters();
             app.showTableForTab(app.currentTab);
+          }).catch(error => {
+            window.location.reload()
           });
       }
     },
@@ -11415,6 +11449,8 @@ export default {
           } else {
             alert('Error occurred while exporting data!');
           }
+        }).catch(error => {
+          window.location.reload()
         });
     },
     checkValueArray(tempArray) {
@@ -11453,6 +11489,8 @@ export default {
             app.values = resp.data.values;
             app.getDeprecatedValue();
             app.showTableForTab(app.currentTab);
+          }).catch(error => {
+            window.location.reload()
           });
       }else {
         alert('The following section can not be empty.');
@@ -11996,6 +12034,8 @@ export default {
                   app.allColorValues = respColor.data.colorValues;
                   app.getDeprecatedValue();
                 })
+            }).catch(error => {
+              window.location.reload()
             });
           } else {
             app.saveColorButtonFlag = false;
@@ -12021,6 +12061,8 @@ export default {
           app.matrixSaved = false;
           app.getDeprecatedValue();
           app.colorDetailsFlag = false;
+        }).catch(error => {
+          window.location.reload()
         });
     },
     async saveNonColorValue(newFlag = false) {
@@ -12334,6 +12376,8 @@ export default {
                   app.allNonColorValues = respNonColor.data.nonColorValues;
                   app.getDeprecatedValue();
                 })
+            }).catch(error => {
+              window.location.reload()
             });
           } else {
             app.saveNonColorButtonFlag = false;
@@ -12353,6 +12397,8 @@ export default {
           app.matrixSaved = false;
           app.getDeprecatedValue();
           app.nonColorDetailsFlag = false;
+        }).catch(error => {
+          window.location.reload()
         });
     },
     checkColorProperty(property) {
@@ -12583,6 +12629,8 @@ export default {
           .then(function (resp) {
             app.preList = resp.data.preList;
             app.postList = resp.data.postList;
+          }).catch(error => {
+            window.location.reload()
           });
         if (currentCharacter.name.startsWith('Color')) {
           app.colTreeData = [];
@@ -13548,7 +13596,9 @@ export default {
           app.loadVersion = null;
           app.taxonName = res.data.taxon;
           app.showSetupArea = false;
-        })
+        }).catch(error => {
+          window.location.reload()
+        });
 
     },
     nameMatrix() {
@@ -13580,7 +13630,9 @@ export default {
             if (app.confirmNewMatrixDialog == true) {
               app.setNewValues();
             }
-          })
+          }).catch(error => {
+            window.location.reload()
+          });
       } else {
         console.log('overwrite to ', selectedMatrixName);
         axios.post('api/v1/overwriteMatrix', postValue)
@@ -13595,7 +13647,9 @@ export default {
             if (app.confirmNewMatrixDialog == true) {
               app.setNewValues();
             }
-          })
+          }).catch(error => {
+            window.location.reload()
+          });
       }
     },
     setNewValues() {
@@ -13620,6 +13674,8 @@ export default {
           app.confirmNewMatrixDialog = false;
           app.showSetupArea = true;
           app.matrixShowFlag = false;
+        }).catch(error => {
+          window.location.reload()
         });
     },
     createNewMatrix() {
@@ -13690,6 +13746,8 @@ export default {
           app.refreshDefaultCharacters();
           app.getDeprecatedValue();
           app.isLoading = false;
+        }).catch(error => {
+          window.location.reload()
         });
     },
     editEachNonColor(value) {
@@ -13727,11 +13785,17 @@ export default {
           app.defaultCharacters = resp.data.defaultCharacters;
           app.refreshDefaultCharacters();
           app.getDeprecatedValue();
+        }).catch(error => {
+          window.location.reload()
         });
     },
     getUserTag: async () => {
       var app = this;
-      return axios.get("api/v1/user-tag/" + app.user.id);
+      axios.get("api/v1/user-tag/" + app.user.id).then(function (resp) {
+        return resp.data;   
+      }).catch(error => {
+        window.location.reload()
+      });
     },
     getPrimaryColor(detailColor) {
       var app = this;
@@ -13842,6 +13906,8 @@ export default {
           app.allColorValues = resp.data.allColorValues;
           app.allNonColorValues = resp.data.allNonColorValues;
           app.getDeprecatedValue();
+        }).catch(error => {
+          window.location.reload()
         });
 
     },
@@ -13857,6 +13923,8 @@ export default {
           app.allColorValues = resp.data.allColorValues;
           app.allNonColorValues = resp.data.allNonColorValues;
           app.getDeprecatedValue();
+        }).catch(error => {
+          window.location.reload()
         });
     },
     calcSummary(row) {
@@ -14213,6 +14281,8 @@ export default {
             app.nounCharacters = resp.data;
             app.nounLastCharacters = resp.data;
             sessionStorage.setItem("nounCharacters",resp.data)
+        }).catch(error => {
+          window.location.reload()
         });
     }
   },
@@ -14427,10 +14497,14 @@ export default {
             app.showTableForTab(app.userTags[0].tag_name);
           }
         }
+      }).catch(error => {
+        window.location.reload()
       });
     axios.get("api/v1/getMatrixNames")
       .then((resp) => {
         app.namesList = resp.data;
+      }).catch(error => {
+        window.location.reload()
       });
     axios.get("color_palette.json").then(function (resp) {
       var tempColorPalette = resp.data;
