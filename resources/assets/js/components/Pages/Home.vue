@@ -8690,7 +8690,6 @@ export default {
       
       axios.post('api/v1/character/add-standard', postCharacters)
       .then(function (resp) {
-         window.location.reload()
           app.userCharacters = resp.data;
           var toolTopIndex = 0;
           app.standardCharactersTooltip = "";
