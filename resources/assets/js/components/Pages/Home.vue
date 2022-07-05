@@ -285,8 +285,7 @@
             </div>
           </div>
         </div>
-        <div style="padding-left: 15px; padding-right: 15px; display: inline-flex; width: 100%;"
-             v-if="matrixShowFlag == true">
+        <div style="padding-left: 15px; padding-right: 15px; display: inline-flex; width: 100%;" v-if="matrixShowFlag == true">
           <div v-bind:class="{'width-95per': descriptionFlag == false}" style="min-width: 70%;">
             <draggable
               :list="userTags"
@@ -960,58 +959,59 @@
                                     style="height: 26px;"
                                     @input="onChangeRoundsOne(index,round.fifth)"
                                     :placeholder="round.text"
-                                    v-on:focus = "nounUndefined = false;
-                                                  secondNounUndefined = false;
-                                                  lastCharacterDefinition = '';
-                                                  firstCharacterUndefined = false;
-                                                  firstCharacterDefinition = ''
-                                                  firstCharacterDeprecated = false;
-                                                  firstCharacterDeprecatedNotifyMessage = '';
-                                                  firstCharacterNotRecommend = false;
-                                                  firstCharacterNotRecommendNotifyMessage = '';
-                                                  firstCharacterSynonym = false;
-                                                  firstCharacterSynonymNotifyMessage = '';
-                                                  firstCharacterBroadSynonym = false;
-                                                  firstCharacterBroadSynonymNotifyMessage = '';
-                                                  thirdCharacterUndefined = false;
-                                                  thirdCharacterDefinition = ''
-                                                  thirdCharacterDeprecated = false;
-                                                  thirdCharacterDeprecatedNotifyMessage = '';
-                                                  thirdCharacterNotRecommend = false;
-                                                  thirdCharacterNotRecommendNotifyMessage = '';
-                                                  thirdCharacterSynonym = false;
-                                                  thirdCharacterSynonymNotifyMessage = '';
-                                                  thirdCharacterBroadSynonym = false;
-                                                  thirdCharacterBroadSynonymNotifyMessage = '';
-                                                  secondThirdCharacterUndefined = false;
-                                                  secondThirdCharacterDefinition = ''
-                                                  secondThirdCharacterDeprecated = false;
-                                                  secondThirdCharacterDeprecatedNotifyMessage = '';
-                                                  secondThirdCharacterNotRecommend = false;
-                                                  secondThirdCharacterNotRecommendNotifyMessage = '';
-                                                  secondThirdCharacterSynonym = false;
-                                                  secondThirdCharacterSynonymNotifyMessage = '';
-                                                  secondThirdCharacterBroadSynonym = false;
-                                                  secondThirdCharacterBroadSynonymNotifyMessage = '';
-                                                  wholeCharacterUndefined=false;
-                                                  wholeCharacterDefinition='';
-                                                  firstNounDeprecated=false;
-                                                  firstNounDeprecatedNotifyMessage='';
-                                                  secondNounDeprecated=false;
-                                                  secondNounDeprecatedNotifyMessage='';
-                                                  firstNounNotRecommend=false;
-                                                  firstNounNotRecommendNotifyMessage='';
-                                                  secondNounNotRecommend=false;
-                                                  secondNounNotRecommendNotifyMessage='';
-                                                  firstNounSynonym=false;
-                                                  firstNounSynonymNotifyMessage='';
-                                                  firstNounBroadSynonym=false;
-                                                  firstNounBroadSynonymNotifyMessage='';
-                                                  secondNounSynonym=false;
-                                                  secondNounSynonymNotifyMessage='';
-                                                  secondNounBroadSynonym=false;
-                                                  secondNounBroadSynonymNotifyMessage='';
-                                                  "
+                                    v-on:focus="nounUndefined = false;
+                                                secondNounUndefined = false;
+                                                lastCharacterDefinition = '';
+                                                firstCharacterUndefined = false;
+                                                firstCharacterDefinition = ''
+                                                firstCharacterDeprecated = false;
+                                                firstCharacterDeprecatedNotifyMessage = '';
+                                                firstCharacterNotRecommend = false;
+                                                firstCharacterNotRecommendNotifyMessage = '';
+                                                firstCharacterSynonym = false;
+                                                firstCharacterSynonymNotifyMessage = '';
+                                                firstCharacterBroadSynonym = false;
+                                                firstCharacterBroadSynonymNotifyMessage = '';
+                                                thirdCharacterUndefined = false;
+                                                thirdCharacterDefinition = ''
+                                                thirdCharacterDeprecated = false;
+                                                thirdCharacterDeprecatedNotifyMessage = '';
+                                                thirdCharacterNotRecommend = false;
+                                                thirdCharacterNotRecommendNotifyMessage = '';
+                                                thirdCharacterSynonym = false;
+                                                thirdCharacterSynonymNotifyMessage = '';
+                                                thirdCharacterBroadSynonym = false;
+                                                thirdCharacterBroadSynonymNotifyMessage = '';
+                                                secondThirdCharacterUndefined = false;
+                                                secondThirdCharacterDefinition = ''
+                                                secondThirdCharacterDeprecated = false;
+                                                secondThirdCharacterDeprecatedNotifyMessage = '';
+                                                secondThirdCharacterNotRecommend = false;
+                                                secondThirdCharacterNotRecommendNotifyMessage = '';
+                                                secondThirdCharacterSynonym = false;
+                                                secondThirdCharacterSynonymNotifyMessage = '';
+                                                secondThirdCharacterBroadSynonym = false;
+                                                secondThirdCharacterBroadSynonymNotifyMessage = '';
+                                                wholeCharacterUndefined=false;
+                                                wholeCharacterDefinition='';
+                                                firstNounDeprecated=false;
+                                                firstNounDeprecatedNotifyMessage='';
+                                                secondNounDeprecated=false;
+                                                secondNounDeprecatedNotifyMessage='';
+                                                firstNounNotRecommend=false;
+                                                firstNounNotRecommendNotifyMessage='';
+                                                secondNounNotRecommend=false;
+                                                secondNounNotRecommendNotifyMessage='';
+                                                firstNounSynonym=false;
+                                                firstNounSynonymNotifyMessage='';
+                                                firstNounBroadSynonym=false;
+                                                firstNounBroadSynonymNotifyMessage='';
+                                                secondNounSynonym=false;
+                                                secondNounSynonymNotifyMessage='';
+                                                secondNounBroadSynonym=false;
+                                                secondNounBroadSynonymNotifyMessage='';
+                                                input();
+                                                "
                                   />
                                   <ul v-if='round.round_val == "S" || round.round_val == "D"'>
                                     <li v-on:click="handleRoundOne(nounCharacter,index)" :value="nounCharacter" v-for="(nounCharacter,key) in roundsOne[index].characters">{{nounCharacter}}
@@ -1299,58 +1299,59 @@
                                       v-bind:style="{ 'width': round.text == 'enter a positional phrases,e.g at middle length' ? 340 + 'px' : ''}"
                                       :placeholder="round.text"
                                       @input="onChangeRoundsTwo(index,round.fifth)"
-                                      v-on:focus = "nounUndefined = false;
-                                                    secondNounUndefined = false;
-                                                    lastCharacterDefinition = '';
-                                                    firstCharacterUndefined = false;
-                                                    firstCharacterDefinition = ''
-                                                    firstCharacterDeprecated = false;
-                                                    firstCharacterDeprecatedNotifyMessage = '';
-                                                    firstCharacterNotRecommend = false;
-                                                    firstCharacterNotRecommendNotifyMessage = '';
-                                                    firstCharacterSynonym = false;
-                                                    firstCharacterSynonymNotifyMessage = '';
-                                                    firstCharacterBroadSynonym = false;
-                                                    firstCharacterBroadSynonymNotifyMessage = '';
-                                                    thirdCharacterUndefined = false;
-                                                    thirdCharacterDefinition = ''
-                                                    thirdCharacterDeprecated = false;
-                                                    thirdCharacterDeprecatedNotifyMessage = '';
-                                                    thirdCharacterNotRecommend = false;
-                                                    thirdCharacterNotRecommendNotifyMessage = '';
-                                                    thirdCharacterSynonym = false;
-                                                    thirdCharacterSynonymNotifyMessage = '';
-                                                    thirdCharacterBroadSynonym = false;
-                                                    thirdCharacterBroadSynonymNotifyMessage = '';
-                                                    secondThirdCharacterUndefined = false;
-                                                    secondThirdCharacterDefinition = ''
-                                                    secondThirdCharacterDeprecated = false;
-                                                    secondThirdCharacterDeprecatedNotifyMessage = '';
-                                                    secondThirdCharacterNotRecommend = false;
-                                                    secondThirdCharacterNotRecommendNotifyMessage = '';
-                                                    secondThirdCharacterSynonym = false;
-                                                    secondThirdCharacterSynonymNotifyMessage = '';
-                                                    secondThirdCharacterBroadSynonym = false;
-                                                    secondThirdCharacterBroadSynonymNotifyMessage = '';
-                                                    wholeCharacterUndefined=false;
-                                                    wholeCharacterDefinition='';
-                                                    firstNounDeprecated=false;
-                                                    firstNounDeprecatedNotifyMessage='';
-                                                    secondNounDeprecated=false;
-                                                    secondNounDeprecatedNotifyMessage='';
-                                                    firstNounNotRecommend=false;
-                                                    firstNounNotRecommendNotifyMessage='';
-                                                    secondNounNotRecommend=false;
-                                                    secondNounNotRecommendNotifyMessage='';
-                                                    firstNounSynonym=false;
-                                                    firstNounSynonymNotifyMessage='';
-                                                    firstNounBroadSynonym=false;
-                                                    firstNounBroadSynonymNotifyMessage='';
-                                                    secondNounSynonym=false;
-                                                    secondNounSynonymNotifyMessage='';
-                                                    secondNounBroadSynonym=false;
-                                                    secondNounBroadSynonymNotifyMessage='';
-                                                    "
+                                      v-on:focus="nounUndefined = false;
+                                                secondNounUndefined = false;
+                                                lastCharacterDefinition = '';
+                                                firstCharacterUndefined = false;
+                                                firstCharacterDefinition = ''
+                                                firstCharacterDeprecated = false;
+                                                firstCharacterDeprecatedNotifyMessage = '';
+                                                firstCharacterNotRecommend = false;
+                                                firstCharacterNotRecommendNotifyMessage = '';
+                                                firstCharacterSynonym = false;
+                                                firstCharacterSynonymNotifyMessage = '';
+                                                firstCharacterBroadSynonym = false;
+                                                firstCharacterBroadSynonymNotifyMessage = '';
+                                                thirdCharacterUndefined = false;
+                                                thirdCharacterDefinition = ''
+                                                thirdCharacterDeprecated = false;
+                                                thirdCharacterDeprecatedNotifyMessage = '';
+                                                thirdCharacterNotRecommend = false;
+                                                thirdCharacterNotRecommendNotifyMessage = '';
+                                                thirdCharacterSynonym = false;
+                                                thirdCharacterSynonymNotifyMessage = '';
+                                                thirdCharacterBroadSynonym = false;
+                                                thirdCharacterBroadSynonymNotifyMessage = '';
+                                                secondThirdCharacterUndefined = false;
+                                                secondThirdCharacterDefinition = ''
+                                                secondThirdCharacterDeprecated = false;
+                                                secondThirdCharacterDeprecatedNotifyMessage = '';
+                                                secondThirdCharacterNotRecommend = false;
+                                                secondThirdCharacterNotRecommendNotifyMessage = '';
+                                                secondThirdCharacterSynonym = false;
+                                                secondThirdCharacterSynonymNotifyMessage = '';
+                                                secondThirdCharacterBroadSynonym = false;
+                                                secondThirdCharacterBroadSynonymNotifyMessage = '';
+                                                wholeCharacterUndefined=false;
+                                                wholeCharacterDefinition='';
+                                                firstNounDeprecated=false;
+                                                firstNounDeprecatedNotifyMessage='';
+                                                secondNounDeprecated=false;
+                                                secondNounDeprecatedNotifyMessage='';
+                                                firstNounNotRecommend=false;
+                                                firstNounNotRecommendNotifyMessage='';
+                                                secondNounNotRecommend=false;
+                                                secondNounNotRecommendNotifyMessage='';
+                                                firstNounSynonym=false;
+                                                firstNounSynonymNotifyMessage='';
+                                                firstNounBroadSynonym=false;
+                                                firstNounBroadSynonymNotifyMessage='';
+                                                secondNounSynonym=false;
+                                                secondNounSynonymNotifyMessage='';
+                                                secondNounBroadSynonym=false;
+                                                secondNounBroadSynonymNotifyMessage='';
+                                                input();
+                                                "
                                     />
                                     <ul v-if='round.round_val == "S" || round.round_val == "D"'>
                                       <li v-on:click="handleRoundTwo(nounCharacter,index)" :value="nounCharacter" v-for="(nounCharacter,key) in roundsTwo[index].characters">{{nounCharacter}}
@@ -4165,6 +4166,8 @@ export default {
       taxonNameConfirm: false,
       usageTaxons: [],
       targetInflorescence: false,
+      roundFirst: false,
+      roundSecond: false,
     }
   },
   components: {
@@ -5697,6 +5700,36 @@ export default {
     async checkStoreCharacter() {
       var app = this;
       var requestBody = {};
+      if(app.roundsOne.length > 0) {
+        for(var i = 0; i < app.roundsOne.length; i++){
+          if(app.roundsOne[i].undefined) {
+            app.roundFirst = true;
+              var date = new Date();
+              requestBody = {
+                "user": app.sharedFlag ? '' : app.user.name,
+                "ontology": "carex",
+                "term": app.roundsOne[i].fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
+                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
+                "definition": app.roundsOne[i].definition,
+                "elucidation": "",
+                "createdBy": app.user.name,
+                "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
+                "definitionSrc": app.user.name,
+              };
+              await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+              .then(function (resp) {
+                axios.post('http://shark.sbs.arizona.edu:8080/save', {
+                  user: app.sharedFlag ? '' : app.user.name,
+                  ontology: 'carex'
+                })
+                  .then(function (resp) {
+                    app.roundFirst = false;
+                    app.roundsOne[i].undefined = false;
+                  });
+              });
+          }
+        } 
+      }
       if (app.firstCharacterUndefined) {
         var date = new Date();
         requestBody = {
@@ -5824,38 +5857,12 @@ export default {
           });
       }
 
-      if(app.roundsOne.length > 0) {
-        $.each(app.roundsOne, function (i, item) {
-          if(app.roundsOne[i].undefined) {
-              var date = new Date();
-              requestBody = {
-                "user": app.sharedFlag ? '' : app.user.name,
-                "ontology": "carex",
-                "term": app.roundsOne[i].fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'),
-                "superclassIRI": "http://biosemantics.arizona.edu/ontologies/carex#toreview",
-                "definition": app.roundsOne[i].definition,
-                "elucidation": "",
-                "createdBy": app.user.name,
-                "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
-                "definitionSrc": app.user.name,
-              };
-              axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
-              .then(function (resp) {
-                axios.post('http://shark.sbs.arizona.edu:8080/save', {
-                  user: app.sharedFlag ? '' : app.user.name,
-                  ontology: 'carex'
-                })
-                  .then(function (resp) {
-                    app.roundsOne[i].undefined = false;
-                  });
-              });
-          }
-        });
-      }
+
 
       if(app.middleCharacter == 'between' && app.roundsTwo.length > 0) {
-        $.each(app.roundsTwo, function (i, item) {
+        for(var i = 0; i < app.roundsTwo.length; i++){
           if(app.roundsTwo[i].undefined) {
+              app.roundSecond = true;
               var date = new Date();
               requestBody = {
                 "user": app.sharedFlag ? '' : app.user.name,
@@ -5875,11 +5882,12 @@ export default {
                   ontology: 'carex'
                 })
                   .then(function (resp) {
+                    app.roundSecond = false;
                     app.roundsTwo[i].undefined = false;
                   });
               });
           }
-        });
+        }
       }
     
     
@@ -5943,6 +5951,542 @@ export default {
                 app.wholeCharacterUndefined = false;
               });
           });
+      }
+      app.roundFirst = false;
+      if(app.roundsOne.length > 0) {
+        $.each(app.roundsOne, function (r_key, item) {
+          var roundNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == item.fifth.toLowerCase());
+          if(item.round_val == 'S' || item.round_val == 'D'){
+            if (roundNounDeprecatedValue) {
+              app.roundFirst = true;
+              app.roundsOne[r_key].deprecated = true;
+              if (roundNounDeprecatedValue['replacement term']) {
+                
+                if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                  var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                }else {
+                  var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                }
+
+                if(app.roundsOne.length > 0) {
+                  $.each(app.roundsOne, function (i, info) {
+                    if(info.round_val == 'S') {
+                      tempWholeCharacter += ' ' + info.second + ' ' + info.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                    }else if(info.round_val == 'P') {
+                      tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
+                    }else if(info.round_val == 'D'){
+                      tempWholeCharacter += ' ' + info.first + ' ' +info.third + ' ' + info.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                    }
+                  });   
+                }  
+
+                if (app.middleCharacter == 'between') {
+                  if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+                    tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter;
+                  }else{
+                    tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                  }
+                  if(app.roundsTwo.length > 0) {
+                    $.each(app.roundsTwo, function (i, items) {
+                      if(items.round_val == 'S') {
+                        tempWholeCharacter += ' ' + items.second + ' ' + items.fourth + ' ' + items.fifth;
+                      }else if(items.round_val == 'P') {
+                        tempWholeCharacter += ' ' + items.fifth;
+                      }else if(items.round_val == 'D'){
+                        tempWholeCharacter += ' ' + items.first + ' ' +items.third + ' ' + items.fourth + ' ' + items.fifth;
+                      }
+                    });   
+                  }  
+                }
+
+                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                  .then(function (resp) {
+                    console.log('term?' + tempWholeCharacter, resp.data);
+                    if (resp.data.entries.length > 0) {
+                      app.roundsOne[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                        roundNounDeprecatedValue['replacement term'] +
+                        '</b>. Please cancel and use the existing character <b>' +
+                        tempWholeCharacter + '</b>.';
+                    } else {
+                      app.roundsOne[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is a deprecated term' +
+                        (roundNounDeprecatedValue['replacement term'] ?
+                          ', consider using <b>' + roundNounDeprecatedValue['replacement term'] + '</b>.' :
+                          ' because ' + roundNounDeprecatedValue['deprecated reason'] + '. Please use another term.');
+                    }
+                  });
+              }
+            } else {
+            axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + item.fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
+                .then(async function (resp) {
+                  var methodEntry = null;
+                  console.log('termround?' + item.fifth, resp.data);
+                  if (!resp.data.entries.length) {
+                    console.log('check',app.roundsOne);
+                    app.roundFirst = true;
+                    app.roundsOne[r_key].undefined = true;
+                  } else {
+                    methodEntry = resp.data.entries.filter(function (each) {
+                      return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
+                    })[0];
+                    if (methodEntry) {
+                      for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                        if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
+                          if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
+                            app.roundFirst = true;
+                            app.roundsOne[r_key].recommend = true;
+                            break;
+                          }
+                        }
+                      }
+                      if (app.roundsOne[r_key].recommend == true) {
+
+                        if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                        }else {
+                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                        }
+
+                        if(app.roundsOne.length > 0) {
+                          $.each(app.roundsOne, function (i, item) {
+                            if(item.round_val == 'S') {
+                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                            }else if(item.round_val == 'P') {
+                              tempWholeCharacter += ' ' + methodEntry.term;
+                            }else if(item.round_val == 'D'){
+                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                            }
+                          });   
+                        } 
+
+                        if (app.middleCharacter == 'between') {
+                          if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+                            tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter;
+                          }else{
+                            tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                          }
+                          if(app.roundsTwo.length > 0) {
+                            $.each(app.roundsTwo, function (i, items) {
+                              if(items.round_val == 'S') {
+                                tempWholeCharacter += ' ' + items.second + ' ' + items.fourth + ' ' + items.fifth;
+                              }else if(items.round_val == 'P') {
+                                tempWholeCharacter += ' ' + items.fifth;
+                              }else if(items.round_val == 'D'){
+                                tempWholeCharacter += ' ' + items.first + ' ' +items.third + ' ' + items.fourth + ' ' + items.fifth;
+                              }
+                            });   
+                          }  
+                        }
+                        axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                          .then(function (resp) {
+                            console.log('term?' + tempWholeCharacter, resp.data);
+                            if (resp.data.entries.length > 0) {
+                              app.roundsOne[r_key].recommendNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                                methodEntry.term +
+                                '</b>. Please cancel and use the existing character <b>' +
+                                tempWholeCharacter + '</b>.';
+                            } else {
+                              app.roundsOne[r_key].recommendNotifyMessage = "Term <b>" + item.fifth + '</b> is a not recommended synonym of <b>' +
+                                methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                            }
+                          });
+                      }
+                    }
+                    if (!app.roundsOne[r_key].recommend) {
+                      methodEntry = resp.data.entries.filter(function (each) {
+                        return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+                      })[0];
+                      if (methodEntry && methodEntry.term != item.fifth.toLowerCase()) {
+                        var tempBroadSynonyms = resp.data.entries;
+                        for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                          if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
+                            if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
+                              app.roundFirst = true;
+                              app.roundsOne[r_key].synonym = true;
+                              break;
+                            }
+                          }
+                        }
+                        if (app.roundsOne[r_key].synonym == true) {
+
+                          if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                          }else {
+                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                          }
+
+                          if(app.roundsOne.length > 0) {
+                            $.each(app.roundsOne, function (i, info) {
+                              if(info.round_val == 'S') {
+                                tempWholeCharacter += ' ' + info.second + ' ' + info.fourth + ' ' + methodEntry.term;
+                              }else if(info.round_val == 'P') {
+                                tempWholeCharacter += ' ' + methodEntry.term;
+                              }else if(info.round_val == 'D'){
+                                tempWholeCharacter += ' ' + info.first + ' ' +info.third + ' ' + info.fourth + ' ' + methodEntry.term;
+                              }
+                            });   
+                          } 
+
+                          if (app.middleCharacter == 'between') {
+                            if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+                              tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter;
+                            }else{
+                              tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                            }
+                            if(app.roundsTwo.length > 0) {
+                              $.each(app.roundsTwo, function (i, items) {
+                                if(items.round_val == 'S') {
+                                  tempWholeCharacter += ' ' + items.second + ' ' + items.fourth + ' ' + items.fifth;
+                                }else if(items.round_val == 'P') {
+                                  tempWholeCharacter += ' ' + items.fifth;
+                                }else if(items.round_val == 'D'){
+                                  tempWholeCharacter += ' ' + items.first + ' ' +items.third + ' ' + items.fourth + ' ' + items.fifth;
+                                }
+                              });   
+                            }
+                          }
+                          axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                            .then(function (resp) {
+                              console.log('termround?' + tempWholeCharacter, resp.data);
+                              if (resp.data.entries.length > 0) {
+                                app.roundsOne[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                                  methodEntry.term +
+                                  '</b>. Please cancel and use the existing character <b>' +
+                                  tempWholeCharacter + '</b>.';
+                              } else {
+                                app.roundsOne[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is an exact synonym of <b>' +
+                                  methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                              }
+                            });
+                        } else {
+                          if (tempBroadSynonyms.length > 0) {
+                            app.roundFirst = true;
+                            app.roundsOne[r_key].broadSynonym = true;
+                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                            
+                              if(app.roundsOne.length > 0) {
+                              $.each(app.roundsOne, function (i, info) {
+                                if(info.round_val == 'S') {
+                                  tempWholeCharacter += ' ' + info.second + ' ' + info.fourth + ' ' + methodEntry.term;
+                                }else if(info.round_val == 'P') {
+                                  tempWholeCharacter += ' ' + methodEntry.term;
+                                }else if(info.round_val == 'D'){
+                                  tempWholeCharacter += ' ' + info.first + ' ' +info.third + ' ' + info.fourth + ' ' + methodEntry.term;
+                                }
+                              });   
+                            }
+
+                            if (app.middleCharacter == 'between') {
+                              if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+                                tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter;
+                              }else{
+                                tempWholeCharacter += ' and ' + app.secondLastCharacter;
+                              }
+                              if(app.roundsTwo.length > 0) {
+                                $.each(app.roundsTwo, function (i, items) {
+                                  if(items.round_val == 'S') {
+                                    tempWholeCharacter += ' ' + items.second + ' ' + items.fourth + ' ' + items.fifth;
+                                  }else if(items.round_val == 'P') {
+                                    tempWholeCharacter += ' ' + items.fifth;
+                                  }else if(items.round_val == 'D'){
+                                    tempWholeCharacter += ' ' + items.first + ' ' +items.third + ' ' + items.fourth + ' ' + items.fifth;
+                                  }
+                                });   
+                              }
+                            }
+
+                            tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+
+                            if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
+                              app.roundsOne[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
+
+                            } else {
+                              app.roundsOne[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                              if (tempBroadSynonyms.length > 1) {
+                                for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                                  app.roundsOne[r_key].broadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                                }
+                              }
+                            }
+                            app.roundsOne[r_key].broadSynonymNotifyMessage += "</b>.";
+                          }
+                        }
+                      }
+                    }
+                  }
+                });
+            }
+          }
+        });
+      }
+
+      app.roundSecond = false;
+      if(app.middleCharacter == 'between' && app.roundsTwo.length > 0) {
+          $.each(app.roundsTwo, function (r_key, item) {
+            var roundNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == item.fifth.toLowerCase());
+            if(item.round_val == 'S' || item.round_val == 'D'){
+              if (roundNounDeprecatedValue) {
+                app.roundSecond = true;
+                app.roundsTwo[r_key].deprecated = true;
+                if (roundNounDeprecatedValue['replacement term']) {
+                  
+                  if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                    var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                  }else {
+                    var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                  }
+
+                  if(app.roundsOne.length > 0) {
+                    $.each(app.roundsOne, function (i, item) {
+                      if(item.round_val == 'S') {
+                        tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                      }else if(item.round_val == 'P') {
+                        tempWholeCharacter += ' ' + item.fifth;
+                      }else if(item.round_val == 'D'){
+                        tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                      }
+                    });   
+                  }  
+
+                  if (app.middleCharacter == 'between') {
+                    if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+                      tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter
+                    }else{
+                      tempWholeCharacter += ' and ' + app.secondLastCharacter
+                    }
+                    if(app.roundsTwo.length > 0) {
+                      $.each(app.roundsTwo, function (i, item) {
+                        if(item.round_val == 'S') {
+                          tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                        }else if(item.round_val == 'P') {
+                          tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
+                        }else if(item.round_val == 'D'){
+                          tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
+                        }
+                      });   
+                    } 
+                  }
+
+                  axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                    .then(function (resp) {
+                      console.log('term?' + tempWholeCharacter, resp.data);
+                      if (resp.data.entries.length > 0) {
+                        app.roundsTwo[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                          roundNounDeprecatedValue['replacement term'] +
+                          '</b>. Please cancel and use the existing character <b>' +
+                          tempWholeCharacter + '</b>.';
+                      } else {
+                        app.roundsTwo[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is a deprecated term' +
+                          (roundNounDeprecatedValue['replacement term'] ?
+                            ', consider using <b>' + roundNounDeprecatedValue['replacement term'] + '</b>.' :
+                            ' because ' + roundNounDeprecatedValue['deprecated reason'] + '. Please use another term.');
+                      }
+                    });
+                }
+              } else {
+              axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + item.fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
+                  .then(async function (resp) {
+                    var methodEntry = null;
+                    console.log('termround2?' + item.fifth, resp.data);
+                    if (!resp.data.entries.length) {
+                      console.log(app.roundsTwo);
+                      app.roundsTwo[r_key].undefined = true;
+                      app.roundSecond = true;
+                    } else {
+                      methodEntry = resp.data.entries.filter(function (each) {
+                        return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
+                      })[0];
+                      if (methodEntry) {
+                        for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                          if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
+                            if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
+                              app.roundSecond = true;
+                              app.roundsTwo[r_key].recommend = true;
+                              break;
+                            }
+                          }
+                        }
+                        if (app.roundsTwo[r_key].recommend == true) {
+
+                          if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                          }else {
+                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                          }
+
+                          if(app.roundsOne.length > 0) {
+                            $.each(app.roundsOne, function (i, item) {
+                              if(item.round_val == 'S') {
+                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                              }else if(item.round_val == 'P') {
+                                tempWholeCharacter += ' ' + item.fifth;
+                              }else if(item.round_val == 'D'){
+                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                              }
+                            });   
+                          } 
+
+                          if (app.middleCharacter == 'between') {
+                            if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+                              tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter
+                            }else{
+                              tempWholeCharacter += ' and ' + app.secondLastCharacter
+                            }
+                            if(app.roundsTwo.length > 0) {
+                              $.each(app.roundsTwo, function (i, item) {
+                                if(item.round_val == 'S') {
+                                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                                }else if(item.round_val == 'P') {
+                                  tempWholeCharacter += ' ' + methodEntry.term;
+                                }else if(item.round_val == 'D'){
+                                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                                }
+                              });   
+                            } 
+                          }
+
+                          await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                            .then(function (resp) {
+                              console.log('term?' + tempWholeCharacter, resp.data);
+                              if (resp.data.entries.length > 0) {
+                                app.roundsTwo[r_key].recommendNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                                  methodEntry.term +
+                                  '</b>. Please cancel and use the existing character <b>' +
+                                  tempWholeCharacter + '</b>.';
+                              } else {
+                                app.roundsTwo[r_key].recommendNotifyMessage = "Term <b>" + item.fifth + '</b> is a not recommended synonym of <b>' +
+                                  methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                              }
+                            });
+                        }
+                      }
+                      if (!app.roundsTwo[r_key].recommend) {
+                        methodEntry = resp.data.entries.filter(function (each) {
+                          return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
+                        })[0];
+                        if (methodEntry && methodEntry.term != item.fifth.toLowerCase()) {
+                          var tempBroadSynonyms = resp.data.entries;
+                          for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
+                            if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
+                              if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
+                                app.roundSecond = true;
+                                app.roundsTwo[r_key].synonym = true;
+                                break;
+                              }
+                            }
+                          }
+                          if (app.roundsTwo[r_key].synonym == true) {
+
+                            if(app.thirdCharacter != '' && app.thirdCharacter != null) {
+                              var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+                            }else {
+                              var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                            }
+
+                            if(app.roundsOne.length > 0) {
+                              $.each(app.roundsOne, function (i, item) {
+                                if(item.round_val == 'S') {
+                                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                                }else if(item.round_val == 'P') {
+                                  tempWholeCharacter += ' ' + item.fifth;
+                                }else if(item.round_val == 'D'){
+                                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                                }
+                              });   
+                            } 
+
+                            if (app.middleCharacter == 'between') {
+                              if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+                                tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter
+                              }else{
+                                tempWholeCharacter += ' and ' + app.secondLastCharacter
+                              }
+                              if(app.roundsTwo.length > 0) {
+                                $.each(app.roundsTwo, function (i, item) {
+                                  if(item.round_val == 'S') {
+                                    tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                                  }else if(item.round_val == 'P') {
+                                    tempWholeCharacter += ' ' + methodEntry.term;
+                                  }else if(item.round_val == 'D'){
+                                    tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                                  }
+                                });   
+                              } 
+                            }
+
+                            await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
+                              .then(function (resp) {
+                                console.log('term?' + tempWholeCharacter, resp.data);
+                                if (resp.data.entries.length > 0) {
+                                  app.roundsTwo[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
+                                    methodEntry.term +
+                                    '</b>. Please cancel and use the existing character <b>' +
+                                    tempWholeCharacter + '</b>.';
+                                } else {
+                                  app.roundsTwo[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is an exact synonym of <b>' +
+                                    methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
+                                }
+                              });
+                          } else {
+                            if (tempBroadSynonyms.length > 0) {
+                              app.roundSecond = true;
+                              app.roundsTwo[r_key].broadSynonym = true;
+                              var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+                              
+                                if(app.roundsOne.length > 0) {
+                                $.each(app.roundsOne, function (i, item) {
+                                  if(item.round_val == 'S') {
+                                    tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+                                  }else if(item.round_val == 'P') {
+                                    tempWholeCharacter += ' ' + item.fifth;
+                                  }else if(item.round_val == 'D'){
+                                    tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+                                  }
+                                });   
+                              }
+
+                              if (app.middleCharacter == 'between') {
+                                if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
+                                  tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter
+                                }else{
+                                  tempWholeCharacter += ' and ' + app.secondLastCharacter
+                                }
+                                if(app.roundsTwo.length > 0) {
+                                  $.each(app.roundsTwo, function (i, item) {
+                                    if(item.round_val == 'S') {
+                                      tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
+                                    }else if(item.round_val == 'P') {
+                                      tempWholeCharacter += ' ' + methodEntry.term;
+                                    }else if(item.round_val == 'D'){
+                                      tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
+                                    }
+                                  });   
+                                }
+                              }
+                              
+                              tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
+
+                              if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
+                                app.roundsTwo[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
+
+                              } else {
+                                app.roundsTwo[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
+                                if (tempBroadSynonyms.length > 1) {
+                                  for (var i = 1; i < tempBroadSynonyms.length; i++) {
+                                    app.roundsTwo[r_key].broadSynonymNotifyMessage += tempBroadSynonyms[i].term;
+                                  }
+                                }
+                              }
+                              app.roundsTwo[r_key].broadSynonymNotifyMessage += "</b>.";
+                            }
+                          }
+                        }
+                      }
+                    }
+                  });
+              }
+            }  
+          });
+
       }
 
       await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + app.firstCharacter.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
@@ -6807,274 +7351,7 @@ export default {
             }
           });
       }
-
-      if(app.roundsOne.length > 0) {
-        $.each(app.roundsOne, function (r_key, item) {
-          var roundNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == item.fifth.toLowerCase());
-          if (roundNounDeprecatedValue) {
-            app.roundsOne[r_key].deprecated = true;
-            if (roundNounDeprecatedValue['replacement term']) {
-              
-              if(app.thirdCharacter != '' && app.thirdCharacter != null) {
-                var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
-              }else {
-                var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-              }
-
-              if(app.roundsOne.length > 0) {
-                $.each(app.roundsOne, function (i, item) {
-                  if(item.round_val == 'S') {
-                    tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
-                  }else if(item.round_val == 'P') {
-                    tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
-                  }else if(item.round_val == 'D'){
-                    tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
-                  }
-                });   
-              }  
-
-              if (app.middleCharacter == 'between') {
-                if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
-                  tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter;
-                }else{
-                  tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                }
-                if(app.roundsTwo.length > 0) {
-                  $.each(app.roundsTwo, function (i, item) {
-                    if(item.round_val == 'S') {
-                      tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-                    }else if(item.round_val == 'P') {
-                      tempWholeCharacter += ' ' + item.fifth;
-                    }else if(item.round_val == 'D'){
-                      tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
-                    }
-                  });   
-                }  
-              }
-
-              axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-                .then(function (resp) {
-                  console.log('term?' + tempWholeCharacter, resp.data);
-                  if (resp.data.entries.length > 0) {
-                    app.roundsOne[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
-                      roundNounDeprecatedValue['replacement term'] +
-                      '</b>. Please cancel and use the existing character <b>' +
-                      tempWholeCharacter + '</b>.';
-                  } else {
-                    app.roundsOne[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is a deprecated term' +
-                      (roundNounDeprecatedValue['replacement term'] ?
-                        ', consider using <b>' + roundNounDeprecatedValue['replacement term'] + '</b>.' :
-                        ' because ' + roundNounDeprecatedValue['deprecated reason'] + '. Please use another term.');
-                  }
-                });
-            }
-          } else {
-          axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + item.fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
-              .then(async function (resp) {
-                var methodEntry = null;
-                console.log('termround?' + item.fifth, resp.data);
-                if (!resp.data.entries.length) {
-                  console.log(app.roundsOne);
-                  app.roundsOne[r_key].undefined = true;
-                } else {
-                  methodEntry = resp.data.entries.filter(function (each) {
-                    return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
-                  })[0];
-                  if (methodEntry) {
-                    for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                      if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
-                        if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
-                          app.roundsOne[r_key].recommend = true;
-                          break;
-                        }
-                      }
-                    }
-                    if (app.roundsOne[r_key].recommend == true) {
-
-                      if(app.thirdCharacter != '' && app.thirdCharacter != null) {
-                        var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
-                      }else {
-                        var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                      }
-
-                      if(app.roundsOne.length > 0) {
-                        $.each(app.roundsOne, function (i, item) {
-                          if(item.round_val == 'S') {
-                            tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
-                          }else if(item.round_val == 'P') {
-                            tempWholeCharacter += ' ' + methodEntry.term;
-                          }else if(item.round_val == 'D'){
-                            tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
-                          }
-                        });   
-                      } 
-
-                      if (app.middleCharacter == 'between') {
-                        if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
-                          tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter;
-                        }else{
-                          tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                        }
-                        if(app.roundsTwo.length > 0) {
-                          $.each(app.roundsTwo, function (i, item) {
-                            if(item.round_val == 'S') {
-                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
-                            }else if(item.round_val == 'P') {
-                              tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
-                            }else if(item.round_val == 'D'){
-                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
-                            }
-                          });   
-                        }  
-                      }
-
-                       
-
-                      await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-                        .then(function (resp) {
-                          console.log('term?' + tempWholeCharacter, resp.data);
-                          if (resp.data.entries.length > 0) {
-                            app.roundsOne[r_key].recommendNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
-                              methodEntry.term +
-                              '</b>. Please cancel and use the existing character <b>' +
-                              tempWholeCharacter + '</b>.';
-                          } else {
-                            app.roundsOne[r_key].recommendNotifyMessage = "Term <b>" + item.fifth + '</b> is a not recommended synonym of <b>' +
-                              methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
-                          }
-                        });
-                    }
-                  }
-                  if (!app.roundsOne[r_key].recommend) {
-                    methodEntry = resp.data.entries.filter(function (each) {
-                      return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
-                    })[0];
-                    if (methodEntry && methodEntry.term != item.fifth.toLowerCase()) {
-                      var tempBroadSynonyms = resp.data.entries;
-                      for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                        if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
-                          if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
-                            app.roundsOne[r_key].synonym = true;
-                            break;
-                          }
-                        }
-                      }
-                      if (app.roundsOne[r_key].synonym == true) {
-
-                        if(app.thirdCharacter != '' && app.thirdCharacter != null) {
-                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
-                        }else {
-                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                        }
-
-                        if(app.roundsOne.length > 0) {
-                          $.each(app.roundsOne, function (i, item) {
-                            if(item.round_val == 'S') {
-                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
-                            }else if(item.round_val == 'P') {
-                              tempWholeCharacter += ' ' + methodEntry.term;
-                            }else if(item.round_val == 'D'){
-                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
-                            }
-                          });   
-                        } 
-
-                        if (app.middleCharacter == 'between') {
-                          if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
-                            tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter;
-                          }else{
-                            tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                          }
-                          if(app.roundsTwo.length > 0) {
-                            $.each(app.roundsTwo, function (i, item) {
-                              if(item.round_val == 'S') {
-                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-                              }else if(item.round_val == 'P') {
-                                tempWholeCharacter += ' ' + item.fifth;
-                              }else if(item.round_val == 'D'){
-                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
-                              }
-                            });   
-                          }
-                        }
-
-                        
-
-                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-                          .then(function (resp) {
-                            console.log('term?' + tempWholeCharacter, resp.data);
-                            if (resp.data.entries.length > 0) {
-                              app.roundsOne[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
-                                methodEntry.term +
-                                '</b>. Please cancel and use the existing character <b>' +
-                                tempWholeCharacter + '</b>.';
-                            } else {
-                              app.roundsOne[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is an exact synonym of <b>' +
-                                methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
-                            }
-                          });
-                      } else {
-                        if (tempBroadSynonyms.length > 0) {
-                          app.roundsOne[r_key].broadSynonym = true;
-                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                          
-                            if(app.roundsOne.length > 0) {
-                            $.each(app.roundsOne, function (i, item) {
-                              if(item.round_val == 'S') {
-                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
-                              }else if(item.round_val == 'P') {
-                                tempWholeCharacter += ' ' + methodEntry.term;
-                              }else if(item.round_val == 'D'){
-                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
-                              }
-                            });   
-                          }
-
-                          if (app.middleCharacter == 'between') {
-                            if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
-                              tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter;
-                            }else{
-                              tempWholeCharacter += ' and ' + app.secondLastCharacter;
-                            }
-                            if(app.roundsTwo.length > 0) {
-                              $.each(app.roundsTwo, function (i, item) {
-                                if(item.round_val == 'S') {
-                                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-                                }else if(item.round_val == 'P') {
-                                  tempWholeCharacter += ' ' + item.fifth;
-                                }else if(item.round_val == 'D'){
-                                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
-                                }
-                              });   
-                            }
-                          }
-
-                       
-
-                          tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
-
-                          if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
-                            app.roundsOne[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
-
-                          } else {
-                            app.roundsOne[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
-                            if (tempBroadSynonyms.length > 1) {
-                              for (var i = 1; i < tempBroadSynonyms.length; i++) {
-                                app.roundsOne[r_key].broadSynonymNotifyMessage += tempBroadSynonyms[i].term;
-                              }
-                            }
-                          }
-                          app.roundsOne[r_key].broadSynonymNotifyMessage += "</b>.";
-                        }
-                      }
-                    }
-                  }
-                }
-              });
-          }
-        });
-
-      }
+     
 
       if (app.middleCharacter == 'between') {
        /* if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
@@ -7643,268 +7920,7 @@ export default {
             });
         }
       }
-
-      if(app.middleCharacter == 'between' && app.roundsTwo.length > 0) {
-          $.each(app.roundsTwo, function (r_key, item) {
-            var roundNounDeprecatedValue = app.deprecatedTerms.find(value => value['deprecate term'] == item.fifth.toLowerCase());
-            if (roundNounDeprecatedValue) {
-              app.roundsTwo[r_key].deprecated = true;
-              if (roundNounDeprecatedValue['replacement term']) {
-                
-                if(app.thirdCharacter != '' && app.thirdCharacter != null) {
-                  var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
-                }else {
-                  var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                }
-
-                if(app.roundsOne.length > 0) {
-                  $.each(app.roundsOne, function (i, item) {
-                    if(item.round_val == 'S') {
-                      tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-                    }else if(item.round_val == 'P') {
-                      tempWholeCharacter += ' ' + item.fifth;
-                    }else if(item.round_val == 'D'){
-                      tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
-                    }
-                  });   
-                }  
-
-                if (app.middleCharacter == 'between') {
-                  if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
-                    tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter
-                  }else{
-                    tempWholeCharacter += ' and ' + app.secondLastCharacter
-                  }
-                  if(app.roundsTwo.length > 0) {
-                    $.each(app.roundsTwo, function (i, item) {
-                      if(item.round_val == 'S') {
-                        tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
-                      }else if(item.round_val == 'P') {
-                        tempWholeCharacter += ' ' + roundNounDeprecatedValue['replacement term'];
-                      }else if(item.round_val == 'D'){
-                        tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + roundNounDeprecatedValue['replacement term'];
-                      }
-                    });   
-                  } 
-                }
-
-                axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-                  .then(function (resp) {
-                    console.log('term?' + tempWholeCharacter, resp.data);
-                    if (resp.data.entries.length > 0) {
-                      app.roundsTwo[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
-                        roundNounDeprecatedValue['replacement term'] +
-                        '</b>. Please cancel and use the existing character <b>' +
-                        tempWholeCharacter + '</b>.';
-                    } else {
-                      app.roundsTwo[r_key].deprecatedNotifyMessage = 'Term <b>' + item.fifth + '</b> is a deprecated term' +
-                        (roundNounDeprecatedValue['replacement term'] ?
-                          ', consider using <b>' + roundNounDeprecatedValue['replacement term'] + '</b>.' :
-                          ' because ' + roundNounDeprecatedValue['deprecated reason'] + '. Please use another term.');
-                    }
-                  });
-              }
-            } else {
-            axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + item.fifth.toLowerCase().replaceAll(' ', '_').replace('-', '_'))
-                .then(async function (resp) {
-                  var methodEntry = null;
-                  console.log('termround?' + item.fifth, resp.data);
-                  if (!resp.data.entries.length) {
-                    console.log(app.roundsTwo);
-                    app.roundsTwo[r_key].undefined = true;
-                  } else {
-                    methodEntry = resp.data.entries.filter(function (each) {
-                      return each.resultAnnotations.some(e => e.property === "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") == true;
-                    })[0];
-                    if (methodEntry) {
-                      for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                        if (methodEntry.resultAnnotations[i].property == "http://biosemantics.arizona.edu/ontologies/carex#has_not_recommended_synonym") {
-                          if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
-                            app.roundsTwo[r_key].recommend = true;
-                            break;
-                          }
-                        }
-                      }
-                      if (app.roundsTwo[r_key].recommend == true) {
-
-                        if(app.thirdCharacter != '' && app.thirdCharacter != null) {
-                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
-                        }else {
-                          var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                        }
-
-                        if(app.roundsOne.length > 0) {
-                          $.each(app.roundsOne, function (i, item) {
-                            if(item.round_val == 'S') {
-                              tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-                            }else if(item.round_val == 'P') {
-                              tempWholeCharacter += ' ' + item.fifth;
-                            }else if(item.round_val == 'D'){
-                              tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
-                            }
-                          });   
-                        } 
-
-                        if (app.middleCharacter == 'between') {
-                          if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
-                            tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter
-                          }else{
-                            tempWholeCharacter += ' and ' + app.secondLastCharacter
-                          }
-                          if(app.roundsTwo.length > 0) {
-                            $.each(app.roundsTwo, function (i, item) {
-                              if(item.round_val == 'S') {
-                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
-                              }else if(item.round_val == 'P') {
-                                tempWholeCharacter += ' ' + methodEntry.term;
-                              }else if(item.round_val == 'D'){
-                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
-                              }
-                            });   
-                          } 
-                        }
-
-                        await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-                          .then(function (resp) {
-                            console.log('term?' + tempWholeCharacter, resp.data);
-                            if (resp.data.entries.length > 0) {
-                              app.roundsTwo[r_key].recommendNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
-                                methodEntry.term +
-                                '</b>. Please cancel and use the existing character <b>' +
-                                tempWholeCharacter + '</b>.';
-                            } else {
-                              app.roundsTwo[r_key].recommendNotifyMessage = "Term <b>" + item.fifth + '</b> is a not recommended synonym of <b>' +
-                                methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
-                            }
-                          });
-                      }
-                    }
-                    if (!app.roundsTwo[r_key].recommend) {
-                      methodEntry = resp.data.entries.filter(function (each) {
-                        return each.resultAnnotations.some(e => e.property === "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") == true;
-                      })[0];
-                      if (methodEntry && methodEntry.term != item.fifth.toLowerCase()) {
-                        var tempBroadSynonyms = resp.data.entries;
-                        for (var i = 0; i < methodEntry.resultAnnotations.length; i++) {
-                          if (methodEntry.resultAnnotations[i].property == "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym") {
-                            if (methodEntry.resultAnnotations[i].value == item.fifth.toLowerCase()) {
-                              app.roundsTwo[r_key].synonym = true;
-                              break;
-                            }
-                          }
-                        }
-                        if (app.roundsTwo[r_key].synonym == true) {
-
-                          if(app.thirdCharacter != '' && app.thirdCharacter != null) {
-                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
-                          }else {
-                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                          }
-
-                          if(app.roundsOne.length > 0) {
-                            $.each(app.roundsOne, function (i, item) {
-                              if(item.round_val == 'S') {
-                                tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-                              }else if(item.round_val == 'P') {
-                                tempWholeCharacter += ' ' + item.fifth;
-                              }else if(item.round_val == 'D'){
-                                tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
-                              }
-                            });   
-                          } 
-
-                          if (app.middleCharacter == 'between') {
-                            if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
-                              tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter
-                            }else{
-                              tempWholeCharacter += ' and ' + app.secondLastCharacter
-                            }
-                            if(app.roundsTwo.length > 0) {
-                              $.each(app.roundsTwo, function (i, item) {
-                                if(item.round_val == 'S') {
-                                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
-                                }else if(item.round_val == 'P') {
-                                  tempWholeCharacter += ' ' + methodEntry.term;
-                                }else if(item.round_val == 'D'){
-                                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
-                                }
-                              });   
-                            } 
-                          }
-
-                          await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + tempWholeCharacter.toLowerCase().replaceAll(' ', '_'))
-                            .then(function (resp) {
-                              console.log('term?' + tempWholeCharacter, resp.data);
-                              if (resp.data.entries.length > 0) {
-                                app.roundsTwo[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is replaced by <b>' +
-                                  methodEntry.term +
-                                  '</b>. Please cancel and use the existing character <b>' +
-                                  tempWholeCharacter + '</b>.';
-                              } else {
-                                app.roundsTwo[r_key].synonymNotifyMessage = 'Term <b>' + item.fifth + '</b> is an exact synonym of <b>' +
-                                  methodEntry.term + '</b>, consider using <b>' + methodEntry.term + '</b>.';
-                              }
-                            });
-                        } else {
-                          if (tempBroadSynonyms.length > 0) {
-                            app.roundsTwo[r_key].broadSynonym = true;
-                            var tempWholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
-                            
-                              if(app.roundsOne.length > 0) {
-                              $.each(app.roundsOne, function (i, item) {
-                                if(item.round_val == 'S') {
-                                  tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-                                }else if(item.round_val == 'P') {
-                                  tempWholeCharacter += ' ' + item.fifth;
-                                }else if(item.round_val == 'D'){
-                                  tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
-                                }
-                              });   
-                            }
-
-                            if (app.middleCharacter == 'between') {
-                              if(app.secondThirdCharacter != '' && app.secondThirdCharacter != null) {
-                                tempWholeCharacter += ' and ' + app.secondThirdCharacter + ' ' + app.secondLastCharacter
-                              }else{
-                                tempWholeCharacter += ' and ' + app.secondLastCharacter
-                              }
-                              if(app.roundsTwo.length > 0) {
-                                $.each(app.roundsTwo, function (i, item) {
-                                  if(item.round_val == 'S') {
-                                    tempWholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + methodEntry.term;
-                                  }else if(item.round_val == 'P') {
-                                    tempWholeCharacter += ' ' + methodEntry.term;
-                                  }else if(item.round_val == 'D'){
-                                    tempWholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + methodEntry.term;
-                                  }
-                                });   
-                              }
-                            }
-                            
-                            tempWholeCharacter = tempWholeCharacter.charAt(0).toUpperCase() + tempWholeCharacter.toLowerCase().slice(1);
-
-                            if (app.userCharacters.find(each => each.name == tempWholeCharacter)) {
-                              app.roundsTwo[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific. Please cancel and use the existing character <b>" + tempWholeCharacter;
-
-                            } else {
-                              app.roundsTwo[r_key].broadSynonymNotifyMessage = "Term <b>" + item.fifth + "</b> is not specific enough, Try to create character using <b>" + tempBroadSynonyms[0].term;
-                              if (tempBroadSynonyms.length > 1) {
-                                for (var i = 1; i < tempBroadSynonyms.length; i++) {
-                                  app.roundsTwo[r_key].broadSynonymNotifyMessage += tempBroadSynonyms[i].term;
-                                }
-                              }
-                            }
-                            app.roundsTwo[r_key].broadSynonymNotifyMessage += "</b>.";
-                          }
-                        }
-                      }
-                    }
-                  }
-                });
-            }
-          });
-
-      }
+      
 
       // if (!app.firstCharacterDeprecated && !app.firstCharacterNotRecommend && !app.firstCharacterSynonym && !app.firstCharacterBroadSynonym && !app.firstNounDeprecated && !app.secondNounDeprecated && !app.firstNounNotRecommend && !app.secondNounNotRecommend && !app.firstNounSynonym && !app.secondNounSynonym && !app.firstNounBroadSynonym && !app.secondNounBroadSynonym && !app.alreadyExistingCharacter) {
       //   await axios.get('http://shark.sbs.arizona.edu:8080/carex/search?term=' + wholeCharacter.toLowerCase().replaceAll(' ', '_'))
@@ -7927,8 +7943,10 @@ export default {
         !app.thirdCharacterNotRecommend &&
         !app.thirdCharacterSynonym &&
         !app.thirdCharacterBroadSynonym &&
+        !app.roundFirst &&
+        !app.roundSecond &&
         !app.nounUndefined &&
-        (app.middleCharacter != 'between' || !app.secondNounUndefined ||  !app.secondThirdCharacterUndefined ) &&
+        (app.middleCharacter != 'between' || !app.secondNounUndefined /*||  !app.secondThirdCharacterUndefined*/ ) &&
         !app.firstNounDeprecated &&
         !app.secondNounDeprecated &&
         !app.firstNounNotRecommend &&
@@ -7946,30 +7964,6 @@ export default {
        app.storeCharacter();
       }
 
-    },
-    checkStoreCharacterValidation() {
-   /*   var app = this;
-      if(app.roundsOne.length > 0) {
-        for(var i = 0; i < app.roundsOne.length; i++){
-          if(app.roundsOne[i].undefined == true) {
-            return true;
-            break;
-          }
-        }
-      }else {
-        return false;
-      }*/
-    /*  if(app.roundsTwo.length > 0) {
-        $.each(app.roundsTwo, function (r_key, item) {
-            if(item.undefined == false && item.recommend == false && item.deprecated == false && item.synonym == false && item.broadSynonym == false) {
-              result = true;
-              return false;
-            }else {
-              result = false;
-              return false;
-            }
-        });
-      }*/
     },
     colorValueCell(colorDetails) {
       var app = this;
@@ -8694,7 +8688,7 @@ export default {
         }
       }
       
-    /*try{*/
+   /* try{*/
       axios.post('api/v1/character/add-standard', postCharacters)
       .then(function (resp) {
           app.userCharacters = resp.data;
@@ -8719,7 +8713,7 @@ export default {
           app.isLoading = false;
           app.refreshUserCharacters();
         });
-     /* }catch (error) {
+      /*}catch (error) {
         const err = error
         if (err.response) {
            console.log(err.response)
@@ -9235,8 +9229,7 @@ export default {
           }
 
           if (!app.checkHaveUnit(app.character.name)) {
-            console.log('asd');
-              checkFields = true;
+            checkFields = true;
           }
           var ch = app.character.name.toLowerCase().split();
           if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation'){

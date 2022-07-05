@@ -341,8 +341,6 @@ class HomeController extends Controller
         }
 
         $dfCharacters = $dfCharacters->toArray();
-        /*echo "<pre>";
-        print_r($dfCharacters); die;*/
         return $dfCharacters;
        /* $defaultCharacters = array_merge($standardCharacters, $dfCharacters);
         return $defaultCharacters;*/
