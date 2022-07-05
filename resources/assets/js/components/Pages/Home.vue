@@ -9310,6 +9310,10 @@ export default {
           app.character.other_name = app.user.name
           axios.post('api/v1/character/update-image', app.character)
                 .then(function (resp) {
+            app.finalDefaultCharacters = resp.data;
+            app.defaultCharacters = resp.data;
+            app.refreshUserCharacters();      
+            app.refreshDefaultCharacters();      
             app.detailsFlag = false;
             app.active_el = 0;
             app.temp_files = [];
