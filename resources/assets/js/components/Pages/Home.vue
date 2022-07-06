@@ -122,7 +122,7 @@
                     </a>
                       <b style= "cursor: pointer;"  v-tooltip="{ content:standardCharactersTooltip, classes: 'standard-tooltip'}">
                         (what
-                        are they?) </b><br/> Or You can also add other characters below.</b>
+                        are they?) </b><br/>You can also add other characters below.</b>
                   </div>
                   <div class="col-md-12 margin-top-10" @click="refreshEntries">
                     <b>Search/create another character:&nbsp;</b>
@@ -3866,7 +3866,7 @@ export default {
       confirmTag: false,
       confirmSummary: false,
       columnCount: 0,
-      taxonName: 'Carex capitata',
+      taxonName: '',
       matrixShowFlag: false,
       headers: [],
       values: [],
