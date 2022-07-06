@@ -355,6 +355,11 @@
                 methodInclude: null,
                 methodExclude: null,
                 methodWhere: null,
+                methodFromNew: null,
+                methodToNew: null,
+                methodIncludeNew: null,
+                methodExcludeNew: null,
+                methodWhereNew: null,
                 fromId: null,
                 fromTerm: null,
                 toId: null,
@@ -478,22 +483,28 @@
         },
         methods: {
             handleMethodFrom(val){
+              this.handleDataFc(4,val);
               this.methodFrom = val;
             },
             handleMethodTo(val){
+              this.handleDataFc(5,val);
               this.methodTo = val;
             },
             handleMethodInclude(val){
+              this.handleDataFc(6,val);
               this.methodInclude = val;
             },
             handleMethodExclude(val){
+              this.handleDataFc(7,val);
               this.methodExclude = val;
             },
             handleMethodWhere(val){
+              this.handleDataFc(8,val);
               this.methodWhere = val;
             },
             // maybe onchagne may onclick whatever..
-            handleDataFc: function () {
+            handleDataFc: function (key,val) {
+                this.childData[key] = val;
                 this.$emit('interface', this.childData); // handle data and give it back to parent by interface
             },
             noneSynonym: function (setting) {
@@ -656,7 +667,6 @@
                     app.childData[8] = app.methodWhere;
 
                     console.log('childData', app.childData);
-
                     app.$emit('interface', app.childData);
                 }
 
@@ -682,7 +692,6 @@
                 app.childData[6] = app.methodInclude;
                 app.childData[7] = app.methodExclude;
                 app.childData[8] = app.methodWhere;
-
                 this.$emit('interface', app.childData);
 
                 let t_action_detail = '';
