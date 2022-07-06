@@ -9308,12 +9308,12 @@ export default {
           alert("The character already exists for this user, but if you upload any image then it will be uploaded.!!");
           app.character.temp_files = app.temp_files;
           app.character.other_name = app.user.name
+          app.isLoading = true;
           axios.post('api/v1/character/update-image', app.character)
                 .then(function (resp) {
             app.finalDefaultCharacters = resp.data;
-            app.defaultCharacters = resp.data;
-            app.refreshUserCharacters();      
-            app.refreshDefaultCharacters();      
+            app.isLoading = false;      
+            app.refreshUserCharacters();    
             app.detailsFlag = false;
             app.active_el = 0;
             app.temp_files = [];
