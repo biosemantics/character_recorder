@@ -13588,12 +13588,15 @@ export default {
           app.userTags = res.data.tags;
           app.allColorValues = res.data.allColorValues;
           app.allNonColorValues = res.data.allNonColorValues;
+          app.finalDefaultCharacters = res.data.defaultCharacters;
+          app.defaultCharacters = res.data.defaultCharacters;
+          app.isLoading = false;
           app.refreshUserCharacters();
+          app.refreshDefaultCharacters();
           app.showTableForTab(app.currentTab);
           app.matrixShowFlag = true;
           app.lastLoadMatrixName = app.loadVersion.matrix_name;
           // sessionStorage.setItem('lastMatrixName', app.loadVersion.matrix_name);
-          app.isLoading = false;
           app.collapsedFlag = true;
           app.showSetupArea = true;
           app.loadVersion = null;
@@ -13657,11 +13660,10 @@ export default {
     },
     setNewValues() {
       var app = this;
-
+      //app.isLoading = true;
       axios.get('api/v1/newMatrix')
         .then((res) => {
-          console.log(res);
-          app.isLoading = false;
+          //app.isLoading = false;
           app.currentVersion = null;
           app.currentName = '';
           app.showNamesList = [];
@@ -13677,6 +13679,9 @@ export default {
           app.confirmNewMatrixDialog = false;
           app.showSetupArea = true;
           app.matrixShowFlag = false;
+          //app.finalDefaultCharacters = res.data.defaultCharacters;
+          //app.defaultCharacters = res.data.defaultCharacters;
+          //app.refreshDefaultCharacters();
         }).catch(error => {
           window.location.reload()
         });
@@ -13746,9 +13751,9 @@ export default {
           app.allNonColorValues = resp.data.allNonColorValues;
           app.finalDefaultCharacters = resp.data.defaultCharacters;
           app.defaultCharacters = resp.data.defaultCharacters;
+          app.isLoading = false;
           app.refreshDefaultCharacters();
           app.getDeprecatedValue();
-          app.isLoading = false;
         }).catch(error => {
           window.location.reload()
         });

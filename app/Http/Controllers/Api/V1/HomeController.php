@@ -321,7 +321,20 @@ class HomeController extends Controller
                         if($st_character->usage_count > 0) {
                           $total = $total +1;
                           break;
+                        }else {
+                          $check = DB::table('characters')
+                                ->where('name',$st_character->name)
+                                ->where(function($q) use($username) {
+                                        $q->where('owner_name',$username)->orWhere('owner_name','like',$username.'_ver_'.'%');
+                                    })
+                                ->orderBy('id','desc')
+                                ->first();
+                          if(!empty($check) && $check->usage_count > 0) {
+                            $total = $total +1;
+                            break;
+                          }
                         } 
+                         
                       }
                       else if($st_character->owner_name == $username && $st_character->usage_count>0 && $clone == 0){
                         $tem_total = 1;
@@ -1092,6 +1105,7 @@ class HomeController extends Controller
         ];
         foreach ($standardCharacters as $eachCharacter) {
             $flag = true;
+            $eachCharacter['usage_count'] = 0;
             foreach ($characters as $ch) {
                 if(isset($eachCharacter['name']) && isset($eachCharacter['IRI']) && isset($eachCharacter->method_from) && isset($eachCharacter->method_to) && isset($eachCharacter->method_include) && isset($eachCharacter->method_exclude) && isset($eachCharacter->method_where) && isset($eachCharacter->method_as)){
                     if ($eachCharacter['name'] == $ch['name']
@@ -4252,7 +4266,7 @@ class HomeController extends Controller
         $returnCharacters = $this->getArrayCharacters();
         $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
         $returnAllDetailValues = $this->getAllDetails();
-
+        $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -4260,7 +4274,8 @@ class HomeController extends Controller
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'tags' => $returnUserTags,
-            'taxon' => $versionUser['taxon']
+            'taxon' => $versionUser['taxon'],
+            'defaultCharacters' => $returnDefaultCharacters,
         ];
 
         return $data;
@@ -4285,7 +4300,6 @@ class HomeController extends Controller
         $returnCharacters = $this->getArrayCharacters();
         $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
         $returnAllDetailValues = $this->getAllDetails();
-
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -4465,6 +4479,7 @@ class HomeController extends Controller
         $returnCharacters = $this->getArrayCharacters();
         $returnUserTags = UserTag::where('user_id', '=', Auth::id())->get();
         $returnAllDetailValues = $this->getAllDetails();
+        //$returnDefaultCharacters = $this->getDefaultCharacters();
 
         $data = [
             'headers' => $returnHeaders,
@@ -4473,6 +4488,7 @@ class HomeController extends Controller
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'tags' => $returnUserTags,
+            //'defaultCharacters' => $returnDefaultCharacters,
         ];
 
         return $data;
