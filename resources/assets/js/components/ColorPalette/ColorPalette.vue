@@ -5,6 +5,80 @@
     </div>
     <div class="modal-body">
       <div class="row">
+        <div class="row color-pattern">
+          <div class="col-md-4">
+            <div class="rular-image">
+                <img src="images/rular-color.jpg">
+            </div>
+            <div class="pallet-basic-color">
+              <div class="boxes"></div>
+              <div class="boxes"></div>
+              <div class="boxes"></div>
+              <div class="boxes"></div>
+              <div class="boxes"></div>
+              <div class="boxes"></div>
+              <div class="boxes"></div> 
+            </div>        
+          </div>
+
+          <div class="col-md-4">
+            <div class="rular-image">
+              <img src="images/rular-color1.jpg">
+            </div>
+            <div class="pallet-color-control">
+              <div class="pallet-color-light">
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>       
+                <div class="boxes"></div>        
+                <div class="boxes"></div>
+              </div>
+              <div class="pallet-color-dark">
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>
+                <div class="boxes"></div>       
+                <div class="boxes"></div>        
+                <div class="boxes"></div>
+              </div>
+            </div>    
+          </div>
+          <div class="col-md-4">
+            <div class="rular-image">
+               <img src="images/rular-color2.jpg">
+            </div>
+              <div data-theme="black" class="light-to-dark">
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+                  <div class="boxes"></div>
+            </div>
+          </div>
+        </div>
+
         <div v-for="(object, key) in colorData" class="col-md-2" style="text-align: center;">
           {{ key }}
          <!--  <div v-for="(color, index) in object" v-if="index % Math.floor(object.length / 10) === 0 && index < Math.floor(object.length / 10) * 10" class="color-cell" v-bind:style="{ 'background-color': 'rgb(' + color['Red'] + ',' + color['Green'] +',' + color['Blue'] + ')'}" v-on:click="selectColor(key, color)" :title="color['Red'] + ',' + color['Green'] +',' + color['Blue']"> -->
