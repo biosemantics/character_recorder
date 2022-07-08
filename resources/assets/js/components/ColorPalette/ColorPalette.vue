@@ -7,8 +7,17 @@
       <div class="row">
         <div class="row color-pattern">
           <div class="col-md-4">
-            <div class="rular-image">
-                <img src="images/rular-color.jpg">
+            <div class="ruler-area">
+                <h3>Basic Colors</h3>
+                <div class="color-outer">
+                  <span class="ColorName">0,0,255</span>
+                  <span class="ColorName">0,255,255</span>
+                  <span class="ColorName">0,255,0</span>
+                  <span class="ColorName">255.255.0</span>
+                  <span class="ColorName">255.0.0</span>
+                  <span class="ColorName">255.0.255</span>
+                  <span class="ColorName">255.255.255</span>
+                </div>
             </div>
             <div class="pallet-basic-color">
               <div class="boxes"></div>
@@ -22,8 +31,19 @@
           </div>
 
           <div class="col-md-4">
-            <div class="rular-image">
-              <img src="images/rular-color1.jpg">
+            <div class="ruler-area">
+               <h3>Color Control Patches</h3>
+              <div class="color-outer">
+                <span class="ColorName">Blue</span>
+                <span class="ColorName">Cyan</span>
+                <span class="ColorName">Green</span>
+                <span class="ColorName">Yellow</span>
+                <span class="ColorName">Red</span>
+                <span class="ColorName">Magenta</span>
+                <span class="ColorName">White</span>
+                <span class="ColorName">3/Color</span>
+                <span class="ColorName">Black</span>
+              </div>
             </div>
             <div class="pallet-color-control">
               <div class="pallet-color-light">
@@ -50,9 +70,32 @@
               </div>
             </div>    
           </div>
-          <div class="col-md-4">
-            <div class="rular-image">
-               <img src="images/rular-color2.jpg">
+          <div class="col-md-4">           
+            <div class="ruler-area">
+               <h3>Gray Scale</h3>
+              <div class="color-outer">
+                <span class="ColorName"><b>A</b></span>
+                <span class="ColorName">1</span>
+                <span class="ColorName">2</span>
+                <span class="ColorName">3</span>
+                <span class="ColorName">4</span>
+                <span class="ColorName">5</span>
+                <span class="ColorName">6</span>
+                <span class="ColorName"><b>M</b></span>
+                <span class="ColorName">8</span>
+                <span class="ColorName">9</span>
+                <span class="ColorName">10</span>
+                <span class="ColorName">11</span>
+                <span class="ColorName">12</span>
+                <span class="ColorName">13</span>
+                <span class="ColorName">14</span>
+                <span class="ColorName">15</span>
+                <span class="ColorName"><b>B</b></span>
+                <span class="ColorName">16</span>
+                <span class="ColorName">17</span>
+                <span class="ColorName">18</span>
+                <span class="ColorName">19</span>
+              </div>
             </div>
               <div data-theme="black" class="light-to-dark">
                   <div class="boxes"></div>

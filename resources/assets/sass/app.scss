@@ -370,10 +370,27 @@ div.dropdown div.item:first-child {
 
 .color-pattern{
   margin-bottom: 30px;
-  .rular-image img {
-      width: 100%;
-      margin: 0 auto;
+  .ruler-area{
+    background-color: #949695;
+    color: #000000;
+    padding: 5px;
+    height: 35px;
   }
+  .ruler-area .color-outer{
+    display: flex;
+    font-size: 9px;
+    justify-content: space-between;
+  }
+  .ruler-area .color-outer b{ font-size: 10px;}
+  .ruler-area h3{
+    color: #000000;
+    text-align: center;
+    font-size: 12px;
+    line-height: 10px;
+    padding: 0;
+    margin: 2px 0 4px 0;
+  }
+    
   .pallet-basic-color{
     display: flex;
     .boxes {
