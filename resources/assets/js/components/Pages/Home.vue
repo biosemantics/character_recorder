@@ -661,6 +661,7 @@
                                                 wholeCharacterDefinition='';
                                                 firstNounDeprecated=false;
                                                 firstNounDeprecatedNotifyMessage='';
+                                                secondLastCharacterDefinition='';
                                                 secondNounDeprecated=false;
                                                 secondNounDeprecatedNotifyMessage='';
                                                 firstNounNotRecommend=false;
@@ -736,6 +737,7 @@
                                                 wholeCharacterDefinition='';
                                                 firstNounDeprecated=false;
                                                 firstNounDeprecatedNotifyMessage='';
+                                                secondLastCharacterDefinition='';
                                                 secondNounDeprecated=false;
                                                 secondNounDeprecatedNotifyMessage='';
                                                 firstNounNotRecommend=false;
@@ -853,6 +855,7 @@
                                                 wholeCharacterDefinition='';
                                                 firstNounDeprecated=false;
                                                 firstNounDeprecatedNotifyMessage='';
+                                                secondLastCharacterDefinition='';
                                                 secondNounDeprecated=false;
                                                 secondNounDeprecatedNotifyMessage='';
                                                 firstNounNotRecommend=false;
@@ -996,6 +999,7 @@
                                                 wholeCharacterDefinition='';
                                                 firstNounDeprecated=false;
                                                 firstNounDeprecatedNotifyMessage='';
+                                                secondLastCharacterDefinition='';
                                                 secondNounDeprecated=false;
                                                 secondNounDeprecatedNotifyMessage='';
                                                 firstNounNotRecommend=false;
@@ -1083,10 +1087,12 @@
                                                 wholeCharacterDefinition='';
                                                 firstNounDeprecated=false;
                                                 firstNounDeprecatedNotifyMessage='';
+                                                secondLastCharacterDefinition='';
                                                 secondNounDeprecated=false;
                                                 secondNounDeprecatedNotifyMessage='';
                                                 firstNounNotRecommend=false;
                                                 firstNounNotRecommendNotifyMessage='';
+                                                secondLastCharacterDefinition='';
                                                 secondNounNotRecommend=false;
                                                 secondNounNotRecommendNotifyMessage='';
                                                 firstNounSynonym=false;
@@ -1184,6 +1190,7 @@
                                                     wholeCharacterDefinition='';
                                                     firstNounDeprecated=false;
                                                     firstNounDeprecatedNotifyMessage='';
+                                                    secondLastCharacterDefinition='';
                                                     secondNounDeprecated=false;
                                                     secondNounDeprecatedNotifyMessage='';
                                                     firstNounNotRecommend=false;
@@ -1336,6 +1343,7 @@
                                                 wholeCharacterDefinition='';
                                                 firstNounDeprecated=false;
                                                 firstNounDeprecatedNotifyMessage='';
+                                                secondLastCharacterDefinition='';
                                                 secondNounDeprecated=false;
                                                 secondNounDeprecatedNotifyMessage='';
                                                 firstNounNotRecommend=false;
@@ -1552,6 +1560,13 @@
                             </div>
                           </div>
                         </div>
+                        <div class="row" v-if="wholeCharacterUndefined">
+                          <div class="col-md-12">
+                            <br>and<br><br>
+                            What is {{ wholeCharacterName }}? <input v-model="wholeCharacterDefinition" style="width:100%"
+                                                                :placeholder="'enter the definition of ' + wholeCharacterName">
+                          </div>
+                        </div>
                       </div>
                       <div class="modal-footer">
                         <a class="btn btn-primary ok-btn"
@@ -1564,6 +1579,7 @@
                                                                 firstCharacterUndefined && !firstCharacterDefinition 
                                                                  &&
                                                                 !firstNounBroadSynonym||
+                                                                wholeCharacterUndefined && !wholeCharacterDefinition ||
                                                                 middleCharacter=='between' && (!secondLastCharacter && !secondNounBroadSynonym || secondNounUndefined && !secondLastCharacterDefinition
                                                                  ||
                                                                 secondThirdCharacterUndefined && !secondThirdCharacterDefinition
@@ -4012,12 +4028,11 @@ export default {
       saveColorButtonFlag: false,
       saveNonColorButtonFlag: false,
       filterFlag: true,
+      wholeCharacterName: '',
       nounUndefined: false,
       secondNounUndefined: false,
-
       fourthNounUndefined: false,
       fifthNounUndefined: false,
-
       saveCharacterButtonFlag: false,
       firstCharacterUndefined: false,
       thirdCharacterUndefined: false,
@@ -4836,12 +4851,11 @@ export default {
         app.fifthCharacter = '';
         app.fourthCharacterDefinition = '';
         app.fifthCharacterDefinition = '';
-
+        app.wholeCharacterName = '';
         app.nounUndefined = false;
         app.secondNounUndefined = false;
         app.fourthNounUndefined = false;
         app.fifthNounUndefined = false;
-
         app.firstCharacterUndefined = false;
         app.thirdCharacterUndefined = false;
         app.secondThirdCharacterUndefined = false;
@@ -4850,7 +4864,6 @@ export default {
         app.thirdCharacterDefinition = '';
         app.secondThirdCharacterDefinition = '';
         app.wholeCharacterDefinition = '';
-
         app.firstCharacterDeprecated = false;
         app.firstCharacterDeprecatedNotifyMessage = '';
         app.firstCharacterNotRecommend = false;
@@ -5875,7 +5888,7 @@ export default {
                 "creationDate": ("0" + (date.getMonth() + 1)).slice(-2) + '-' + ("0" + date.getDate()).slice(-2) + '-' + date.getFullYear(),
                 "definitionSrc": app.user.name,
               };
-              axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
+              await axios.post('http://shark.sbs.arizona.edu:8080/class', requestBody)
               .then(function (resp) {
                 axios.post('http://shark.sbs.arizona.edu:8080/save', {
                   user: app.sharedFlag ? '' : app.user.name,
@@ -5889,7 +5902,6 @@ export default {
           }
         }
       }
-    
     
       let wholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
       if(app.thirdCharacter != null && app.thirdCharacter != '') {
@@ -5926,6 +5938,7 @@ export default {
         }
       }
 
+      app.wholeCharacterName = wholeCharacter;
       if (app.wholeCharacterUndefined) {
         var date = new Date();
         requestBody = {
@@ -5952,6 +5965,7 @@ export default {
               });
           });
       }
+
       app.roundFirst = false;
       if(app.roundsOne.length > 0) {
         $.each(app.roundsOne, function (r_key, item) {
@@ -7932,6 +7946,8 @@ export default {
       //     });
       // }
 
+
+
       if (
         !app.firstCharacterUndefined &&
         !app.firstCharacterDeprecated &&
@@ -7946,6 +7962,7 @@ export default {
         !app.roundFirst &&
         !app.roundSecond &&
         !app.nounUndefined &&
+        !app.wholeCharacterUndefined &&
         (app.middleCharacter != 'between' || !app.secondNounUndefined /*||  !app.secondThirdCharacterUndefined*/ ) &&
         !app.firstNounDeprecated &&
         !app.secondNounDeprecated &&
@@ -7962,6 +7979,8 @@ export default {
         !app.alreadyExistingCharacter
       ) {
        app.storeCharacter();
+      }else {
+        app.wholeCharacterUndefined = true;
       }
 
     },
@@ -8734,8 +8753,7 @@ export default {
       axios.post("api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
         .then(function (resp) {
           app.isLoading = false;
-          location.reload();
-         /* app.toRemoveCharacterId = null;
+          app.toRemoveCharacterId = null;
           app.toRemoveStandardConfirmFlag = false;
           app.userCharacters = resp.data.characters;
           app.headers = resp.data.headers;
@@ -8749,10 +8767,9 @@ export default {
           if (app.userTags.length != resp.data.userTags.length && !resp.data.userTags.find(ch => ch == app.currentTab)) {
             app.userTags = resp.data.userTags;
             if (app.userTags[0]) app.showTableForTab(app.userTags[0].tag_name);
-          } else app.showTableForTab(app.currentTab);*/
-        }).catch(error => {
-          window.location.reload()
-        });
+          } else app.showTableForTab(app.currentTab);
+
+        })
 
     },
     removeUserCharacter(characterId) {
