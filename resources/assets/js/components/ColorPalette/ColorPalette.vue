@@ -82,8 +82,7 @@
         <div v-for="(object, key) in colorData" class="col-md-2" style="text-align: center;">
           {{ key }}
          <!--  <div v-for="(color, index) in object" v-if="index % Math.floor(object.length / 10) === 0 && index < Math.floor(object.length / 10) * 10" class="color-cell" v-bind:style="{ 'background-color': 'rgb(' + color['Red'] + ',' + color['Green'] +',' + color['Blue'] + ')'}" v-on:click="selectColor(key, color)" :title="color['Red'] + ',' + color['Green'] +',' + color['Blue']"> -->
-        <div v-for="(color, index) in object" class="color-cell" v-bind:style="{ 'background-color': 'rgb(' + color['Red'] + ',' + color['Green'] +',' + color['Blue'] + ')'}" v-on:click="selectColor(key, color)" v-tooltip="color['Red'] + ', ' + color['Green'] +', ' + color['Blue']">
-            <!--        <span />-->
+        <div v-for="(color, index) in object" class="color-cell"  v-if="color['show'] == 1" v-bind:style="{ 'background-color': 'rgb(' + color['Red'] + ',' + color['Green'] +',' + color['Blue'] + ')'}" v-on:click="selectColor(key, color)" v-tooltip="color['Red'] + ', ' + color['Green'] +', ' + color['Blue']">
           </div>
         </div>
       </div>
@@ -122,19 +121,26 @@ export default {
       this.$emit('selectedColor', app.colorData)
     },
   },
+
   beforeMount() {
     var app = this;
-    app.colorData = app.paletteData;
-    for(const i in app.colorData){
-      var child = app.colorData[i];
+    for(const i in app.paletteData){
+      var child = app.paletteData[i];
       for(var j = 0; j < child.length; j++){
-        var item = [];
-        app.colorData[i][j].cal= (0.299*child[j].Red)+(0.587*child[j].Green)+(0.114*child[j].Blue);
+        if(j % Math.floor(child.length / 10) === 0 && j < Math.floor(child.length / 10) * 10){
+          var item = [];
+          app.paletteData[i][j].cal= (0.299*child[j].Red)+(0.587*child[j].Green)+(0.114*child[j].Blue);
+          app.paletteData[i][j].show = 1;
+        }else {
+          app.paletteData[i][j].cal= (0.299*child[j].Red)+(0.587*child[j].Green)+(0.114*child[j].Blue);
+          app.paletteData[i][j].show = 0;
+        }
       }
-      app.colorData[i].sort(function(a, b) {
+      app.paletteData[i].sort(function(a, b) {
         return b.cal - a.cal;
       });
     }
+    app.colorData = app.paletteData;
   }
 }
 </script>
