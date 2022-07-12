@@ -41,7 +41,7 @@
                 <span class="ColorName">Red</span>
                 <span class="ColorName">Magenta</span>
                 <span class="ColorName">White</span>
-                <span class="ColorName">3/Color</span>
+                <span class="ColorName">Brown</span>
                 <span class="ColorName">Black</span>
               </div>
             </div>
@@ -90,8 +90,8 @@
                 <span class="ColorName">13</span>
                 <span class="ColorName">14</span>
                 <span class="ColorName">15</span>
-                <span class="ColorName"><b>B</b></span>
                 <span class="ColorName">16</span>
+                <span class="ColorName"><b>B</b></span>
                 <span class="ColorName">17</span>
                 <span class="ColorName">18</span>
                 <span class="ColorName">19</span>
@@ -159,7 +159,7 @@ export default {
   methods: {
     selectColor(key, color) {
       var app = this;
-      app.colorData = key + ' (' + color.Red + ', ' + color.Green + ', ' + color.Blue + ')';
+      app.colorData = key + ' (' + Math.round(color.Red) + ', ' + Math.round(color.Green) + ', ' + Math.round(color.Blue) + ')';
 
       this.$emit('selectedColor', app.colorData)
     },
