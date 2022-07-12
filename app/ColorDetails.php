@@ -22,6 +22,8 @@ class ColorDetails extends Model
         'colored_IRI',
         'multi_colored',
         'multi_colored_IRI',
-        'post_constraint'];
+        'post_constraint',
+        'not_remove',
+    ];
 
 }

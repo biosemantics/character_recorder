@@ -14,5 +14,7 @@ class NonColorDetails extends Model
         'degree_constraint',
         'main_value',
         'main_value_IRI',
-        'post_constraint'];
+        'post_constraint',
+        'not_remove',
+    ];
 }

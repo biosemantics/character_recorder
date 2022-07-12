@@ -25,6 +25,7 @@ class character extends Model
         'summary',
         'images',
         'numeric_flag',
+        'auto_fill_value',
     ];
     //
 }

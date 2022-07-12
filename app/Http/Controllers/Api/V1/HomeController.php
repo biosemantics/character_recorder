@@ -149,7 +149,7 @@ class HomeController extends Controller
         $allCharacters = DB::table('characters')->where('owner_name', '=', $username)->orderBy('order', 'ASC')->get();
     
         $headers = $this->getHeadersByUserId($userID);
-        $values = DB::table('values')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->select('values.id as id', 'values.character_id as character_id', 'values.header_id as header_id', 'values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
+        $values = DB::table('values')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->select('values.id as id', 'values.character_id as character_id', 'values.header_id as header_id','values.not_remove','values.value', 'characters.unit as unit', 'characters.summary as summary')->get();
         $colorDetails = DB::table('color_details')->join('values', 'values.id', '=', 'color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
         $nonColorDetails = DB::table('non_color_details')->join('values', 'values.id', '=', 'non_color_details.value_id')->join('characters', 'characters.id', '=', 'values.character_id')->where('characters.owner_name', '=', $username)->get();
 
@@ -779,40 +779,74 @@ class HomeController extends Controller
                 }
             }
             if ($flag) {
-                // Value::create([
-                //     'character_id' => $eachCharacter->id,
-                //     'header_id' => 1,
-                //     'value' => $eachCharacter->name,
-                // ]);
-                array_push($temp, [
+                Value::create([
                     'character_id' => $eachCharacter->id,
                     'header_id' => 1,
                     'value' => $eachCharacter->name,
                 ]);
+               /* array_push($temp, [
+                    'character_id' => $eachCharacter->id,
+                    'header_id' => 1,
+                    'value' => $eachCharacter->name,
+                ]);*/
+
 
             }
             foreach ($headers as $header) {
                 if ($valueFlag[$eachCharacter->id][$header->id]) {
-                    // Value::create([
-                    //     'character_id' => $eachCharacter->id,
-                    //     'header_id' => $header->id,
-                    //     'value' => '',
-                    // ]);
-                    array_push($temp, [
-                        'character_id' => $eachCharacter->id,
-                        'header_id' => $header->id,
-                        'value' => '',
+                  $colorCharacter = 0;
+                  $nonColorCharacter = 0;
+                  $not_remove = null;
+                  $toValue = '';
+                  if($eachCharacter->auto_fill_value == 'not applicable') {
+                    $toValue = $eachCharacter->auto_fill_value;
+                    $not_remove = 1;
+                  }else if($eachCharacter->auto_fill_value != null && $eachCharacter->auto_fill_value != '' && $eachCharacter->auto_fill_value != 'not applicable'){
+                    $toValue = '';
+                    $not_remove = 1;
+                    if( strpos( $eachCharacter->name, "Color of" ) === 0 || strpos( $eachCharacter->name, "Color between" ) === 0) {
+                      $colorCharacter = 1;
+                    }else {
+                      $nonColorCharacter = 1;
+                    }
+                  }
+                  $valueCreated = Value::create([
+                                  'character_id' => $eachCharacter->id,
+                                  'header_id' => $header->id,
+                                  'value' => $toValue,
+                                  'not_remove' => $not_remove
+                                ]);
+                  if($colorCharacter == 1){
+                    ColorDetails::create([
+                                  'value_id' => $valueCreated->id,
+                                  'colored' => $eachCharacter->auto_fill_value,
+                                  'not_remove' => $not_remove
+                                ]);
+                    Character::where('id',$eachCharacter->id)->update(['usage_count'=>1]);
+                  }
+                  if($nonColorCharacter == 1) {
+                    NonColorDetails::create([
+                      'value_id' => $valueCreated->id,
+                      'main_value' => $eachCharacter->auto_fill_value,
+                      'not_remove' => $not_remove
                     ]);
+                    Character::where('id',$eachCharacter->id)->update(['usage_count'=>1]);
+                  }
+                 /* array_push($temp, [
+                      'character_id' => $eachCharacter->id,
+                      'header_id' => $header->id,
+                      'value' => '',
+                  ]);*/
                 }
             }
         }
         Value::insert($temp);
-
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
         $returnTaxon = $user->taxon;
         $returnAllDetailValues = $this->getAllDetails();
+        $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'headers' => $returnHeaders,
             'characters' => $returnCharacters,
@@ -820,6 +854,7 @@ class HomeController extends Controller
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'taxon' => $returnTaxon,
+            'defaultCharacters' => $returnDefaultCharacters,
         ];
 
         return $data;
@@ -1088,7 +1123,7 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $order = Character::max('order') + 1;
-        $characters = Character::where('owner_name', '=', $username)->select('name', 'IRI', 'method_from', 'method_to', 'method_include', 'method_exclude', 'method_where', 'owner_name','standard_tag')->get();
+        $characters = Character::where('owner_name', '=', $username)->select('name', 'IRI', 'method_from', 'method_to', 'method_include', 'method_exclude', 'method_where', 'owner_name','standard_tag','auto_fill_value')->get();
         Character::where('owner_name', '=', $username)/*->where('standard_tag','inflorescence')->orWhere('standard_tag','inflorescence unit')*/->delete();
         $userTags = UserTag::where('user_id', '=', Auth::id())->get();
         $newCharacters = [];
@@ -1114,7 +1149,9 @@ class HomeController extends Controller
             'usage_count',
             'order',
             'show_flag',
+            'auto_fill_value',
         ];
+
         foreach ($standardCharacters as $eachCharacter) {
             $flag = true;
             $eachCharacter['usage_count'] = 0;
@@ -1148,7 +1185,6 @@ class HomeController extends Controller
                         $tempStdCharacter[$eachChKey] = '';
                     }
                 }
-
                 array_push($newCharacters, $tempStdCharacter);
 
                 $order = $order + 1;
@@ -2754,7 +2790,7 @@ class HomeController extends Controller
               }
             }
             
-            $color = ColorDetails::where('value_id',$final_id)->where('colored',$data['colored'])->first();
+            $color = ColorDetails::where('value_id',$final_id)->where('colored',$data['colored'])->where('not_remove','!=',1)->first();
             if ($color) {
               $color->delete();
               $characterColorValues = DB::table('values')->where('character_id', '=', $copyCharacter->id)->get();
@@ -2835,7 +2871,7 @@ class HomeController extends Controller
               }
             }
             
-            $nonColor = NonColorDetails::where('value_id',$final_id)->where('main_value',$data['main_value'])->first();
+            $nonColor = NonColorDetails::where('value_id',$final_id)->where('main_value',$data['main_value'])->where('not_remove','!=',1)->first();
             if ($nonColor) {
               $nonColor->delete();
               $characterNonValues = DB::table('values')->where('character_id', '=', $copyCharacter->id)->get();
@@ -4054,6 +4090,8 @@ class HomeController extends Controller
                 'usage_count' => $eachCharacter['usage_count'],
                 'order' => $eachCharacter['order'],
                 'show_flag' => $eachCharacter['show_flag'],
+                'numeric_flag' => $eachCharacter['numeric_flag'],
+                'auto_fill_value' => $eachCharacter['auto_fill_value'],
                 'created_at' => date("Y-m-d") . " " . date("H:i:s"),
                 'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
@@ -4115,6 +4153,7 @@ class HomeController extends Controller
             ->select('values.id as id',
                 'values.character_id as character_id',
                 'values.header_id as header_id',
+                'values.not_remove as not_remove',
                 'values.value as value')
             ->get();
         $newValues = [];
@@ -4123,6 +4162,7 @@ class HomeController extends Controller
                 'character_id' => $characterIds[$eachValue['character_id']],
                 'header_id' => $eachValue['header_id'] == 1 ? 1 : $headerIds[$eachValue['header_id']],
                 'value' => $eachValue['value'],
+                'not_remove' => $eachValue['not_remove'],
                 'created_at' => date("Y-m-d") . " " . date("H:i:s"),
                 'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
@@ -4172,6 +4212,7 @@ class HomeController extends Controller
                 'multi_colored' => $eachColorDetail['multi_colored'],
                 'multi_colored_IRI' => $eachColorDetail['multi_colored_IRI'],
                 'post_constraint' => $eachColorDetail['post_constraint'],
+                'not_remove' => $eachColorDetail['not_remove'],
                 'created_at' => date("Y-m-d") . " " . date("H:i:s"),
                 'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
@@ -4190,6 +4231,7 @@ class HomeController extends Controller
                 'main_value' => $eachNonColorDetail['main_value'],
                 'main_value_IRI' => $eachNonColorDetail['main_value_IRI'],
                 'post_constraint' => $eachNonColorDetail['post_constraint'],
+                'not_remove' => $eachNonColorDetail['not_remove'],
                 'created_at' => date("Y-m-d") . " " . date("H:i:s"),
                 'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);
