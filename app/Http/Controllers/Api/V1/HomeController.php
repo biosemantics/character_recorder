@@ -2006,6 +2006,20 @@ class HomeController extends Controller
                     $total_names[] = $final_name;
                 
                     break;
+                  }else {
+                    $check = DB::table('characters')
+                                ->where('name',$st_character->name)
+                                ->where(function($q) use($username) {
+                                        $q->where('owner_name',$username)->orWhere('owner_name','like',$username.'_ver_'.'%');
+                                    })
+                                ->orderBy('id','desc')
+                                ->first();
+                    if(!empty($check) && $check->usage_count > 0) {
+                      $taxon = DB::table('users')->where('email', 'like', '%' . $username . '%')->pluck('taxon')->first();
+                      $final_name = 'Used for '.$taxon.' by '.$username;
+                      $total_names[] = $final_name;
+                      break;
+                    }
                   } 
                 }
                 else if($st_character->owner_name == $username && $st_character->usage_count>0 && $clone == 0){
