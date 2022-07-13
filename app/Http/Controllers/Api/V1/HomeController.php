@@ -500,6 +500,7 @@ class HomeController extends Controller
             'show_flag' => $request->input('show_flag'),
             'standard_tag' => $request->input('standard_tag'),
             'summary' => $request->input('summary'),
+            'numeric_flag' => $request->input('numeric_flag'),
             'images' => json_encode($allImageName),
         ]);
 
@@ -525,6 +526,7 @@ class HomeController extends Controller
                 'show_flag' => $request->input('show_flag'),
                 'standard_tag' => $request->input('standard_tag'),
                 'summary' => $request->input('summary'),
+                'numeric_flag' => $request->input('numeric_flag'),
                 'images' => json_encode($allImageName),
             ]);
 
@@ -937,6 +939,7 @@ class HomeController extends Controller
             'usage_count' => 0,
             'show_flag' => $request->input('show_flag'),
             'standard_tag' => $request->input('standard_tag'),
+            'numeric_flag' => $request->input('numeric_flag'),
             'summary' => $request->input('summary'),
             'images' => json_encode($allImageName),
         ]);
@@ -961,6 +964,7 @@ class HomeController extends Controller
                 'show_flag' => $request->input('show_flag'),
                 'standard_tag' => $request->input('standard_tag'),
                 'summary' => $request->input('summary'),
+                'numeric_flag' => $request->input('numeric_flag'),
                 'images' => json_encode($allImageName),
             ]);
             $defaultCharacter->save();
@@ -2088,6 +2092,8 @@ class HomeController extends Controller
         $character->show_flag = $request->input('show_flag');
         $character->standard_tag = $request->input('standard_tag');
         $character->summary = $request->input('summary');
+        $character->numeric_flag = $request->input('numeric_flag');
+
         if(!empty($allImageName)) {
            if(!empty($character->images)) {
                 $img = json_decode($character->images,true);
@@ -3051,6 +3057,7 @@ class HomeController extends Controller
                                 'multi_colored' => $eachColorDetails->multi_colored,
                                 'multi_colored_IRI' => $eachColorDetails->multi_colored_IRI,
                                 'post_constraint' => $eachColorDetails->post_constraint,
+                                'not_remove' => $eachColorDetails->not_remove
                             ]);
 
                             $otherColorDetail->save();
@@ -3074,6 +3081,7 @@ class HomeController extends Controller
                                 'main_value' => $eachNonColorDetails->main_value,
                                 'main_value_IRI' => $eachNonColorDetails->main_value_IRI,
                                 'post_constraint' => $eachNonColorDetails->post_constraint,
+                                'not_remove' => $eachNonColorDetails->not_remove
                             ]);
 
                             $otherNonColorDetail->save();
