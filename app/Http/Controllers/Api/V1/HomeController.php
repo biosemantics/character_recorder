@@ -3149,6 +3149,7 @@ class HomeController extends Controller
                 if ($eachValue->header_id != 1
                     && $eachValue->value == null) {
                     $eachValue->value = $value['value'];
+                    $eachValue->not_remove = $value['not_remove'];
                     $eachValue->save();
                 }
             }
@@ -3177,6 +3178,7 @@ class HomeController extends Controller
                                     'multi_colored' => $eachColorDetails->multi_colored,
                                     'multi_colored_IRI' => $eachColorDetails->multi_colored_IRI,
                                     'post_constraint' => $eachColorDetails->post_constraint,
+                                    'not_remove' => $eachColorDetails->not_remove,
                                 ]);
 
                                 $otherColorDetail->save();
@@ -3203,6 +3205,7 @@ class HomeController extends Controller
                                     'main_value' => $eachNonColorDetails->main_value,
                                     'main_value_IRI' => $eachNonColorDetails->main_value_IRI,
                                     'post_constraint' => $eachNonColorDetails->post_constraint,
+                                    'not_remove' => $eachNonColorDetails->not_remove,
                                 ]);
 
                                 $otherNonColorDetail->save();
