@@ -5362,7 +5362,7 @@ export default {
       } else {
         var ch = app.character.name.toLowerCase().split(" ");
         if(ch[0] != undefined && ch[1] !== undefined){
-          if(ch[0]+' '+ch[1] == 'length of' || ch[0]+' '+ch[1] == "width of" || ch[0]+' '+ch[1] == 'depth of' /*|| ch[0]+' '+ch[1] == 'diameter of'*/ || ch[0]+' '+ch[1] == 'distance of' || ch[0]+' '+ch[1] == 'distance between' || ch[0]+' '+ch[1] == 'count of' || ch[0]+' '+ch[1] == 'number of' || ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' /*&& ch[0]!= 'diameter'*/ && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'number') ){
+          if(ch[0]+' '+ch[1] == 'length of' || ch[0]+' '+ch[1] == "width of" || ch[0]+' '+ch[1] == 'depth of' /*|| ch[0]+' '+ch[1] == 'diameter of'*/ || ch[0]+' '+ch[1] == 'distance of' || ch[0]+' '+ch[1] == 'distance between' || ch[0]+' '+ch[1] == 'count of' || (ch[0]+' '+ch[1] == 'number of' && app.numericalFlag == false ) || ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' /*&& ch[0]!= 'diameter'*/ && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'number') ){
             app.active_el = 'method';
           }else {
             app.active_el = 'tag'
