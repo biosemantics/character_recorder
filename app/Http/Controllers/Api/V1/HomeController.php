@@ -1970,6 +1970,17 @@ class HomeController extends Controller
     public function getUsageTaxons(Request $request){
       $character = $request->all();
       $users = DB::table('characters')->pluck('owner_name')->unique()->toArray();
+      if(count($users)>0) {
+        foreach ($users as $ukey => $uvalue) {
+          if(strpos($uvalue, '_ver_') !== false){
+            $split=explode("_ver_", $uvalue)[0];
+            if(!in_array($split, $users)){
+              $users[] = $split;
+            }
+            unset($users[$ukey]);
+          }
+        }
+      }
       $dfCharacter = DB::table('default_characters')->where('name',$character[0])->count();
       $standardCharacters = DB::table('characters')->where('name',$character[0])->get()->toArray();
       if($dfCharacter > 0) {

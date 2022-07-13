@@ -45,7 +45,7 @@
                 <!--</div>-->
                 <div class="col-md-12">
                 </div>
-                <div class="col-md-12" v-if="ch_name != 'color' && ( ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'presence' || ch_name == 'shape' || ch_name == 'texture' || ch_name == 'number' || ch_name == 'pubescence' || ch_name == 'relative'|| ch_name == 'inflation' || ch_name == 'orientation')"  style="margin-top: 10px;">
+                <div class="col-md-12" v-if=" ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'number'"  style="margin-top: 10px;">
                     <div class="row">
                         <label class="col-md-3 text-right">From:</label>
                         <div class="col-md-8"> 
@@ -96,7 +96,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" v-if="ch_name != 'color' && ( ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'presence' || ch_name == 'shape' || ch_name == 'texture' || ch_name == 'number' || ch_name == 'pubescence' || ch_name == 'relative'|| ch_name == 'inflation' || ch_name == 'orientation')" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance'  || ch_name == 'number'" style="margin-top: 10px;">
                     <div class="row">
                         <label class="col-md-3 text-right">To:</label>
                         <div class="col-md-8"> 
@@ -149,7 +149,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" v-if="ch_name != 'color' && ( ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'presence' || ch_name == 'shape' || ch_name == 'texture' || ch_name == 'number' || ch_name == 'pubescence' || ch_name == 'relative'|| ch_name == 'inflation' || ch_name == 'orientation')" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'number'" style="margin-top: 10px;">
                     <div class="row">
                         <label class="col-md-3 text-right">Include:</label>
                         <div class="col-md-8"> 
@@ -203,7 +203,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-12" v-if="ch_name != 'color' && ( ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'presence' || ch_name == 'shape' || ch_name == 'texture' || ch_name == 'number' || ch_name == 'pubescence' || ch_name == 'relative'|| ch_name == 'inflation' || ch_name == 'orientation')" style="margin-top: 10px;">
+                <div class="col-md-12" v-if="ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'distance' || ch_name == 'number'" style="margin-top: 10px;">
                     <div class="row">
                         <label class="col-md-3 text-right">Exclude:</label>
                         <div class="col-md-8">

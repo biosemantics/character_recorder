@@ -1740,17 +1740,18 @@
                                   Method
                                   </a>
                                 </li>
-                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),(((!checkHaveUnit(character.name) ||  firstCharacterChange == 'color' || firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation') || numericalFlag == true) ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
-                                  <div v-if="firstCharacterChange  != 'color' && firstCharacterChange  != 'number' && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation') && numericalFlag == false">
+                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),(((!checkHaveUnit(character.name) ||  firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth'  || firstCharacterChange  != 'distance' ||  firstCharacterChange  != 'number') || numericalFlag == true) ? 'grey' : ''), (active_el == 'unit' ? 'active' : '')]">
+                                  <div v-if="firstCharacterChange  != 'number' && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'number' ) && numericalFlag == false">
                                     <a 
-                                    :disabled="((!checkHaveUnit(character.name) || firstCharacterChange  == 'color' || firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation'))"
+                                    :disabled="((!checkHaveUnit(character.name) ||  firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' ||  firstCharacterChange  != 'number'))"
                                     v-on:click="showDetails('unit', metadataFlag)">
                                     Unit
                                     </a>
                                   </div>
                                   <div v-else>
                                     <a 
-                                      :disabled="((!checkHaveUnit(character.name) || firstCharacterChange == 'color' || firstCharacterChange == 'number') && ((firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation') && numericalFlag == false))">
+                                      :disabled="((!checkHaveUnit(character.name) ||  firstCharacterChange == 'number') && ((firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || 
+                                      firstCharacterChange  != 'distance' || firstCharacterChange  != 'number') && numericalFlag == false))">
                                       Unit
                                     </a>
                                   </div></li>
@@ -1758,17 +1759,19 @@
                                   v-on:click="showDetails('tag', metadataFlag)">
                                   Tag</a>
                                 </li>
-                                <li  :class="['summary',(completeElement.includes('summary') ? 'back-green' : ''),(((!checkHaveUnit(character.name) || firstCharacterChange == 'color') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation')) ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
+                                <li  :class="['summary',(completeElement.includes('summary') ? 'back-green' : ''),(((!checkHaveUnit(character.name)) && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'number')) ? 'grey' : ''), (active_el == 'summary' ? 'active' : '')]">
                                     <div v-if="firstCharacterChange != 'color'">
                                       <a 
-                                      :disabled="((!checkHaveUnit(character.name) || firstCharacterChange == 'color') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation'))"
+                                      :disabled="((!checkHaveUnit(character.name)) && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || 
+                                      firstCharacterChange  != 'distance' || firstCharacterChange  != 'number'))"
                                       v-on:click="showDetails('summary', metadataFlag)">
                                        Summary Function
                                       </a>
                                     </div>
                                     <div v-else>
                                       <a 
-                                        :disabled="((!checkHaveUnit(character.name) || firstCharacterChange == 'color') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || firstCharacterChange  != 'distance'|| firstCharacterChange  != 'presence' || firstCharacterChange  != 'shape' || firstCharacterChange  != 'texture' || firstCharacterChange  != 'number' || firstCharacterChange  != 'pubescence' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'inflation' || firstCharacterChange  != 'relative' || firstCharacterChange  != 'orientation'))">
+                                        :disabled="((!checkHaveUnit(character.name)) && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || 
+                                        firstCharacterChange  != 'distance' ||  firstCharacterChange  != 'number'))">
                                          Summary Function
                                       </a>
                                     </div>
@@ -3859,6 +3862,13 @@ export default {
         return '';
       }
     },
+    firstCharacterMiddleChange() {
+      if(this.firstCharacter != undefined && this.firstCharacter != null && this.firstCharacter != '' && this.middleCharacter != undefined && this.middleCharacter != null && this.middleCharacter != '') {
+        return this.firstCharacter.toLowerCase()+''+this.middleCharacter.toLowerCase();
+      }else {
+        return '';
+      }
+    },
     _valid() {
       var result = true;
       var app = this;
@@ -5352,16 +5362,16 @@ export default {
       } else {
         var ch = app.character.name.toLowerCase().split(" ");
         if(ch[0] != undefined && ch[1] !== undefined){
-          if(ch[0]+' '+ch[1] == 'length of' || ch[0]+' '+ch[1] == "width of" || ch[0]+' '+ch[1] == 'depth of' || ch[0]+' '+ch[1] == 'diameter of' || ch[0]+' '+ch[1] == 'distance of' || ch[0]+' '+ch[1] == 'distance between' || ch[0]+' '+ch[1] == 'count of' || ch[0]+' '+ch[1] == 'number of' || ch[0] == "color" || ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'color' && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' /*&& ch[0]!= 'growth'*/ && ch[0]!= 'number' && ch[0]!= 'pubescence' && ch[0]!= 'relative' && ch[0]!= 'inflation' && ch[0]!= 'orientation') ){
+          if(ch[0]+' '+ch[1] == 'length of' || ch[0]+' '+ch[1] == "width of" || ch[0]+' '+ch[1] == 'depth of' /*|| ch[0]+' '+ch[1] == 'diameter of'*/ || ch[0]+' '+ch[1] == 'distance of' || ch[0]+' '+ch[1] == 'distance between' || ch[0]+' '+ch[1] == 'count of' || ch[0]+' '+ch[1] == 'number of' || ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' /*&& ch[0]!= 'diameter'*/ && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'number') ){
             app.active_el = 'method';
           }else {
             app.active_el = 'tag'
           }
         }
         var checkTab = 0;
-        if(ch[0] != 'undefined' && (ch[0] == 'color' || ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'color' && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' /*&& ch[0]!= 'growth'*/ && ch[0]!= 'number' && ch[0]!= 'pubescence' && ch[0]!= 'relative' && ch[0]!= 'inflation' && ch[0]!= 'orientation'))) {
+        if(ch[0] != 'undefined' && ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' /*&& ch[0]!= 'diameter'*/ && ch[0]!= 'distance'  && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' && ch[0]!= 'number')) {
           var type = 'method';
-        }else if(app.numericalFlag == true && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'color' && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' /*&& ch[0]!= 'growth'*/ && ch[0]!= 'number' && ch[0]!= 'pubescence' && ch[0]!= 'relative' && ch[0]!= 'inflation' && ch[0]!= 'orientation'){
+        }else if(app.numericalFlag == true && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' /*&& ch[0]!= 'diameter'*/ && ch[0]!= 'distance' && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' && ch[0]!= 'number' ){
           var type = 'tag';
           checkTab = 1;
         }else {
@@ -8208,14 +8218,14 @@ export default {
       app.character.creator = app.user.name + ' via CR';
       app.editFlag = false;
       app.newCharacterFlag = false;
-      if(app.firstCharacterChange == 'color' || (app.numericalFlag == false && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'color' && app.firstCharacterChange!= 'presence' && app.firstCharacterChange!= 'shape' && app.firstCharacterChange!= 'texture' /*&& app.firstCharacterChange!= 'growth'*/ && app.firstCharacterChange!= 'number' && app.firstCharacterChange!= 'pubescence' && app.firstCharacterChange!= 'relative' && app.firstCharacterChange!= 'inflation' && app.firstCharacterChange!= 'orientation')) {
+      if(app.numericalFlag == false && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'number') {
         var type = 'method';
-      }else if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'color' && app.firstCharacterChange!= 'presence' && app.firstCharacterChange!= 'shape' && app.firstCharacterChange!= 'texture' /*&& app.firstCharacterChange!= 'growth'*/ && app.firstCharacterChange!= 'number' && app.firstCharacterChange!= 'pubescence' && app.firstCharacterChange!= 'relative' && app.firstCharacterChange!= 'inflation' && app.firstCharacterChange!= 'orientation'){
+      }else if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance'&& app.firstCharacterChange!= 'number'){
         var type = 'tag';
       }else {
         var type = '';
       }
-     if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'color' && app.firstCharacterChange!= 'presence' && app.firstCharacterChange!= 'shape' && app.firstCharacterChange!= 'texture' /*&& app.firstCharacterChange!= 'growth'*/ && app.firstCharacterChange!= 'number' && app.firstCharacterChange!= 'pubescence' && app.firstCharacterChange!= 'relative' && app.firstCharacterChange!= 'inflation' && app.firstCharacterChange!= 'orientation'){
+     if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'number'){
         app.parentData = '';
         app.metadataFlag = 'tag';
         app.currentMetadata = tag;
@@ -8264,11 +8274,11 @@ export default {
      
       var ch_name = app.character.name.split(' ')[0].toLowerCase();
       var joinCharacter = (ch_name+' '+app.middleCharacter).toLowerCase();
-      if(joinCharacter == 'length of' || joinCharacter == "width of" || joinCharacter == 'depth of' || joinCharacter == 'diameter of' || joinCharacter == 'distance of' || joinCharacter == 'distance between' || joinCharacter == 'count of' || joinCharacter == 'number of' || joinCharacter == "color" || ( app.numericalFlag == false && joinCharacter!= 'length' && joinCharacter!= 'width' && joinCharacter!= 'depth' && joinCharacter!= 'distance' && joinCharacter!= 'color' && joinCharacter!= 'presence' && joinCharacter!= 'shape' && joinCharacter!= 'texture' /*&& joinCharacter!= 'growth'*/ && joinCharacter!= 'number' && joinCharacter!= 'pubescence' && joinCharacter!= 'relative' && joinCharacter!= 'inflation' && joinCharacter!= 'orientation')) {
+      console.log('joinCharacter',joinCharacter);
+      if(joinCharacter == 'length of' || joinCharacter == "width of" || joinCharacter == 'depth of' /*|| joinCharacter == 'diameter of'*/ || joinCharacter == 'distance of' || joinCharacter == 'distance between' || joinCharacter == 'count of' || (joinCharacter == 'number of' && app.numericalFlag == false) || ( app.numericalFlag == false && ch_name!= 'length' && ch_name!= 'width' && ch_name!= 'depth' /*&& ch_name!= 'diameter'*/ && ch_name!= 'distance' && ch_name!= 'number')) {
         app.active_el = 'method';
-      }else if(app.numericalFlag == true && joinCharacter!= 'length' && joinCharacter!= 'width' && joinCharacter!= 'depth' && joinCharacter!= 'distance' && joinCharacter!= 'color' && joinCharacter!= 'presence' && joinCharacter!= 'shape' && joinCharacter!= 'texture' /*&& joinCharacter!= 'growth'*/ && joinCharacter!= 'number' && joinCharacter!= 'pubescence' && joinCharacter!= 'relative' && joinCharacter!= 'inflation' && joinCharacter!= 'orientation'){
+      }else if(app.numericalFlag == true && ch_name!= 'length' && ch_name!= 'width' && ch_name!= 'depth' /*&& ch_name!= 'diameter'*/ && ch_name!= 'distance' && ch_name!= 'number'){
         app.active_el = 'tag';
-         
       }else {
         app.active_el = 'tag';
       }
@@ -8316,14 +8326,6 @@ export default {
 
       console.log('metadata', metadata);
       console.log("app.character=", app.character);
-/*      if(app.firstCharacter == 'Color' && (metadata == 'unit' || metadata == 'summary')) {
-
-      }else {*/
-     /* var ch = app.character.name.toLowerCase().split();
-       if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' && ch[0].toLowerCase()!= 'growth' && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation'){
-          app.parentData = app.character.standard_tag;
-          app.currentMetadata = tag;
-       }else{*/
         if ((app.checkHaveUnit(app.character.name,metadata)) || (metadata != 'method' && metadata != 'unit' && metadata != 'summary')) {
           app.metadataFlag = metadata;
           switch (metadata) {
@@ -8403,7 +8405,6 @@ export default {
               break;
           }
         }
-      /*}*/
     },
     checkNumericalCharacter(characterName) {
       var result = false;
@@ -9609,7 +9610,7 @@ export default {
             checkFields = true;
           }
           var ch = app.character.name.toLowerCase().split();
-          if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' /*&& ch[0].toLowerCase()!= 'growth'*/ && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation'){
+          if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'number'){
                checkFields = true;
             }
 
@@ -10991,12 +10992,7 @@ export default {
     checkHaveUnit(string,type) {
       var app = this;
       var ch = string.split(" ");
-      if(app.firstCharacter != undefined && (app.firstCharacter.toLowerCase() == 'color')  && ( type == 'method' || type == "tag")) {
-        return true;
-      }else if(ch[0] != 'undefined' && (ch[0].toLowerCase() == 'color') && (type == 'method' || type == "tag"))
-      {
-        return true;  
-      }else if(app.numericalFlag == false && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' /*&& ch[0].toLowerCase()!= 'growth'*/ && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation' && (type == 'method' || type == 'tag')){
+      if(app.numericalFlag == false && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' /*&& ch[0].toLowerCase()!= 'diameter'*/ && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'number' && (type == 'method' || type == 'tag')){
           return true;
       }else {
         var character = app.userCharacters.find(each => each.name === string);
@@ -11004,7 +11000,7 @@ export default {
           if (string.startsWith('Length of')
             || string.startsWith('Width of')
             || string.startsWith('Depth of')
-            || string.startsWith('Diameter of')
+            //|| string.startsWith('Diameter of')
             || string.startsWith('Distance between')
             || string.startsWith('Distance of')
             || string.startsWith('Count of')
@@ -11024,14 +11020,14 @@ export default {
         else if (string.startsWith('Length of')
           || string.startsWith('Width of')
           || string.startsWith('Depth of')
-          || string.startsWith('Diameter of')
+         // || string.startsWith('Diameter of')
           || string.startsWith('Distance between')
           || string.startsWith('Distance of')
           || string.startsWith('Number of')
           || string.startsWith('Count of')
           || app.numericalFlag === true
           && app.newCharacterFlag == false) {
-          if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'color' && ch[0].toLowerCase()!= 'presence' && ch[0].toLowerCase()!= 'shape' && ch[0].toLowerCase()!= 'texture' /*&& ch[0].toLowerCase()!= 'growth'*/ && ch[0].toLowerCase()!= 'number' && ch[0].toLowerCase()!= 'pubescence' && ch[0].toLowerCase()!= 'relative' && ch[0].toLowerCase()!= 'inflation' && ch[0].toLowerCase()!= 'orientation'){
+          if(app.numericalFlag == true && ch[0] != 'undefined' && (ch[0]+' '+ch[1]).toLowerCase()!= 'length of' && (ch[0]+' '+ch[1]).toLowerCase()!= 'width of' /*&& ch[0].toLowerCase()!= 'diameter'*/ && (ch[0]+' '+ch[1]).toLowerCase()!= 'depth of' && ch[0].toLowerCase()!= 'distance' && (ch[0]+' '+ch[1]).toLowerCase()!= 'number'){
             return false;
           }else {
             return true;
