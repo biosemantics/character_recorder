@@ -3055,6 +3055,7 @@ class HomeController extends Controller
             foreach ($values as $eachValue) {
                 if ($eachValue->header_id != 1) {
                     $eachValue->value = $value['value'];
+                    $eachValue->not_remove = $value['not_remove'];
                     $eachValue->save();
                 }
             }
