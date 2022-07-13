@@ -263,7 +263,7 @@
                   <div v-for="(eachTag, tagIndex) in standardCharactersTags" :key="tagIndex"
                        v-if="userCharacters.find(ch => ch.standard_tag == eachTag && ch.standard == 1)"
                        style="display: table; cursor: pointer;">
-                    <b>{{ eachTag }}</b>
+                    <b v-bind:style="{color:((branchedProximalmost == 'pistillate' || branchedDistalmost == 'pistillate' || unbranchedUnisexual == 'pistillate') && (eachTag.toLowerCase().trim() == 'anther' || eachTag.toLowerCase().trim() == 'staminate flower')) ? '#B2B2B2': ((branchedProximalmost == 'staminate' || branchedDistalmost == 'staminate' || unbranchedUnisexual == 'staminate') && (eachTag.toLowerCase().trim() == 'achene' || eachTag.toLowerCase().trim() == 'perigynium' || eachTag.toLowerCase().trim() == 'pistillate scale')) ? '#B2B2B2' : ''}">{{ eachTag }}</b>
                     <div v-for="(eachCharacter, index) in userCharacters"
                          :key="index"
                          v-if="eachCharacter.standard_tag == eachTag && (eachCharacter.standard == 1)"
@@ -271,7 +271,7 @@
                       <!-- <input type="checkbox" :id="'character_id'+eachCharacter.id"  name="use_character" v-model="eachCharacter.use_character"> -->
                       <i 
                         v-bind:style="{'font-weight': eachCharacter.deprecated >= 0 ? 'bold' : 'linear',
-                        color: ((branchedProximalmost == 'pistillate' || branchedDistalmost == 'pistillate' || unbranchedUnisexual == 'pistillate') && (eachCharacter.standard_tag.toLowerCase().trim() == 'anther' || eachCharacter.standard_tag.toLowerCase().trim() == 'staminate flower')) ? '#2a88bd' :  ((branchedProximalmost == 'staminate' || branchedDistalmost == 'staminate' || unbranchedUnisexual == 'staminate') && (eachCharacter.standard_tag.toLowerCase().trim() == 'achene' || eachCharacter.standard_tag.toLowerCase().trim() == 'perigynium' || eachCharacter.standard_tag.toLowerCase().trim() == 'pistillate scale')) ? '#2a88bd' : (eachCharacter.parent_term && eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f'
+                        color: ((branchedProximalmost == 'pistillate' || branchedDistalmost == 'pistillate' || unbranchedUnisexual == 'pistillate') && (eachCharacter.standard_tag.toLowerCase().trim() == 'anther' || eachCharacter.standard_tag.toLowerCase().trim() == 'staminate flower')) ? '#B2B2B2' :  ((branchedProximalmost == 'staminate' || branchedDistalmost == 'staminate' || unbranchedUnisexual == 'staminate') && (eachCharacter.standard_tag.toLowerCase().trim() == 'achene' || eachCharacter.standard_tag.toLowerCase().trim() == 'perigynium' || eachCharacter.standard_tag.toLowerCase().trim() == 'pistillate scale')) ? '#B2B2B2' : (eachCharacter.parent_term && eachCharacter.parent_term.endsWith('(general);') && userCharacters.filter(ch => ch.parent_term == eachCharacter.parent_term).length > 1) ? '#da7f38' : '#636b6f'
                       }"
                       >
                      {{
@@ -280,8 +280,8 @@
                         <a style="margin-left: 35px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                           <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench"></span>
                         </a>
-                        <a style="margin-left: 5px;" v-on:click="removeStandardCharacter(eachCharacter.id)">
-                          <span class="glyphicon glyphicon-remove"></span>
+                        <a  style="margin-left: 5px;" v-on:click="removeStandardCharacter(eachCharacter.id)">
+                          <span v-bind:style="{color:((branchedProximalmost == 'pistillate' || branchedDistalmost == 'pistillate' || unbranchedUnisexual == 'pistillate') && (eachCharacter.standard_tag.toLowerCase().trim() == 'anther' || eachCharacter.standard_tag.toLowerCase().trim() == 'staminate flower')) ? '#B2B2B2': ((branchedProximalmost == 'staminate' || branchedDistalmost == 'staminate' || unbranchedUnisexual == 'staminate') && (eachCharacter.standard_tag.toLowerCase().trim() == 'achene' || eachCharacter.standard_tag.toLowerCase().trim() == 'perigynium' || eachCharacter.standard_tag.toLowerCase().trim() == 'pistillate scale')) ? '#B2B2B2' : '#2a88bd'}" class="glyphicon glyphicon-remove"></span>
                         </a> 
                       </i>
 
@@ -8760,10 +8760,10 @@ export default {
           app.standardCharactersTooltip += '<div class="col-md-1" style="padding: 0px 2px !important;">';
           var  color = "white";
           if((app.branchedProximalmost == 'pistillate' || app.branchedDistalmost == 'pistillate' || app.unbranchedUnisexual == 'pistillate') && (postCharacters[i].standard_tag.toLowerCase().trim() == 'anther' || postCharacters[i].standard_tag.toLowerCase().trim() == 'staminate flower')){
-            color = '#2a88bd';
+            color = '#D9D9D9';
           }
           else if((app.branchedProximalmost == 'staminate' || app.branchedDistalmost == 'staminate' || app.unbranchedUnisexual == 'staminate') && (postCharacters[i].standard_tag.toLowerCase().trim() == 'achene' || postCharacters[i].standard_tag.toLowerCase().trim() == 'perigynium' || postCharacters[i].standard_tag.toLowerCase().trim() == 'pistillate scale')){
-            color = '#2a88bd';
+            color = '#D9D9D9';
           }
           app.standardCharactersTooltip = app.standardCharactersTooltip + '<h6 class="mb-0 mt-0 ml-0 mr-0" style="color:'+ color +';">' + postCharacters[i].name + '</h6>';
           app.standardCharactersTooltip += '</div>';
