@@ -75,6 +75,7 @@ Route::group([
         Route::post('update-unit',                      ['as' => 'update_unit',                 'uses' => 'HomeController@updateUnit']);
         Route::post('update-summary',                   ['as' => 'update_summary',              'uses' => 'HomeController@updateSummary']);
         Route::post('delete/{userId}/{characterId}',    ['as' => 'delete_character',            'uses' => 'HomeController@deleteCharacter']);
+        Route::post('delete-row-character/{userId}/{characterId}',    ['as' => 'delete_row_character',            'uses' => 'HomeController@deleteRowCharacter']);
         Route::post('multiple_delete',    ['as' => 'multiple_delete', 'uses' => 'HomeController@multipleDeleteCharacter']);
         Route::get('search_character',    ['as' => 'search_character', 'uses' => 'HomeController@searchCharacter']);
         Route::get('character-values',                           ['as' => 'character_values',            'uses' => 'HomeController@characterValues']);
