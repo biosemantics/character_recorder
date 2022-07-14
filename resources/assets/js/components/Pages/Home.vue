@@ -8885,7 +8885,7 @@ export default {
                   character.auto_fill_value = "pistillate, staminate";
                 }
 
-                if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == 'pistillate' || app.branchedProximalmost == 'pistillate')) {
+              /*  if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == 'pistillate' || app.branchedProximalmost == 'pistillate')) {
                   character.auto_fill_value = "pistillate";
                 }
 
@@ -8898,6 +8898,30 @@ export default {
                 }
 
                 if(splited[0] == 'sexuality of proximalmost' && (app.branchedDistalmost == 'pistillate' || app.branchedProximalmost == 'pistillate')) {
+                  character.auto_fill_value = "pistillate";
+                }*/
+
+                if(splited[0] == 'sexuality of proximalmost' && (app.branchedDistalmost == 'staminate' || app.branchedDistalmost == 'pistillate')) {
+                  character.auto_fill_value = "not applicable";
+                }
+
+                if(splited[0] == 'sexuality of proximalmost' && (app.branchedProximalmost == 'staminate')) {
+                  character.auto_fill_value = "staminate";
+                }
+
+                if(splited[0] == 'sexuality of proximalmost' && (app.branchedProximalmost == 'pistillate')) {
+                  character.auto_fill_value = "pistillate";
+                }
+
+                if(splited[0] == 'sexuality of distalmost' && (app.branchedProximalmost == 'staminate' || app.branchedProximalmost == 'pistillate')) {
+                  character.auto_fill_value = "not applicable";
+                }
+
+                if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == 'staminate')) {
+                  character.auto_fill_value = "staminate";
+                }
+
+                if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == 'pistillate')) {
                   character.auto_fill_value = "pistillate";
                 }
 
@@ -8933,7 +8957,7 @@ export default {
                   character.auto_fill_value = "pistillate";
                 }
                 if(splited[0] == 'number of pistillate') {
-                  //character.auto_fill_value = "pistillate";
+                  character.auto_fill_value = "not applicable";
                 }
                 if(splited[0] == 'number of inflorescence' ||  splited[0] == 'number of pistillate' || lowerCase == 'number of perigynia per proximal inflorescence unit' || lowerCase == 'number of perigynia per distal inflorescence unit' || splited[0] == 'shape of inflorescence' || lowerCase == 'shape of pistillate inflorescence unit' || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proximalmost' || splited[0] == 'sexuality of distalmost' || splited[0] == 'width of proximalmost' || splited[0] == 'length of proximalmost' || splited[0] == 'width of distalmost' || splited[0] == 'length of distalmost' || splited[0] == 'branching of inflorescence' ) {
                     postCharacters.push(character);
@@ -8949,7 +8973,7 @@ export default {
                   character.auto_fill_value = "staminate";
                 }
                 if(splited[0] == 'number of pistillate') {
-                  //character.auto_fill_value = "staminate";
+                  character.auto_fill_value = "not applicable";
                 }
                 if(splited[0] == 'number of inflorescence' ||  splited[0] == 'number of pistillate' || splited[0] == 'number of staminate' || splited[0] == 'shape of inflorescence' || lowerCase == "shape of staminate inflorescence unit" || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proximalmost' || splited[0] == 'sexuality of distalmost' || splited[0] == 'width of proximalmost' || splited[0] == 'length of proximalmost' || splited[0] == 'width of distalmost' || splited[0] == 'length of distalmost' || splited[0] == 'branching of inflorescence' ) {
                     postCharacters.push(character);
@@ -8963,14 +8987,14 @@ export default {
                 character.auto_fill_value = "bisexual";
               }
               if(splited[0] == 'number of bisexual') {
-               // character.auto_fill_value = "bisexual";
+                character.auto_fill_value = "not applicable";
               }
               if(splited[0] == 'number of pistillate' || lowerCase == 'number of staminate inflorescence units' || lowerCase == 'shape of pistillate inflorescence unit' || lowerCase == 'shape of staminate inflorescence unit' || lowerCase == 'number of staminate inflorescence units'){  
               }else {
                 postCharacters.push(character);
               }
             }else if(app.branched == 'mixed') {
-                if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == "pistillate" || app.branchedDistalmost == 'pistillate')) {
+                /*if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == "pistillate" || app.branchedDistalmost == 'pistillate')) {
                   character.auto_fill_value = "pistillate";
                 }
                 if(splited[0] == 'sexuality of proximalmost' && (app.branchedDistalmost == "staminate" || app.branchedDistalmost == 'staminate')) {
@@ -8996,6 +9020,38 @@ export default {
                 }
                 if(splited[0] == 'sexuality of proximalmost' && (app.branchedDistalmost == "gynaecandrous" || app.branchedDistalmost == 'gynaecandrous')) {
                   character.auto_fill_value = "gynaecandrous";
+                }*/
+
+                if(splited[0] == 'sexuality of proximalmost' && (app.branchedDistalmost == "staminate" || app.branchedDistalmost == 'pistillate' || app.branchedDistalmost == 'gynaecandrous' || app.branchedDistalmost == 'androgynous')) {
+                  character.auto_fill_value = "not applicable";
+                }
+                if(splited[0] == 'sexuality of proximalmost' && (app.branchedProximalmost == "staminate")) {
+                  character.auto_fill_value = "staminate";
+                }
+                if(splited[0] == 'sexuality of proximalmost' && (app.branchedProximalmost == "pistillate")) {
+                  character.auto_fill_value = "pistillate";
+                }
+                if(splited[0] == 'sexuality of proximalmost' && (app.branchedProximalmost == "gynaecandrous")) {
+                  character.auto_fill_value = "gynaecandrous";
+                }
+                if(splited[0] == 'sexuality of proximalmost' && (app.branchedProximalmost == "androgynous")) {
+                  character.auto_fill_value = "androgynous";
+                }
+
+                if(splited[0] == 'sexuality of distalmost' && (app.branchedProximalmost == "staminate" || app.branchedProximalmost == 'pistillate' || app.branchedProximalmost == 'gynaecandrous' || app.branchedProximalmost == 'androgynous')) {
+                  character.auto_fill_value = "not applicable";
+                }
+                if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == "staminate")) {
+                  character.auto_fill_value = "staminate";
+                }
+                if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == "pistillate")) {
+                  character.auto_fill_value = "pistillate";
+                }
+                if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == "gynaecandrous")) {
+                  character.auto_fill_value = "gynaecandrous";
+                }
+                if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == "androgynous")) {
+                  character.auto_fill_value = "androgynous";
                 }
 
                 if(splited[0] == 'number of inflorescence' ||  splited[0] == 'number of pistillate' || lowerCase == 'number of staminate inflorescence units' ||
