@@ -322,7 +322,6 @@ class HomeController extends Controller
                   $tem_total = 0;
                   $clone = 0;
                   foreach ($standardCharacters as $s => $st_character) {
- 
                     if($st_character->name == $dfCharacter->name) { 
                       if(strpos($st_character->owner_name, $username.'_ver_' ) === 0){
                         $clone = 1;
@@ -334,7 +333,8 @@ class HomeController extends Controller
                           $total = $total +1;
                           break;
                         }else {
-                          $check = DB::table('characters')
+                          $clone = 0;
+                          /*$check = DB::table('characters')
                                 ->where('name',$st_character->name)
                                 ->where(function($q) use($username) {
                                         $q->where('owner_name',$username)->orWhere('owner_name','like',$username.'_ver_'.'%');
@@ -344,7 +344,7 @@ class HomeController extends Controller
                           if(!empty($check) && $check->usage_count > 0) {
                             $total = $total +1;
                             break;
-                          }
+                          }*/
                         } 
                          
                       }
@@ -354,11 +354,9 @@ class HomeController extends Controller
                       }
 
                     }
-                  }
-                   
+                  }  
                 }
               } 
-
             }
             $dfCharacters[$key]->usage_count = $total;
             $dfCharacters[$key]->final_images = json_decode($dfCharacter->images,true);
@@ -647,7 +645,7 @@ class HomeController extends Controller
             Header::where('user_id', '=', Auth::id())->delete();
         }
 
-        /*$defaultCharacters = $this->getDefaultCharacters();
+        $defaultCharacters = $this->getDefaultCharacters();
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();
@@ -663,8 +661,42 @@ class HomeController extends Controller
             'defaultCharacters' => $defaultCharacters
         ];
 
-        return $data;*/
-        return [];
+        return $data;
+    }
+
+    public function deleteRowCharacter(Request $request, $userId, $characterId)
+    {
+      $user = User::where('id', '=', Auth::id())->first();
+      $username = explode('@', $user['email'])[0];
+      $character = Character::where('id', '=', $characterId)->first();
+      if (Character::where('name', '=', $character->name)->count() < 2) {
+          DefaultCharacter::where('name', '=', $character->name)->delete();
+      }
+      if (Character::where('standard_tag', '=', Character::where('id', '=', $characterId)->first()->standard_tag)
+              ->where('owner_name', '=', $username)
+              ->count() < 2) {
+          UserTag::where('tag_name', '=', Character::where('id', '=', $characterId)->first()->standard_tag)
+              ->where('user_id', '=', Auth::id())
+              ->delete();
+      }
+
+
+      Character::where('id', '=', $characterId)->delete();
+      if (Value::where('character_id', '=', $characterId)->first()) {
+          Value::where('character_id', '=', $characterId)->delete();
+      }
+
+      $characters = DB::table('characters')->where('owner_name', '=', $username)->get();
+
+      $usedCharacters = Character::where('owner_name', '=', $username)->get();
+      foreach ($usedCharacters as $usedCharacter) {
+          $usedCharacter->username = str_replace($username . ', ', '', $usedCharacter->username);
+          $usedCharacter->save();
+      }
+
+      if (!Character::where('owner_name', '=', $username)->first()) {
+          Header::where('user_id', '=', Auth::id())->delete();
+      }
     }
     
     // delete non select values during add matrix
@@ -762,6 +794,8 @@ class HomeController extends Controller
         $headerValues = Value::where('header_id', '=', 1)->get();
         $values = Value::join('headers', 'headers.id', '=', 'values.header_id')->where('headers.user_id', '=', $request->input('user_id'))->get();
         $temp = [];
+        $tempColor = [];
+        $tempNonColor = [];
         $valueFlag = [];
         foreach ($characters as $eachCharacter) {
             $valueFlag[$eachCharacter->id] = [];
@@ -786,13 +820,11 @@ class HomeController extends Controller
                     'header_id' => 1,
                     'value' => $eachCharacter->name,
                 ]);
-               /* array_push($temp, [
-                    'character_id' => $eachCharacter->id,
-                    'header_id' => 1,
-                    'value' => $eachCharacter->name,
-                ]);*/
-
-
+              /*array_push($temp, [
+                  'character_id' => $eachCharacter->id,
+                  'header_id' => 1,
+                  'value' => $eachCharacter->name,
+              ]);*/
             }
             foreach ($headers as $header) {
                 if ($valueFlag[$eachCharacter->id][$header->id]) {
@@ -818,31 +850,46 @@ class HomeController extends Controller
                                   'value' => $toValue,
                                   'not_remove' => $not_remove
                                 ]);
+                  /*array_push($temp, [
+                      'character_id' => $eachCharacter->id,
+                      'header_id' => $header->id,
+                      'value' => $toValue,
+                      'not_remove' => $not_remove
+                  ]);*/
+
                   if($colorCharacter == 1){
-                    ColorDetails::create([
+                    array_push($tempColor, [
+                        'value_id' => $valueCreated->id,
+                        'colored' => $eachCharacter->auto_fill_value,
+                        'not_remove' => $not_remove
+                    ]);
+                    /*ColorDetails::create([
                                   'value_id' => $valueCreated->id,
                                   'colored' => $eachCharacter->auto_fill_value,
                                   'not_remove' => $not_remove
-                                ]);
-                    Character::where('id',$eachCharacter->id)->update(['usage_count'=>1]);
+                                ]);*/
                   }
                   if($nonColorCharacter == 1) {
-                    NonColorDetails::create([
+                    array_push($tempNonColor, [
                       'value_id' => $valueCreated->id,
                       'main_value' => $eachCharacter->auto_fill_value,
                       'not_remove' => $not_remove
                     ]);
+                    /*NonColorDetails::create([
+                      'value_id' => $valueCreated->id,
+                      'main_value' => $eachCharacter->auto_fill_value,
+                      'not_remove' => $not_remove
+                    ]);*/
+                  }
+                  if($not_remove == 1) {
                     Character::where('id',$eachCharacter->id)->update(['usage_count'=>1]);
                   }
-                 /* array_push($temp, [
-                      'character_id' => $eachCharacter->id,
-                      'header_id' => $header->id,
-                      'value' => '',
-                  ]);*/
                 }
             }
         }
-        Value::insert($temp);
+        //Value::insert($temp);
+        ColorDetails::insert($tempColor);
+        NonColorDetails::insert($tempNonColor);
         $returnHeaders = $this->getHeaders();
         $returnValues = $this->getValuesByCharacter();
         $returnCharacters = $this->getArrayCharacters();

@@ -2913,6 +2913,48 @@
             </div>
           </transition>
         </div>
+        <div v-if="toRemoveRowConfirmFlag" @close="toRemoveRowConfirmFlag = false">
+          <transition name="modal">
+            <div class="modal-mask">
+              <div class="modal-wrapper">
+                <div class="modal-container">
+                  <div class="modal-header">
+                    <b>Confirm to remove?</b>
+                  </div>
+                  <div class="modal-body">
+                    <div>
+                      <b>Are you sure you want to remove
+                        {{ userCharacters.find(each => each.id == toRemoveCharacterId).name }}?</b>
+                    </div>
+                    <br/>
+                    <br/>
+                    <i v-if="userCharacters.find(each => each.id == toRemoveCharacterId).standard == 1">
+                      This recommended character can be restored by selecting the character in "Search/create character'
+                      search box (see the image below).
+                    </i>
+                    <i v-if="userCharacters.find(each => each.id == toRemoveCharacterId).standard == 0">
+                      This user-defined character may not be restored after being deleted if it is not used by others.
+                      But you can always recreate this character by selecting 'Click HERE to create new character' as
+                      shown in the image below.
+                    </i>
+                    <img src="images/remove_confirm_image.png">
+                  </div>
+                  <div class="modal-footer">
+                    <div class="row">
+                      <div class="col-md-12">
+                        <a class="btn btn-primary ok-btn"
+                           v-on:click="confirmRemoveRowCharacter()">
+                          Remove </a>
+                        <a v-on:click="toRemoveRowConfirmFlag = false"
+                           class="btn btn-danger">Cancel</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </transition>
+        </div>
         <div v-if="toRemoveStandardConfirmFlag" @close="toRemoveStandardConfirmFlag = false">
           <transition name="modal">
             <div class="modal-mask">
@@ -4105,6 +4147,7 @@ export default {
       confirmOverwriteFlag: false,
       toRemoveCharacterId: null,
       toRemoveStandardConfirmFlag: false,
+      toRemoveRowConfirmFlag: false,
       toRemoveHeaderId: null,
       toRemoveHeaderConfirmFlag: false,
       toCollapseConfirmFlag: false,
@@ -9166,11 +9209,20 @@ export default {
       console.log('index', index);
       app.userCharacters[index]['use_character']= 0;
     },
+    confirmRemoveRowCharacter() {
+      var app = this;
+      console.log('confirmRemoveRowCharacter');
+      axios.post("/chrecorder/public/api/v1/character/delete-row-character/" + app.user.id + "/" + app.toRemoveCharacterId)
+        .then(function (resp) {
+          window.location.reload()
+        });
+
+    },
     confirmRemoveCharacter() {
       var app = this;
       console.log('confirmRemoveCharacter');
       app.isLoading = true;
-      axios.post("api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
+      axios.post("/chrecorder/public/api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
         .then(function (resp) {
           app.isLoading = false;
           app.toRemoveCharacterId = null;
@@ -9178,6 +9230,7 @@ export default {
           app.userCharacters = resp.data.characters;
           app.headers = resp.data.headers;
           app.values = resp.data.values;
+          app.finalDefaultCharacters = resp.data.defaultCharacters;
           app.defaultCharacters = resp.data.defaultCharacters;
           if (app.userCharacters.length == 0) {
             app.matrixShowFlag = false;
@@ -9188,15 +9241,15 @@ export default {
             app.userTags = resp.data.userTags;
             if (app.userTags[0]) app.showTableForTab(app.userTags[0].tag_name);
           } else app.showTableForTab(app.currentTab);
-
-        })
-
+        });
     },
     removeUserCharacter(characterId) {
       var app = this;
+      console.log('removeUserCharacter');
       var oldUserTag = app.userCharacters.find(ch => ch.id == characterId).standard_tag;
       axios.post("api/v1/character/delete/" + app.user.id + "/" + characterId)
         .then(function (resp) {
+          app.finalDefaultCharacters = res.data.defaultCharacters;
           app.defaultCharacters = resp.data.defaultCharacters;
           app.refreshDefaultCharacters();
           app.userCharacters = resp.data.characters;
@@ -9993,6 +10046,7 @@ export default {
               app.character.third_character = thirdArray;
               axios.post('api/v1/character/add-character', app.character)
                 .then(function (resp) {
+                  app.isLoading = false;
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
                     var jsonUserTag = {
                       user_id: app.user.id,
@@ -10032,7 +10086,6 @@ export default {
                   app.enhanceFlag = false;
                   app.detailsFlag = false;
                   app.numericalFlag = false;
-                  app.isLoading = false;
                   app.showTableForTab(app.currentTab);
                   app.active_el = 0;
                   app.temp_files = [];
@@ -10078,6 +10131,7 @@ export default {
               app.character.third_character = thirdArray;
               axios.post("api/v1/character/create", app.character)
                 .then(function (resp) {
+                  app.isLoading = false;
                   if (!app.userCharacters.find(ch => ch.standard_tag == app.character.standard_tag)) {
                     var jsonUserTag = {
                       user_id: app.user.id,
@@ -10096,7 +10150,6 @@ export default {
                   app.refreshUserCharacters();
                   app.defaultCharacters = resp.data.defaultCharacters;
                   app.refreshDefaultCharacters();
-                  app.isLoading = false;
                   app.detailsFlag = false;
                   app.numericalFlag = false;
                   app.showTableForTab(app.currentTab);
@@ -10590,7 +10643,6 @@ export default {
           axios.post('api/v1/character/update', value)
             .then(function (resp) {
               app.isLoading = false;
-              console.log('saveItem', resp.data);
               if (resp.data.error_input == 1) {
                 event.target.style.color = 'red';
               } else {
@@ -10837,8 +10889,7 @@ export default {
       var app = this;
       app.toRemoveCharacterId = characterId;
       app.matrixSaved = false;
-      app.toRemoveStandardConfirmFlag = true;
-
+      app.toRemoveRowConfirmFlag = true;
     },
     changeUnit(characterId, unit) {
       var app = this;
@@ -14191,6 +14242,7 @@ export default {
       app.removeEachColorValue.username = app.user.name;
       axios.post('api/v1/remove-each-color-details', app.removeEachColorValue)
         .then(function (resp) {
+          app.isLoading = false;
           app.toRemoveColorValueConfirmFlag = false;
           app.colorDetails = resp.data.colorDetails;
           app.values = resp.data.values;
@@ -14200,7 +14252,6 @@ export default {
           app.allNonColorValues = resp.data.allNonColorValues;
           app.finalDefaultCharacters = resp.data.defaultCharacters;
           app.defaultCharacters = resp.data.defaultCharacters;
-          app.isLoading = false;
           app.refreshDefaultCharacters();
           app.getDeprecatedValue();
         }).catch(error => {
