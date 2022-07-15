@@ -90,7 +90,6 @@
                 <span class="ColorName">13</span>
                 <span class="ColorName">14</span>
                 <span class="ColorName">15</span>
-                <span class="ColorName">16</span>
                 <span class="ColorName"><b>B</b></span>
                 <span class="ColorName">17</span>
                 <span class="ColorName">18</span>
