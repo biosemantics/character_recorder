@@ -1084,20 +1084,6 @@ class HomeController extends Controller
       $oldValue = $value->value;
       $v = $request->input('value');
       $value->value = $v;
-//        if (is_numeric($v)) {
-//            $value->value = $v;
-//        } else {
-//            $varr = preg_split('/(?<=[0-9])(?=[a-z]+)/i',$v);
-//            if (count($varr)==2 && is_numeric($varr[0])) {
-//                $c = Character::find($value->character_id);
-//                if ($c->unit == $varr[1]) {
-//                    $value->value = $varr[0];
-//                } else {
-//                    return ['error_input' => 1];
-//                }
-//            }
-//        }
-
       $value->save();
       $character = Character::where('id', '=', $value->character_id)->first();
       $allValues = Value::where('character_id',$value->character_id)->where('header_id','!=',1)->get();
@@ -1112,6 +1098,68 @@ class HomeController extends Controller
           $character->usage_count = 0;
       }
       $character->save();
+      if($character->type == 'plant dioecious, pistillate' || $character->type == 'plant dioecious, staminate' || $character->type == 'bisexual') {
+        $other_key = '';
+        $other_id = '';
+        $other_header_id = '';
+        if($character->type == 'plant dioecious, pistillate'){
+          $otherCharacter = Character::where('name','Number of pistillate inflorescence units')->where('owner_name',$character->owner_name)->first();
+        }
+        if($character->type == 'plant dioecious, staminate'){
+          $otherCharacter = Character::where('name','Number of staminate inflorescence units')->where('owner_name',$character->owner_name)->first();
+        }
+        if($character->type == 'bisexual'){
+          $otherCharacter = Character::where('name','Number of bisexual inflorescence units')->where('owner_name',$character->owner_name)->first();
+        }
+        if($otherCharacter) {
+          foreach ($allValues as $vKey => $allValue) {
+            if($allValue->id == $data['id']) {
+              $other_key = $vKey;
+              break;
+            }
+          }
+          $otherAllValues = Value::where('character_id',$otherCharacter->id)->where('header_id','!=',1)->get();
+          foreach ($otherAllValues as $oKey => $otherValue) {
+            if($other_key == $oKey) {
+              $other_id = $otherValue->id;
+              $other_header_id = $otherValue->header_id;
+              break;
+            }
+          }
+          $other = Value::where('id', '=', $other_id)->first();
+          $request_values = explode(",", $request->input('value'));
+          $exist_values = explode(",",$other->value);
+          $oldValues = explode(",", $oldValue);
+          if(count($exist_values)> 0 && count($request_values) > 0){
+            foreach ($exist_values as $ekey => $eValue) {
+              if(in_array($eValue, $oldValues)) {
+                unset($exist_values[$ekey]);
+              }else {
+                if(!empty($eValue)){
+                  $request_values[] = $eValue;
+                }
+              } 
+            }
+            $ov = implode(',',$request_values);
+          }else {
+            $ov = $request->input('value');
+          }
+          $other->value = $ov;
+          $other->save();
+          $otherCount = DB::table('values')->where('character_id', '=', $otherCharacter->id)
+          ->where('value', '<>', '')
+          ->where('value', '<>', null)
+          ->where('value', '<>', $otherCharacter->name)
+          ->count();
+          if ($otherCount > 0) {
+            $otherCharacter->usage_count = 1;
+            $otherCharacter->save();
+          } else {
+            $otherCharacter->usage_count = 0;
+            $otherCharacter->save();
+          }
+        }
+      }
       if(!empty($data['last_load_matrix'])){
         $final_key = '';
         $final_id = '';
@@ -1133,6 +1181,7 @@ class HomeController extends Controller
             }
           }
           $value = Value::where('id', '=', $final_id)->first();
+          $oldValue = $value->value;
           $v = $request->input('value');
           $value->value = $v;
           $value->save();
@@ -1147,6 +1196,64 @@ class HomeController extends Controller
               $copyCharacter->usage_count = 0;
           }
           $copyCharacter->save();
+          if($copyCharacter->type == 'plant dioecious, pistillate' || $copyCharacter->type == 'plant dioecious, staminate' || $character->type == 'bisexual') {
+            $other_key = '';
+            $other_id = '';
+            $other_header_id = '';
+            if($copyCharacter->type == 'plant dioecious, pistillate'){
+              $otherCharacter = Character::where('name','Number of pistillate inflorescence units')->where('owner_name',$copyCharacter->owner_name)->first();
+            }
+            if($copyCharacter->type == 'plant dioecious, staminate'){
+              $otherCharacter = Character::where('name','Number of staminate inflorescence units')->where('owner_name',$copyCharacter->owner_name)->first();
+            }
+            if($copyCharacter->type == 'bisexual'){
+              $otherCharacter = Character::where('name','Number of bisexual inflorescence units')->where('owner_name',$copyCharacter->owner_name)->first();
+            }
+            if($otherCharacter) {
+              foreach ($copyAllValues as $vKey => $allValue) {
+                if($allValue->id == $data['id']) {
+                  $other_key = $vKey;
+                  break;
+                }
+              }
+              $otherAllValues = Value::where('character_id',$otherCharacter->id)->where('header_id','!=',1)->get();
+              foreach ($otherAllValues as $oKey => $otherValue) {
+                if($other_key == $oKey) {
+                  $other_id = $otherValue->id;
+                  $other_header_id = $otherValue->header_id;
+                  break;
+                }
+              }
+              $otherMatrix = Value::where('id', '=', $other_id)->first();
+              $request_values = explode(",", $request->input('value'));
+              $exist_values = explode(",",$otherMatrix->value);
+              $oldValues = explode(",", $oldValue);
+              if(count($exist_values)> 0 && count($request_values) > 0){
+                foreach ($exist_values as $ekey => $eValue) {
+                  if(in_array($eValue, $oldValues)) {
+                    unset($exist_values[$ekey]);
+                  } 
+                }
+               $ov = implode(',',array_merge($exist_values,$request_values));
+              }else {
+                $ov = $request->input('value');
+              }
+              $otherMatrix->value = $ov;
+              $otherMatrix->save();
+              $otherCount = DB::table('values')->where('character_id', '=', $otherCharacter->id)
+              ->where('value', '<>', '')
+              ->where('value', '<>', null)
+              ->where('value', '<>', $otherCharacter->name)
+              ->count();
+              if ($otherCount > 0) {
+                $otherCharacter->usage_count = 1;
+                $otherCharacter->save();
+              } else {
+                $otherCharacter->usage_count = 0;
+                $otherCharacter->save();
+              }
+            }
+          }
         }
         
       }
@@ -1174,7 +1281,7 @@ class HomeController extends Controller
         $username = explode('@', $user['email'])[0];
 
         $order = Character::max('order') + 1;
-        $characters = Character::where('owner_name', '=', $username)->select('name', 'IRI', 'method_from', 'method_to', 'method_include', 'method_exclude', 'method_where', 'owner_name','standard_tag','auto_fill_value')->get();
+        $characters = Character::where('owner_name', '=', $username)->select('name', 'IRI', 'method_from', 'method_to', 'method_include', 'method_exclude', 'method_where', 'owner_name','standard_tag','auto_fill_value','type')->get();
         Character::where('owner_name', '=', $username)/*->where('standard_tag','inflorescence')->orWhere('standard_tag','inflorescence unit')*/->delete();
         $userTags = UserTag::where('user_id', '=', Auth::id())->get();
         $newCharacters = [];
@@ -1201,6 +1308,7 @@ class HomeController extends Controller
             'order',
             'show_flag',
             'auto_fill_value',
+            'type'
         ];
 
         foreach ($standardCharacters as $eachCharacter) {
@@ -4176,6 +4284,7 @@ class HomeController extends Controller
                 'show_flag' => $eachCharacter['show_flag'],
                 'numeric_flag' => $eachCharacter['numeric_flag'],
                 'auto_fill_value' => $eachCharacter['auto_fill_value'],
+                'type' => $eachCharacter['type'],
                 'created_at' => date("Y-m-d") . " " . date("H:i:s"),
                 'updated_at' => date("Y-m-d") . " " . date("H:i:s")
             ]);

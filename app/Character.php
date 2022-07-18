@@ -26,6 +26,7 @@ class character extends Model
         'images',
         'numeric_flag',
         'auto_fill_value',
+        'type',
     ];
     //
 }
