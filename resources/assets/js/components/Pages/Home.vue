@@ -8683,7 +8683,7 @@ export default {
       }else {
         return false;
       }
-       for (var i = 0; i < app.standardCollections.length; i++) {
+      for (var i = 0; i < app.standardCollections.length; i++) {
         var character = app.standardCollections[i];
         character.auto_fill_value = '';
         var standard_tag = character.standard_tag.toLowerCase().trim();
@@ -8740,7 +8740,7 @@ export default {
                 character.auto_fill_value = 'not applicable';
               }
             }
-            if(splited[0] == 'branching of inflorescence'){
+            if(lowerCase == 'branching of inflorescence units'){
               character.auto_fill_value = app.branchedType; 
             }
             if(app.branched == 'unisexual') {
@@ -8948,7 +8948,7 @@ export default {
             postCharacters.push(character);
           /*}*/
         }  
-      }    
+      }
       var toolTopIndex = 0;
       app.standardCharactersTooltip = "";
       for (var j = 0; j < app.standardCharactersTags.length; j++) {
@@ -14528,15 +14528,19 @@ export default {
     },
     confirmOverwrite() {
       var app = this;
-
+      app.isLoading = true;
       axios.post('api/v1/overwrite-value', app.copyValue)
         .then(function (resp) {
+          app.isLoading = false;
           app.confirmOverwriteFlag = false;
           app.values = resp.data.values;
           app.preList = resp.data.preList;
           app.postList = resp.data.postList;
           app.allColorValues = resp.data.allColorValues;
           app.allNonColorValues = resp.data.allNonColorValues;
+          app.defaultCharacters = resp.data.defaultCharacters;
+          app.finalDefaultCharacters = resp.data.defaultCharacters;
+          app.refreshDefaultCharacters();
           app.getDeprecatedValue();
         }).catch(error => {
           window.location.reload()

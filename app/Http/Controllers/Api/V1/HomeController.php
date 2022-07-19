@@ -3206,16 +3206,68 @@ class HomeController extends Controller
 
         $characterName = Character::where('id', '=', $value['character_id'])->first()->name;
         $values = Value::where('character_id', '=', $value['character_id'])->get();
+      
+        $characterInfo = Character::where('id', '=', $value['character_id'])->first();
 
+        $oldValues = array();
         if ($selectedValue->value != null) {
 
-            foreach ($values as $eachValue) {
+            foreach ($values as $keyVal => $eachValue) {
                 if ($eachValue->header_id != 1) {
+                    $oldValues[$keyVal] = explode(",", $eachValue->value);
                     $eachValue->value = $value['value'];
                     $eachValue->not_remove = $value['not_remove'];
                     $eachValue->save();
                 }
             }
+          if($characterInfo->type == 'plant dioecious, pistillate' || $characterInfo->type == 'plant dioecious, staminate' || $characterInfo->type == 'bisexual' ) {
+            $other_key = '';
+            $other_id = '';
+            $other_header_id = '';
+            if($characterInfo->type == 'plant dioecious, pistillate'){
+              $otherCharacter = Character::where('name','Number of pistillate inflorescence units')->where('owner_name',$characterInfo->owner_name)->first();
+            }
+            if($characterInfo->type == 'plant dioecious, staminate'){
+              $otherCharacter = Character::where('name','Number of staminate inflorescence units')->where('owner_name',$characterInfo->owner_name)->first();
+            }
+            if($characterInfo->type == 'bisexual'){
+              $otherCharacter = Character::where('name','Number of bisexual inflorescence units')->where('owner_name',$characterInfo->owner_name)->first();
+            }
+            $usage_count = 0;
+            if($otherCharacter) {
+              $otherValues = Value::where('character_id', '=', $otherCharacter->id)->get();
+              $request_values = explode(',',$value['value']);
+              foreach ($otherValues as $oKey => $otherValue) {
+                if ($otherValue->header_id != 1) {
+                  $newValues = array();
+                  $newValues = $request_values;
+                  $exist_values = explode(",",$otherValue->value);
+                  if(count($exist_values)>0){
+                    foreach ($exist_values as $ekey => $eValue) {
+                      if(in_array($eValue, $oldValues[$oKey])) {
+                        unset($exist_values[$ekey]);
+                      }else {
+                        if(!empty($eValue)){
+                          $newValues[] = $eValue;
+                        }
+                      } 
+                    } 
+                  }
+                  if(count($newValues)>0){
+                    $usage_count = 1;
+                  }
+                  $otherValue->value = implode(",",$newValues);
+                  $otherValue->save();
+                }
+              }
+
+              Character::where('id',$otherCharacter->id)->update(['usage_count'=>$usage_count]);
+              
+            }
+                    
+
+          }
+
         } else if (substr($characterName, 0, 5) === "Color") {
             $colorDetails = ColorDetails::where('value_id', '=', $selectedValue->id)->get();
             if ($colorDetails) {
@@ -3279,12 +3331,14 @@ class HomeController extends Controller
 
         $constraints = $this->getDefaultConstraint($characterName);
         $returnAllDetailValues = $this->getAllDetails();
+        $returnDefaultCharacters = $this->getDefaultCharacters();
         $data = [
             'values' => $returnValues,
             'allColorValues' => $returnAllDetailValues['colorValues'],
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
+            'default_characters' => $returnDefaultCharacters
         ];
 
         return $data;
