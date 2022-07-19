@@ -1377,6 +1377,8 @@ class HomeController extends Controller
             if(DefaultCharacter::where('name',$addDefault['name'])->count() == 0 ){
               $addDefault['order'] = null;
               $addDefault['standard'] = 0;
+              unset($addDefault['auto_fill_value']);
+              unset($addDefault['type']);
               $finalCharacters[] = $addDefault;
             }
           }
