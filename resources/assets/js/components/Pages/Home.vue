@@ -310,7 +310,7 @@
                         <a style="margin-left: 35px;" v-on:click="onResolveUserCharacter(eachCharacter)">
                           <span v-if="eachCharacter.deprecated >= 0" class="glyphicon glyphicon-wrench"></span>
                         </a>
-                        <a  style="margin-left: 5px;" v-on:click="removeStandardCharacter(eachCharacter.id)">
+                        <a  style="margin-left: 5px;" v-on:click="eachCharacter.auto_fill_value != undefined ? (eachCharacter.auto_fill_value == 'not applicable' ? '' : removeStandardCharacter(eachCharacter.id)) : removeStandardCharacter(eachCharacter.id)">
                           <!-- <span v-bind:style="{color:((branchedProximalmost == 'pistillate' || branchedDistalmost == 'pistillate' || unbranchedUnisexual == 'pistillate') && (eachCharacter.standard_tag.toLowerCase().trim() == 'anther' || eachCharacter.standard_tag.toLowerCase().trim() == 'staminate flower')) ? '#B2B2B2': ((branchedProximalmost == 'staminate' || branchedDistalmost == 'staminate' || unbranchedUnisexual == 'staminate') && (eachCharacter.standard_tag.toLowerCase().trim() == 'achene' || eachCharacter.standard_tag.toLowerCase().trim() == 'perigynium' || eachCharacter.standard_tag.toLowerCase().trim() == 'pistillate scale')) ? '#B2B2B2' : '#2a88bd'}" class="glyphicon glyphicon-remove"></span> -->
                           <span v-bind:style="{color: eachCharacter.auto_fill_value != undefined ? (eachCharacter.auto_fill_value == 'not applicable' ? '#B2B2B2' : '#2a88bd'): '#2a88bd'}" class="glyphicon glyphicon-remove"></span>
                         </a> 
@@ -8791,6 +8791,9 @@ export default {
                 if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == 'pistillate')) {
                   character.auto_fill_value = "pistillate";
                 }
+                if(lowerCase == 'number of inflorescence units') {
+                  character.type = null;
+                }
                 if(lowerCase == 'relative size of secondary inflorescence units compared to primary inflorescence units' || splited[0] == 'number of inflorescence' ||  splited[0] == 'number of pistillate' || lowerCase == 'number of staminate inflorescence units' || splited[0] == 'shape of inflorescence' || lowerCase == 'shape of pistillate inflorescence unit' || lowerCase == "shape of staminate inflorescence unit" || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proximalmost' || splited[0] == 'sexuality of distalmost' || splited[0] == 'width of proximalmost' || splited[0] == 'length of proximalmost' || splited[0] == 'width of distalmost' || splited[0] == 'length of distalmost' || splited[0] == 'branching of inflorescence' ) {
                   postCharacters.push(character);
                 }else{
@@ -8898,6 +8901,9 @@ export default {
               }
               if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == "androgynous")) {
                 character.auto_fill_value = "androgynous";
+              }
+              if(lowerCase == 'number of inflorescence units') {
+                character.type = null;
               }
 
               if(lowerCase == 'relative size of secondary inflorescence units compared to primary inflorescence units' || splited[0] == 'number of inflorescence' ||  splited[0] == 'number of pistillate' || lowerCase == 'number of staminate inflorescence units' ||
@@ -9142,6 +9148,9 @@ export default {
                 if(splited[0] == 'sexuality of distalmost' && (app.branchedDistalmost == 'pistillate')) {
                   character.auto_fill_value = "pistillate";
                 }
+                if(lowerCase == 'number of inflorescence units') {
+                  character.type = null;
+                }
                 if(lowerCase == 'relative size of secondary inflorescence units compared to primary inflorescence units' || splited[0] == 'number of inflorescence' ||  splited[0] == 'number of pistillate' || lowerCase == 'number of staminate inflorescence units' || splited[0] == 'shape of inflorescence' || lowerCase == 'shape of pistillate inflorescence unit' || lowerCase == "shape of staminate inflorescence unit" || splited[0] == 'texture of internode' || splited[0] == 'length of internode' || splited[0] == 'length of peduncle' || splited[0] == 'texture of peduncle' || splited[0] == 'width of proximal' || splited[0] == 'length of proximal' || splited[0] == 'branchedness of inflorescence' || splited[0] == 'flower sexual arrangement' || splited[0] == 'sexuality of proximalmost' || splited[0] == 'sexuality of distalmost' || splited[0] == 'width of proximalmost' || splited[0] == 'length of proximalmost' || splited[0] == 'width of distalmost' || splited[0] == 'length of distalmost' || splited[0] == 'branching of inflorescence' ) {
                   postCharacters.push(character);
                 }else{
@@ -9226,6 +9235,9 @@ export default {
                 postCharacters.push(character);
               }
             }else if(app.branched == 'mixed') {
+              if(lowerCase == 'number of inflorescence units') {
+                character.type = null;
+              }
               if(splited[0] == 'sexuality of proximalmost' && (app.branchedProximalmost == "staminate")) {
                 character.auto_fill_value = "staminate";
               }
@@ -9355,8 +9367,11 @@ export default {
     confirmRemoveRowCharacter() {
       var app = this;
       console.log('confirmRemoveRowCharacter');
+      app.isLoading = true;
       axios.post("/chrecorder/public/api/v1/character/delete-row-character/" + app.user.id + "/" + app.toRemoveCharacterId)
         .then(function (resp) {
+          window.location.reload()
+        }).catch(error => {
           window.location.reload()
         });
 
@@ -9384,6 +9399,8 @@ export default {
             app.userTags = resp.data.userTags;
             if (app.userTags[0]) app.showTableForTab(app.userTags[0].tag_name);
           } else app.showTableForTab(app.currentTab);
+        }).catch(error => {
+          window.location.reload()
         });
     },
     removeUserCharacter(characterId) {

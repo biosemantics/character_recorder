@@ -8,14 +8,14 @@
                 <span style="font-size: 16px;">This section demonstrates queries the user can execute against the character data. The system aggregates the data entered by all users each night into a RDF graph, which is used to support the search. Due to the <i>nightly</i> aggregation schedule, only data enter the day before can be queried.</span>
             </div>
             <div>
-                <a
+                <router-link
                     class="btn btn-primary"
                     style = "float: left; padding: 2px;"
-                    href="/chrecorder/public"
+                    :to="'/'"
                     v-tooltip="{ content:'<div>Go back to workspace</div>' }"
                 >
                     <span class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span>
-                </a>
+                </router-link>
             </div>
             <div style="margin-left: 35px; margin-top: 5px;">
                 <div class="row">

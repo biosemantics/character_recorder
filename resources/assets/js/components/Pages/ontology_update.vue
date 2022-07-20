@@ -8,8 +8,8 @@
         </h3>
       </div>
       <div>
-        <a class="btn btn-primary" style="float: left; padding: 2px;" href="/chrecorder/public"><span
-          class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span></a>
+        <router-link  class="btn btn-primary" style="float: left; padding: 2px;" :to="'/'"><span
+          class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span></router-link>
       </div>
       <div style="margin-left: 35px">
         <div class="row">
