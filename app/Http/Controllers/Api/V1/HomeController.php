@@ -3338,7 +3338,7 @@ class HomeController extends Controller
             'allNonColorValues' => $returnAllDetailValues['nonColorValues'],
             'preList' => $constraints['preList'],
             'postList' => $constraints['postList'],
-            'default_characters' => $returnDefaultCharacters
+            'defaultCharacters' => $returnDefaultCharacters
         ];
 
         return $data;
