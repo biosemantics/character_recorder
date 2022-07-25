@@ -1771,7 +1771,7 @@
                                   Method
                                   </a>
                                 </li>
-                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),(((!checkHaveUnit(character.name) ||  firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth'  || firstCharacterChange  != 'distance' ||
+                                <li :class="['unit',(completeElement.includes('unit') ? 'back-green':''),(((!checkHaveUnit(character.name,'unit') ||  firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth'  || firstCharacterChange  != 'distance' ||
                                 firstCharacterChange  != 'diameter' ||
                                 firstCharacterChange  != 'count' || 
                                 firstCharacterChange  != 'radius' || 
@@ -1785,7 +1785,8 @@
                                     :disabled="(firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth' || firstCharacterChange  != 'distance' || 
                                     firstCharacterChange  != 'diameter' ||
                                     firstCharacterChange  != 'count' ||
-                                    firstCharacterChange  != 'radius')"
+                                    firstCharacterChange  != 'radius' || 
+                                    firstCharacterChange  != 'number')"
                                     v-on:click="((!checkHaveUnit(character.name) ||  firstCharacterChange  == 'number') && (firstCharacterChange  != 'length' || firstCharacterChange  != 'width' || firstCharacterChange  != 'depth'  || firstCharacterChange  != 'distance' ||
                                     firstCharacterChange  != 'diameter' ||
                                     firstCharacterChange  != 'count' || 
@@ -5467,19 +5468,23 @@ export default {
         }
       } else {
         var ch = app.character.name.toLowerCase().split(" ");
-        if(ch[0] != undefined && ch[1] !== undefined){
-          if(ch[0]+' '+ch[1] == 'length of' || ch[0]+' '+ch[1] == "width of" || ch[0]+' '+ch[1] == 'depth of' || ch[0]+' '+ch[1] == 'diameter of' || ch[0]+' '+ch[1] == 'count of' || ch[0]+' '+ch[1] == 'radius of' || ch[0]+' '+ch[1] == 'distance of' || ch[0]+' '+ch[1] == 'distance between' || ch[0]+' '+ch[1] == 'count of' || /*(*/ch[0]+' '+ch[1] == 'number of' /*&& app.numericalFlag == false ) */|| ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'diameter' && ch[0]!= 'count' && ch[0]!= 'radius' && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'number') ){
+        if(ch[0] != undefined){
+          if(ch[0] == 'length' || ch[0] == "width" || ch[0] == 'depth' || ch[0] == 'diameter' || ch[0] == 'count' || ch[0] == 'radius' || ch[0] == 'distance' || ch[0] == 'count' || /*(*/ch[0] == 'number' /*&& app.numericalFlag == false ) */|| ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'diameter' && ch[0]!= 'count' && ch[0]!= 'radius' && ch[0]!= 'depth' && ch[0]!= 'distance' && ch[0]!= 'number') ){
             app.active_el = 'method';
           }else {
-            app.active_el = 'tag'
+            if(app.numericalFlag == true && ch[0] != 'number') {
+              app.active_el = 'method';
+            }else {
+             app.active_el = 'tag';
+            }
           }
         }
         var checkTab = 0;
         if(ch[0] != 'undefined' && ( app.numericalFlag == false && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' && ch[0]!= 'diameter' && ch[0]!= 'count' && ch[0]!= 'radius' && ch[0]!= 'distance'  && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' && ch[0]!= 'number')) {
           var type = 'method';
         }else if(app.numericalFlag == true && ch[0]!= 'length' && ch[0]!= 'width' && ch[0]!= 'depth' && ch[0]!= 'diameter' && ch[0]!= 'count' && ch[0]!= 'radius' && ch[0]!= 'distance' && ch[0]!= 'presence' && ch[0]!= 'shape' && ch[0]!= 'texture' && ch[0]!= 'number' ){
-          var type = 'tag';
-          checkTab = 1;
+          var type = 'method';
+          //checkTab = 1;
         }else {
           var type = "";
         }
@@ -8328,15 +8333,17 @@ export default {
       if(app.numericalFlag == false && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'diameter' && app.firstCharacterChange!= 'count' && app.firstCharacterChange!= 'radius' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'number') {
         var type = 'method';
       }else if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'diameter' && app.firstCharacterChange!= 'count' && app.firstCharacterChange!= 'radius' && app.firstCharacterChange!= 'distance'&& app.firstCharacterChange!= 'number'){
-        var type = 'tag';
+
+        var type = 'method';
       }else {
         var type = '';
       }
-     if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'diameter' && app.firstCharacterChange!= 'count' && app.firstCharacterChange!= 'radius' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'number'){
-        app.parentData = '';
-        app.metadataFlag = 'tag';
-        app.currentMetadata = tag;
-     }else {
+     /*if(app.numericalFlag == true && app.firstCharacterChange!= 'length' && app.firstCharacterChange!= 'width' && app.firstCharacterChange!= 'depth' && app.firstCharacterChange!= 'diameter' && app.firstCharacterChange!= 'count' && app.firstCharacterChange!= 'radius' && app.firstCharacterChange!= 'distance' && app.firstCharacterChange!= 'number'){
+
+        app.parentData = [];
+        app.metadataFlag = 'method';
+        app.currentMetadata = method;
+     }else {*/
       if (app.checkHaveUnit(app.character.name,type)) {
         // Initializing the methodFieldData //
         app.methodFieldData.fromTerm = null;
@@ -8377,15 +8384,13 @@ export default {
         app.metadataFlag = 'tag';
         app.currentMetadata = tag;
       }
-     }
+     //}
      
       var ch_name = app.character.name.split(' ')[0].toLowerCase();
-      var joinCharacter = (ch_name+' '+app.middleCharacter).toLowerCase();
-      console.log('joinCharacter',joinCharacter);
-      if(joinCharacter == 'length of' || joinCharacter == "width of" || joinCharacter == 'depth of' || joinCharacter == 'diameter of' || joinCharacter == 'distance of' || joinCharacter == 'distance between' || joinCharacter == 'count of' || joinCharacter == 'radius of' || joinCharacter == 'number of' || ( app.numericalFlag == false && ch_name!= 'length' && ch_name!= 'width' && ch_name!= 'depth' && ch_name!= 'diameter' && ch_name!= 'radius' && ch_name!= 'count' && ch_name!= 'distance' && ch_name!= 'number')) {
+      if(ch_name == 'length' || ch_name == "width" || ch_name == 'depth' || ch_name == 'diameter' || ch_name == 'distance' || ch_name == 'count' || ch_name == 'radius' || ch_name == 'number' || ( app.numericalFlag == false && ch_name!= 'length' && ch_name!= 'width' && ch_name!= 'depth' && ch_name!= 'diameter' && ch_name!= 'radius' && ch_name!= 'count' && ch_name!= 'distance' && ch_name!= 'number')) {
         app.active_el = 'method';
       }else if(app.numericalFlag == true && ch_name!= 'length' && ch_name!= 'width' && ch_name!= 'depth' && ch_name!= 'diameter' && ch_name!= 'count' && ch_name!= 'radius' && ch_name!= 'distance' && ch_name!= 'number'){
-        app.active_el = 'tag';
+        app.active_el = 'method';
       }else {
         app.active_el = 'tag';
       }
@@ -9886,7 +9891,10 @@ export default {
             console.log(ch[0]);
             if(ch[0] == 'length' || ch[0] == 'depth' || ch[0] == 'width' ||ch[0] == 'distance' || ch[0] == 'diameter' || ch[0] == 'radius' || ch[0] == 'count') {
             }else {
-              checkFields = true;
+              if(app.numericalFlag == true && ch[0] != 'number') {
+              }else {
+                checkFields = true;
+              }
             }
           }
           if (checkFields) {
@@ -10721,7 +10729,7 @@ export default {
           axios.get('api/v1/user-tag/' + app.user.id)
             .then(function (resp) {
               app.userTags = resp.data;
-              app.showTableForTab(app.currentTab);
+              app.showTableForTab();
             }).catch(error => {
               window.location.reload()
             });
@@ -11284,19 +11292,19 @@ export default {
       }else {
         var character = app.userCharacters.find(each => each.name === string);
         if(type == 'unit' ) {
-          if (string.startsWith('Length of')
-            || string.startsWith('Width of')
-            || string.startsWith('Depth of')
-            || string.startsWith('Diameter of')
-            || string.startsWith('Distance between')
-            || string.startsWith('Distance of')
-            || string.startsWith('Count of')
-            || string.startsWith('Radius of')
+            if (string.startsWith('Length')
+            || string.startsWith('Width')
+            || string.startsWith('Depth')
+            || string.startsWith('Diameter')
+            || string.startsWith('Distance')
+            || string.startsWith('Distance')
+            || string.startsWith('Count')
+            || string.startsWith('Radius')
             || app.numericalFlag === true
             && app.newCharacterFlag == false) {
             return true;
           } else if (character) {
-            if (character.summary && !string.startsWith('Number of')) {
+            if (character.summary && !string.startsWith('Number')) {
               return true;
             } else {
               return false;
@@ -11305,24 +11313,24 @@ export default {
             return false;
           }
         }
-        else if (string.startsWith('Length of')
-          || string.startsWith('Width of')
-          || string.startsWith('Depth of')
-          || string.startsWith('Diameter of')
-          || string.startsWith('Distance between')
-          || string.startsWith('Distance of')
-          || string.startsWith('Number of')
-          || string.startsWith('Count of')
-          || string.startsWith('Radius of')
+        else if (string.startsWith('Length')
+          || string.startsWith('Width')
+          || string.startsWith('Depth')
+          || string.startsWith('Diameter')
+          || string.startsWith('Distance')
+          || string.startsWith('Distance')
+          || string.startsWith('Number')
+          || string.startsWith('Count')
+          || string.startsWith('Radius')
           || app.numericalFlag === true
-          && app.newCharacterFlag == false) {
-          if(app.numericalFlag == true && ch[0] != 'undefined' && (ch[0]+' '+ch[1]).toLowerCase()!= 'length of' && (ch[0]+' '+ch[1]).toLowerCase()!= 'width of' && (ch[0]+' '+ch[1]).toLowerCase()!= 'diameter of' && (ch[0]+' '+ch[1]).toLowerCase()!= 'depth of' && (ch[0]+' '+ch[1]).toLowerCase()!= 'count of' && (ch[0]+' '+ch[1]).toLowerCase()!= 'radius of' && ch[0].toLowerCase()!= 'distance' && (ch[0]+' '+ch[1]).toLowerCase()!= 'number of'){
+          && app.newCharacterFlag == false) {  
+         /* if(app.numericalFlag == true && ch[0] != 'undefined' && ch[0].toLowerCase()!= 'length' && ch[0].toLowerCase()!= 'width' && ch[0].toLowerCase()!= 'diameter' && ch[0].toLowerCase()!= 'depth' && ch[0].toLowerCase()!= 'count' && ch[0].toLowerCase()!= 'radius' && ch[0].toLowerCase()!= 'distance' && ch[0].toLowerCase()!= 'number'){
             return false;
-          }else {
+          }else {*/
             return true;
-          }
+          //}
         } else if (character) {
-          if (character.summary && !string.startsWith('Number of')) {
+          if (character.summary && !string.startsWith('Number')) {
             return true;
           } else {
             return false;

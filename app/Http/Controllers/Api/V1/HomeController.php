@@ -2140,8 +2140,8 @@ class HomeController extends Controller
       }
       $dfCharacter = DB::table('default_characters')->where('name',$character[0])->count();
       $standardCharacters = DB::table('characters')->where('name',$character[0])->get()->toArray();
+      $total_names = array();
       if($dfCharacter > 0) {
-        $total_names = array();
         foreach ($users as $u => $username) {
           if(strrchr($username,"_ver_") == ''){    
             $tem_total = 0;
@@ -4639,6 +4639,10 @@ class HomeController extends Controller
         User::where('password', '')->delete();
         User::where('id', '=', Auth::id())->update(['last_matrix' => '']);
         DefaultCharacter::whereRaw('1')->delete();
+        CharacterValue::whereraw('1')->delete();
+        $files =   Storage::allFiles('public');
+        Storage::delete($files);
+
     }
 
     public function updateStandardCharacter()
