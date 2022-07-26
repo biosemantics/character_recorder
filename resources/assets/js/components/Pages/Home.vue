@@ -14631,7 +14631,7 @@ export default {
       var app = this;
       var characterName = row.find(each => each.header_id == 1).value;
       var currentCharacter = app.userCharacters.find(each => each.name == characterName);
-      if (currentCharacter.summary || characterName.startsWith("Number ")) {
+      if (currentCharacter.summary || characterName.startsWith("Number ") ) {
         if (row.find(each => (each.header_id != 1 && each.value != null && each.value != ''))) {
           var sum = 0;
           var tempRpArray = [];
@@ -14682,7 +14682,7 @@ export default {
             return "mean=" + mean + "<br/>" + "range=" + range;
           }
         }
-
+        return "mean=" + '' + "<br/>" + "range=" + '';
       }
       return ''
     },
