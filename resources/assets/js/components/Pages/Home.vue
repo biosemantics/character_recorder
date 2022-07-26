@@ -3683,6 +3683,7 @@
     <viewer :images="images"
             class="viewer" ref="viewer"
             @inited="inited"
+            :options ="{'movable':false,'zoomable':false}"
     >
       <img v-for="(src, index) in images" :src="src" :key="index" style="display: none;">
     </viewer>
