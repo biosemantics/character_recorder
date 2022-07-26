@@ -1019,6 +1019,60 @@
                                     class="w-full"
                                     style="height: 26px;"
                                     @input="onChangeRoundsOneThird(index,round.fourth)"
+                                    v-on:focus="nounUndefined = false;
+                                                secondNounUndefined = false;
+                                                lastCharacterDefinition = '';
+                                                firstCharacterUndefined = false;
+                                                firstCharacterDefinition = ''
+                                                firstCharacterDeprecated = false;
+                                                firstCharacterDeprecatedNotifyMessage = '';
+                                                firstCharacterNotRecommend = false;
+                                                firstCharacterNotRecommendNotifyMessage = '';
+                                                firstCharacterSynonym = false;
+                                                firstCharacterSynonymNotifyMessage = '';
+                                                firstCharacterBroadSynonym = false;
+                                                firstCharacterBroadSynonymNotifyMessage = '';
+                                                thirdCharacterUndefined = false;
+                                                thirdCharacterDefinition = ''
+                                                thirdCharacterDeprecated = false;
+                                                thirdCharacterDeprecatedNotifyMessage = '';
+                                                thirdCharacterNotRecommend = false;
+                                                thirdCharacterNotRecommendNotifyMessage = '';
+                                                thirdCharacterSynonym = false;
+                                                thirdCharacterSynonymNotifyMessage = '';
+                                                thirdCharacterBroadSynonym = false;
+                                                thirdCharacterBroadSynonymNotifyMessage = '';
+                                                secondThirdCharacterUndefined = false;
+                                                secondThirdCharacterDefinition = ''
+                                                secondThirdCharacterDeprecated = false;
+                                                secondThirdCharacterDeprecatedNotifyMessage = '';
+                                                secondThirdCharacterNotRecommend = false;
+                                                secondThirdCharacterNotRecommendNotifyMessage = '';
+                                                secondThirdCharacterSynonym = false;
+                                                secondThirdCharacterSynonymNotifyMessage = '';
+                                                secondThirdCharacterBroadSynonym = false;
+                                                secondThirdCharacterBroadSynonymNotifyMessage = '';
+                                                wholeCharacterUndefined=false;
+                                                wholeCharacterDefinition='';
+                                                firstNounDeprecated=false;
+                                                firstNounDeprecatedNotifyMessage='';
+                                                secondLastCharacterDefinition='';
+                                                secondNounDeprecated=false;
+                                                secondNounDeprecatedNotifyMessage='';
+                                                firstNounNotRecommend=false;
+                                                firstNounNotRecommendNotifyMessage='';
+                                                secondNounNotRecommend=false;
+                                                secondNounNotRecommendNotifyMessage='';
+                                                firstNounSynonym=false;
+                                                firstNounSynonymNotifyMessage='';
+                                                firstNounBroadSynonym=false;
+                                                firstNounBroadSynonymNotifyMessage='';
+                                                secondNounSynonym=false;
+                                                secondNounSynonymNotifyMessage='';
+                                                secondNounBroadSynonym=false;
+                                                secondNounBroadSynonymNotifyMessage='';
+                                                input();
+                                                "
                                   />
                                   <ul>
                                     <template v-for="(nounCharacter,key) in roundsOne[index].thirdCh">
@@ -1363,6 +1417,60 @@
                                         class="width-100"
                                         style="height: 26px;"
                                         @input="onChangeRoundsTwoThird(index,round.fourth)"
+                                        v-on:focus="nounUndefined = false;
+                                                secondNounUndefined = false;
+                                                lastCharacterDefinition = '';
+                                                firstCharacterUndefined = false;
+                                                firstCharacterDefinition = ''
+                                                firstCharacterDeprecated = false;
+                                                firstCharacterDeprecatedNotifyMessage = '';
+                                                firstCharacterNotRecommend = false;
+                                                firstCharacterNotRecommendNotifyMessage = '';
+                                                firstCharacterSynonym = false;
+                                                firstCharacterSynonymNotifyMessage = '';
+                                                firstCharacterBroadSynonym = false;
+                                                firstCharacterBroadSynonymNotifyMessage = '';
+                                                thirdCharacterUndefined = false;
+                                                thirdCharacterDefinition = ''
+                                                thirdCharacterDeprecated = false;
+                                                thirdCharacterDeprecatedNotifyMessage = '';
+                                                thirdCharacterNotRecommend = false;
+                                                thirdCharacterNotRecommendNotifyMessage = '';
+                                                thirdCharacterSynonym = false;
+                                                thirdCharacterSynonymNotifyMessage = '';
+                                                thirdCharacterBroadSynonym = false;
+                                                thirdCharacterBroadSynonymNotifyMessage = '';
+                                                secondThirdCharacterUndefined = false;
+                                                secondThirdCharacterDefinition = ''
+                                                secondThirdCharacterDeprecated = false;
+                                                secondThirdCharacterDeprecatedNotifyMessage = '';
+                                                secondThirdCharacterNotRecommend = false;
+                                                secondThirdCharacterNotRecommendNotifyMessage = '';
+                                                secondThirdCharacterSynonym = false;
+                                                secondThirdCharacterSynonymNotifyMessage = '';
+                                                secondThirdCharacterBroadSynonym = false;
+                                                secondThirdCharacterBroadSynonymNotifyMessage = '';
+                                                wholeCharacterUndefined=false;
+                                                wholeCharacterDefinition='';
+                                                firstNounDeprecated=false;
+                                                firstNounDeprecatedNotifyMessage='';
+                                                secondLastCharacterDefinition='';
+                                                secondNounDeprecated=false;
+                                                secondNounDeprecatedNotifyMessage='';
+                                                firstNounNotRecommend=false;
+                                                firstNounNotRecommendNotifyMessage='';
+                                                secondNounNotRecommend=false;
+                                                secondNounNotRecommendNotifyMessage='';
+                                                firstNounSynonym=false;
+                                                firstNounSynonymNotifyMessage='';
+                                                firstNounBroadSynonym=false;
+                                                firstNounBroadSynonymNotifyMessage='';
+                                                secondNounSynonym=false;
+                                                secondNounSynonymNotifyMessage='';
+                                                secondNounBroadSynonym=false;
+                                                secondNounBroadSynonymNotifyMessage='';
+                                                input();
+                                                "
                                       />
                                       <ul>
                                         <template v-for="(nounCharacter,key) in roundsTwo[index].thirdCh">
@@ -6109,13 +6217,24 @@ export default {
 
       if(app.roundsOne.length > 0) {
         $.each(app.roundsOne, function (i, item) {
-          if(item.round_val == 'S') {
-            wholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-          }else if(item.round_val == 'P') {
-            wholeCharacter += ' ' + item.fifth;
-          }else if(item.round_val == 'D'){
-            wholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+          if(item.fourth != null && item.fourth != '') {
+            if(item.round_val == 'S') {
+              wholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+            }else if(item.round_val == 'P') {
+              wholeCharacter += ' ' + item.fifth;
+            }else if(item.round_val == 'D'){
+              wholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+            } 
+          }else {
+            if(item.round_val == 'S') {
+              wholeCharacter += ' ' + item.second + ' ' + item.fifth;
+            }else if(item.round_val == 'P') {
+              wholeCharacter += ' ' + item.fifth;
+            }else if(item.round_val == 'D'){
+              wholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fifth;
+            }
           }
+          
         });   
       }
       if (app.middleCharacter == 'between') {
@@ -6126,13 +6245,24 @@ export default {
         }
         if(app.roundsTwo.length > 0) {
           $.each(app.roundsTwo, function (i, item) {
-            if(item.round_val == 'S') {
-              wholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
-            }else if(item.round_val == 'P') {
-              wholeCharacter += ' ' + item.fifth;
-            }else if(item.round_val == 'D'){
-              wholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+            if(item.fourth != null && item.fourth != '') {
+              if(item.round_val == 'S') {
+                wholeCharacter += ' ' + item.second + ' ' + item.fourth + ' ' + item.fifth;
+              }else if(item.round_val == 'P') {
+                wholeCharacter += ' ' + item.fifth;
+              }else if(item.round_val == 'D'){
+                wholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fourth + ' ' + item.fifth;
+              }
+            } else {
+              if(item.round_val == 'S') {
+                wholeCharacter += ' ' + item.second + ' ' + item.fifth;
+              }else if(item.round_val == 'P') {
+                wholeCharacter += ' ' + item.fifth;
+              }else if(item.round_val == 'D'){
+                wholeCharacter += ' ' + item.first + ' ' +item.third + ' ' + item.fifth;
+              }
             }
+            
           });   
         }
       }
