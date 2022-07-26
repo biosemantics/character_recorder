@@ -523,7 +523,7 @@
                       </div>
                       <div v-else style="width: 80%; float:left; text-align: center"
                            v-on:click.self="value.not_remove == 1 ? '' : focusedValue(value)">
-                        <div v-if="allColorValues.some(function(item){ return item.value_id != value.id && (value.value == 'not applicable' || value.value == 'applicable but value not recorded')})" style="text-align: left" v-on:click.self="value.not_remove == 1 ? '' : focusedValue(value)"
+                        <div v-if="value.value == 'not applicable' || value.value == 'applicable but value not recorded'" style="text-align: left" v-on:click.self="value.not_remove == 1 ? '' : focusedValue(value)"
                           >{{value.value}}
                         </div>
                       
