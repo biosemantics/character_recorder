@@ -6101,9 +6101,9 @@ export default {
         }
       }
     
-      let wholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
+      var wholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.lastCharacter;
       if(app.thirdCharacter != null && app.thirdCharacter != '') {
-        let wholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
+         wholeCharacter = app.firstCharacter + ' ' + app.middleCharacter + ' ' + app.thirdCharacter + ' ' + app.lastCharacter;
       }
 
       if(app.roundsOne.length > 0) {
