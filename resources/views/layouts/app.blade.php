@@ -16,6 +16,7 @@
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
     <link href="{{ asset('css/ldbtn.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/loading.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Hotjar Tracking Code for shark.sbs.arizona.edu/chrecorder/public -->
 {{--    <script>--}}
 {{--        (function(h,o,t,j,a,r){--}}
@@ -152,12 +153,12 @@
                 </div>
                 <div class="row">
                     <div class="col-md-4">
-                        <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
+                       <!--  <a id="top-user" href="{{ url('/leader-board') }}" style="text-decoration: none">
                             <div style="height: 34px;padding-top: 10px;">
                                 <img src="{{ asset('images/crown.png') }}" style="display: inline"/>
-                                <div class="explore" style="font-family: Arial; display: inline; vertical-align: bottom">{{ getTopUser() }}</div>
+                                <div class="explore" id="top_user" style="font-family: Arial; display: inline; vertical-align: bottom">fetching data...</div>
                             </div>
-                        </a>
+                        </a> -->
                     </div>
                     <div class="col-md-1">
                     </div>
@@ -229,4 +230,13 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}?v=2019_04_25"></script>
 </body>
+<!-- <script> 
+$(document).ready(function(){
+    $.ajax({
+        url: "get_top_user", 
+        success: function(result){
+        $('#top_user').text(result)
+    }});
+});
+</script> -->
 </html>

@@ -8,33 +8,32 @@ import OntologyUpdate from './components/Pages/ontology_update.vue';
 import SharedCharacter from './components/Pages/shared_character.vue';
 
 const routes = [
-    // {
-    //     path: '/home',
-    //     component: Home,
-    //     name: 'home'
-    // },
     {
-        path: '/chrecorder/public/',
+        path: '/home',
+        redirect: '/'
+    },
+    {
+        path: '/',
         component: Home,
         name: 'home'
     },
     {
-        path: '/chrecorder/public/leader-board',
+        path: '/leader-board',
         component: LeaderBoard,
         name: 'leader_board'
     },
     {
-        path: '/chrecorder/public/explore-character',
+        path: '/explore-character',
         component: ExploreCharacter,
         name: 'explore_character'
     },
     {
-        path: '/chrecorder/public/ontology-update',
+        path: '/ontology-update',
         component: OntologyUpdate,
         name: 'ontology_update'
     },
     {
-        path: '/chrecorder/public/shared-character',
+        path: '/shared-character',
         component: SharedCharacter,
         name: 'shared_character'
     },

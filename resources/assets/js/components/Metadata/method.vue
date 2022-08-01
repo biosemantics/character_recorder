@@ -14,24 +14,25 @@
         <div class="col-md-12" v-if="!methodEntry">
             Loading...
         </div>
+
         <div v-if="methodEntry">
             <!--<div class="col-md-12" v-if="noneMethod == false && methodArray.length > 0">
                 Please select one illustration that matching your measurement methods.
             </div> -->
-            <div v-for="(each, index) in methodEntry.resultAnnotations"
+            <!-- <div v-for="(each, index) in methodEntry.resultAnnotations"
                  :key="index"
                  v-if="noneMethod == false && each.property == 'http://biosemantics.arizona.edu/ontologies/carex#elucidation'"
-                 class="col-md-6">
+                 class="col-md-6"> -->
                  <!-- <label>{{ each.value.substring(1, each.value.length - 1) }}</label>
                  <label>{{ each.value.indexOf('id=') < 0 ?
                         each.value.slice(each.value.indexOf('file/d/') + 7, each.value.indexOf('/view?usp=')) :
                         each.value.split('id=')[1].substring(0, each.value.split('id=')[1].length - 1) }}</label> -->
-                <img class="img-method"
+                <!-- <img class="img-method"
                      v-bind:class="{ greenBorder: illustratorProperty[index] }"
                      v-on:click="clickedMethod(index, each.clickMethodValue)"
                      v-bind:id="'img-method-' + index" style="width: 100%;"
                      v-bind:src="'https://drive.google.com/uc?id=' + each.src"/>
-            </div>
+            </div> -->
             <div v-if="!noneMethod && methodEntry.resultAnnotations && methodEntry.resultAnnotations.length > 0 && !edit_created_other && !editFlag" class="col-md-12 text-right">
                 <a class="btn btn-primary" v-on:click="noneOfAbove()">None of above</a>
             </div>
@@ -44,14 +45,29 @@
                 <!--</div>-->
                 <div class="col-md-12">
                 </div>
-                <div class="col-md-12" style="margin-top: 10px;">
-                    <label class="col-md-3 text-right">From:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('From')" class="col-md-8" v-model="methodFrom"
-                           @keyup="saveMeasureItems" name="methodFrom"/>
-                    <p v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
-                    <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
+                <div class="col-md-12" v-if=" ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'diameter' || ch_name == 'distance' || ch_name == 'number' || ch_name == 'count' || ch_name == 'radius'"  style="margin-top: 10px;">
+                    <div class="row">
+                        <label class="col-md-3 text-right">From:</label>
+                        <div class="col-md-8"> 
+                            <div class="selectDataList">
+                                <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('From')" class="width-100" v-model="methodFrom"
+                                        @keyup="saveMeasureItems" name="methodFrom"/>
+                                <!-- <datalist id="method_characters">
+                                    <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                                </datalist> -->    
+                                <ul>
+                                    <li v-on:click="handleMethodFrom(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodFromQuery">{{nounCharacter}}
+                                    </li>
+                                </ul> 
+                            </div> 
+                        </div> 
+                        <p class="col-md-1" v-if="fromId != null || greenTick.from == true" style="color: green;">&#10004;</p>
+                    </div>
+                    <div class="row"> 
+                        <a v-if="fromNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.from }"
                        v-on:mouseover="needMore('from')">Need info on new terms:</a>
-                    <div class="col-md-12" v-if="formViewFlag.from == true">
+                    </div>
+                    <div class="row" v-if="formViewFlag.from == true">
                         <div class="col-md-12" v-if="fromSynonyms.length > 0">
                             {{ methodFrom }}: is a synonym of
 
@@ -79,84 +95,142 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-top: 10px;">
-                    <label class="col-md-3 text-right">To:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('To')" class="col-md-8" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
-                    <p v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
-                    <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
-                       v-on:mouseover="needMore('to')">Need info on new terms:</a>
+
+                <div class="col-md-12" v-if="ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'diameter' || ch_name == 'distance'  || ch_name == 'number' || ch_name == 'count' || ch_name == 'radius'" style="margin-top: 10px;">
+                    <div class="row">
+                        <label class="col-md-3 text-right">To:</label>
+                        <div class="col-md-8"> 
+                            <div class="selectDataList">
+                                <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('To')" class="width-100" v-model="methodTo" @keyup="saveMeasureItems" name="methodTo"/>
+                                <!-- <datalist id="to_characters">
+                                    <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                                </datalist>  -->  
+                                <ul>
+                                    <li v-on:click="handleMethodTo(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodToQuery">{{nounCharacter}}
+                                    </li>
+                                </ul> 
+                            </div>
+                        </div>
+
+                        <p class="col-md-1" v-if="toId != null || greenTick.to == true" style="color: green;">&#10004;</p>
+                    </div>
+                    <div class="row">
+                        <a v-if="toNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.to }"
+                        v-on:mouseover="needMore('to')">Need info on new terms:</a>
+                    </div>
+
                     <div class="col-md-12" v-if="formViewFlag.to == true">
-                        <div class="col-md-12" v-if="toSynonyms.length > 0">
-                            {{ methodTo }}: is a synonym of
-                        </div>
-                        <div class="col-md-12" v-if="toSynonyms.length > 0">
-                            <a class="btn btn-basic" v-on:click="addSynonym('to', each)" v-tooltip="each.tooltip"
-                               v-for="(each, index) in toSynonyms" :key="index">
-                                {{ each.term }}
-                            </a>
-                            <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('to')">None of above, add the
-                                term to Dictionary</a>
-                        </div>
-                        <div class="col-md-12" v-if="noneSynonymFlag.to == true">
-                            <div>
-                                Add the following to the dictionary:
+                        <div class="row">
+                            <div class="col-md-12" v-if="toSynonyms.length > 0">
+                                {{ methodTo }}: is a synonym of
                             </div>
-                            <a class="btn btn-primary col-md-4" v-on:click="addTerm('to', methodTo)"
-                               style="padding: 3px 8px;"> {{ methodTo }} </a>
-                            <!-- <div class="col-md-7"
-                                 style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
-                                <input v-model="definition.to" style="max-width: 120px;"/>
-                                <a class="btn btn-primary" v-on:click="addUserSynonym('to', definition.to)"
-                                   style="padding: 1px 4px;">Add</a>
-                            </div> -->
+                            <div class="col-md-12" v-if="toSynonyms.length > 0">
+                                <a class="btn btn-basic" v-on:click="addSynonym('to', each)" v-tooltip="each.tooltip"
+                                v-for="(each, index) in toSynonyms" :key="index">
+                                    {{ each.term }}
+                                </a>
+                                <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('to')">None of above, add the
+                                    term to Dictionary</a>
+                            </div>
+                            <div class="col-md-12" v-if="noneSynonymFlag.to == true">
+                                <div>
+                                    Add the following to the dictionary:
+                                </div>
+                                <a class="btn btn-primary col-md-4" v-on:click="addTerm('to', methodTo)"
+                                style="padding: 3px 8px;"> {{ methodTo }} </a>
+                                <!-- <div class="col-md-7"
+                                    style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
+                                    <input v-model="definition.to" style="max-width: 120px;"/>
+                                    <a class="btn btn-primary" v-on:click="addUserSynonym('to', definition.to)"
+                                    style="padding: 1px 4px;">Add</a>
+                                </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-top: 10px;">
-                    <label class="col-md-3 text-right">Include:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Include')" class="col-md-8" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
-                    <p v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
-                    <a v-if="includeNeedMore == true" class="red col-md-12"
-                       v-bind:class="{ green: needMoreGreen.include }" v-on:mouseover="needMore('include')">Need info on new
-                        terms:</a>
+
+                <div class="col-md-12" v-if="ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'diameter' || ch_name == 'distance' || ch_name == 'number' || ch_name == 'count' || ch_name == 'radius'" style="margin-top: 10px;">
+                    <div class="row">
+                        <label class="col-md-3 text-right">Include:</label>
+                        <div class="col-md-8"> 
+                            <div class="selectDataList">
+                                <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Include')" class="width-100" v-model="methodInclude" @keyup="saveMeasureItems" name="methodInclude"/>
+                                <!-- <datalist id="include_characters">
+                                    <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                                </datalist>   -->
+                                <ul>
+                                    <li v-on:click="handleMethodInclude(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodIncludeQuery">{{nounCharacter}}
+                                    </li>
+                                </ul>
+                            </div> 
+                        </div>
+                        <p class="col-md-1" v-if="includeId != null || greenTick.include == true" style="color: green;">&#10004;</p>
+                    </div>
+
+                    <div class="row">
+                        <a v-if="includeNeedMore == true" class="red col-md-12"
+                        v-bind:class="{ green: needMoreGreen.include }" v-on:mouseover="needMore('include')">Need info on new
+                            terms:</a>
+                    </div>
+
                     <div class="col-md-12" v-if="formViewFlag.include == true">
-                        <div class="col-md-12" v-if="includeSynonyms.length > 0">
-                            {{ methodInclude }}: is a synonym of
-                        </div>
-                        <div class="col-md-12" v-if="includeSynonyms.length > 0">
-                            <a class="btn btn-basic" v-on:click="addSynonym('include', each)" v-tooltip="each.tooltip"
-                               v-for="(each, index) in includeSynonyms" :key="index">
-                                {{ each.term }}
-                            </a>
-                            <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('include')">None of above, add
-                                the term to Dictionary</a>
-                        </div>
-                        <div class="col-md-12" v-if="noneSynonymFlag.include == true">
-                            <div>
-                                Add the following to the dictionary:
+                        <div class="row">
+                            <div class="col-md-12" v-if="includeSynonyms.length > 0">
+                                {{ methodInclude }}: is a synonym of
                             </div>
-                            <a class="btn btn-primary col-md-4" v-on:click="addTerm('include', methodInclude)"
-                               style="padding: 3px 8px;"> {{ methodInclude }} </a>
-                            <!-- <div class="col-md-7"
-                                 style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
-                                <input v-model="definition.include" style="max-width: 120px;"/>
-                                <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.include)"
-                                   style="padding: 1px 4px;">Add</a>
-                            </div> -->
+                            <div class="col-md-12" v-if="includeSynonyms.length > 0">
+                                <a class="btn btn-basic" v-on:click="addSynonym('include', each)" v-tooltip="each.tooltip"
+                                v-for="(each, index) in includeSynonyms" :key="index">
+                                    {{ each.term }}
+                                </a>
+                                <a class="col-md-12 btn btn-basic" v-on:click="noneSynonym('include')">None of above, add
+                                    the term to Dictionary</a>
+                            </div>
+                            <div class="col-md-12" v-if="noneSynonymFlag.include == true">
+                                <div>
+                                    Add the following to the dictionary:
+                                </div>
+                                <a class="btn btn-primary col-md-4" v-on:click="addTerm('include', methodInclude)"
+                                style="padding: 3px 8px;"> {{ methodInclude }} </a>
+                                <!-- <div class="col-md-7"
+                                    style="border: 1px solid grey; border-radius: 4px; margin-left: 10px;">
+                                    <input v-model="definition.include" style="max-width: 120px;"/>
+                                    <a class="btn btn-primary" v-on:click="addUserSynonym('from', definition.include)"
+                                    style="padding: 1px 4px;">Add</a>
+                                </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-12" style="margin-top: 10px;">
-                    <label class="col-md-3 text-right">Exclude:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Exclude')" class="col-md-8" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
-                    <p v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
+
+                <div class="col-md-12" v-if="ch_name == 'length' || ch_name == 'width' || ch_name == 'depth' || ch_name == 'diameter' || ch_name == 'distance' || ch_name == 'number' || ch_name == 'count' || ch_name == 'radius'" style="margin-top: 10px;">
+                    <div class="row">
+                        <label class="col-md-3 text-right">Exclude:</label>
+                        <div class="col-md-8">
+                            <div class="selectDataList">
+                                <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Exclude')" class="width-100" v-model="methodExclude" @keyup="saveMeasureItems" name="methodExclude"/>
+                                <!-- <datalist id="exclude_characters">
+                                    <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                                </datalist>   -->
+                                <ul>
+                                    <li v-on:click="handleMethodExclude(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodExcludeQuery">{{nounCharacter}}
+                                    </li>
+                                </ul>  
+                            </div> 
+                        </div>
+
+                        <p class="col-md-1" v-if="excludeId != null || greenTick.exclude == true" style="color: green;">&#10004;</p>
+                    </div>
+
                     <a v-if="excludeNeedMore == true" class="red col-md-12"
                        v-bind:class="{ green: needMoreGreen.exclude }" v-on:mouseover="needMore('exclude')">Need info on new
                         terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.exclude == true">
+
                         <div class="col-md-12" v-if="excludeSynonyms.length > 0">
                             {{ methodExclude }}: is a synonym of
                         </div>
+
                         <div class="col-md-12" v-if="excludeSynonyms.length > 0">
                             <a class="btn btn-basic" v-on:click="addSynonym('exclude', each)" v-tooltip="each.tooltip"
                                v-for="(each, index) in excludeSynonyms" :key="index">
@@ -180,10 +254,25 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-12" style="margin-top: 10px;">
-                    <label class="col-md-3 text-right">Where:</label>
-                    <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Where')" class="col-md-8" v-model="methodWhere" @keyup="saveMeasureItems" name="methodWhere"/>
-                    <p v-if="whereId != null || greenTick.where == true" style="color: green;">&#10004;</p>
+                    <div class="row">
+                        <label class="col-md-3 text-right">Where:</label>
+                        <div class="selectDataList col-md-8"> 
+                            <div class="selectDataList">
+                                <input :disabled="viewFlag || edit_created_other || editFlag" v-on:blur="userLog('Where')" class="width-100" v-model="methodWhere" @keyup="saveMeasureItems" name="methodWhere"/>
+                                <!-- <datalist id="where_characters">
+                                    <option :value="noun_character" v-for="noun_character in noun_characters">{{noun_character}}</option>
+                                </datalist>   -->
+                                <ul>
+                                    <li v-on:click="handleMethodWhere(nounCharacter)" :value="nounCharacter" v-for="nounCharacter in resultMethodWhereQuery">{{nounCharacter}}
+                                    </li>
+                                </ul> 
+                            </div>
+                        </div>  
+
+                        <p class="col-md-1" v-if="whereId != null || greenTick.where == true" style="color: green;">&#10004;</p>
+                    </div>
                     <a v-if="whereNeedMore == true" class="red col-md-12" v-bind:class="{ green: needMoreGreen.where }"
                        v-on:mouseover="needMore('where')">Need info on new terms:</a>
                     <div class="col-md-12" v-if="formViewFlag.where == true">
@@ -230,6 +319,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <a class="btn btn-primary" v-on:click="confirmTerm(newTermDefinition)">Add</a>
+                                        <a v-on:click="cancelConfirmTerm()" class="btn btn-danger">Cancel</a>
                                     </div>
                                 </div>
                             </div>
@@ -254,6 +344,7 @@
                 shared: true,
                 childData: [],
                 character_name: null,
+                ch_name: null,
                 viewFlag: false,
                 edit_created_other: true,
                 editFlag: false,
@@ -264,6 +355,11 @@
                 methodInclude: null,
                 methodExclude: null,
                 methodWhere: null,
+                methodFromNew: null,
+                methodToNew: null,
+                methodIncludeNew: null,
+                methodExcludeNew: null,
+                methodWhereNew: null,
                 fromId: null,
                 fromTerm: null,
                 toId: null,
@@ -338,9 +434,77 @@
                 }
             }
         },
+        computed: {
+          resultMethodFromQuery(){
+            if(this.methodFrom){
+            return this.noun_characters.filter((item)=>{
+              return this.methodFrom.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+          resultMethodToQuery(){
+            if(this.methodTo){
+            return this.noun_characters.filter((item)=>{
+              return this.methodTo.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+          resultMethodIncludeQuery(){
+            if(this.methodInclude){
+            return this.noun_characters.filter((item)=>{
+              return this.methodInclude.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+          resultMethodExcludeQuery(){
+            if(this.methodExclude){
+            return this.noun_characters.filter((item)=>{
+              return this.methodExclude.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+          resultMethodWhereQuery(){
+            if(this.methodWhere){
+            return this.noun_characters.filter((item)=>{
+              return this.methodWhere.toLowerCase().split(' ').every(v => item.toLowerCase().includes(v))
+            })
+            }else{
+              return this.noun_characters;
+            }
+          },
+        },
         methods: {
+            handleMethodFrom(val){
+              this.handleDataFc(4,val);
+              this.methodFrom = val;
+            },
+            handleMethodTo(val){
+              this.handleDataFc(5,val);
+              this.methodTo = val;
+            },
+            handleMethodInclude(val){
+              this.handleDataFc(6,val);
+              this.methodInclude = val;
+            },
+            handleMethodExclude(val){
+              this.handleDataFc(7,val);
+              this.methodExclude = val;
+            },
+            handleMethodWhere(val){
+              this.handleDataFc(8,val);
+              this.methodWhere = val;
+            },
             // maybe onchagne may onclick whatever..
-            handleDataFc: function () {
+            handleDataFc: function (key,val) {
+                this.childData[key] = val;
                 this.$emit('interface', this.childData); // handle data and give it back to parent by interface
             },
             noneSynonym: function (setting) {
@@ -363,6 +527,10 @@
                 app.newTerm = definition;
                 app.currentSetting = setting;
                 app.modalFlag = true;
+            },
+            cancelConfirmTerm() {
+              var app = this;
+              app.modalFlag = false;
             },
             confirmTerm: function (definition) {
                 var app = this;
@@ -499,7 +667,6 @@
                     app.childData[8] = app.methodWhere;
 
                     console.log('childData', app.childData);
-
                     app.$emit('interface', app.childData);
                 }
 
@@ -525,7 +692,6 @@
                 app.childData[6] = app.methodInclude;
                 app.childData[7] = app.methodExclude;
                 app.childData[8] = app.methodWhere;
-
                 this.$emit('interface', app.childData);
 
                 let t_action_detail = '';
@@ -887,6 +1053,13 @@
         beforeMount () {
             var app = this;
             this.character_name = sessionStorage.getItem("characterName");
+            this.noun_characters = sessionStorage.getItem("nounCharacters").split(',');
+            var ch = this.character_name.split(" ");
+            if(ch[0] != undefined) {
+                app.ch_name = ch[0].toLowerCase();
+            }else {
+                app.ch_name = '';
+            }
             this.viewFlag = (sessionStorage.getItem('viewFlag') == 'true');
             this.editFlag = (sessionStorage.getItem('editFlag') == 'true');
             this.edit_created_other = (sessionStorage.getItem('edit_created_other')=='true');

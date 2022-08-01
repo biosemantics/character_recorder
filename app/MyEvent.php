@@ -24,6 +24,129 @@ class MyEvent implements ShouldBroadcast
     public function __construct($detailData = null)
     {
         $beforeOneWeek = date('Y-m-d h:m:s', strtotime('-7 days'));
+        // fetch all records corresponding values with characters and  retrieve first row of data from color_details and non_color_details 
+        $allValues =    \DB::table('values')
+                        ->leftJoin('characters', 'characters.id', '=', 'values.character_id')
+                        ->select( 'values.*' ,'characters.id As chId', 'characters.owner_name',
+                        \DB::raw('(select value_id from  non_color_details where value_id  =   values.id  order by id asc limit 1) as ncid'),  
+                        \DB::raw('(select value_id from  color_details where value_id  =   values.id  order by id asc limit 1) as cid'), 
+                        \DB::raw('(select updated_at from  color_details where value_id  =   values.id  order by id asc limit 1) as cDate'),
+                        \DB::raw('(select updated_at from  non_color_details where value_id  =   values.id  order by id asc limit 1) as ncDate'),
+                        )
+                        ->get();
+
+        $resultList = [];
+        foreach ($allValues as $eachValue) {
+            if ($eachValue->header_id != 1
+                && $eachValue->value != null
+                && strtotime($eachValue->updated_at) > strtotime($beforeOneWeek)
+            ) {
+                $currentUser = User::where('email','like', $eachValue->owner_name . '@%')->first();
+                if (!empty($currentUser) && $currentUser->password != '') {
+                    if (array_key_exists($eachValue->owner_name, $resultList)) {
+                        $resultList[$eachValue->owner_name] = $resultList[$eachValue->owner_name] + 1;
+                    } else {
+                        $resultList[$eachValue->owner_name] = 1;
+                    }
+                }
+            } else {
+
+                if (!empty($eachValue->cid) && (strtotime($eachValue->cDate) >= strtotime($beforeOneWeek))) {
+                    $currentUser = User::where('email','like', $eachValue->owner_name . '@%')->first();
+                    if (!empty($currentUser) && $currentUser->password != '') {
+                        if (array_key_exists($eachValue->owner_name, $resultList)) {
+                            $resultList[$eachValue->owner_name] = $resultList[$eachValue->owner_name] + 1;
+                        } else {
+                            $resultList[$eachValue->owner_name] = 1;
+                        }
+                    }
+                } else {
+                    if (!empty($eachValue->ncid) && (strtotime($eachValue->ncDate) >= strtotime($beforeOneWeek))) {
+                        $currentUser = User::where('email','like', $eachValue->owner_name . '@%')->first();
+                        if (!empty($currentUser) && $currentUser->password != '') {
+                            if (array_key_exists($eachValue->owner_name, $resultList)) {
+                                $resultList[$eachValue->owner_name] = $resultList[$eachValue->owner_name] + 1;
+                            } else {
+                                $resultList[$eachValue->owner_name] = 1;
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        $lastWeekFlag = false;
+
+        if ($resultList == []) {
+
+            $lastWeekFlag = true;
+            $resultList['allFlag'] = true;
+
+            foreach ($allValues as $eachValue) {
+                if ($eachValue->header_id != 1
+                    && $eachValue->value != null
+                ) {
+                    $currentUser = User::where('email','like', $eachValue->owner_name . '@%')->first();
+                    if (!empty($currentUser) && $currentUser->password != '') {
+                        if (array_key_exists($eachValue->owner_name, $resultList)) {
+                            $resultList[$eachValue->owner_name] = $resultList[$eachValue->owner_name] + 1;
+                        } else {
+                            $resultList[$eachValue->owner_name] = 1;
+                        }
+                    }
+                } else { 
+                    if (!empty($eachValue->cid)) {
+                        $currentUser = User::where('email','like', $eachValue->owner_name . '@%')->first();
+                        if (!empty($currentUser) && $currentUser->password != '') {
+                            if (array_key_exists($eachValue->owner_name, $resultList)) {
+                                $resultList[$eachValue->owner_name] = $resultList[$eachValue->owner_name] + 1;
+                            } else {
+                                $resultList[$eachValue->owner_name] = 1;
+                            }
+                        }
+                    } else {
+                        if (!empty($eachValue->ncid)) {
+                            $currentUser = User::where('email','like', $eachValue->owner_name . '@%')->first();
+                            if (!empty($currentUser) && $currentUser->password != '') {
+                                if (array_key_exists($eachValue->owner_name, $resultList)) {
+                                    $resultList[$eachValue->owner_name] = $resultList[$eachValue->owner_name] + 1;
+                                } else {
+                                    $resultList[$eachValue->owner_name] = 1;
+                                }
+                            }
+                        }
+                    }
+               }
+            }
+        } else {
+            $resultList['allFlag'] = false;
+        }
+
+        $maxValue = 0;
+        $maxKey = '';
+        foreach ($resultList as $key => $eachValue) {
+            if ($resultList[$key] > $maxValue) {
+                $maxKey = $key;
+                $maxValue = $resultList[$key];
+            }
+        }
+
+        $result = $maxKey . ' recorded ' . $maxValue . ' characters';
+        if ($lastWeekFlag == false) {
+            $result = $result . ' last week';
+        }
+
+        $this->topUser = $result;
+
+        $this->leaderBoard = $resultList;
+
+        $this->detailData = $detailData;
+    }
+
+   /* public function __construct($detailData = null)
+    {
+        $beforeOneWeek = date('Y-m-d h:m:s', strtotime('-7 days'));
 
         $allValues = Value::all();
         $resultList = [];
@@ -178,7 +301,7 @@ class MyEvent implements ShouldBroadcast
         $this->leaderBoard = $resultList;
 
         $this->detailData = $detailData;
-    }
+    }*/
 
     public function broadcastOn()
     {

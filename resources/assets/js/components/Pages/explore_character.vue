@@ -8,14 +8,14 @@
                 <span style="font-size: 16px;">This section demonstrates queries the user can execute against the character data. The system aggregates the data entered by all users each night into a RDF graph, which is used to support the search. Due to the <i>nightly</i> aggregation schedule, only data enter the day before can be queried.</span>
             </div>
             <div>
-                <a
+                <router-link
                     class="btn btn-primary"
                     style = "float: left; padding: 2px;"
-                    href="/chrecorder/public"
+                    :to="'/'"
                     v-tooltip="{ content:'<div>Go back to workspace</div>' }"
                 >
                     <span class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span>
-                </a>
+                </router-link>
             </div>
             <div style="margin-left: 35px; margin-top: 5px;">
                 <div class="row">
@@ -1216,20 +1216,24 @@
             app.user.name = app.user.email.split('@')[0];
             sessionStorage.setItem('userId', app.user.id);
 
-            axios.post('/chrecorder/public/api/v1/get-default-constraint').then(function(resp){
+            axios.post('api/v1/get-default-constraint').then(function(resp){
                 app.preList = resp.data.preList;
                 app.postList = resp.data.postList;
                 console.log(app.preList);
                 console.log(app.postList);
+            }).catch(error => {
+                window.location.reload()
             });
-            // axios.get('/chrecorder/public/api/v1/getTaxons').then(function(resp){
+            // axios.get('api/v1/getTaxons').then(function(resp){
             //     console.log(resp);
             //     app.taxonData = resp.data.taxons;
             // });
 
-            axios.get('/chrecorder/public/api/v1/getUsers').then(function(resp){
+            axios.get('api/v1/getUsers').then(function(resp){
                 console.log(resp);
                 app.usersData = resp.data;
+            }).catch(error => {
+                window.location.reload()
             });
 
             var query=` PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
