@@ -24,9 +24,9 @@ export default Vue;
 
 export var router = new VueRouter({
     mode: 'history',
+    base: process.env.MIX_VUE_APP_API_BASE_URL,
     routes: routes
 });
-
 
 new Vue({
     el: '#app',

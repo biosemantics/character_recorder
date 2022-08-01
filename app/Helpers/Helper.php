@@ -31,127 +31,63 @@ if (!function_exists('getTopUser')) {
      * */
     function getTopUser()
     {
-        // $beforeOneWeek = date('Y-m-d h:m:s', strtotime('-7 days'));
+        // fetch all records corresponding values with characters and  retrieve first row of data from color_details and non_color_details  
+        $allValues =    DB::table('values')
+                        ->leftJoin('characters', 'characters.id', '=', 'values.character_id')
+                        ->select( 'values.*' ,'characters.id As chId', 'characters.owner_name',
+                        DB::raw('(select value_id from  non_color_details where value_id  =   values.id order by id asc limit 1) as ncid'), 
+                        DB::raw('(select value_id from  color_details where value_id  =   values.id order by id asc limit 1) as cid'), 
 
-        $allValues = Value::all();
+                        )
+                        ->get();
         $resultList = [];
-        $allUsers = User::all();
-        // foreach ($allValues as $eachValue) {
-        //     if ($eachValue->header_id != 1
-        //         && $eachValue->value != null
-        //         && strtotime($eachValue->updated_at) > strtotime($beforeOneWeek)) {
-        //         $character = Character::where('id', '=', $eachValue->character_id)->first();
-        //         if (array_key_exists($character->owner_name, $resultList)) {
-        //             $resultList[$character->owner_name] = $resultList[$character->owner_name] + 1;
-        //         } else {
-        //             $resultList[$character->owner_name] = 1;
-        //         }
-        //     } else {
-        //         $valueDetail = ColorDetails::where('value_id', '=', $eachValue->id)->whereDate('updated_at', '>=', $beforeOneWeek)->first();
-        //         if ($valueDetail) {
-        //             $character = Character::where('id', '=', $eachValue->character_id)->first();
-        //             if (array_key_exists($character->owner_name, $resultList)) {
-        //                 $resultList[$character->owner_name] = $resultList[$character->owner_name] + 1;
-        //             } else {
-        //                 $resultList[$character->owner_name] = 1;
-        //             }
-        //         } else {
-        //             $valueDetail = NonColorDetails::where('value_id', '=', $eachValue->id)->whereDate('updated_at', '>=', $beforeOneWeek)->first();
-        //             if ($valueDetail) {
-        //                 $character = Character::where('id', '=', $eachValue->character_id)->first();
-        //                 if (array_key_exists($character->owner_name, $resultList)) {
-        //                     $resultList[$character->owner_name] = $resultList[$character->owner_name] + 1;
-        //                 } else {
-        //                     $resultList[$character->owner_name] = 1;
-        //                 }
-        //             }
-
-        //         }
-        //     }
-        // }
-
         $lastWeekFlag = false;
-
-        if ($resultList == []) {
+        if (count($allValues) > 0) {
             $lastWeekFlag = true;
-
             foreach ($allValues as $eachValue) {
                 if ($eachValue->header_id != 1
                     && $eachValue->value != null) {
-                    $character = Character::where('id', '=', $eachValue->character_id)->first();
-                    $currentUser = null;
-                    foreach($allUsers as $eachUser) {
-                        if (explode('@', $eachUser['email'])[0] == $character->owner_name) {
-                            $currentUser = $eachUser;
-                            break;
-                        }
+                    $currentUserName = $eachValue->owner_name ? explode('_ver_', $eachValue->owner_name)[0]: '';
+                    if (array_key_exists($currentUserName, $resultList)) {
+                        $resultList[$currentUserName] = $resultList[$currentUserName] + 1;
+                    } else {
+                        $resultList[$currentUserName] = 1;
                     }
-                    $currentUserName = explode('_ver_', $character->owner_name)[0];
-//                    if ($currentUser['password'] != '') {
+                } else {
+                    if (!empty($eachValue->cid)) {
+                        $currentUserName = $eachValue->owner_name ? explode('_ver_', $eachValue->owner_name)[0]: '';
                         if (array_key_exists($currentUserName, $resultList)) {
                             $resultList[$currentUserName] = $resultList[$currentUserName] + 1;
                         } else {
                             $resultList[$currentUserName] = 1;
                         }
-//                    }
-                } else {
-                    $valueDetail = ColorDetails::where('value_id', '=', $eachValue->id)->first();
-                    if ($valueDetail) {
-                        $character = Character::where('id', '=', $eachValue->character_id)->first();
-                        $currentUser = null;
-                        foreach($allUsers as $eachUser) {
-                            if (explode('@', $eachUser['email'])[0] == $character->owner_name) {
-                                $currentUser = $eachUser;
-                                break;
-                            }
-                        }
-                        $currentUserName = explode('_ver_', $character->owner_name)[0];
-//                        if ($currentUser['password'] != '') {
+                    } else {
+                        if (!empty($eachValue->ncid)) {
+                            $currentUserName = $eachValue->owner_name ? explode('_ver_', $eachValue->owner_name)[0]: '';
                             if (array_key_exists($currentUserName, $resultList)) {
                                 $resultList[$currentUserName] = $resultList[$currentUserName] + 1;
                             } else {
                                 $resultList[$currentUserName] = 1;
                             }
-//                        }
-                    } else {
-                        $valueDetail = NonColorDetails::where('value_id', '=', $eachValue->id)->first();
-                        if ($valueDetail) {
-                            $character = Character::where('id', '=', $eachValue->character_id)->first();
-                            $currentUser = null;
-                            foreach($allUsers as $eachUser) {
-                                if (explode('@', $eachUser['email'])[0] == $character->owner_name) {
-                                    $currentUser = $eachUser;
-                                    break;
-                                }
-                            }
-                            $currentUserName = explode('_ver_', $character->owner_name)[0];
-//                            if ($currentUser['password'] != '') {
-                                if (array_key_exists($currentUserName, $resultList)) {
-                                    $resultList[$currentUserName] = $resultList[$currentUserName] + 1;
-                                } else {
-                                    $resultList[$currentUserName] = 1;
-                                }
-//                            }
                         }
                     }
                 }
             }
         }
-
         $maxValue = 0;
         $maxKey = '';
-        foreach ($resultList as $key => $eachValue) {
-            if ($resultList[$key] > $maxValue) {
-                $maxKey = $key;
-                $maxValue = $resultList[$key];
+        if(!empty($resultList)) {
+            foreach ($resultList as $key => $eachValue) {
+                if ($resultList[$key] > $maxValue) {
+                    $maxKey = $key;
+                    $maxValue = $resultList[$key];
+                }
             }
         }
-
         $result = 'User "' . $maxKey . '" recorded ' . $maxValue . ' characters';
         if ($lastWeekFlag == false) {
             $result = $result . ' last week';
         }
-
         return $result;
     }
 }

@@ -8,8 +8,8 @@
         </h3>
       </div>
       <div>
-        <a class="btn btn-primary" style="float: left; padding: 2px;" href="/chrecorder/public"><span
-          class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span></a>
+        <router-link  class="btn btn-primary" style="float: left; padding: 2px;" :to="'/'"><span
+          class="glyphicon glyphicon-menu-left" style="font-Size: 25px; padding-top:2px;"></span></router-link>
       </div>
       <div style="margin-left: 35px">
         <div class="row">
@@ -433,7 +433,7 @@ export default {
             'taxa': app.applicableTaxa
           };
           console.log(postValue);
-          axios.post('/chrecorder/public/send-mail', postValue);
+          axios.post('send-mail', postValue);
           app.messageDialogFlag = false;
         });
 
@@ -442,7 +442,7 @@ export default {
   watch: {},
   async created() {
     var app = this;
-    await axios.get("/chrecorder/public/api/v1/character/" + app.user.id)
+    await axios.get("api/v1/character/" + app.user.id)
       .then(function (resp) {
         console.log('resp character', resp.data);
         app.userCharacters = resp.data.characters;
@@ -450,11 +450,15 @@ export default {
         app.values = resp.data.values;
         app.allColorValues = resp.data.allColorValues;
         app.allNonColorValues = resp.data.allNonColorValues;
+      }).catch(error => {
+          window.location.reload()
       });
-    await axios.get("/chrecorder/public/api/v1/user-tag/" + app.user.id)
+    await axios.get("api/v1/user-tag/" + app.user.id)
       .then(function (resp) {
         app.userTags = resp.data;
         console.log('userTags', app.userTags);
+      }).catch(error => {
+          window.location.reload()
       });
     app.currentTermType = 1;
     axios.get("http://shark.sbs.arizona.edu:8080/carex/getDeprecatedClasses")

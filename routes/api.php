@@ -70,9 +70,15 @@ Route::group([
         Route::post('add-character',                    ['as' => 'add_character',               'uses' => 'HomeController@addCharacter']);
         Route::post('update',                           ['as' => 'update_value',                'uses' => 'HomeController@updateValue']);
         Route::post('update-character',                 ['as' => 'update_character',            'uses' => 'HomeController@updateCharacter']);
+        Route::post('update-image',                 ['as' => 'update_image',            'uses' => 'HomeController@updateImage']);
+        Route::post('edit-view',                 ['as' => 'edit_view',            'uses' => 'HomeController@editView']);
         Route::post('update-unit',                      ['as' => 'update_unit',                 'uses' => 'HomeController@updateUnit']);
         Route::post('update-summary',                   ['as' => 'update_summary',              'uses' => 'HomeController@updateSummary']);
         Route::post('delete/{userId}/{characterId}',    ['as' => 'delete_character',            'uses' => 'HomeController@deleteCharacter']);
+        Route::post('delete-row-character/{userId}/{characterId}',    ['as' => 'delete_row_character',            'uses' => 'HomeController@deleteRowCharacter']);
+        Route::post('multiple_delete',    ['as' => 'multiple_delete', 'uses' => 'HomeController@multipleDeleteCharacter']);
+        Route::get('search_character',    ['as' => 'search_character', 'uses' => 'HomeController@searchCharacter']);
+        Route::get('character-values',                           ['as' => 'character_values',            'uses' => 'HomeController@characterValues']);
         Route::post('add-standard',                     ['as' => 'add_standard_character',      'uses' => 'HomeController@addStandardCharacter']);
         Route::get('remove-all-standard',               ['as' => 'remove_all_standard',         'uses' => 'HomeController@removeAllStandard']);
         Route::post('remove-all',                       ['as' => 'remove_all',                  'uses' => 'HomeController@removeAll']);
@@ -84,5 +90,10 @@ Route::group([
         Route::post('delete-header/{headerId}',         ['as' => 'delete-header',               'uses' => 'HomeController@deleteHeader']);
         Route::post('change-order',                     ['as' => 'change-order',                'uses' => 'HomeController@changeOrder']);
         Route::get('{userId}',                          ['as' => 'get_character',               'uses' => 'HomeController@getCharacter']);
+        Route::post('check-image',                       ['as' => 'check_image',            'uses' => 'HomeController@checkImage']);
+        Route::post('identify',                       ['as' => 'identify',            'uses' => 'HomeController@identify']);
+        Route::post('empty-cells',                           ['as' => 'empty_cells',            'uses' => 'HomeController@emptyCells']);
+        Route::post('get-usage-taxons',                          ['as' => 'get_usage_taxons',               'uses' => 'HomeController@getUsageTaxons']);
+
     });
 });
