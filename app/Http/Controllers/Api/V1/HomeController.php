@@ -614,7 +614,7 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
         $character = Character::where('id', '=', $characterId)->first();
-        if (Character::where('name', '=', $character->name)->count() < 2) {
+        if ($character && Character::where('name', '=', $character->name)->count() < 2) {
             DefaultCharacter::where('name', '=', $character->name)->delete();
         }
         if (Character::where('standard_tag', '=', Character::where('id', '=', $characterId)->first()->standard_tag)
@@ -669,7 +669,7 @@ class HomeController extends Controller
       $user = User::where('id', '=', Auth::id())->first();
       $username = explode('@', $user['email'])[0];
       $character = Character::where('id', '=', $characterId)->first();
-      if (Character::where('name', '=', $character->name)->count() < 2) {
+      if ($character && Character::where('name', '=', $character->name)->count() < 2) {
           DefaultCharacter::where('name', '=', $character->name)->delete();
       }
       if (Character::where('standard_tag', '=', Character::where('id', '=', $characterId)->first()->standard_tag)
