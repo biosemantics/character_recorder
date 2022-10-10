@@ -614,7 +614,7 @@ class HomeController extends Controller
         $user = User::where('id', '=', Auth::id())->first();
         $username = explode('@', $user['email'])[0];
         $character = Character::where('id', '=', $characterId)->first();
-        if (Character::where('name', '=', $character->name)->count() < 2) {
+        if ($character && Character::where('name', '=', $character->name)->count() < 2) {
             DefaultCharacter::where('name', '=', $character->name)->delete();
         }
         if (Character::where('standard_tag', '=', Character::where('id', '=', $characterId)->first()->standard_tag)
@@ -669,7 +669,7 @@ class HomeController extends Controller
       $user = User::where('id', '=', Auth::id())->first();
       $username = explode('@', $user['email'])[0];
       $character = Character::where('id', '=', $characterId)->first();
-      if (Character::where('name', '=', $character->name)->count() < 2) {
+      if ($character && Character::where('name', '=', $character->name)->count() < 2) {
           DefaultCharacter::where('name', '=', $character->name)->delete();
       }
       if (Character::where('standard_tag', '=', Character::where('id', '=', $characterId)->first()->standard_tag)
@@ -3895,29 +3895,31 @@ class HomeController extends Controller
 
         // Wait for the requests to complete, even if some of them fail
         $responses = Promise\settle($promises)->wait();
+        if(isset($responses['taxonId']) && isset($responses['taxonId']['value'])) {
+            // You can access each response using the key of the promise
+            $xml = $responses['taxonId']['value']->getBody()->getContents();
 
-        // You can access each response using the key of the promise
-        $xml = $responses['taxonId']['value']->getBody()->getContents();
+            $xmlObject = simplexml_load_string($xml);
 
-        $xmlObject = simplexml_load_string($xml);
+            //Encode the SimpleXMLElement object into a JSON string.
+            $jsonString = json_encode($xmlObject);
 
-        //Encode the SimpleXMLElement object into a JSON string.
-        $jsonString = json_encode($xmlObject);
+            //Convert it back into an associative array for
+            //the purposes of testing.
+            $jsonArray = json_decode($jsonString, true);
 
-        //Convert it back into an associative array for
-        //the purposes of testing.
-        $jsonArray = json_decode($jsonString, true);
-
-        if (array_key_exists('IdList', $jsonArray)) {
-            if (count($jsonArray['IdList'])) {
-                return $jsonArray['IdList']['Id'];
+            if (array_key_exists('IdList', $jsonArray)) {
+                if (count($jsonArray['IdList'])) {
+                    return $jsonArray['IdList']['Id'];
+                } else {
+                    return "unknown";
+                }
             } else {
                 return "unknown";
             }
-        } else {
+        }else {
             return "unknown";
         }
-
     }
 
     public function test()

@@ -9504,7 +9504,7 @@ export default {
       var app = this;
       console.log('confirmRemoveRowCharacter');
       app.isLoading = true;
-      axios.post("/chrecorder/public/api/v1/character/delete-row-character/" + app.user.id + "/" + app.toRemoveCharacterId)
+      axios.post("api/v1/character/delete-row-character/" + app.user.id + "/" + app.toRemoveCharacterId)
         .then(function (resp) {
           window.location.reload()
         }).catch(error => {
@@ -9516,7 +9516,7 @@ export default {
       var app = this;
       console.log('confirmRemoveCharacter');
       app.isLoading = true;
-      axios.post("/chrecorder/public/api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
+      axios.post("api/v1/character/delete/" + app.user.id + "/" + app.toRemoveCharacterId)
         .then(function (resp) {
           app.isLoading = false;
           app.toRemoveCharacterId = null;
