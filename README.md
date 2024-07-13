@@ -1,7 +1,11 @@
 ## Character Recorder
 
 Character Recorder is part of the Author-Driven Computable Phenotypic Data and Ontology Development Platform. This proof-of-concept software system was developed with support from US National Science Foundation, under award # 1661485. 
-Other components of the Platform include Conflict Resolver, Ontology Web Service Modeule, and the Carex Ontology. 
+Other components of the Platform include 
+
+#Conflict Resolver (https://github.com/biosemantics/ConflictResolverMobileApp), 
+#Ontology Web Service Modeule(https://github.com/biosemantics/charaparser-web), and 
+#the Carex Ontology. 
 
 Character Recorder was built using Laravel with Vue.js. 
 
