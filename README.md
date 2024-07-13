@@ -1,10 +1,12 @@
-## Laravel 5.6 + Vue.js - Simple CRUD Demo
+## Character Recorder
 
-Simple project showing how Laravel works with Vue.js.
+Character Recorder is part of the Author-Driven Computable Phenotypic Data and Ontology Development Platform. This proof-of-concept software system was developed with support from US National Science Foundation, under award # 1661485. 
+Other components of the Platform include Conflict Resolver, Ontology Web Service Modeule, and the Carex Ontology. 
+
+Character Recorder was built using Laravel with Vue.js. 
 
 ---
-
-### How to use
+## How to set up Character Recorder on a linux server
 
 - Clone the repository with __git clone__
 - Copy __.env.example__ file to __.env__ and edit database credentials there
