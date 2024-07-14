@@ -5,7 +5,7 @@ Other components of the Platform include
 
 - Conflict Resolver (https://github.com/biosemantics/ConflictResolverMobileApp), 
 - Ontology Access Web Service (https://github.com/biosemantics/charaparser-web), and 
-- the Carex Ontology. 
+- the Carex Ontology (https://github.com/biosemantics/ontologies). 
 
 Character Recorder was built using Laravel with Vue.js. 
 
