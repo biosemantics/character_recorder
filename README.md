@@ -7,9 +7,12 @@ Other components of the Platform include
 - Ontology Access Web Service (https://github.com/biosemantics/charaparser-web), and 
 - the Carex Ontology (https://github.com/biosemantics/ontologies). 
 
-Character Recorder was built using Laravel with Vue.js. 
+## Character Recorder Demo (2024)
+https://www.screencast.com/t/wy2V5Cx0JE
 
 ---
+Character Recorder was built using Laravel with Vue.js. 
+
 ## How to set up Character Recorder on a linux server
 
 - Clone the repository with __git clone__
