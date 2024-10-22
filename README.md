@@ -8,7 +8,8 @@ Other components of the Platform include
 - the Carex Ontology (https://github.com/biosemantics/ontologies). 
 
 ## Character Recorder Demo (2024)
-https://www.screencast.com/t/wy2V5Cx0JE
+
+https://app.screencast.com/eberIjZcTclBv
 
 ---
 Character Recorder was built using Laravel with Vue.js. 
